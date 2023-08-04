@@ -40,6 +40,11 @@ const MainPage = styled.div`
         width: 100%;
         height: 100%;
       }
+      picture{
+        width: 100%;
+        height: 100%;
+
+      }
       img {
         width: 100%;
         height: 100%;
@@ -64,7 +69,8 @@ export default function Home() {
             <p>Place Your Product Here</p>
             <div className="imgadd">
               {selectedImage?.url ? (
-                <img
+                <picture>
+                   <img
                   src={
                     selectedImage?.url
                       ? selectedImage?.url
@@ -72,6 +78,9 @@ export default function Home() {
                   }
                   alt=""
                 />
+
+                </picture>
+               
               ) : (
                 <div className="more">
                   <Image src={assets.images.dotbox} alt=""></Image>

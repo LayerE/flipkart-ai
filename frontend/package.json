@@ -6,14 +6,16 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "export": "next export"
+
   },
   "dependencies": {
     "@types/node": "20.4.5",
     "@types/react": "18.2.17",
     "@types/react-dom": "18.2.7",
     "@types/styled-components": "^5.1.26",
-    "babel-plugin-styled-components": "^2.1.4",
+    "babel-plugin-styled-components": "^2.1.1",
     "eslint": "8.46.0",
     "eslint-config-next": "13.4.12",
     "next": "13.4.12",
@@ -23,6 +25,6 @@
     "typescript": "5.1.6"
   },
   "resolutions": {
-    "styled-components": "^5.3.10"
+    "styled-components": "^6.0.5"
   }
 }

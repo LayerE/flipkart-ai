@@ -12,7 +12,7 @@ import {
 } from "@/store/dropdown";
 import { useAppState } from "@/context/app.context";
 
-const index = () => {
+const Generate = () => {
   const {
     selectPlacement,
     setSelectedPlacement,
@@ -145,4 +145,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Generate;

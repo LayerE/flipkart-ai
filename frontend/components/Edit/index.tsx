@@ -8,7 +8,7 @@ import { coloreList } from '@/store/dropdown'
 import { useAppState } from "@/context/app.context";
 
 
-const index = () => {
+const Edit = () => {
   const [colore, setColore] = useState<string>("");
   const [bgRemove, setBgRemove] = useState<boolean>(false);
   const [magickErase, setMagickErase] = useState<boolean>(false);
@@ -83,4 +83,4 @@ const index = () => {
   )
 }
 
-export default index
+export default Edit

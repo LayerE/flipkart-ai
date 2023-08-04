@@ -15,7 +15,7 @@ interface ContextITFC {
   activeTab: number;
   setActiveTab: (tabID: number) => void;
   file: File | null;
-  setFile: (file: File) => void;
+  setFile: (file: File | null) => void;
 
   selectedOption: string;
   setSelectedOption: (selectedOption: string) => void;

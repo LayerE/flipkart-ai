@@ -45,7 +45,7 @@ const TabData = [
   },
 ];
 
-const index: React.FC = () => {
+const Sidebar: React.FC = () => {
   const { activeTab, setActiveTab } = useAppState();
 
   return (
@@ -189,6 +189,11 @@ const SideBar = styled.div`
     border: 2px solid #b1b1b1;
     padding: 10px 10px;
     height: 120px;
+    picture{
+        width: 100%;
+        height: 100%;
+
+      }
     img {
       width: 100%;
       height: 100%;
@@ -199,4 +204,4 @@ const SideBar = styled.div`
     border-color: ${({ theme }) => theme.btnPrimary};
   }
 `;
-export default index;
+export default Sidebar;

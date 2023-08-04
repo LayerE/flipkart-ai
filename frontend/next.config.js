@@ -1,8 +1,7 @@
-/** @type {import('next').NextConfig} */
+/**  @type {import('next').NextConfig} */
 const path = require("path");
 
 const nextConfig = {
-  output: 'export',
   reactStrictMode: true,
   compiler: {
     styledComponents: true,
@@ -23,4 +22,4 @@ const nextConfig = {
   },
 }
 
-module.exports = nextConfig
+module.exports = nextConfig;

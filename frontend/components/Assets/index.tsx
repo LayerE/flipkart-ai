@@ -7,7 +7,9 @@ import { styled } from "styled-components";
 import { category, test } from "@/store/dropdown";
 import { useAppState } from "@/context/app.context";
 
-const index: React.FC = () => {
+
+
+const Assets: React.FC = () => {
   const {
     selectedImage,
     setSelectedImage,
@@ -51,7 +53,10 @@ const index: React.FC = () => {
               }
               onClick={() => setSelectedImage({ id: i, url: test })}
             >
+               <picture>
               <img src={test} alt="" />
+
+               </picture>
             </div>
           ))}
         </ResponsiveRowWraptwo>
@@ -71,4 +76,4 @@ export const ResponsiveRowWraptwo = styled(Row)`
    `}
 `;
 
-export default index;
+export default Assets;
