@@ -1,38 +1,113 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Flipkart AI
+
+<!-- ## Description -->
+
+
+
 
 ## Getting Started
 
-First, run the development server:
+To get a local copy up and running follow these simple steps.
 
+Clone this repository: `git clone git@github.com:-------------.git`
+Install the dependencies:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+yarn
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Run the development server:
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+```bash
+yarn dev
+```
+Open http://localhost:3000 with your browser to see the app.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Building the App
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+To build the app for production, follow these steps:
 
-## Learn More
+1. Install the dependencies:
+   ```bash
+   yarn or npm install
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+2. Build the app:
+   ```bash
+   yarn build or npm run build
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   This command will create an optimized production build of the app in the `build` directory.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+3. Start the production server:
+   ```bash
+   yarn start or npm run start
+   ```
 
-## Deploy on Vercel
+   The app will be running on http://localhost:3000.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Static Export
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+To export the app as a static site, you can use Next.js's static site generation feature. Follow these steps:
+
+1. Install the dependencies (if you haven't done so already):
+   ```bash
+   yarn or npm install
+   ```
+
+2. Generate the static files:
+   ```bash
+   yarn build && yarn export or npm run build && npm run export
+   ```
+
+   This command will generate the static files in the `out` directory.
+
+3. You can now deploy the `out` directory to a static hosting service of your choice, such as Vercel, Netlify, or GitHub Pages. Consult the documentation of your chosen hosting service for specific instructions on how to deploy a static site.
+
+   Alternatively, you can serve the static files locally using a static file server. For example, you can use the `serve` package:
+   ```bash
+   yarn global add serve 
+   serve -s out
+
+   # Or, if you're using npm:
+
+   npm install -g serve
+   serve -s out
+   ```
+
+   The app will be available at http://localhost:3000.
+
+### Customization
+
+The app's appearance and behavior can be customized by modifying the relevant files in the `pages` directory. You can update the styles in the `styles` directory and modify the components in the `components` directory to suit your needs.
+
+## Contributing
+
+If you'd like to contribute to the development of Polygon Copilot, follow these steps:
+
+1. Fork the repository and clone it to your local machine.
+
+2. Install the dependencies:
+  
+ ```bash
+   yarn
+   ```
+   
+3. Create a new branch for your feature or bug fix:
+   ```bash
+   git checkout -b my-feature
+   ```
+
+4. Make your changes and test them locally.
+
+5. Commit your changes:
+   ```bash
+   git commit -m "Add my feature"
+   ```
+
+6. Push your changes to your forked repository:
+   ```bash
+   git push origin my-feature
+   ```
+
+7. Create a pull request on the main repository, describing your changes and why they should be merged.
