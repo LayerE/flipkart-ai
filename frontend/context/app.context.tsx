@@ -39,6 +39,30 @@ interface ContextITFC {
   setSelectedColoreStrength: (selectColoreStrength: number) => void;
   selectOutLline: number;
   setSelectedOutline: (selectOutLline: number) => void;
+  promt: string;
+  setpromt: (promt: string) => void;
+  product: string;
+  setProduct: (product: string) => void;
+  placementTest: string;
+  setPlacementTest: (placementTest: string) => void;
+  backgroundTest: string;
+
+  setBackgrundTest:(backgrundTest: string) =>void;
+  surroundingTest: string;
+
+  setSurroundingTest:(surroundingTest: string) =>void;
+    colore: string;
+  setColore: (colore: string) => void;
+  bgRemove: boolean;
+  setBgRemove: (bgRemove: boolean) => void;
+  magickErase: boolean;
+  setMagickErase: (magickErase: boolean) => void;
+  upScale: boolean;
+  setupscale: (upScale: boolean) => void;
+  front: boolean;
+  setFront: (front: boolean) => void;
+  back: boolean;
+  setBack: (back: boolean) => void;
 }
 export const AppContext = createContext<ContextITFC>({
   activeTab: 1,
@@ -68,6 +92,30 @@ export const AppContext = createContext<ContextITFC>({
   selectOutLline: 1,
   setSelectedOutline: (selectOutLline: number) => {},
 
+  promt: "",
+  setpromt: (promt: string) => {},
+  product: "",
+  setProduct: (product: string) => "",
+  placementTest: "",
+  setPlacementTest: (placementTest: string) => "",
+  backgroundTest: "",
+
+  setBackgrundTest:(backgrundTest: string) =>"",
+  surroundingTest: "",
+
+  setSurroundingTest:(surroundingTest: string) =>{},
+   colore: "",
+  setColore: () => {},
+  bgRemove: false,
+  setBgRemove: () => {},
+  magickErase: false,
+  setMagickErase: () => {},
+  upScale: false,
+  setupscale: () => {},
+  front: true,
+  setFront: () => {},
+  back: false,
+  setBack: () => {},
 });
 
 export const AppContextProvider = ({ children }: ContextProviderProps) => {
@@ -85,7 +133,21 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [selectColoreStrength, setSelectedColoreStrength] = useState<number>(0);
   const [selectOutLline, setSelectedOutline] = useState<number>(0);
 
+  const [promt, setpromt] = useState<string>("");
+  const [product, setProduct] = useState<string>("");
+  const [placementTest, setPlacementTest] = useState<string>("");
+  const [surroundingTest, setSurroundingTest] = useState<string>("");
+  const [backgroundTest, setBackgrundTest] = useState<string>("");
 
+const [colore, setColore] = useState<string>("");
+  const [bgRemove, setBgRemove] = useState<boolean>(false);
+  const [magickErase, setMagickErase] = useState<boolean>(false);
+  const [upScale, setupscale] = useState<boolean>(false);
+  const [front, setFront] = useState<boolean>(false);
+  const [back, setBack] = useState<boolean>(false);
+
+  
+  
   useEffect(() => {
     // if (window?.localStorage?.getItem("banner_clicked")) {
     //   close("banner");
@@ -115,10 +177,32 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         selectBackground,
         setSelectedBackground,
         selectColore,
-        setSelectedColore,selectResult, setSelectedresult,
-        selectRunder, setSelectedRender,
-        selectColoreStrength, setSelectedColoreStrength,
-        selectOutLline, setSelectedOutline
+        setSelectedColore,
+        selectResult,
+        setSelectedresult,
+        selectRunder,
+        setSelectedRender,
+        selectColoreStrength,
+        setSelectedColoreStrength,
+        selectOutLline,
+        setSelectedOutline,
+        promt, setpromt,
+        product, setProduct,
+        placementTest, setPlacementTest,
+        backgroundTest, setBackgrundTest,
+        surroundingTest, setSurroundingTest,
+           colore,
+        setColore,
+        bgRemove,
+        setBgRemove,
+        magickErase,
+        setMagickErase,
+        upScale,
+        setupscale,
+        front,
+        setFront,
+        back,
+        setBack,
       }}
     >
       {children}

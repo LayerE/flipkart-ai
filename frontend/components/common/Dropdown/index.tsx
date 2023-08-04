@@ -58,7 +58,7 @@ const DropdownInput: React.FC = ({ data }) => {
           onClick={handleToggleDropdown}
           style={{ cursor: "pointer" }}
         >
-          <span>{data?.activeTab || data.lable === "color" ? "None" : "Select an option"}</span>
+          <span>{data?.activeTab ? data?.activeTab   : data?.lable === "color" ? "None" : "Select an option"}</span>
           <span className={`dropdown-arrow ${isDropdownOpen ? "open" : ""}`}>
             {isDropdownOpen ? (
               <svg

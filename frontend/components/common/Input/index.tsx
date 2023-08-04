@@ -116,7 +116,7 @@ export const FileUpload: React.FC = () => {
       {file ? (
         <div className="selected">
           <p> {slideName(file.name)}</p>
-          <button onClick={handleRemoveFile}>x</button>
+          <button onClick={handleRemoveFile}>Replace</button>
         </div>
       ) : (
         <div>

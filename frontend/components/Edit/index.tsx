@@ -9,12 +9,19 @@ import { useAppState } from "@/context/app.context";
 
 
 const Edit = () => {
-  const [colore, setColore] = useState<string>("");
-  const [bgRemove, setBgRemove] = useState<boolean>(false);
-  const [magickErase, setMagickErase] = useState<boolean>(false);
-  const [upScale, setupscale] = useState<boolean>(false);
-  const [front, setFront] = useState<boolean>(true);
-  const [back, setBack] = useState<boolean>(false);
+  const {   colore,
+    setColore,
+    bgRemove,
+    setBgRemove,
+    magickErase,
+    setMagickErase,
+    upScale,
+    setupscale,
+    front,
+    setFront,
+    back,
+    setBack,}=useAppState()
+
 
 
 

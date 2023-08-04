@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { Row } from "../common/Row";
 import { Input, TestArea } from "../common/Input";
 import Button from "../common/Button";
@@ -28,13 +28,23 @@ const Generate = () => {
     setSelectedColoreStrength,
     selectOutLline,
     setSelectedOutline,
+    promt, setpromt,
+    product, setProduct,
+    placementTest, setPlacementTest,
+    backgroundTest, setBackgrundTest,
+    surroundingTest, setSurroundingTest
   } = useAppState();
+
+
+
+
+
 
   return (
     <div className="accest">
       <div className="gap">
         <Row>
-          <TestArea />
+          <TestArea value={promt}  onChange={(e)=> setpromt(e.target.value)}/>
         </Row>
         <Row>
           <Button>Generate</Button>
@@ -45,7 +55,7 @@ const Generate = () => {
       </div>
       <div className="filde gap">
         <DisabledLabel>Product</DisabledLabel>
-        <Input></Input>
+        <Input value={product}  onChange={(e)=> setProduct(e.target.value)}></Input>
       </div>
       <div className="gap">
         <DisabledLabel>Placement</DisabledLabel>
@@ -59,7 +69,7 @@ const Generate = () => {
               activeTab: selectPlacement,
             }}
           ></DropdownInput>
-          <Input></Input>
+          <Input value={placementTest}  onChange={(e)=> setPlacementTest(e.target.value)}></Input>
         </div>
       </div>
       <div className="gap">
@@ -75,7 +85,7 @@ const Generate = () => {
               activeTab: selectSurrounding,
             }}
           ></DropdownInput>
-          <Input></Input>
+          <Input value={surroundingTest}  onChange={(e)=> setSurroundingTest(e.target.value)}></Input>
         </div>
       </div>
       <div className="gap">
@@ -90,7 +100,7 @@ const Generate = () => {
               activeTab: selectBackground,
             }}
           ></DropdownInput>
-          <Input></Input>
+          <Input value={backgroundTest}  onChange={(e)=> setBackgrundTest(e.target.value)}></Input>
         </div>
       </div>
       <div className="rowwothtwo">
