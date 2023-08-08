@@ -1,4 +1,5 @@
 import { useAppState } from "@/context/app.context";
+import { BgRemover } from "@/store/api";
 import React, { useState, useEffect,useRef } from "react";
 import { styled } from "styled-components";
 
@@ -90,6 +91,8 @@ export const FileUpload: React.FC = () => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0] || null;
     setFile(selectedFile);
+
+    BgRemover(selectedFile, "nsdfsd.png")
   };
 
   const handleRemoveFile = () => {

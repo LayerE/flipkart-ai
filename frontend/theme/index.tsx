@@ -64,7 +64,10 @@ export function theme(): DefaultTheme {
     paddings: {
       paddingSmall: ".5rem",
       padding: "1rem",
-      paddingTop: "130px"
+      paddingTop: "130px",
+      paddingTopMobile: "100px"
+
+
     },
     //ctr width
     ctrSizes: {

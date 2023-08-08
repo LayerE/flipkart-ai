@@ -14,11 +14,11 @@ import Generate from "../Generate/index";
 import Edit from "../Edit";
 
 const TabData = [
-  {
-    id: 1,
-    image: assets.icons.assets_icon,
-    tittle: "Assets",
-  },
+  // {
+  //   id: 1,
+  //   image: assets.icons.assets_icon,
+  //   tittle: "Assets",
+  // },
   {
     id: 2,
 
@@ -54,7 +54,7 @@ const Sidebar: React.FC = () => {
         {TabData.map((elemenmt, i) => (
           // <Column>
           <div
-          key={i}
+            key={i}
             className={activeTab === elemenmt.id ? "active tabBox " : "tabBox"}
             onClick={() => setActiveTab(elemenmt.id)}
           >
@@ -64,7 +64,8 @@ const Sidebar: React.FC = () => {
           // </Column>
         ))}
       </div>
-      <div className="tapExpanded">
+      <div className={activeTab != null ? "tapExpanded dispaySlid" : 'tapExpanded'}>
+        <div className="closs" onClick={()=>setActiveTab(null)}><div className="x">X</div></div>
         <div className="tittle">
           {activeTab === 1
             ? "Add assets"
@@ -89,18 +90,19 @@ const SideBar = styled.div`
   .selectbox {
     display: flex;
     gap: 10px;
-
-    
+  }
+  .closs{
+    display: none;
   }
   .selectone {
-      border-radius: 4px;
-      cursor: pointer;
-      border: 1px solid #c7c3c3;
-      padding: 8px 13px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid #c7c3c3;
+    padding: 8px 13px;
 
-      font-size: 12px;
-      font-weight: bold;
-    }
+    font-size: 12px;
+    font-weight: bold;
+  }
   display: flex;
 
   .selectTool {
@@ -123,7 +125,7 @@ const SideBar = styled.div`
     gap: 12px;
     margin-bottom: 12px;
   }
-  .bigGap{
+  .bigGap {
     margin-bottom: 25px;
   }
   .clolorpicker {
@@ -148,6 +150,32 @@ const SideBar = styled.div`
 
     padding-top: ${({ theme }) => theme.paddings.paddingTop};
   }
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  .columWrapper{
+       padding-left: 10px;
+    padding-right: 10px;
+
+  }
+  .closs{
+    display: block;
+    position: absolute;
+    right:20px;
+    top:100px;
+    cursor: pointer;
+
+    .x{
+      cursor: pointer;
+    //   width:30px;
+    // height:30px;
+    // border-radius:50%;
+    // border-top: 2px solid black;
+    // z-index:30;
+
+    }
+  }
+
+
+   `}
   .active {
     background-color: ${({ theme }) => theme.btnPrimary};
   }
@@ -172,6 +200,14 @@ const SideBar = styled.div`
       font-weight: 500;
     }
   }
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+.tabBox{
+  span{
+    font-size: 8px;
+  }
+}
+  `}
   .tapExpanded {
     padding-left: 15px;
     padding-right: 30px;
@@ -183,24 +219,40 @@ const SideBar = styled.div`
 
     overflow: auto;
   }
- 
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  .tapExpanded{
+  display: none;
+    position:absolute;
+    left: 90px;
+    background:#fff;
+    z-index:5;
+    height:100%;
+    width: calc(100% - 90px);
+    padding-left: 15px;
+
+
+  }
+  .dispaySlid{
+    display: block;
+  }
+`}
+
   .imageBox {
     border-radius: 8px;
     border: 2px solid #b1b1b1;
     padding: 10px 10px;
     height: 120px;
-    picture{
-        width: 100%;
-        height: 100%;
-
-      }
+    picture {
+      width: 100%;
+      height: 100%;
+    }
     img {
       width: 100%;
       height: 100%;
       object-fit: contain;
     }
   }
-  .ativeimg{
+  .ativeimg {
     border-color: ${({ theme }) => theme.btnPrimary};
   }
 `;

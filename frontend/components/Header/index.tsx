@@ -167,7 +167,11 @@ const Headers = styled.div`
   padding: 0 50px;
   width: 100%;
   border: 2px solid ${({ theme }) => theme.bgBorder};
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  padding: 0 15px;
 
+
+`}
   .profilbox {
     position: relative;
     font-size: 14px;

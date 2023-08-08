@@ -49,7 +49,7 @@ import {
       };
   
       //padding
-      paddings: { padding: string; paddingSmall: string, paddingTop: string };
+      paddings: { padding: string; paddingSmall: string, paddingTop: string , paddingTopMobile: string};
   
       // media queries
       mediaWidth: {

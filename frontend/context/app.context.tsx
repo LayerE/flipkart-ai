@@ -12,7 +12,7 @@ type ContextProviderProps = {
 };
 
 interface ContextITFC {
-  activeTab: number;
+  activeTab: number | null;
   setActiveTab: (tabID: number) => void;
   file: File | null;
   setFile: (file: File | null) => void;
@@ -47,11 +47,11 @@ interface ContextITFC {
   setPlacementTest: (placementTest: string) => void;
   backgroundTest: string;
 
-  setBackgrundTest:(backgrundTest: string) =>void;
+  setBackgrundTest: (backgrundTest: string) => void;
   surroundingTest: string;
 
-  setSurroundingTest:(surroundingTest: string) =>void;
-    colore: string;
+  setSurroundingTest: (surroundingTest: string) => void;
+  colore: string;
   setColore: (colore: string) => void;
   bgRemove: boolean;
   setBgRemove: (bgRemove: boolean) => void;
@@ -63,9 +63,30 @@ interface ContextITFC {
   setFront: (front: boolean) => void;
   back: boolean;
   setBack: (back: boolean) => void;
+  modifidImage: string;
+  setModifidImage: (modifidImage: string) => void;
+  imageArray: string[];
+  setImageArray: (imageArray: string[]) => void;
+  previewLoader: boolean;
+  setPriviewLoader: (previewLoader: boolean) => void;
+  generationLoader: boolean;
+  setGenerationLoader: (generationLoader: boolean) => void;
+
+  inpainting: boolean;
+  setInpainting: (inpainting: boolean) => void;
+  removeText: boolean;
+  setRemoveText: (removeText: boolean) => void;
+  replaceBg: boolean;
+  setReplaceBg: (replaceBg: boolean) => void;
+  PDE: boolean;
+  setPDE: (PDE: boolean) => void;
+  PSN: boolean;
+  setPSN: (PSN: boolean) => void;
+  superResolution: boolean;
+  setSuperResolution: (superResolution: boolean) => void;
 }
 export const AppContext = createContext<ContextITFC>({
-  activeTab: 1,
+  activeTab: 2,
   setActiveTab: () => {},
   file: null,
   setFile: () => {},
@@ -100,11 +121,11 @@ export const AppContext = createContext<ContextITFC>({
   setPlacementTest: (placementTest: string) => "",
   backgroundTest: "",
 
-  setBackgrundTest:(backgrundTest: string) =>"",
+  setBackgrundTest: (backgrundTest: string) => "",
   surroundingTest: "",
 
-  setSurroundingTest:(surroundingTest: string) =>{},
-   colore: "",
+  setSurroundingTest: (surroundingTest: string) => {},
+  colore: "",
   setColore: () => {},
   bgRemove: false,
   setBgRemove: () => {},
@@ -116,13 +137,37 @@ export const AppContext = createContext<ContextITFC>({
   setFront: () => {},
   back: false,
   setBack: () => {},
+  modifidImage: "",
+  setModifidImage: () => {},
+
+  imageArray: [],
+  setImageArray: (imageArray: string[]) => {},
+  previewLoader: false,
+  setPriviewLoader: () => {},
+  generationLoader: false,
+  setGenerationLoader: () => {},
+  inpainting: false,
+  setInpainting: () => {},
+  removeText: false,
+  setRemoveText: (removeText: boolean) => {},
+  replaceBg: false,
+  setReplaceBg: () => {},
+  PDE: false,
+  setPDE: () => {},
+  PSN: false,
+  setPSN: () => {},
+  superResolution: false,
+  setSuperResolution: () => {},
 });
 
 export const AppContextProvider = ({ children }: ContextProviderProps) => {
-  const [activeTab, setActiveTab] = useState<number>(1);
+  const [activeTab, setActiveTab] = useState<number| null>(2);
   const [file, setFile] = useState<File | null>(null);
   const [selectedOption, setSelectedOption] = useState<string>("");
   const [selectedImage, setSelectedImage] = useState<object>({});
+
+  const [modifidImage, setModifidImage] = useState<string>("");
+
   const [selectCategory, setSelectedCategory] = useState<string>("");
   const [selectPlacement, setSelectedPlacement] = useState<string>("");
   const [selectSurrounding, setSelectedSurrounding] = useState<string>("");
@@ -139,15 +184,24 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [surroundingTest, setSurroundingTest] = useState<string>("");
   const [backgroundTest, setBackgrundTest] = useState<string>("");
 
-const [colore, setColore] = useState<string>("");
+  const [colore, setColore] = useState<string>("");
   const [bgRemove, setBgRemove] = useState<boolean>(false);
   const [magickErase, setMagickErase] = useState<boolean>(false);
   const [upScale, setupscale] = useState<boolean>(false);
   const [front, setFront] = useState<boolean>(false);
   const [back, setBack] = useState<boolean>(false);
+  const [imageArray, setImageArray] = useState<string[]>([]);
 
-  
-  
+  const [previewLoader, setPriviewLoader] = useState<boolean>(false);
+  const [generationLoader, setGenerationLoader] = useState<boolean>(false);
+
+  const [inpainting, setInpainting] = useState<boolean>(false);
+  const [removeText, setRemoveText] = useState<boolean>(false);
+  const [replaceBg, setReplaceBg] = useState<boolean>(false);
+  const [PDE, setPDE] = useState<boolean>(false);
+  const [PSN, setPSN] = useState<boolean>(false);
+  const [superResolution, setSuperResolution] = useState<boolean>(false);
+
   useEffect(() => {
     // if (window?.localStorage?.getItem("banner_clicked")) {
     //   close("banner");
@@ -186,12 +240,17 @@ const [colore, setColore] = useState<string>("");
         setSelectedColoreStrength,
         selectOutLline,
         setSelectedOutline,
-        promt, setpromt,
-        product, setProduct,
-        placementTest, setPlacementTest,
-        backgroundTest, setBackgrundTest,
-        surroundingTest, setSurroundingTest,
-           colore,
+        promt,
+        setpromt,
+        product,
+        setProduct,
+        placementTest,
+        setPlacementTest,
+        backgroundTest,
+        setBackgrundTest,
+        surroundingTest,
+        setSurroundingTest,
+        colore,
         setColore,
         bgRemove,
         setBgRemove,
@@ -203,6 +262,26 @@ const [colore, setColore] = useState<string>("");
         setFront,
         back,
         setBack,
+        modifidImage,
+        setModifidImage,
+        imageArray,
+        setImageArray,
+        previewLoader,
+        setPriviewLoader,
+        generationLoader,
+        setGenerationLoader,
+        inpainting,
+        setInpainting,
+        removeText,
+        setRemoveText,
+        replaceBg,
+        setReplaceBg,
+        PDE,
+        setPDE,
+        PSN,
+        setPSN,
+        superResolution,
+        setSuperResolution,
       }}
     >
       {children}

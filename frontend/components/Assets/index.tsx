@@ -43,24 +43,7 @@ const Assets: React.FC = () => {
           ></DropdownInput>
         </Row>
       </div>
-      <div className="gap">
-        <ResponsiveRowWraptwo>
-          {test.map((test, i) => (
-            <div
-              key={i}
-              className={
-                selectedImage.id === i ? "imageBox ativeimg" : "imageBox"
-              }
-              onClick={() => setSelectedImage({ id: i, url: test })}
-            >
-               <picture>
-              <img src={test} alt="" />
-
-               </picture>
-            </div>
-          ))}
-        </ResponsiveRowWraptwo>
-      </div>
+     
     </div>
   );
 };

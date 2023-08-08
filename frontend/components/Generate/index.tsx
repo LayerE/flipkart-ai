@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useEffect, useState } from "react";
 import { Row } from "../common/Row";
 import { Input, TestArea } from "../common/Input";
 import Button from "../common/Button";
@@ -9,8 +9,11 @@ import {
   placementList,
   resultList,
   surroundingList,
+  test,
 } from "@/store/dropdown";
 import { useAppState } from "@/context/app.context";
+import { styled } from "styled-components";
+import { BgRemover, generateimge } from "@/store/api";
 
 const Generate = () => {
   const {
@@ -28,32 +31,76 @@ const Generate = () => {
     setSelectedColoreStrength,
     selectOutLline,
     setSelectedOutline,
-    promt, setpromt,
-    product, setProduct,
-    placementTest, setPlacementTest,
-    backgroundTest, setBackgrundTest,
-    surroundingTest, setSurroundingTest
+    promt,
+    setpromt,
+    product,
+    setProduct,
+    placementTest,
+    setPlacementTest,
+    backgroundTest,
+    setBackgrundTest,
+    surroundingTest,
+    setSurroundingTest,
+    setSelectedImage,
+    selectedImage,
+    modifidImage,
+    setModifidImage,
+    imageArray, setImageArray,
+    previewLoader, setPriviewLoader,
+    generationLoader, setGenerationLoader
   } = useAppState();
 
 
+  // const imageArrays = JSON.parse(localStorage.getItem("g-images")) || [];
 
-
-
+  console.log(imageArray);
+  const generateImageHandeler = async () => {
+    setGenerationLoader(true)
+    try {
+      const data = await generateimge(promt);
+      console.log(data, "dff");
+      if (data) {
+        setImageArray((prev) => [...prev, data]);
+      
+      }
+    } catch (error) {
+      console.error("Error generating image:", error);
+    } finally{
+      setGenerationLoader(false)
+    }
+  };
 
   return (
     <div className="accest">
       <div className="gap">
         <Row>
-          <TestArea value={promt}  onChange={(e)=> setpromt(e.target.value)}/>
+          <TestArea value={promt} onChange={(e) => setpromt(e.target.value)} />
         </Row>
         <Row>
-          <Button>Generate</Button>
+          <Button onClick={() => generateImageHandeler()}>{ generationLoader ? "Loading...": "Generate"}</Button>
         </Row>
       </div>
-      <div className="bigGap" >
-        <Label>Edit the the prompt in the form below.</Label>
+      <div className="bigGap">
+        {/* <Label>Edit the the prompt in the form below.</Label> */}
       </div>
-      <div className="filde gap">
+      <div className="gap">
+        <ResponsiveRowWraptwo>
+          {imageArray.map((test, i) => (
+            <div
+              key={i}
+              className={
+                selectedImage.id === i ? "imageBox ativeimg" : "imageBox"
+              }
+              onClick={() =>{ setSelectedImage({ id: i, url: test }); setModifidImage("")}}
+            >
+              <picture>
+                <img src={test} alt="" />
+              </picture>
+            </div>
+          ))}
+        </ResponsiveRowWraptwo>
+      </div>
+      {/* <div className="filde gap">
         <DisabledLabel>Product</DisabledLabel>
         <Input value={product}  onChange={(e)=> setProduct(e.target.value)}></Input>
       </div>
@@ -150,9 +197,19 @@ const Generate = () => {
             }}
           ></DropdownNOBorder>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
 
 export default Generate;
+export const ResponsiveRowWraptwo = styled(Row)`
+  display: grid !important;
+  gap: 1rem;
+  ${({ theme }) => theme.minMediaWidth.atleastSmall`
+      grid-template-columns: repeat(2, 1fr);
+  `}
+  ${({ theme }) => theme.minMediaWidth.atleastLarge`
+    grid-template-columns: repeat(2, 1fr);
+   `}
+`;
