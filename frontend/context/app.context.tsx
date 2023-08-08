@@ -41,6 +41,8 @@ interface ContextITFC {
   setSelectedOutline: (selectOutLline: number) => void;
   promt: string;
   setpromt: (promt: string) => void;
+  bgpromt: string;
+  setBgpromt: (bgpromt: string) => void;
   product: string;
   setProduct: (product: string) => void;
   placementTest: string;
@@ -67,6 +69,11 @@ interface ContextITFC {
   setModifidImage: (modifidImage: string) => void;
   imageArray: string[];
   setImageArray: (imageArray: string[]) => void;
+  modifidImageArray: string[];
+  setModifidImageArray: (modifidImageArray: string[]) => void;
+  undoArray: string[];
+  setUndoArray: (undoArray: string[]) => void;
+
   previewLoader: boolean;
   setPriviewLoader: (previewLoader: boolean) => void;
   generationLoader: boolean;
@@ -115,6 +122,8 @@ export const AppContext = createContext<ContextITFC>({
 
   promt: "",
   setpromt: (promt: string) => {},
+  bgpromt: "",
+  setBgpromt: (promt: string) => {},
   product: "",
   setProduct: (product: string) => "",
   placementTest: "",
@@ -142,6 +151,12 @@ export const AppContext = createContext<ContextITFC>({
 
   imageArray: [],
   setImageArray: (imageArray: string[]) => {},
+  modifidImageArray: [],
+  setModifidImageArray: (modifidImageArray: string[]) => {},
+  undoArray: [],
+  setUndoArray: (undoArray: string[]) => {},
+
+
   previewLoader: false,
   setPriviewLoader: () => {},
   generationLoader: false,
@@ -167,6 +182,10 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [selectedImage, setSelectedImage] = useState<object>({});
 
   const [modifidImage, setModifidImage] = useState<string>("");
+  const [modifidImageArray, setModifidImageArray] = useState<string[]>([]);
+  const [undoArray, setUndoArray] = useState<string[]>([]);
+
+
 
   const [selectCategory, setSelectedCategory] = useState<string>("");
   const [selectPlacement, setSelectedPlacement] = useState<string>("");
@@ -179,6 +198,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [selectOutLline, setSelectedOutline] = useState<number>(0);
 
   const [promt, setpromt] = useState<string>("");
+  const [bgpromt, setBgpromt] = useState<string>("");
+
   const [product, setProduct] = useState<string>("");
   const [placementTest, setPlacementTest] = useState<string>("");
   const [surroundingTest, setSurroundingTest] = useState<string>("");
@@ -282,6 +303,10 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setPSN,
         superResolution,
         setSuperResolution,
+        bgpromt, setBgpromt,
+        modifidImageArray, setModifidImageArray,
+  undoArray, setUndoArray
+
       }}
     >
       {children}

@@ -2,7 +2,7 @@ import { useAppState } from "@/context/app.context";
 import { BgRemover } from "@/store/api";
 import React, { useState, useEffect,useRef } from "react";
 import { styled } from "styled-components";
-
+import { uid } from 'uid';
 export const Input = styled.input`
   padding: 0.5rem 0.75rem;
   border: 1px solid ${(props) => props.theme.stroke};
@@ -64,15 +64,25 @@ export const Input2 = ({
 
 const InputFile = styled.div`
   border-radius: 6px;
-  border: 1px solid #888;
-  background: #eee;
+  /* border: 1px solid #888; */
+  /* background: #eee; */
   width: 100%;
-  padding: 9px 24px;
+  /* height: 250px; */
+  /* text-align: center; */
+  /* display: flex;
+  justify-content: center;
+  align-items:center; */
   font-size: 10px;
   color: #888;
+  /* padding: 90px 10px; */
+
   label {
     display: flex;
+justify-content    :center ;
+align-items: center;
     gap: 12px;
+    height: 250px;
+    width: 100%;
   }
   .selected{
     display: flex;
@@ -86,13 +96,17 @@ const InputFile = styled.div`
 `;
 
 export const FileUpload: React.FC = () => {
-  const { file, setFile } = useAppState();
+  const { file, setFile,  selectedImage, setSelectedImage,setImageArray, imageArray } = useAppState();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0] || null;
     setFile(selectedFile);
+    const blobUrl = URL.createObjectURL(selectedFile);
+    const idG = imageArray.length;
+    setSelectedImage({url:blobUrl,id : idG,  tools: {bgRemove:false, removeText:false, replaceBg:false, psn:false, pde:false, superResolution:false}})
+    setImageArray((prev) => [...prev, blobUrl]);
 
-    BgRemover(selectedFile, "nsdfsd.png")
+    // BgRemover(selectedFile, "nsdfsd.png")
   };
 
   const handleRemoveFile = () => {
@@ -140,7 +154,7 @@ export const FileUpload: React.FC = () => {
                 strokeLinejoin="round"
               />
             </svg>
-            Upload Product Photo / 3D Model
+            Upload Product Photo /Generate Image
           </label>
           <input
             type="file"

@@ -30,6 +30,7 @@ const Edit = () => {
     setFront,
     back,
     selectedImage,
+    setSelectedImage,
     modifidImage,
     setModifidImage,
     previewLoader,
@@ -46,11 +47,21 @@ const Edit = () => {
     setPSN,
     superResolution,
     setSuperResolution,
+    bgpromt,
+    setBgpromt,
+    modifidImageArray,
+    setModifidImageArray,
 
     setBack,
   } = useAppState();
 
-  const { selectColore, setSelectedColore } = useAppState();
+  useEffect(() => {
+    console.log("ss");
+  }, [previewLoader, bgRemove, modifidImageArray]);
+
+  const [bgClick, setBgClick] = useState(false);
+
+  // const { selectColore, setSelectedColore } = useAppState();
 
   function downloadImage(blob: Blob, filename: string) {
     const url = blob;
@@ -71,29 +82,67 @@ const Edit = () => {
   }
 
   const handileDownload = () => {
-    downloadImage(modifidImage, "new.png");
+    downloadImage(modifidImageArray[modifidImageArray.length -1].url, "new.png");
   };
   const HandleBgRemover = async () => {
+    setBgRemove(true);
     setPriviewLoader(true);
-    setBgRemove(!bgRemove);
     console.log(bgRemove);
-    if (bgRemove) {
-      const modifiedData = await BgRemover(selectedImage?.url, "hero.png");
-      setModifidImage(await modifiedData);
+    console.log("sdfws", bgRemove);
+   
+    let temp;
+    if (modifidImage === null || modifidImage === "") {
+      temp = selectedImage.url;
+    } else {
+      temp = modifidImageArray[modifidImageArray.length - 1].url
     }
+    const modifiedData = await BgRemover(temp, "hero.png");
+    setModifidImageArray( (pre) => [...pre,  {url: modifiedData, tool: "bgRemove"}]);
+    console.log([...modifidImageArray, await modifiedData]);
+    // setModifidImage(await modifidImageArray[modifidImageArray.length - 1]);
+
+    console.log("modifidImage", modifidImageArray);
+
+    setSelectedImage((prevState) => ({
+      ...prevState,
+      tools: {
+        ...prevState.tools,
+        bgRemove: true,
+      },
+    }));
+    console.log("innmde");
+
+    console.log("end");
+
     setPriviewLoader(false);
   };
 
   const HandleSuperResolutin = async () => {
     setPriviewLoader(true);
-    setSuperResolution(!superResolution);
-    if (superResolution) {
-      const modifiedData = await superResolutionFuc(
-        selectedImage?.url,
-        "hero.png"
-      );
-      setModifidImage(await modifiedData);
+    setSuperResolution(true);
+    let temp;
+    if (modifidImage === null || modifidImage === "") {
+      temp = selectedImage.url;
+    } else {
+      temp = modifidImageArray[modifidImageArray.length - 1].url
     }
+    const modifiedData = await superResolutionFuc(
+      temp,
+      "hero.png"
+    );
+    // setModifidImage(await modifiedData);
+    
+    setModifidImageArray( (pre) => [...pre,  {url: modifiedData, tool: "superResolution"}]);
+
+
+    setSelectedImage((prevState) => ({
+      ...prevState,
+      tools: {
+        ...prevState.tools,
+        superResolution: true,
+      },
+    }));
+
     setPriviewLoader(false);
   };
 
@@ -104,13 +153,21 @@ const Edit = () => {
     if (modifidImage === null || modifidImage === "") {
       temp = selectedImage.url;
     } else {
-      temp = modifidImage;
+      temp = modifidImageArray[modifidImageArray.length - 1].url;
     }
-    setPSN(!PSN);
-    if (PSN) {
-      const modifiedData = await PortraitSurfaceNormals(temp, "hero.png");
-      setModifidImage(await modifiedData);
-    }
+    setPSN(true);
+
+    const modifiedData = await PortraitSurfaceNormals(temp, "hero.png");
+    // setModifidImage(await modifiedData);
+    setModifidImageArray( (pre) => [...pre,  {url: modifiedData, tool: "psn"}]);
+    setSelectedImage((prevState) => ({
+      ...prevState,
+      tools: {
+        ...prevState.tools,
+        psn: true,
+      },
+    }));
+
     setPriviewLoader(false);
   };
 
@@ -121,29 +178,47 @@ const Edit = () => {
     if (modifidImage === null || modifidImage === "") {
       temp = selectedImage.url;
     } else {
-      temp = modifidImage;
+      temp = modifidImageArray[modifidImageArray.length - 1].url;
     }
-    setPDE(!PDE);
-    if (PDE) {
-      const modifiedData = await PortraitDepthEstimation(temp, "hero.png");
-      setModifidImage(await modifiedData);
-    }
+    setPDE(true);
+
+    const modifiedData = await PortraitDepthEstimation(temp, "hero.png");
+    // setModifidImage(await modifiedData);
+    setModifidImageArray( (pre) => [...pre,  {url: modifiedData, tool: "pde"}]);
+    
+    setSelectedImage((prevState) => ({
+      ...prevState,
+      tools: {
+        ...prevState.tools,
+        pde: true,
+      },
+    }));
+
     setPriviewLoader(false);
   };
 
   const HandleReplacebackground = async () => {
     setPriviewLoader(true);
-    setReplaceBg(!replaceBg);
+    setReplaceBg(true);
     let temp;
     if (modifidImage === null || modifidImage === "") {
       temp = selectedImage.url;
     } else {
-      temp = modifidImage;
+      temp = modifidImageArray[modifidImageArray.length - 1].url;
     }
-    if (replaceBg) {
-      const modifiedData = await Replacebackground(temp, "hero.png");
-      setModifidImage(await modifiedData);
-    }
+
+    const modifiedData = await Replacebackground(temp, "hero.png", bgpromt);
+    // setModifidImage(await modifiedData);
+    setModifidImageArray( (pre) => [...pre,  {url: modifiedData, tool: "replaceBg"}]);
+
+    setSelectedImage((prevState) => ({
+      ...prevState,
+      tools: {
+        ...prevState.tools,
+        replaceBg: true,
+      },
+    }));
+
     setPriviewLoader(false);
   };
 
@@ -153,13 +228,22 @@ const Edit = () => {
     if (modifidImage === null || modifidImage === "") {
       temp = selectedImage.url;
     } else {
-      temp = modifidImage;
+      temp = modifidImageArray[modifidImageArray.length - 1].url;
     }
-    setRemoveText(!removeText);
-    if (removeText) {
-      const modifiedData = await RemoveText(temp, "hero.png");
-      setModifidImage(await modifiedData);
-    }
+    setRemoveText(true);
+
+    const modifiedData = await RemoveText(temp, "hero.png");
+    // setModifidImage(await modifiedData);
+    setModifidImageArray( (pre) => [...pre,  {url: modifiedData, tool: "removeText"}]);
+
+    setSelectedImage((prevState) => ({
+      ...prevState,
+      tools: {
+        ...prevState.tools,
+        removeText: true,
+      },
+    }));
+
     setPriviewLoader(false);
   };
 
@@ -169,24 +253,24 @@ const Edit = () => {
     if (modifidImage === null || modifidImage === "") {
       temp = selectedImage.url;
     } else {
-      temp = modifidImage;
+      temp = modifidImageArray[modifidImageArray.length - 1].url;
     }
-    setInpainting(!inpainting);
-    if (inpainting) {
-      const modifiedData = await Inpainting(temp, "hero.png");
-      setModifidImage(await imageArray);
-    }
+    setInpainting(true);
+
+    const modifiedData = await Inpainting(temp, "hero.png");
+    setModifidImage(await modifiedData);
+
     setPriviewLoader(false);
   };
 
   return (
-    <div className="accest">
+    <div className={selectedImage.url ? "accest" : "accest blure"}>
       <div className="gap">
         {/* <Row>
           <FileUpload></FileUpload>
         </Row> */}
       </div>
-      <div className="gap">
+      {/* <div className="gap">
         <Label>Arrange</Label>
         <div className="selectbox">
           <div
@@ -202,9 +286,9 @@ const Edit = () => {
             Send to back
           </div>
         </div>
-      </div>
+      </div> */}
 
-      <div className="gap">
+      {/* <div className="gap">
         <Label>Color</Label>
         <div className="rowwothtwo">
           <DropdownInput
@@ -220,13 +304,19 @@ const Edit = () => {
             <Input onChange={(e) => setColore(e.target.value)} />
           </div>
         </div>
-      </div>
+      </div> */}
       <div className="gap">
         <Label>Tools</Label>
         <div className="gap">
           <div
-            className={bgRemove ? "selectTool ativeimg" : "selectTool"}
-            onClick={() => HandleBgRemover()}
+            className={
+              selectedImage?.tools?.bgRemove
+                ? "selectTool ativeimg"
+                : "selectTool"
+            }
+            onClick={() => {
+              selectedImage?.tools?.bgRemove ? null : HandleBgRemover();
+            }}
           >
             <Label>Remove Background</Label>
             <div>
@@ -235,8 +325,14 @@ const Edit = () => {
           </div>
 
           <div
-            className={removeText ? "selectTool ativeimg" : "selectTool"}
-            onClick={() => HandleRemoveText()}
+            className={
+              selectedImage?.tools?.removeText
+                ? "selectTool ativeimg"
+                : "selectTool"
+            }
+            onClick={() =>
+              selectedImage?.tools?.removeText ? null : HandleRemoveText()
+            }
           >
             <Label>Remove Text</Label>
             <div>
@@ -244,17 +340,52 @@ const Edit = () => {
             </div>
           </div>
           <div
-            className={replaceBg ? "selectTool ativeimg" : "selectTool"}
-            onClick={() => HandleReplacebackground()}
+            className={
+              selectedImage?.tools?.replaceBg
+                ? "selectTool ativeimg"
+                : "selectTool"
+            }
+            onClick={() =>
+              selectedImage?.tools?.replaceBg
+                ? setBgClick(false)
+                : bgClick
+                ? null
+                : setBgClick(true)
+            }
           >
+            {bgClick ? (
+              <div className="cardClose" onClick={() => setBgClick(false)}>
+                <div className="x">X</div>
+              </div>
+            ) : null}
+
+            {/* HandleReplacebackground() */}
             <Label>Replace background</Label>
             <div>
               <p>Replace background</p>
             </div>
+            {bgClick ? (
+              <div className="gen">
+                <Input
+                  value={bgpromt}
+                  onChange={(e) => setBgpromt(e.target.value)}
+                />
+                <Button
+                  disabled={bgpromt === "" ? true : false}
+                  onClick={() => HandleReplacebackground()}
+                >
+                  Generate Background
+                </Button>
+              </div>
+            ) : null}
           </div>
           <div
-            className={PDE ? "selectTool ativeimg" : "selectTool"}
-            onClick={() => HandlePortraitDepthEstimation()}
+            className={
+              selectedImage?.tools?.pde ? "selectTool ativeimg" : "selectTool"
+            }
+            onClick={() =>
+              selectedImage?.tools?.pde ? null : HandlePortraitDepthEstimation()
+            }
           >
             <Label>Portrait Depth Estimation</Label>
             <div>
@@ -262,8 +393,12 @@ const Edit = () => {
             </div>
           </div>
           <div
-            className={PSN ? "selectTool ativeimg" : "selectTool"}
-            onClick={() => HandlePortraitSurfaceNormals()}
+            className={
+              selectedImage?.tools?.psn ? "selectTool ativeimg" : "selectTool"
+            }
+            onClick={() =>
+              selectedImage?.tools?.psn ? null : HandlePortraitSurfaceNormals()
+            }
           >
             <Label>Portrait Surface Normals</Label>
             <div>
@@ -271,8 +406,16 @@ const Edit = () => {
             </div>
           </div>
           <div
-            className={superResolution ? "selectTool ativeimg" : "selectTool"}
-            onClick={() => HandleSuperResolutin()}
+            className={
+              selectedImage?.tools?.superResolution
+                ? "selectTool ativeimg"
+                : "selectTool"
+            }
+            onClick={() =>
+              selectedImage?.tools?.superResolution
+                ? null
+                : HandleSuperResolutin()
+            }
           >
             <Label>Super resolution</Label>
             <div>
@@ -300,7 +443,14 @@ const Edit = () => {
         </div>
       </div>
       <Row>
-        <Button onClick={() => handileDownload()}>Download</Button>
+        <Button
+          onClick={() => handileDownload()}
+          disabled={
+            selectedImage?.url ? false : previewLoader === true ? false : true
+          }
+        >
+          Download
+        </Button>
       </Row>
     </div>
   );

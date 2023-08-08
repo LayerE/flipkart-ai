@@ -8,7 +8,7 @@ export const generateimge = async (promt: string) => {
     method: "POST",
     headers: {
       "x-api-key":
-        "4d6a5189dd239c19e16312ddbdd35f2aa19d87a4a36fce1f4ae1693ca61410aca6504ebc1845d40f7f81a9d84e2e1121",
+        "33f74f9d17bd2f90f81d61af8fd8875f834961c457e81caba25a0bbfecbed37ddf5360ee064c84e930c54cfb06fb7379",
     },
     body: promte,
   });
@@ -33,7 +33,7 @@ export const BgRemover = async (
     method: "POST",
     headers: {
       "x-api-key":
-        "4d6a5189dd239c19e16312ddbdd35f2aa19d87a4a36fce1f4ae1693ca61410aca6504ebc1845d40f7f81a9d84e2e1121",
+        "33f74f9d17bd2f90f81d61af8fd8875f834961c457e81caba25a0bbfecbed37ddf5360ee064c84e930c54cfb06fb7379",
     },
     body: form,
   });
@@ -58,7 +58,7 @@ export const superResolutionFuc = async (
     method: "POST",
     headers: {
       "x-api-key":
-        "4d6a5189dd239c19e16312ddbdd35f2aa19d87a4a36fce1f4ae1693ca61410aca6504ebc1845d40f7f81a9d84e2e1121",
+        "33f74f9d17bd2f90f81d61af8fd8875f834961c457e81caba25a0bbfecbed37ddf5360ee064c84e930c54cfb06fb7379",
     },
     body: form,
   });
@@ -81,7 +81,7 @@ export const PortraitSurfaceNormals = async (
       method: "POST",
       headers: {
         "x-api-key":
-          "4d6a5189dd239c19e16312ddbdd35f2aa19d87a4a36fce1f4ae1693ca61410aca6504ebc1845d40f7f81a9d84e2e1121",
+          "33f74f9d17bd2f90f81d61af8fd8875f834961c457e81caba25a0bbfecbed37ddf5360ee064c84e930c54cfb06fb7379",
       },
       body: form,
     }
@@ -106,7 +106,7 @@ export const PortraitDepthEstimation = async (
       method: "POST",
       headers: {
         "x-api-key":
-          "4d6a5189dd239c19e16312ddbdd35f2aa19d87a4a36fce1f4ae1693ca61410aca6504ebc1845d40f7f81a9d84e2e1121",
+          "33f74f9d17bd2f90f81d61af8fd8875f834961c457e81caba25a0bbfecbed37ddf5360ee064c84e930c54cfb06fb7379",
       },
       body: form,
     }
@@ -120,19 +120,20 @@ export const PortraitDepthEstimation = async (
 
 export const Replacebackground = async (
   photo: string,
-  filename: string
+  filename: string,
+  prompt: string
 ): Promise<string> => {
   const form = new FormData();
   const fileItem = await dataURLtoFile(photo, filename);
   form.append("image_file", fileItem);
-  form.append("prompt", "a cozy marble kitchen with wine glasses");
+  form.append("prompt", prompt);
   const response = await fetch(
     "https://clipdrop-api.co/replace-background/v1",
     {
       method: "POST",
       headers: {
         "x-api-key":
-          "4d6a5189dd239c19e16312ddbdd35f2aa19d87a4a36fce1f4ae1693ca61410aca6504ebc1845d40f7f81a9d84e2e1121",
+          "33f74f9d17bd2f90f81d61af8fd8875f834961c457e81caba25a0bbfecbed37ddf5360ee064c84e930c54cfb06fb7379",
       },
       body: form,
     }
@@ -156,7 +157,7 @@ export const RemoveText = async (
     method: "POST",
     headers: {
       "x-api-key":
-        "4d6a5189dd239c19e16312ddbdd35f2aa19d87a4a36fce1f4ae1693ca61410aca6504ebc1845d40f7f81a9d84e2e1121",
+        "33f74f9d17bd2f90f81d61af8fd8875f834961c457e81caba25a0bbfecbed37ddf5360ee064c84e930c54cfb06fb7379",
     },
     body: form,
   });
@@ -180,7 +181,7 @@ export const Inpainting = async (
     method: "POST",
     headers: {
       "x-api-key":
-        "4d6a5189dd239c19e16312ddbdd35f2aa19d87a4a36fce1f4ae1693ca61410aca6504ebc1845d40f7f81a9d84e2e1121",
+        "33f74f9d17bd2f90f81d61af8fd8875f834961c457e81caba25a0bbfecbed37ddf5360ee064c84e930c54cfb06fb7379",
     },
     body: form,
   });

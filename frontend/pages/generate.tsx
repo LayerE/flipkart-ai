@@ -7,11 +7,12 @@ import { styled } from "styled-components";
 import { useAppState } from "@/context/app.context";
 import assets from "@/public/assets";
 import { useEffect } from "react";
+import { FileUpload } from "@/components/common/Input";
 
 const inter = Inter({ subsets: ["latin"] });
 const MainPage = styled.div`
   display: flex;
-  .loader{
+  .loader {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -23,18 +24,18 @@ const MainPage = styled.div`
     background: #3f3a3a40;
     font-size: 24px;
     color: #f9d00d;
-
   }
 
   .main-privier {
+    position: relative;
     padding: 2rem;
     padding-top: ${({ theme }) => theme.paddings.paddingTop};
+    width: 100%;
   }
   ${({ theme }) => theme.mediaWidth.upToMedium`
     .main-privier {
     padding: 2rem;
     padding-top: ${({ theme }) => theme.paddings.paddingTopMobile};
-
     }
 
     
@@ -49,7 +50,7 @@ const MainPage = styled.div`
       font-weight: 500;
       border: 2px solid #f9d00d;
       padding: 1rem;
-      height: 350px;
+      min-height: 350px;
       width: 100%;
       display: flex;
       flex-direction: column;
@@ -64,11 +65,17 @@ const MainPage = styled.div`
         padding: 0 50px;
         width: 100%;
         height: 100%;
+        position: relative;
+        .file {
+          position: absolute;
+          height: 100%;
+          width: 100%;
+          left: 0;
+        }
       }
-      picture{
+      picture {
         width: 100%;
         height: 100%;
-
       }
       img {
         width: 100%;
@@ -89,43 +96,160 @@ const MainPage = styled.div`
 
   }
 
+ 
   `}
+
+  .undoBox {
+    position: absolute;
+    bottom: 100px;
+    left: 0;
+    z-index: 10;
+    width: 100%;
+    .undoWrapper {
+      display: flex;
+      gap: 30px;
+      justify-content: center;
+      width: 100%;
+
+      .undo {
+        picture {
+          /* max-width: max-content !importent; */
+        }
+        img {
+          cursor: pointer;
+          width: 50px;
+          height: 50px;
+        }
+      }
+    }
+  }
 `;
 
 export default function Home() {
-  const { selectedImage, setSelectedImage , modifidImage, setModifidImage, 
-    previewLoader, setPriviewLoader,
+  const {
+    selectedImage,
+    setSelectedImage,
+    modifidImage,
+    setModifidImage,
+    previewLoader,
+    setPriviewLoader,
+    modifidImageArray,
+    bgRemove,
+    setModifidImageArray,
+    undoArray,
+    setUndoArray,
   } = useAppState();
 
   useEffect(() => {
-    console.log("new render")
-   
-  }, [previewLoader, modifidImage])
+    console.log("new render");
+  }, [previewLoader, modifidImage, modifidImageArray]);
+  const handileUndo = () => {
+    if (modifidImageArray.length > 0) {
+      setUndoArray((pre) => [
+        ...pre,
+        modifidImageArray[modifidImageArray.length - 1],
+      ]);
+
+      setModifidImageArray((pre) => {
+
+        const lastElement = pre[pre.length - 1];
+        if (lastElement && lastElement.tool) {
+
+          setSelectedImage((prevState) => ({
+            ...prevState,
+            tools: {
+              ...prevState.tools,
+              [lastElement.tool]: false,
+            },
+          }));
   
+
+
+        }
+        
+       return pre.slice(0, -1)
+      });
+    }
+  };
+  const handilePre = () => {
+    if (undoArray.length > 0) {
+      setModifidImageArray((pre) => [...pre, undoArray[undoArray.length - 1]]);
+      setUndoArray((pre) => {
+        
+        
+        const lastElement = pre[pre.length - 1];
+        if (lastElement && lastElement.tool) {
+
+          setSelectedImage((prevState) => ({
+            ...prevState,
+            tools: {
+              ...prevState.tools,
+              [lastElement.tool]: true,
+            },
+          }));
+  
+
+
+        }
+        
+        return pre.slice(0, -1)});
+    }
+  };
 
   return (
     <MainPage>
       <Sidebar />
       <div className="main-privier">
+        {modifidImageArray.length > 1 ? (
+          <div className="undoBox">
+            <div className="undoWrapper">
+              <div className="undo" onClick={() => handileUndo()}>
+                <picture>
+                  <img
+                    width="80"
+                    height="80"
+                    src="https://img.icons8.com/dotty/80/undo.png"
+                    alt="undo"
+                  />
+                </picture>
+              </div>
+              <div className="undo" onClick={() => handilePre()}>
+                <picture>
+                  <img
+                    width="80"
+                    height="80"
+                    src="https://img.icons8.com/dotty/80/redo.png"
+                    alt="redo"
+                  />
+                </picture>
+              </div>
+            </div>
+          </div>
+        ) : null}
         <div className="tgide">
           <div className="preBox">
             <p>Place Your Product Here</p>
             <div className="imgadd">
               {selectedImage?.url ? (
-                <picture>
-                   <img
-                  src={
-                    selectedImage?.url
-                      ? selectedImage?.url
-                      : assets.images.dotbox
-                  }
-                  alt=""
-                />
-
-                </picture>
-               
+                <>
+                  {" "}
+                  <div className="file"></div>
+                  <picture>
+                    <img
+                      src={
+                        selectedImage?.url
+                          ? selectedImage?.url
+                          : assets.images.dotbox
+                      }
+                      alt=""
+                    />
+                  </picture>
+                </>
               ) : (
                 <div className="more">
+                  <div className="file">
+                    <FileUpload />
+                  </div>
                   <Image src={assets.images.dotbox} alt=""></Image>
                 </div>
               )}
@@ -135,29 +259,18 @@ export default function Home() {
           {selectedImage?.id > -1 ? (
             <div className="preBox">
               <p>Place Your Product Here</p>
-              {
-                previewLoader?
-              <div className="loader">Loading...</div>
-                
-                :null
-              }
+              {previewLoader ? <div className="loader">Loading...</div> : null}
               <div className="imgadd">
-
-                {
-                  modifidImage !== "" ? 
-                    <img
-                    src={modifidImage}
+                {modifidImageArray.length ? (
+                  <img
+                    src={modifidImageArray[modifidImageArray.length - 1].url}
                     alt=""
-                  /> 
-
-                  :
+                  />
+                ) : (
                   <div className="more">
-                  <Image src={assets.images.dotbox} alt=""></Image>
-                </div>
-
-                }
-              
-               
+                    <Image src={assets.images.dotbox} alt=""></Image>
+                  </div>
+                )}
               </div>
               <p className="center">Step 1: Place your product inside here</p>
             </div>

@@ -91,7 +91,7 @@ const Generate = () => {
               className={
                 selectedImage.id === i ? "imageBox ativeimg" : "imageBox"
               }
-              onClick={() =>{ setSelectedImage({ id: i, url: test }); setModifidImage("")}}
+              onClick={() =>{ setSelectedImage({ id: i, url: test , tools: {bgRemove:false, removeText:false, replaceBg:false, psn:false, pde:false, superResolution:false} }); setModifidImage("")}}
             >
               <picture>
                 <img src={test} alt="" />

@@ -110,7 +110,13 @@ const SideBar = styled.div`
     border-radius: 7px;
     border: 1px solid #838383;
     padding: 1.3rem 1.2rem;
-
+    position: relative;
+.cardClose{
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  z-index: 50;
+}
     p {
       margin-top: 16px;
       color: #b2a4a4;
@@ -179,6 +185,18 @@ const SideBar = styled.div`
   .active {
     background-color: ${({ theme }) => theme.btnPrimary};
   }
+  .blure{
+
+    filter: blur(2px); /* adjust px value to increase or decrease the blur */
+    opacity: 0.9; 
+    
+  }
+  .gen{
+    margin-top:20px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
   .two-side {
     display: flex;
     gap: 0.3rem;
@@ -214,7 +232,7 @@ const SideBar = styled.div`
     padding-top: 30px;
     padding-bottom: 70px;
     border-right: 2px solid ${({ theme }) => theme.bgBorder};
-    width: 350px;
+    width: 380px;
     padding-top: ${({ theme }) => theme.paddings.paddingTop};
 
     overflow: auto;
