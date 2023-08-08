@@ -39,10 +39,15 @@ const MainPage = styled.div`
       background: ${({ theme }) => theme.btnPrimary};
       &:hover {
         background: ${({ theme }) => theme.btnPrimary};
-
       }
     }
   }
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+.sidebar{
+  display: none;;
+}
+`}
 
   .dashbaord {
     background: #f8f8f8;
@@ -73,15 +78,11 @@ const MainPage = styled.div`
           margin: 80px;
         }
         &:hover {
-
-          border: 1px solid #F9D00D;
-
+          border: 1px solid #f9d00d;
         }
 
-        &:hover .testcreat{
+        &:hover .testcreat {
           background: rgba(249, 208, 13, 0.08);
-
-
         }
 
         .testcreat {
@@ -93,13 +94,58 @@ const MainPage = styled.div`
           text-align: center;
           padding: 16px;
           font-size: 14px;
-        transition: all 0.3s;
-
-         
+          transition: all 0.3s;
         }
       }
     }
+    ${({ theme }) => theme.mediaWidth.upToMedium`
+.gridebox {
+   
+      grid-template-columns: 1fr 1fr ;
+      gap: 12px;
+
+      .createbox {
+        cursor: pointer;
+        width: 100%;
+        height: 185px;
+        border-radius: 16px;
+        background: #f8f8f8;
+        border-radius: 16px;
+        border: 1px solid #585858;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        /* align-items: center; */
+        transition: all 0.3s;
+        svg {
+          margin: 60px;
+        }
+        &:hover {
+          border: 1px solid #f9d00d;
+        }
+
+        &:hover .testcreat {
+          background: rgba(249, 208, 13, 0.08);
+        }
+
+        .testcreat {
+          border-radius: 0px 0px 16px 16px;
+          background: #e3e3e3;
+          position: absolute;
+          bottom: 0;
+          width: 100%;
+          text-align: center;
+          padding: 16px;
+          font-size: 14px;
+          transition: all 0.3s;
+        }
+      }
+     
   }
+`}
+  }
+
+ 
 `;
 
 export default function Home() {
