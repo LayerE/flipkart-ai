@@ -143,6 +143,8 @@ const Headers = styled.div`
     color: rgba(0, 0, 0, 1);
     border: none;
   outline: none;
+  background-color: transparent;
+
 
     :active{
       border: none;

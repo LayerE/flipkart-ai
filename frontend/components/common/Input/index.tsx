@@ -23,6 +23,7 @@ export const TestArea = styled.textarea`
   padding: 0.5rem 0.75rem;
   border: 1px solid ${(props) => props.theme.stroke};
   outline: none;
+  color: #000;
   border-radius: 0.5rem;
   height: 100px;
   background-color: transparent;
@@ -96,7 +97,7 @@ align-items: center;
 `;
 
 export const FileUpload: React.FC = () => {
-  const { file, setFile,  selectedImage, setSelectedImage,setImageArray, imageArray } = useAppState();
+  const { file, setFile,  selectedImage, setSelectedImage,setImageArray, imageArray ,setModifidImageArray} = useAppState();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0] || null;
@@ -104,6 +105,7 @@ export const FileUpload: React.FC = () => {
     const blobUrl = URL.createObjectURL(selectedFile);
     const idG = imageArray.length;
     setSelectedImage({url:blobUrl,id : idG,  tools: {bgRemove:false, removeText:false, replaceBg:false, psn:false, pde:false, superResolution:false}})
+    setModifidImageArray([])
     setImageArray((prev) => [...prev, blobUrl]);
 
     // BgRemover(selectedFile, "nsdfsd.png")
