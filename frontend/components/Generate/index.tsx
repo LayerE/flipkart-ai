@@ -15,6 +15,14 @@ import { useAppState } from "@/context/app.context";
 import { styled } from "styled-components";
 import { BgRemover, generateimge } from "@/store/api";
 
+const fadeIn = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 1 } }
+};
+
+
+import { motion } from "framer-motion";
+
 const Generate = () => {
   const {
     selectPlacement,
@@ -71,13 +79,17 @@ const Generate = () => {
   };
 
   return (
-    <div className="accest">
+    <motion.div 
+    initial="hidden"
+    animate="visible"
+    variants={fadeIn}
+    className="accest">
       <div className="gap">
         <Row>
           <TestArea value={promt} onChange={(e) => setpromt(e.target.value)} />
         </Row>
         <Row>
-          <Button onClick={() => generateImageHandeler()}>{ generationLoader ? "Loading...": "Generate"}</Button>
+          <Button onClick={() => generateImageHandeler()} disabled={promt === ""? true: false}>{ generationLoader ? "Loading...": "Generate"}</Button>
         </Row>
       </div>
       <div className="bigGap">
@@ -198,7 +210,7 @@ const Generate = () => {
           ></DropdownNOBorder>
         </div>
       </div> */}
-    </div>
+    </motion.div>
   );
 };
 

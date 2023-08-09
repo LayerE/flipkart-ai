@@ -13,6 +13,12 @@ import Assets from "../Assets/index";
 import Generate from "../Generate/index";
 import Edit from "../Edit";
 
+import { motion } from "framer-motion";
+const fadeIn = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 1 } },
+};
+
 const TabData = [
   // {
   //   id: 1,
@@ -50,6 +56,7 @@ const Sidebar: React.FC = () => {
 
   return (
     <SideBar>
+      <motion.div className="new">
       <div className="columWrapper">
         {TabData.map((elemenmt, i) => (
           // <Column>
@@ -64,7 +71,7 @@ const Sidebar: React.FC = () => {
           // </Column>
         ))}
       </div>
-      <div className={activeTab != null ? "tapExpanded dispaySlid" : 'tapExpanded'}>
+      <motion.div className={activeTab != null ? "tapExpanded dispaySlid" : 'tapExpanded'}>
         <div className="closs" onClick={()=>setActiveTab(null)}><div className="x">X</div></div>
         <div className="tittle">
           {activeTab === 1
@@ -80,13 +87,19 @@ const Sidebar: React.FC = () => {
         ) : (
           <Edit />
         )}
-      </div>
+      </motion.div>
+      </motion.div>
     </SideBar>
   );
 };
 
 const SideBar = styled.div`
+.new{
   height: 100vh;
+  display: flex;
+
+
+}
   .selectbox {
     display: flex;
     gap: 10px;
@@ -103,7 +116,6 @@ const SideBar = styled.div`
     font-size: 12px;
     font-weight: bold;
   }
-  display: flex;
 
   .selectTool {
     cursor: pointer;

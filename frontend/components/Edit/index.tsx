@@ -16,6 +16,14 @@ import {
   superResolutionFuc,
 } from "@/store/api";
 
+const fadeIn = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 1 } }
+};
+
+
+import { motion } from "framer-motion";
+
 const Edit = () => {
   const {
     colore,
@@ -51,6 +59,8 @@ const Edit = () => {
     setBgpromt,
     modifidImageArray,
     setModifidImageArray,
+    undoArray,
+    setUndoArray,
 
     setBack,
   } = useAppState();
@@ -102,6 +112,7 @@ const Edit = () => {
     // setModifidImage(await modifidImageArray[modifidImageArray.length - 1]);
 
     console.log("modifidImage", modifidImageArray);
+    setUndoArray([])
 
     setSelectedImage((prevState) => ({
       ...prevState,
@@ -110,9 +121,7 @@ const Edit = () => {
         bgRemove: true,
       },
     }));
-    console.log("innmde");
-
-    console.log("end");
+    
 
     setPriviewLoader(false);
   };
@@ -133,6 +142,7 @@ const Edit = () => {
     // setModifidImage(await modifiedData);
     
     setModifidImageArray( (pre) => [...pre,  {url: modifiedData, tool: "superResolution"}]);
+    setUndoArray([])
 
 
     setSelectedImage((prevState) => ({
@@ -167,6 +177,7 @@ const Edit = () => {
         psn: true,
       },
     }));
+    setUndoArray([])
 
     setPriviewLoader(false);
   };
@@ -193,6 +204,8 @@ const Edit = () => {
         pde: true,
       },
     }));
+    setUndoArray([])
+
 
     setPriviewLoader(false);
   };
@@ -218,6 +231,8 @@ const Edit = () => {
         replaceBg: true,
       },
     }));
+    setUndoArray([])
+
 
     setPriviewLoader(false);
   };
@@ -243,6 +258,8 @@ const Edit = () => {
         removeText: true,
       },
     }));
+    setUndoArray([])
+
 
     setPriviewLoader(false);
   };
@@ -259,12 +276,17 @@ const Edit = () => {
 
     const modifiedData = await Inpainting(temp, "hero.png");
     setModifidImage(await modifiedData);
+    setUndoArray([])
 
     setPriviewLoader(false);
   };
 
   return (
-    <div className={selectedImage.url ? "accest" : "accest blure"}>
+    <motion.div 
+    initial="hidden"
+    animate="visible"
+    variants={fadeIn}
+    className={selectedImage.url ? "accest" : "accest blure"}>
       <div className="gap">
         {/* <Row>
           <FileUpload></FileUpload>
@@ -446,13 +468,13 @@ const Edit = () => {
         <Button
           onClick={() => handileDownload()}
           disabled={
-            selectedImage?.url ? false : previewLoader === true ? false : true
+            previewLoader === true ? true: modifidImageArray.length ? false : false
           }
         >
           Download
         </Button>
       </Row>
-    </div>
+    </motion.div>
   );
 };
 

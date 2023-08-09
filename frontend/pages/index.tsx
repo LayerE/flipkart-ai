@@ -7,9 +7,20 @@ import { styled } from "styled-components";
 import assets from "@/public/assets";
 import Link from "next/link";
 
+const fadeIn = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 1 } }
+};
+
+
+import { motion } from "framer-motion";
+
 const inter = Inter({ subsets: ["latin"] });
 const MainPage = styled.div`
+.new{
   display: flex;
+
+}
   .sidebar {
     border-right: 1px solid rgba(238, 238, 238, 1);
     height: 100vh;
@@ -151,6 +162,11 @@ const MainPage = styled.div`
 export default function Home() {
   return (
     <MainPage>
+    <motion.div
+    initial="hidden"
+    animate="visible"
+    variants={fadeIn}
+    className="new">
       <div className="sidebar">
         <div className="tab  active-tab">
           <Image src={assets.icons.project_icon} alt="" />
@@ -181,6 +197,7 @@ export default function Home() {
           </Link>
         </div>
       </div>
+    </motion.div>
     </MainPage>
   );
 }

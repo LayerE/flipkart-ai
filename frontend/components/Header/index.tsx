@@ -142,6 +142,8 @@ const Headers = styled.div`
   input{
     color: rgba(0, 0, 0, 1);
     border: none;
+  outline: none;
+
     :active{
       border: none;
       outline: none;

@@ -8,11 +8,18 @@ import { useAppState } from "@/context/app.context";
 import assets from "@/public/assets";
 import { useEffect } from "react";
 import { FileUpload } from "@/components/common/Input";
+import { motion } from "framer-motion";
+const fadeIn = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 1 } },
+};
 
 const inter = Inter({ subsets: ["latin"] });
 const MainPage = styled.div`
+.new{
   display: flex;
-  .loader {
+
+}  .loader {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -151,10 +158,8 @@ export default function Home() {
       ]);
 
       setModifidImageArray((pre) => {
-
         const lastElement = pre[pre.length - 1];
         if (lastElement && lastElement.tool) {
-
           setSelectedImage((prevState) => ({
             ...prevState,
             tools: {
@@ -162,12 +167,9 @@ export default function Home() {
               [lastElement.tool]: false,
             },
           }));
-  
-
-
         }
-        
-       return pre.slice(0, -1)
+
+        return pre.slice(0, -1);
       });
     }
   };
@@ -175,11 +177,8 @@ export default function Home() {
     if (undoArray.length > 0) {
       setModifidImageArray((pre) => [...pre, undoArray[undoArray.length - 1]]);
       setUndoArray((pre) => {
-        
-        
         const lastElement = pre[pre.length - 1];
         if (lastElement && lastElement.tool) {
-
           setSelectedImage((prevState) => ({
             ...prevState,
             tools: {
@@ -187,47 +186,55 @@ export default function Home() {
               [lastElement.tool]: true,
             },
           }));
-  
-
-
         }
-        
-        return pre.slice(0, -1)});
+
+        return pre.slice(0, -1);
+      });
     }
   };
 
   return (
     <MainPage>
+    <motion.div initial="hidden" animate="visible" variants={fadeIn} className="new">
       <Sidebar />
       <div className="main-privier">
-        {modifidImageArray.length > 1 ? (
+        {modifidImageArray.length > 0 ? (
           <div className="undoBox">
             <div className="undoWrapper">
+             {
+              modifidImageArray.length >0 ?
               <div className="undo" onClick={() => handileUndo()}>
-                <picture>
-                  <img
-                    width="80"
-                    height="80"
-                    src="https://img.icons8.com/dotty/80/undo.png"
-                    alt="undo"
-                  />
-                </picture>
-              </div>
+              <picture>
+                <img
+                  width="80"
+                  height="80"
+                  src="https://img.icons8.com/dotty/80/undo.png"
+                  alt="undo"
+                />
+              </picture>
+            </div>: null
+             }
+             {
+              undoArray.length >0?
               <div className="undo" onClick={() => handilePre()}>
-                <picture>
-                  <img
-                    width="80"
-                    height="80"
-                    src="https://img.icons8.com/dotty/80/redo.png"
-                    alt="redo"
-                  />
-                </picture>
-              </div>
+              <picture>
+                <img
+                  width="80"
+                  height="80"
+                  src="https://img.icons8.com/dotty/80/redo.png"
+                  alt="redo"
+                />
+              </picture>
+            </div>:null
+             }
             </div>
           </div>
         ) : null}
         <div className="tgide">
-          <div className="preBox">
+          <motion.div className="preBox"
+            initial="hidden" animate="visible" variants={fadeIn}
+          
+          >
             <p>Place Your Product Here</p>
             <div className="imgadd">
               {selectedImage?.url ? (
@@ -255,9 +262,11 @@ export default function Home() {
               )}
             </div>
             <p className="center">Step 1: Place your product inside here</p>
-          </div>
+          </motion.div>
           {selectedImage?.id > -1 ? (
-            <div className="preBox">
+            <motion.div 
+            initial="hidden" animate="visible" variants={fadeIn}
+            className="preBox">
               <p>Place Your Product Here</p>
               {previewLoader ? <div className="loader">Loading...</div> : null}
               <div className="imgadd">
@@ -273,10 +282,11 @@ export default function Home() {
                 )}
               </div>
               <p className="center">Step 1: Place your product inside here</p>
-            </div>
+            </motion.div>
           ) : null}
         </div>
       </div>
+    </motion.div>
     </MainPage>
   );
 }
