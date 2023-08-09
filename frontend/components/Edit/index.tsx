@@ -18,9 +18,8 @@ import {
 
 const fadeIn = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 1 } }
+  visible: { opacity: 1, transition: { duration: 1 } },
 };
-
 
 import { motion } from "framer-motion";
 
@@ -92,27 +91,33 @@ const Edit = () => {
   }
 
   const handileDownload = () => {
-    downloadImage(modifidImageArray[modifidImageArray.length -1].url, "new.png");
+    downloadImage(
+      modifidImageArray[modifidImageArray.length - 1].url,
+      "new.png"
+    );
   };
   const HandleBgRemover = async () => {
     setBgRemove(true);
     setPriviewLoader(true);
     console.log(bgRemove);
     console.log("sdfws", bgRemove);
-   
+
     let temp;
-    if (modifidImage === null || modifidImage === "") {
+    if (!modifidImageArray.length) {
       temp = selectedImage.url;
     } else {
-      temp = modifidImageArray[modifidImageArray.length - 1].url
+      temp = modifidImageArray[modifidImageArray.length - 1].url;
     }
     const modifiedData = await BgRemover(temp, "hero.png");
-    setModifidImageArray( (pre) => [...pre,  {url: modifiedData, tool: "bgRemove"}]);
+    setModifidImageArray((pre) => [
+      ...pre,
+      { url: modifiedData, tool: "bgRemove" },
+    ]);
     console.log([...modifidImageArray, await modifiedData]);
     // setModifidImage(await modifidImageArray[modifidImageArray.length - 1]);
 
     console.log("modifidImage", modifidImageArray);
-    setUndoArray([])
+    setUndoArray([]);
 
     setSelectedImage((prevState) => ({
       ...prevState,
@@ -121,7 +126,6 @@ const Edit = () => {
         bgRemove: true,
       },
     }));
-    
 
     setPriviewLoader(false);
   };
@@ -130,20 +134,19 @@ const Edit = () => {
     setPriviewLoader(true);
     setSuperResolution(true);
     let temp;
-    if (modifidImage === null || modifidImage === "") {
+    if (!modifidImageArray.length ) {
       temp = selectedImage.url;
     } else {
-      temp = modifidImageArray[modifidImageArray.length - 1].url
+      temp = modifidImageArray[modifidImageArray.length - 1].url;
     }
-    const modifiedData = await superResolutionFuc(
-      temp,
-      "hero.png"
-    );
+    const modifiedData = await superResolutionFuc(temp, "hero.png");
     // setModifidImage(await modifiedData);
-    
-    setModifidImageArray( (pre) => [...pre,  {url: modifiedData, tool: "superResolution"}]);
-    setUndoArray([])
 
+    setModifidImageArray((pre) => [
+      ...pre,
+      { url: modifiedData, tool: "superResolution" },
+    ]);
+    setUndoArray([]);
 
     setSelectedImage((prevState) => ({
       ...prevState,
@@ -160,7 +163,7 @@ const Edit = () => {
     setPriviewLoader(true);
     let temp;
 
-    if (modifidImage === null || modifidImage === "") {
+    if (!modifidImageArray.length) {
       temp = selectedImage.url;
     } else {
       temp = modifidImageArray[modifidImageArray.length - 1].url;
@@ -169,7 +172,7 @@ const Edit = () => {
 
     const modifiedData = await PortraitSurfaceNormals(temp, "hero.png");
     // setModifidImage(await modifiedData);
-    setModifidImageArray( (pre) => [...pre,  {url: modifiedData, tool: "psn"}]);
+    setModifidImageArray((pre) => [...pre, { url: modifiedData, tool: "psn" }]);
     setSelectedImage((prevState) => ({
       ...prevState,
       tools: {
@@ -177,7 +180,7 @@ const Edit = () => {
         psn: true,
       },
     }));
-    setUndoArray([])
+    setUndoArray([]);
 
     setPriviewLoader(false);
   };
@@ -186,7 +189,7 @@ const Edit = () => {
     setPriviewLoader(true);
     let temp;
 
-    if (modifidImage === null || modifidImage === "") {
+    if (!modifidImageArray.length) {
       temp = selectedImage.url;
     } else {
       temp = modifidImageArray[modifidImageArray.length - 1].url;
@@ -195,8 +198,8 @@ const Edit = () => {
 
     const modifiedData = await PortraitDepthEstimation(temp, "hero.png");
     // setModifidImage(await modifiedData);
-    setModifidImageArray( (pre) => [...pre,  {url: modifiedData, tool: "pde"}]);
-    
+    setModifidImageArray((pre) => [...pre, { url: modifiedData, tool: "pde" }]);
+
     setSelectedImage((prevState) => ({
       ...prevState,
       tools: {
@@ -204,8 +207,7 @@ const Edit = () => {
         pde: true,
       },
     }));
-    setUndoArray([])
-
+    setUndoArray([]);
 
     setPriviewLoader(false);
   };
@@ -214,7 +216,7 @@ const Edit = () => {
     setPriviewLoader(true);
     setReplaceBg(true);
     let temp;
-    if (modifidImage === null || modifidImage === "") {
+    if (!modifidImageArray.length) {
       temp = selectedImage.url;
     } else {
       temp = modifidImageArray[modifidImageArray.length - 1].url;
@@ -222,7 +224,10 @@ const Edit = () => {
 
     const modifiedData = await Replacebackground(temp, "hero.png", bgpromt);
     // setModifidImage(await modifiedData);
-    setModifidImageArray( (pre) => [...pre,  {url: modifiedData, tool: "replaceBg"}]);
+    setModifidImageArray((pre) => [
+      ...pre,
+      { url: modifiedData, tool: "replaceBg" },
+    ]);
 
     setSelectedImage((prevState) => ({
       ...prevState,
@@ -231,8 +236,7 @@ const Edit = () => {
         replaceBg: true,
       },
     }));
-    setUndoArray([])
-
+    setUndoArray([]);
 
     setPriviewLoader(false);
   };
@@ -240,7 +244,7 @@ const Edit = () => {
   const HandleRemoveText = async () => {
     setPriviewLoader(true);
     let temp;
-    if (modifidImage === null || modifidImage === "") {
+    if (!modifidImageArray.length) {
       temp = selectedImage.url;
     } else {
       temp = modifidImageArray[modifidImageArray.length - 1].url;
@@ -249,7 +253,10 @@ const Edit = () => {
 
     const modifiedData = await RemoveText(temp, "hero.png");
     // setModifidImage(await modifiedData);
-    setModifidImageArray( (pre) => [...pre,  {url: modifiedData, tool: "removeText"}]);
+    setModifidImageArray((pre) => [
+      ...pre,
+      { url: modifiedData, tool: "removeText" },
+    ]);
 
     setSelectedImage((prevState) => ({
       ...prevState,
@@ -258,8 +265,7 @@ const Edit = () => {
         removeText: true,
       },
     }));
-    setUndoArray([])
-
+    setUndoArray([]);
 
     setPriviewLoader(false);
   };
@@ -276,17 +282,18 @@ const Edit = () => {
 
     const modifiedData = await Inpainting(temp, "hero.png");
     setModifidImage(await modifiedData);
-    setUndoArray([])
+    setUndoArray([]);
 
     setPriviewLoader(false);
   };
 
   return (
-    <motion.div 
-    initial="hidden"
-    animate="visible"
-    variants={fadeIn}
-    className={selectedImage.url ? "accest" : "accest blure"}>
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={fadeIn}
+      className={selectedImage.url ? "accest" : "accest blure"}
+    >
       <div className="gap">
         {/* <Row>
           <FileUpload></FileUpload>
@@ -468,7 +475,11 @@ const Edit = () => {
         <Button
           onClick={() => handileDownload()}
           disabled={
-            previewLoader === true ? true: modifidImageArray.length ? false : false
+            previewLoader === true
+              ? true
+              : modifidImageArray.length
+              ? false
+              : false
           }
         >
           Download
