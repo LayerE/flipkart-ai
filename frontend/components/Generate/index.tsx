@@ -69,9 +69,11 @@ const Generate = () => {
       const data = await generateimge(promt);
       console.log(data, "dff");
       if (data) {
-        setImageArray((prev) => [...prev, data]);
+        setImageArray((prev) => [...prev, {url:data.url, baseUrl:data.baseUrl}]);
       
       }
+      console.log(data, "dff",imageArray);
+
     } catch (error) {
       console.error("Error generating image:", error);
     } finally{
@@ -104,10 +106,10 @@ const Generate = () => {
               className={
                 selectedImage.id === i ? "imageBox ativeimg" : "imageBox"
               }
-              onClick={() =>{ setSelectedImage({ id: i, url: test , tools: {bgRemove:false, removeText:false, replaceBg:false, psn:false, pde:false, superResolution:false} }); setModifidImageArray([])}}
+              onClick={() =>{ setSelectedImage({ id: i, url: test.url ,baseUrl: test.baseUrl, tools: {bgRemove:false, removeText:false, replaceBg:false, psn:false, pde:false, superResolution:false,magic:false} }); setModifidImageArray([])}}
             >
               <picture>
-                <img src={test} alt="" />
+                <img src={test.baseUrl} alt="" />
               </picture>
             </div>
           ))}

@@ -91,6 +91,9 @@ interface ContextITFC {
   setPSN: (PSN: boolean) => void;
   superResolution: boolean;
   setSuperResolution: (superResolution: boolean) => void;
+  magicImage: string;
+  setMagicImage: (magicImage: string) => void;
+
 }
 export const AppContext = createContext<ContextITFC>({
   activeTab: 2,
@@ -173,6 +176,9 @@ export const AppContext = createContext<ContextITFC>({
   setPSN: () => {},
   superResolution: false,
   setSuperResolution: () => {},
+  magicImage: "",
+  setMagicImage: () => {},
+
 });
 
 export const AppContextProvider = ({ children }: ContextProviderProps) => {
@@ -199,6 +205,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
   const [promt, setpromt] = useState<string>("");
   const [bgpromt, setBgpromt] = useState<string>("");
+  const [magicImage, setMagicImage] = useState<string>("");
+
 
   const [product, setProduct] = useState<string>("");
   const [placementTest, setPlacementTest] = useState<string>("");
@@ -305,7 +313,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setSuperResolution,
         bgpromt, setBgpromt,
         modifidImageArray, setModifidImageArray,
-  undoArray, setUndoArray
+  undoArray, setUndoArray,
+  magicImage, setMagicImage
+
 
       }}
     >

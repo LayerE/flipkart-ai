@@ -1,15 +1,15 @@
 import { useAppState } from "@/context/app.context";
 import { BgRemover } from "@/store/api";
-import React, { useState, useEffect,useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { styled } from "styled-components";
-import { uid } from 'uid';
+import { uid } from "uid";
 export const Input = styled.input`
   padding: 0.5rem 0.75rem;
   border: 1px solid ${(props) => props.theme.stroke};
   outline: none;
   border-radius: 0.45rem;
   background-color: transparent;
-  width:100%;
+  width: 100%;
   font-size: 12px;
 
   &:disabled {
@@ -27,9 +27,8 @@ export const TestArea = styled.textarea`
   border-radius: 0.5rem;
   height: 100px;
   background-color: transparent;
-  width:100%;
+  width: 100%;
   font-size: 12px;
-
 
   &:disabled {
     color: #fff7f7 !important;
@@ -79,35 +78,68 @@ const InputFile = styled.div`
 
   label {
     display: flex;
-justify-content    :center ;
-align-items: center;
+    justify-content: center;
+    align-items: center;
     gap: 12px;
     height: 250px;
     width: 100%;
   }
-  .selected{
+  .selected {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    button{
-        border: none;
-        font-size: 12px;
+    button {
+      border: none;
+      font-size: 12px;
     }
   }
 `;
 
 export const FileUpload: React.FC = () => {
-  const { file, setFile,  selectedImage, setSelectedImage,setImageArray, imageArray ,setModifidImageArray} = useAppState();
+  const {
+    file,
+    setFile,
+    selectedImage,
+    setSelectedImage,
+    setImageArray,
+    imageArray,
+    setModifidImageArray,
+  } = useAppState();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0] || null;
     setFile(selectedFile);
     const blobUrl = URL.createObjectURL(selectedFile);
     const idG = imageArray.length;
-    setSelectedImage({url:blobUrl,id : idG,  tools: {bgRemove:false, removeText:false, replaceBg:false, psn:false, pde:false, superResolution:false}})
-    setModifidImageArray([])
-    setImageArray((prev) => [...prev, blobUrl]);
 
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        // setImageUrl(reader.result);
+        setSelectedImage({
+          url: blobUrl,
+          baseUrl: reader.result,
+          id: idG,
+          tools: {
+            bgRemove: false,
+            removeText: false,
+            replaceBg: false,
+            psn: false,
+            pde: false,
+            superResolution: false,
+            magic: false,
+          },
+        });
+
+        setModifidImageArray([]);
+        setImageArray((prev) => [...prev, {url:blobUrl,baseUrl: reader.result}]);
+        console.log(reader.result)
+      };
+    reader.readAsDataURL(selectedFile);
+
+    }
+   
+    console.log(selectedImage.baseUrl, "dfdsf");
     // BgRemover(selectedFile, "nsdfsd.png")
   };
 
@@ -128,7 +160,6 @@ export const FileUpload: React.FC = () => {
 
     return displayedName;
   }
-  
 
   return (
     <InputFile>
@@ -169,5 +200,3 @@ export const FileUpload: React.FC = () => {
     </InputFile>
   );
 };
-
-

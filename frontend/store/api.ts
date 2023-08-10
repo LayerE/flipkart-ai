@@ -1,4 +1,4 @@
-import { arrayBufferToDataURL, dataURLtoFile } from "@/utils/BufferToDataUrl";
+import { arrayBufferToDataURL, arrayBufferToDataURLNew, dataURLtoFile } from "@/utils/BufferToDataUrl";
 
 export const generateimge = async (promt: string) => {
   const promte = new FormData();
@@ -8,18 +8,20 @@ export const generateimge = async (promt: string) => {
     method: "POST",
     headers: {
       "x-api-key":
-        "33f74f9d17bd2f90f81d61af8fd8875f834961c457e81caba25a0bbfecbed37ddf5360ee064c84e930c54cfb06fb7379",
+        "5f28e1037978f6eee7cfc6d61439fc02dd23c4ca3b73fc1ee7521b3948b852d06cfae5fd52cc626460bd1eabce6120fd",
     },
     body: promte,
   });
 
   const buffer = await response.arrayBuffer();
   const dataURL = await arrayBufferToDataURL(buffer);
+  const datbase = await arrayBufferToDataURLNew(buffer)
+  
   const imageArray = JSON.parse(localStorage.getItem("g-images")) || [];
   const array = [...imageArray, dataURL];
   localStorage.setItem("g-images", JSON.stringify(array));
 
-  return dataURL;
+  return {url:dataURL,baseUrl:datbase};
 };
 
 export const BgRemover = async (
@@ -33,7 +35,7 @@ export const BgRemover = async (
     method: "POST",
     headers: {
       "x-api-key":
-        "33f74f9d17bd2f90f81d61af8fd8875f834961c457e81caba25a0bbfecbed37ddf5360ee064c84e930c54cfb06fb7379",
+        "5f28e1037978f6eee7cfc6d61439fc02dd23c4ca3b73fc1ee7521b3948b852d06cfae5fd52cc626460bd1eabce6120fd",
     },
     body: form,
   });
@@ -58,7 +60,7 @@ export const superResolutionFuc = async (
     method: "POST",
     headers: {
       "x-api-key":
-        "33f74f9d17bd2f90f81d61af8fd8875f834961c457e81caba25a0bbfecbed37ddf5360ee064c84e930c54cfb06fb7379",
+        "5f28e1037978f6eee7cfc6d61439fc02dd23c4ca3b73fc1ee7521b3948b852d06cfae5fd52cc626460bd1eabce6120fd",
     },
     body: form,
   });
@@ -81,7 +83,7 @@ export const PortraitSurfaceNormals = async (
       method: "POST",
       headers: {
         "x-api-key":
-          "33f74f9d17bd2f90f81d61af8fd8875f834961c457e81caba25a0bbfecbed37ddf5360ee064c84e930c54cfb06fb7379",
+          "5f28e1037978f6eee7cfc6d61439fc02dd23c4ca3b73fc1ee7521b3948b852d06cfae5fd52cc626460bd1eabce6120fd",
       },
       body: form,
     }
@@ -106,7 +108,7 @@ export const PortraitDepthEstimation = async (
       method: "POST",
       headers: {
         "x-api-key":
-          "33f74f9d17bd2f90f81d61af8fd8875f834961c457e81caba25a0bbfecbed37ddf5360ee064c84e930c54cfb06fb7379",
+          "5f28e1037978f6eee7cfc6d61439fc02dd23c4ca3b73fc1ee7521b3948b852d06cfae5fd52cc626460bd1eabce6120fd",
       },
       body: form,
     }
@@ -133,7 +135,7 @@ export const Replacebackground = async (
       method: "POST",
       headers: {
         "x-api-key":
-          "33f74f9d17bd2f90f81d61af8fd8875f834961c457e81caba25a0bbfecbed37ddf5360ee064c84e930c54cfb06fb7379",
+          "5f28e1037978f6eee7cfc6d61439fc02dd23c4ca3b73fc1ee7521b3948b852d06cfae5fd52cc626460bd1eabce6120fd",
       },
       body: form,
     }
@@ -157,7 +159,7 @@ export const RemoveText = async (
     method: "POST",
     headers: {
       "x-api-key":
-        "33f74f9d17bd2f90f81d61af8fd8875f834961c457e81caba25a0bbfecbed37ddf5360ee064c84e930c54cfb06fb7379",
+        "5f28e1037978f6eee7cfc6d61439fc02dd23c4ca3b73fc1ee7521b3948b852d06cfae5fd52cc626460bd1eabce6120fd",
     },
     body: form,
   });
@@ -170,18 +172,21 @@ export const RemoveText = async (
 
 export const Inpainting = async (
   photo: string,
-  filename: string
+  filename: string,
+  mask: string
 ): Promise<string> => {
   const form = new FormData();
   const fileItem = await dataURLtoFile(photo, filename);
-  form.append("image_file", fileItem);
-  // form.append('mask_file', mask)
+  const maskFile = await dataURLtoFile(mask, "mask.png");
 
-  const response = await fetch("https://clipdrop-api.co/remove-text/v1", {
+  form.append("image_file", fileItem);
+  form.append('mask_file', maskFile)
+
+  const response = await fetch("https://clipdrop-api.co/cleanup/v1", {
     method: "POST",
     headers: {
       "x-api-key":
-        "33f74f9d17bd2f90f81d61af8fd8875f834961c457e81caba25a0bbfecbed37ddf5360ee064c84e930c54cfb06fb7379",
+        "5f28e1037978f6eee7cfc6d61439fc02dd23c4ca3b73fc1ee7521b3948b852d06cfae5fd52cc626460bd1eabce6120fd",
     },
     body: form,
   });

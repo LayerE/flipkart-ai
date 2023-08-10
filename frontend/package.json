@@ -15,15 +15,20 @@
     "@types/react-dom": "18.2.7",
     "@types/styled-components": "^5.1.26",
     "babel-plugin-styled-components": "^2.1.1",
+    "canvas": "^2.11.2",
     "eslint": "8.46.0",
     "eslint-config-next": "13.4.12",
+    "file64": "^1.0.2",
     "framer-motion": "^10.15.1",
+    "konva": "^9.2.0",
     "next": "13.4.12",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-konva": "^18.2.10",
     "styled-components": "^6.0.5",
     "typescript": "5.1.6",
-    "uid": "^2.0.2"
+    "uid": "^2.0.2",
+    "use-image": "^1.1.1"
   },
   "resolutions": {
     "styled-components": "^6.0.5"

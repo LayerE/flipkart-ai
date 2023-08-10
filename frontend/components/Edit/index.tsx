@@ -22,6 +22,7 @@ const fadeIn = {
 };
 
 import { motion } from "framer-motion";
+import { arrayBufferToDataURL, dataURLtoFile } from "@/utils/BufferToDataUrl";
 
 const Edit = () => {
   const {
@@ -60,6 +61,8 @@ const Edit = () => {
     setModifidImageArray,
     undoArray,
     setUndoArray,
+  magicImage, setMagicImage,
+
 
     setBack,
   } = useAppState();
@@ -104,28 +107,30 @@ const Edit = () => {
 
     let temp;
     if (!modifidImageArray.length) {
-      temp = selectedImage.url;
+      temp = selectedImage.baseUrl;
     } else {
       temp = modifidImageArray[modifidImageArray.length - 1].url;
     }
     const modifiedData = await BgRemover(temp, "hero.png");
-    setModifidImageArray((pre) => [
-      ...pre,
-      { url: modifiedData, tool: "bgRemove" },
-    ]);
-    console.log([...modifidImageArray, await modifiedData]);
-    // setModifidImage(await modifidImageArray[modifidImageArray.length - 1]);
 
-    console.log("modifidImage", modifidImageArray);
-    setUndoArray([]);
-
-    setSelectedImage((prevState) => ({
-      ...prevState,
-      tools: {
-        ...prevState.tools,
-        bgRemove: true,
-      },
-    }));
+    if(modifiedData){
+      
+      setModifidImageArray((pre) => [
+        ...pre,
+        { url: modifiedData, tool: "bgRemove" },
+      ]);
+    
+  
+      setUndoArray([]);
+  
+      setSelectedImage((prevState) => ({
+        ...prevState,
+        tools: {
+          ...prevState.tools,
+          bgRemove: true,
+        },
+      }));
+    }
 
     setPriviewLoader(false);
   };
@@ -135,26 +140,29 @@ const Edit = () => {
     setSuperResolution(true);
     let temp;
     if (!modifidImageArray.length ) {
-      temp = selectedImage.url;
+      temp = selectedImage.baseUrl;
     } else {
       temp = modifidImageArray[modifidImageArray.length - 1].url;
     }
     const modifiedData = await superResolutionFuc(temp, "hero.png");
     // setModifidImage(await modifiedData);
+    if(modifiedData){
+      
+      setModifidImageArray((pre) => [
+        ...pre,
+        { url: modifiedData, tool: "superResolution" },
+      ]);
+      setUndoArray([]);
+  
+      setSelectedImage((prevState) => ({
+        ...prevState,
+        tools: {
+          ...prevState.tools,
+          superResolution: true,
+        },
+      }));
+    }
 
-    setModifidImageArray((pre) => [
-      ...pre,
-      { url: modifiedData, tool: "superResolution" },
-    ]);
-    setUndoArray([]);
-
-    setSelectedImage((prevState) => ({
-      ...prevState,
-      tools: {
-        ...prevState.tools,
-        superResolution: true,
-      },
-    }));
 
     setPriviewLoader(false);
   };
@@ -164,7 +172,7 @@ const Edit = () => {
     let temp;
 
     if (!modifidImageArray.length) {
-      temp = selectedImage.url;
+      temp = selectedImage.baseUrl;
     } else {
       temp = modifidImageArray[modifidImageArray.length - 1].url;
     }
@@ -172,15 +180,19 @@ const Edit = () => {
 
     const modifiedData = await PortraitSurfaceNormals(temp, "hero.png");
     // setModifidImage(await modifiedData);
-    setModifidImageArray((pre) => [...pre, { url: modifiedData, tool: "psn" }]);
-    setSelectedImage((prevState) => ({
-      ...prevState,
-      tools: {
-        ...prevState.tools,
-        psn: true,
-      },
-    }));
-    setUndoArray([]);
+
+    if(modifiedData){
+      
+      setModifidImageArray((pre) => [...pre, { url: modifiedData, tool: "psn" }]);
+      setSelectedImage((prevState) => ({
+        ...prevState,
+        tools: {
+          ...prevState.tools,
+          psn: true,
+        },
+      }));
+      setUndoArray([]);
+    }
 
     setPriviewLoader(false);
   };
@@ -190,7 +202,7 @@ const Edit = () => {
     let temp;
 
     if (!modifidImageArray.length) {
-      temp = selectedImage.url;
+      temp = selectedImage.baseUrl;
     } else {
       temp = modifidImageArray[modifidImageArray.length - 1].url;
     }
@@ -198,16 +210,19 @@ const Edit = () => {
 
     const modifiedData = await PortraitDepthEstimation(temp, "hero.png");
     // setModifidImage(await modifiedData);
-    setModifidImageArray((pre) => [...pre, { url: modifiedData, tool: "pde" }]);
-
-    setSelectedImage((prevState) => ({
-      ...prevState,
-      tools: {
-        ...prevState.tools,
-        pde: true,
-      },
-    }));
-    setUndoArray([]);
+    if(modifiedData){
+      
+      setModifidImageArray((pre) => [...pre, { url: modifiedData, tool: "pde" }]);
+  
+      setSelectedImage((prevState) => ({
+        ...prevState,
+        tools: {
+          ...prevState.tools,
+          pde: true,
+        },
+      }));
+      setUndoArray([]);
+    }
 
     setPriviewLoader(false);
   };
@@ -217,26 +232,29 @@ const Edit = () => {
     setReplaceBg(true);
     let temp;
     if (!modifidImageArray.length) {
-      temp = selectedImage.url;
+      temp = selectedImage.baseUrl;
     } else {
       temp = modifidImageArray[modifidImageArray.length - 1].url;
     }
 
     const modifiedData = await Replacebackground(temp, "hero.png", bgpromt);
     // setModifidImage(await modifiedData);
-    setModifidImageArray((pre) => [
-      ...pre,
-      { url: modifiedData, tool: "replaceBg" },
-    ]);
-
-    setSelectedImage((prevState) => ({
-      ...prevState,
-      tools: {
-        ...prevState.tools,
-        replaceBg: true,
-      },
-    }));
-    setUndoArray([]);
+    if(modifiedData){
+      
+      setModifidImageArray((pre) => [
+        ...pre,
+        { url: modifiedData, tool: "replaceBg" },
+      ]);
+  
+      setSelectedImage((prevState) => ({
+        ...prevState,
+        tools: {
+          ...prevState.tools,
+          replaceBg: true,
+        },
+      }));
+      setUndoArray([]);
+    }
 
     setPriviewLoader(false);
   };
@@ -245,7 +263,7 @@ const Edit = () => {
     setPriviewLoader(true);
     let temp;
     if (!modifidImageArray.length) {
-      temp = selectedImage.url;
+      temp = selectedImage.baseUrl;
     } else {
       temp = modifidImageArray[modifidImageArray.length - 1].url;
     }
@@ -253,19 +271,22 @@ const Edit = () => {
 
     const modifiedData = await RemoveText(temp, "hero.png");
     // setModifidImage(await modifiedData);
-    setModifidImageArray((pre) => [
-      ...pre,
-      { url: modifiedData, tool: "removeText" },
-    ]);
+    if(modifiedData){
 
-    setSelectedImage((prevState) => ({
-      ...prevState,
-      tools: {
-        ...prevState.tools,
-        removeText: true,
-      },
-    }));
-    setUndoArray([]);
+      setModifidImageArray((pre) => [
+        ...pre,
+        { url: modifiedData, tool: "removeText" },
+      ]);
+  
+      setSelectedImage((prevState) => ({
+        ...prevState,
+        tools: {
+          ...prevState.tools,
+          removeText: true,
+        },
+      }));
+      setUndoArray([]);
+    }
 
     setPriviewLoader(false);
   };
@@ -274,7 +295,7 @@ const Edit = () => {
     setPriviewLoader(true);
     let temp;
     if (modifidImage === null || modifidImage === "") {
-      temp = selectedImage.url;
+      temp = selectedImage.baseUrl;
     } else {
       temp = modifidImageArray[modifidImageArray.length - 1].url;
     }
@@ -286,6 +307,52 @@ const Edit = () => {
 
     setPriviewLoader(false);
   };
+
+  // const handleImageChange = (file) => {
+  //   // const file = e.target.files[0];
+  //   const reader = new FileReader();
+
+  //   reader.onloadend = function() {
+  //     setMagicImage(reader.result);
+
+  //   };
+
+  //   if (file) {
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
+  function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+  
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  }
+
+  const blobUrlToDataUrl = async (blobUrl) => {
+    const response = await fetch(blobUrl);
+    const blob = await response.blob();
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setMagicImage(reader.result);
+      console.log(magicImage)
+    };
+    reader.readAsDataURL(blob);
+
+
+};
+  const  handeleMG=async () =>{
+    setMagickErase(!magickErase)
+
+    const urlfile = modifidImageArray[modifidImageArray.length -1]?.url
+    const tofilr = await blobUrlToDataUrl(urlfile)
+    // const newurl = await fileToBase64(tofilr)
+    console.log(tofilr,"dfdf",magicImage);
+  // magicImage, setMagicImage
+
+  }
 
   return (
     <motion.div
@@ -451,16 +518,16 @@ const Edit = () => {
               <p>Super resolution</p>
             </div>
           </div>
-          {/* <div
+          <div
             className={magickErase ? "selectTool ativeimg" : "selectTool"}
-            onClick={() => setMagickErase(!magickErase)}
+            onClick={() => handeleMG()}
           >
             <Label>Magic Erase</Label>
             <div>
               <p>Paint over objects to erase from the image</p>
             </div>
           </div>
-          <div
+          {/* <div
             className={upScale ? "selectTool ativeimg" : "selectTool"}
             onClick={() => setupscale(!upScale)}
           >
