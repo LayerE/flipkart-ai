@@ -349,7 +349,7 @@ const Edit = () => {
     const urlfile = modifidImageArray[modifidImageArray.length -1]?.url
     const tofilr = await blobUrlToDataUrl(urlfile)
     // const newurl = await fileToBase64(tofilr)
-    console.log(tofilr,"dfdf",magicImage);
+  
   // magicImage, setMagicImage
 
   }

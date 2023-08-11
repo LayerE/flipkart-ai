@@ -198,6 +198,7 @@ const SideBar = styled.div`
     background-color: ${({ theme }) => theme.btnPrimary};
   }
   .blure{
+    pointer-events: none;
 
     filter: blur(2px); /* adjust px value to increase or decrease the blur */
     opacity: 0.9; 
