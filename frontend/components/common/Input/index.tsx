@@ -7,6 +7,7 @@ export const Input = styled.input`
   padding: 0.5rem 0.75rem;
   border: 1px solid ${(props) => props.theme.stroke};
   outline: none;
+  color: #000;
   border-radius: 0.45rem;
   background-color: transparent;
   width: 100%;
@@ -132,13 +133,15 @@ export const FileUpload: React.FC = () => {
         });
 
         setModifidImageArray([]);
-        setImageArray((prev) => [...prev, {url:blobUrl,baseUrl: reader.result}]);
-        console.log(reader.result)
+        setImageArray((prev) => [
+          ...prev,
+          { url: blobUrl, baseUrl: reader.result },
+        ]);
+        console.log(reader.result);
       };
-    reader.readAsDataURL(selectedFile);
-
+      reader.readAsDataURL(selectedFile);
     }
-   
+
     console.log(selectedImage.baseUrl, "dfdsf");
     // BgRemover(selectedFile, "nsdfsd.png")
   };
