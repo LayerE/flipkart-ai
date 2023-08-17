@@ -94,6 +94,13 @@ const MainPage = styled.div`
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      .close{
+        position:absolute;
+        right:20px;
+        top:10px;
+        font-size: 18px;
+        cursor: pointer;
+      }
 
       .imgadd {
         margin: 10px 0;
@@ -266,6 +273,7 @@ export default function Home() {
     undoArray,
     setUndoArray,
     magickErase,
+    setFile,
     setMagickErase,
     setInpainting,
   } = useAppState();
@@ -542,6 +550,7 @@ export default function Home() {
                 animate="visible"
                 variants={fadeIn}
               >
+                <div className="close" onClick={()=>{setSelectedImage({}) ; setFile(null)}}>X</div>
                 <p>Place Your Product Here</p>
                 <div className="imgadd">
                   {selectedImage?.url ? (
