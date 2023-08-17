@@ -550,7 +550,12 @@ export default function Home() {
                 animate="visible"
                 variants={fadeIn}
               >
+                  {selectedImage?.url ? (
                 <div className="close" onClick={()=>{setSelectedImage({}) ; setFile(null)}}>X</div>
+
+
+
+                  ) : null}
                 <p>Place Your Product Here</p>
                 <div className="imgadd">
                   {selectedImage?.url ? (
