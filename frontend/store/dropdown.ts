@@ -19,4 +19,37 @@ export const test = [
   export const resultList = [1, 2, 3, 4,5,6,7,8,9];
 
 
+  export const templets = [
+    {
+      image: "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/b3250ecd-e67f-4f5d-8813-864444fb2100/256",
+      promt: "montain"
+    },
+    {
+      image: "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/c603596d-958b-40b1-c333-ec7f71d67100/256",
+      promt: "montain"
+    },  {
+      image: "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/ec0c2e98-c02b-43a1-8c61-cec2f2e19400/256",
+      promt: "montain"
+    },  {
+      image: "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/f55418ca-1796-4ebf-1571-a3d92da3af00/256",
+      promt: "montain"
+    },  {
+      image: "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/68b6af6d-fd18-46f8-2a75-87f65d3ce200/256",
+      promt: "montain"
+    },  {
+      image: "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/ade716c4-cd63-4de7-bb83-8bf53912ad00/256",
+      promt: "montain"
+    },
+    {
+      image: "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/4c5202d6-2fdc-4835-313e-dc41595b9300/256",
+      promt: "montain"
+    },
+    {
+      image: "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/92cc22a8-389a-4733-141b-146ec538f300/256",
+      promt: "montain"
+    }, 
+  ];
+
+
+
  

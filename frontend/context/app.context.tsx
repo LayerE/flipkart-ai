@@ -21,6 +21,9 @@ interface ContextITFC {
   setSelectedOption: (selectedOption: string) => void;
   selectedImage: object;
   setSelectedImage: (selectedImage: object) => void;
+  viewMore: object;
+  setViewMore: (viewMore: object) => void;
+
   selectCategory: string;
   setSelectedCategory: (selectCategory: string) => void;
   selectPlacement: string;
@@ -69,6 +72,8 @@ interface ContextITFC {
   setModifidImage: (modifidImage: string) => void;
   imageArray: string[];
   setImageArray: (imageArray: string[]) => void;
+  upladedArray: string[];
+  setUpladedArray: (upladedArray: string[]) => void;
   modifidImageArray: string[];
   setModifidImageArray: (modifidImageArray: string[]) => void;
   undoArray: string[];
@@ -93,7 +98,6 @@ interface ContextITFC {
   setSuperResolution: (superResolution: boolean) => void;
   magicImage: string;
   setMagicImage: (magicImage: string) => void;
-
 }
 export const AppContext = createContext<ContextITFC>({
   activeTab: 2,
@@ -104,6 +108,8 @@ export const AppContext = createContext<ContextITFC>({
   setSelectedOption: (selectedOption: string) => {},
   selectedImage: {},
   setSelectedImage: (selectedImage: Object) => {},
+  viewMore: {},
+  setViewMore: (viewMore: Object) => {},
   selectCategory: "",
   setSelectedCategory: (selectCategory: string) => {},
   selectPlacement: "",
@@ -156,9 +162,11 @@ export const AppContext = createContext<ContextITFC>({
   setImageArray: (imageArray: string[]) => {},
   modifidImageArray: [],
   setModifidImageArray: (modifidImageArray: string[]) => {},
+  upladedArray: [],
+  setUpladedArray: (upladedArray: string[]) => {},
+
   undoArray: [],
   setUndoArray: (undoArray: string[]) => {},
-
 
   previewLoader: false,
   setPriviewLoader: () => {},
@@ -178,20 +186,20 @@ export const AppContext = createContext<ContextITFC>({
   setSuperResolution: () => {},
   magicImage: "",
   setMagicImage: () => {},
-
 });
 
 export const AppContextProvider = ({ children }: ContextProviderProps) => {
-  const [activeTab, setActiveTab] = useState<number| null>(2);
+  const [activeTab, setActiveTab] = useState<number | null>(1);
   const [file, setFile] = useState<File | null>(null);
   const [selectedOption, setSelectedOption] = useState<string>("");
   const [selectedImage, setSelectedImage] = useState<object>({});
+  const [viewMore, setViewMore] = useState<object>({});
 
   const [modifidImage, setModifidImage] = useState<string>("");
   const [modifidImageArray, setModifidImageArray] = useState<string[]>([]);
+  const [upladedArray, setUpladedArray] = useState<string[]>([]);
+
   const [undoArray, setUndoArray] = useState<string[]>([]);
-
-
 
   const [selectCategory, setSelectedCategory] = useState<string>("");
   const [selectPlacement, setSelectedPlacement] = useState<string>("");
@@ -206,7 +214,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [promt, setpromt] = useState<string>("");
   const [bgpromt, setBgpromt] = useState<string>("");
   const [magicImage, setMagicImage] = useState<string>("");
-
 
   const [product, setProduct] = useState<string>("");
   const [placementTest, setPlacementTest] = useState<string>("");
@@ -231,14 +238,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [PSN, setPSN] = useState<boolean>(false);
   const [superResolution, setSuperResolution] = useState<boolean>(false);
 
-  useEffect(() => {
-    // if (window?.localStorage?.getItem("banner_clicked")) {
-    //   close("banner");
-    // } else {
-    //   open("banner");
-    // }
-  }, []);
-
   return (
     <AppContext.Provider
       value={{
@@ -246,7 +245,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setActiveTab,
         file,
         setFile,
-
         selectedOption,
         setSelectedOption,
         selectedImage,
@@ -311,12 +309,18 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setPSN,
         superResolution,
         setSuperResolution,
-        bgpromt, setBgpromt,
-        modifidImageArray, setModifidImageArray,
-  undoArray, setUndoArray,
-  magicImage, setMagicImage
-
-
+        bgpromt,
+        setBgpromt,
+        modifidImageArray,
+        setModifidImageArray,
+        upladedArray,
+        setUpladedArray,
+        undoArray,
+        setUndoArray,
+        magicImage,
+        setMagicImage,
+        viewMore,
+        setViewMore,
       }}
     >
       {children}

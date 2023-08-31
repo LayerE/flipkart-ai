@@ -8,7 +8,7 @@ import { category, test } from "@/store/dropdown";
 import { useAppState } from "@/context/app.context";
 import { productList } from "@/store/listOfElement";
 
-const Assets: React.FC = () => {
+const ListOf: React.FC = () => {
   const {
     selectedImage,
     setSelectedImage,
@@ -16,6 +16,7 @@ const Assets: React.FC = () => {
     setSelectedCategory,
     imageArray,
     upladedArray,
+    viewMore,
     setModifidImageArray
   } = useAppState();
 
@@ -23,13 +24,11 @@ const Assets: React.FC = () => {
     <div className="accest">
       <div className="gap">
         <Row>
-          <Label>Product</Label>
+          <Label>Select an element to add</Label>
         </Row>
-        <Row>
-          <FileUpload1 />
-        </Row>
+       
         <ResponsiveRowWraptwo>
-          {productList.map((test, i) => (
+          {viewMore?.list?.map((test, i) => (
             <div
               key={i}
               className={
@@ -60,58 +59,9 @@ const Assets: React.FC = () => {
           ))}
         </ResponsiveRowWraptwo>
       </div>
-      <div className="gap">
-        <Row>
-          <Label>Uploaded Assets</Label>
-        </Row>
-
-        <ResponsiveRowWraptwo>
-          {upladedArray.map((test, i) => (
-            <div
-              key={i}
-              className={
-                selectedImage.id === i ? "imageBox ativeimg" : "imageBox"
-              }
-              onClick={() => {
-                setSelectedImage({
-                  id: i,
-                  url: test.url,
-                  baseUrl: test.baseUrl,
-                  tools: {
-                    bgRemove: false,
-                    removeText: false,
-                    replaceBg: false,
-                    psn: false,
-                    pde: false,
-                    superResolution: false,
-                    magic: false,
-                  },
-                });
-                setModifidImageArray([]);
-              }}
-            >
-              <picture>
-                <img src={test.url} alt="" />
-              </picture>
-            </div>
-          ))}
-        </ResponsiveRowWraptwo>
-      </div>
-      {/* <div className="gap">
-        <Row>
-          <Label>Select product category</Label>
-        </Row>
-        <Row>
-          <DropdownInput
-            data={{
-              list: category,
-              action: setSelectedCategory,
-              label: "category",
-              activeTab: selectCategory,
-            }}
-          ></DropdownInput>
-        </Row>
-      </div> */}
+     
+      
+  
     </div>
   );
 };
@@ -127,4 +77,4 @@ export const ResponsiveRowWraptwo = styled(Row)`
    `}
 `;
 
-export default Assets;
+export default ListOf;

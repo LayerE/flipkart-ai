@@ -14,35 +14,38 @@ import Generate from "../Generate/index";
 import Edit from "../Edit";
 
 import { motion } from "framer-motion";
+import Humans from "../Humans";
+import Element from "../Element";
+import ListOf from "../List OfProduct";
 const fadeIn = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 1 } },
 };
 
 const TabData = [
-  // {
-  //   id: 1,
-  //   image: assets.icons.assets_icon,
-  //   tittle: "Assets",
-  // },
+  {
+    id: 1,
+    image: assets.icons.assets_icon,
+    tittle: "Assets",
+  },
   {
     id: 2,
 
     image: assets.icons.generate_icon,
     tittle: "Generate",
   },
-  //   {
-  //     id: 3,
+  {
+    id: 3,
 
-  //     image: assets.icons.element_icon,
-  //     tittle: "Elements",
-  //   },
-  //   {
-  //     id: 4,
+    image: assets.icons.element_icon,
+    tittle: "Elements",
+  },
+  {
+    id: 4,
 
-  //     image: assets.icons.user_icon,
-  //     tittle: "Humans",
-  //   },
+    image: assets.icons.user_icon,
+    tittle: "Humans",
+  },
   {
     id: 5,
 
@@ -52,59 +55,91 @@ const TabData = [
 ];
 
 const Sidebar: React.FC = () => {
-  const { activeTab, setActiveTab } = useAppState();
+  const { activeTab, setActiveTab, viewMore, setViewMore } = useAppState();
 
   return (
     <SideBar>
       <motion.div className="new">
-      <div className="columWrapper">
-        {TabData.map((elemenmt, i) => (
-          // <Column>
-          <div
-            key={i}
-            className={activeTab === elemenmt.id ? "active tabBox " : "tabBox"}
-            onClick={() => setActiveTab(elemenmt.id)}
-          >
-            <Image src={elemenmt.image} alt="" width={16} />
-            <span>{elemenmt.tittle}</span>
-          </div>
-          // </Column>
-        ))}
-      </div>
-      <motion.div className={activeTab != null ? "tapExpanded dispaySlid" : 'tapExpanded'}>
-        <div className="closs" onClick={()=>setActiveTab(null)}><div className="x">X</div></div>
-        <div className="tittle">
-          {activeTab === 1
-            ? "Add assets"
-            : activeTab === 2
-            ? "Generate Photoshoot"
-            : "Edit Image"}
+        <div className="columWrapper">
+          {TabData.map((elemenmt, i) => (
+            // <Column>
+            <div
+              key={i}
+              className={
+                activeTab === elemenmt.id ? "active tabBox " : "tabBox"
+              }
+              onClick={() => {
+                setActiveTab(elemenmt.id);
+                setViewMore({ status: false });
+              }}
+            >
+              <Image src={elemenmt.image} alt="" width={16} />
+              <span>{elemenmt.tittle}</span>
+            </div>
+            // </Column>
+          ))}
         </div>
-        {activeTab === 1 ? (
-          <Assets />
-        ) : activeTab === 2 ? (
-          <Generate />
-        ) : (
-          <Edit />
-        )}
-      </motion.div>
+        <div className="larfer">
+          <motion.div
+            className={
+              activeTab != null ? "tapExpanded dispaySlid" : "tapExpanded"
+            }
+          >
+            <div className="closs" onClick={() => setActiveTab(null)}>
+              <div className="x">X</div>
+            </div>
+            <div className="tittle">
+              {activeTab === 1 ? (
+                "Add assets"
+              ) : activeTab === 2 ? (
+                "Generate Photoshoot"
+              ) : activeTab === 3 && viewMore?.status == true ? (
+                <div
+                  style={{ cursor: "pointer", display:"flex", gap: "0px", justifyContent: "start", alignItems: "center"}}
+                  onClick={() => setViewMore({ status: false })}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                  {" "}
+                  {viewMore.title}{" "}
+                </div>
+              ) : activeTab === 3 ? (
+                "Add Element"
+              ) : activeTab === 4 ? (
+                "Add Humans"
+              ) : (
+                "Edit Image"
+              )}
+            </div>
+            {activeTab === 1 ? (
+              <Assets />
+            ) : activeTab === 2 ? (
+              <Generate />
+            ) : activeTab === 3 && viewMore?.status == true ? (
+              <ListOf />
+            ) : activeTab === 3 ? (
+              <Element />
+            ) : activeTab === 4 ? (
+              <Humans />
+            ) : (
+              <Edit />
+            )}
+          </motion.div>
+        </div>
       </motion.div>
     </SideBar>
   );
 };
 
 const SideBar = styled.div`
-.new{
-  height: 100vh;
-  display: flex;
-
-
-}
+  .new {
+    min-height: 100vh;
+    display: flex;
+  }
   .selectbox {
     display: flex;
     gap: 10px;
   }
-  .closs{
+  .closs {
     display: none;
   }
   .selectone {
@@ -123,12 +158,12 @@ const SideBar = styled.div`
     border: 1px solid #838383;
     padding: 1.3rem 1.2rem;
     position: relative;
-.cardClose{
-  position: absolute;
-  right: 15px;
-  top: 15px;
-  z-index: 50;
-}
+    .cardClose {
+      position: absolute;
+      right: 15px;
+      top: 15px;
+      z-index: 50;
+    }
     p {
       margin-top: 16px;
       color: #b2a4a4;
@@ -197,18 +232,17 @@ const SideBar = styled.div`
   .active {
     background-color: ${({ theme }) => theme.btnPrimary};
   }
-  .blure{
+  .blure {
     pointer-events: none;
 
     filter: blur(2px); /* adjust px value to increase or decrease the blur */
-    opacity: 0.9; 
-    
+    opacity: 0.9;
   }
-  .gen{
-    margin-top:20px;
-    display:flex;
-    flex-direction:column;
-    gap:10px;
+  .gen {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
   .two-side {
     display: flex;
@@ -239,14 +273,17 @@ const SideBar = styled.div`
   }
 }
   `}
+  .larfer {
+    width: 380px;
+  }
   .tapExpanded {
     padding-left: 15px;
-    padding-right: 30px;
+    padding-right: 15px;
     padding-top: 30px;
     padding-bottom: 70px;
     border-right: 2px solid ${({ theme }) => theme.bgBorder};
-    width: 380px;
     padding-top: ${({ theme }) => theme.paddings.paddingTop};
+    width: 100% !important;
 
     overflow: auto;
   }

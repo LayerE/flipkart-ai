@@ -73,7 +73,7 @@ const Edit = () => {
 
   const [bgClick, setBgClick] = useState(false);
 
-  // const { selectColore, setSelectedColore } = useAppState();
+  const { selectColore, setSelectedColore } = useAppState();
 
   function downloadImage(blob: Blob, filename: string) {
     const url = blob;
@@ -366,7 +366,7 @@ const Edit = () => {
           <FileUpload></FileUpload>
         </Row> */}
       </div>
-      {/* <div className="gap">
+      <div className="gap">
         <Label>Arrange</Label>
         <div className="selectbox">
           <div
@@ -382,9 +382,9 @@ const Edit = () => {
             Send to back
           </div>
         </div>
-      </div> */}
+      </div>
 
-      {/* <div className="gap">
+      <div className="gap">
         <Label>Color</Label>
         <div className="rowwothtwo">
           <DropdownInput
@@ -400,7 +400,7 @@ const Edit = () => {
             <Input onChange={(e) => setColore(e.target.value)} />
           </div>
         </div>
-      </div> */}
+      </div>
       <div className="gap">
         <Label>Tools</Label>
         <div className="gap">

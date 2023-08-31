@@ -23,7 +23,7 @@ const MainPage = styled.div`
 }
   .sidebar {
     border-right: 1px solid rgba(238, 238, 238, 1);
-    height: 100vh;
+    min-height: 100vh;
     padding-left: 70px;
     padding-right: 24px;
     padding-top: ${({ theme }) => theme.paddings.paddingTop};
@@ -63,7 +63,7 @@ const MainPage = styled.div`
   .dashbaord {
     background: #f8f8f8;
     width: 100%;
-    height: 100vh;
+    min-height: 100vh;
     padding: 40px 30px;
     padding-top: ${({ theme }) => theme.paddings.paddingTop};
     overflow: auto;
