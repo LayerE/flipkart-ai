@@ -158,6 +158,8 @@ export default function Home() {
   // const [selectedImaged, setDownloadImage] = useState(null);
   let canvasInstance;
   // let selectedImaged = null;
+  const selectRef = useRef(null);
+
 
   const getBase64FromUrl = async (url: string) => {
     const data = await fetch(url);
@@ -293,6 +295,60 @@ export default function Home() {
       stroke: "rgba(249, 208, 13, 1)", // border color of the rectangle
       strokeWidth: 1,
     });
+     // Zoom and Pan event handlers
+     canvasInstanceRef.on('mouse:wheel', (opt) => {
+      const delta = opt.e.deltaY;
+      let zoom = canvasInstanceRef.getZoom();
+      zoom *= 0.999 ** delta;
+      if (zoom > 20) zoom = 20;
+      if (zoom < 0.01) zoom = 0.01;
+      canvasInstanceRef.zoomToPoint({ x: canvasInstanceRef.width / 2, y: canvasInstanceRef.height / 2 }, zoom);
+      opt.e.preventDefault();
+      opt.e.stopPropagation();
+    });
+  //    canvasInstanceRef.on('mouse:wheel', (opt) => {
+  //     const delta = opt.e.deltaY;
+  //     const vpt = canvasInstanceRef.viewportTransform;
+  //     vpt[4] += delta;  // Adjust this value to change horizontal pan
+  //     vpt[5] += delta;  // Adjust this value to change vertical pan
+  //     canvasInstanceRef.requestRenderAll();
+  //     opt.e.preventDefault();
+  //     opt.e.stopPropagation();
+  // });
+
+  //    canvasInstanceRef.on('mouse:wheel', (opt) => {
+  //     const delta = opt.e.deltaY;
+  //     let zoom = canvasInstanceRef.getZoom();
+  //     zoom *= 0.999 ** delta;
+  //     if (zoom > 20) zoom = 20;
+  //     if (zoom < 0.01) zoom = 0.01;
+  //     canvasInstanceRef.setZoom(zoom);
+  //     opt.e.preventDefault();
+  //     opt.e.stopPropagation();
+  // });
+//   canvasInstanceRef.on('mouse:down', (opt) => {
+//     const evt = opt.e;
+//     canvasInstanceRef.isDragging = true;
+//     canvasInstanceRef.selection = false;
+//     canvasInstanceRef.lastPosX = evt.clientX;
+//     canvasInstanceRef.lastPosY = evt.clientY;
+// });
+
+//   canvasInstanceRef.on('mouse:move', (opt) => {
+//     if (canvasInstanceRef.isDragging) {
+//         const e = opt.e;
+//         const vpt = canvasInstanceRef.viewportTransform;
+//         vpt[4] += e.clientX - canvasInstanceRef.lastPosX;
+//         vpt[5] += e.clientY - canvasInstanceRef.lastPosY;
+//         canvasInstanceRef.requestRenderAll();
+//         canvasInstanceRef.lastPosX = e.clientX;
+//         canvasInstanceRef.lastPosY = e.clientY;
+//     }
+// });
+// canvasInstanceRef.on('mouse:up', () => {
+//   canvasInstanceRef.isDragging = false;
+//   canvasInstanceRef.selection = true;
+// });
 
     const imageGenText = new fabric.Text("Add Image", {
       left: 100 + 75, // center of the rectangle
@@ -302,6 +358,7 @@ export default function Home() {
       originY: "center",
       selectable: false,
     });
+    
 
     // add.addEventListener("click", async () => {
     //   fabric.Image.fromURL(
@@ -377,6 +434,23 @@ export default function Home() {
     canvasInstanceRef.getElement().ondragover = function (e) {
       e.preventDefault();
     };
+
+   
+
+    //   // Use addEventListener for the dropdown
+    //   const handleZoomChange = (event) => {
+    //     const zoomPercentage = event.target.value;
+    //     canvasInstanceRef.setZoom(zoomPercentage / 100);
+    //     canvasInstanceRef.requestRenderAll();
+    // }
+    
+    // selectRef.current.addEventListener('change', handleZoomChange);
+
+    // // Cleanup the event listener on component unmount
+    // return () => {
+    //     selectRef.current.removeEventListener('change', handleZoomChange);
+    // };
+
   }, [setDownloadImage]);
 
   function downloadCanvasContent() {
@@ -469,7 +543,16 @@ export default function Home() {
             <button id="sendToBackBtn">Send to Back</button>
             <button id="asdd">Add</button>
             <button id="deleteBtn">Delete Selected</button>
+            <select ref={selectRef}>
+                <option value="50">50%</option>
+                <option value="75">75%</option>
+                <option value="100" selected>100%</option>
+                <option value="125">125%</option>
+                <option value="150">150%</option>
+            </select>
           </div> */}
+
+         
 
           <div className="convas-continer">
             <canvas ref={canvasRef} />

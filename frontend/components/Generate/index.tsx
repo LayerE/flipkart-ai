@@ -184,6 +184,6 @@ export const SwchichBtn = styled(Row)`
   }
 `;
 export const Wrapper = styled.div`
-  max-height: 600px;
-  overflow-y: scroll;
+  /* max-height: 600px;
+  overflow-y: scroll; */
 `;
