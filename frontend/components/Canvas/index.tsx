@@ -113,6 +113,7 @@ const App: React.FC = () => {
 
         <div style={{ flex: "1" }}>
           {sampleImages.map((src, index) => (
+              <picture>
             <img
               key={index}
               src={src}
@@ -121,6 +122,7 @@ const App: React.FC = () => {
               onDragStart={(e) => e.dataTransfer.setData("text", src)}
               style={{ width: "100px", height: "100px", marginBottom: "10px" }}
             />
+            </picture>
           ))}
         </div>
       </div>

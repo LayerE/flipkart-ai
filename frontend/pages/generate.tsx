@@ -54,9 +54,9 @@ export default function Home() {
     setInpainting,
   } = useAppState();
 
-  useEffect(() => {
-    console.log("new render");
-  }, [previewLoader, modifidImage, modifidImageArray]);
+  // useEffect(() => {
+  //   console.log("new render");
+  // }, [previewLoader, modifidImage, modifidImageArray]);
   const handileUndo = () => {
     if (modifidImageArray.length > 0) {
       setUndoArray((pre) => [
@@ -100,11 +100,11 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {
-    if (magickErase && selectedImage.url) {
-      // drawImageOnCanvas(selectedImage?.url)
-    }
-  }, [magickErase, selectedImage]);
+  // useEffect(() => {
+  //   if (magickErase && selectedImage.url) {
+  //     // drawImageOnCanvas(selectedImage?.url)
+  //   }
+  // }, [magickErase, selectedImage]);
 
   const [drawing, setDrawing] = useState(false);
   const [lines, setLines] = useState([]);
@@ -136,12 +136,12 @@ export default function Home() {
     setLines([...lines, { mode, points: [pos.x, pos.y] }]);
   };
 
-  useEffect(() => {
-    if (status === "loaded") {
-      setImageWidth(img.width);
-      setImageHeight(img.height);
-    }
-  }, [img, status]);
+  // useEffect(() => {
+  //   if (status === "loaded") {
+  //     setImageWidth(img.width);
+  //     setImageHeight(img.height);
+  //   }
+  // }, [img, status]);
 
   const [bgColor, setBgColor] = useState("transparent");
 
