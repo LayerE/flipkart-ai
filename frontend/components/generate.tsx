@@ -608,12 +608,14 @@ export default function Home() {
                   ) : null}
                   <div className="imgadd">
                     {modifidImageArray.length ? (
+                      <picture>
                       <img
                         src={
                           modifidImageArray[modifidImageArray.length - 1].url
                         }
                         alt=""
                       />
+                      </picture>
                     ) : (
                       <div className="more">
                         <NextImage

@@ -82,7 +82,7 @@ const Element: React.FC = () => {
         </div>
         <div className="gap">
           {elemest.map((item, i) => (
-            <div>
+            <div key={i}>
               <div className=" rows">
                 <div className="left">
                   <Label>{item?.title}</Label>

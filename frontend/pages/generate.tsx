@@ -377,7 +377,7 @@ export default function Home() {
     canvasInstanceRef.getElement().ondragover = function (e) {
       e.preventDefault();
     };
-  }, []);
+  }, [setDownloadImage]);
 
   function downloadCanvasContent() {
     if (downlaodImg) {
