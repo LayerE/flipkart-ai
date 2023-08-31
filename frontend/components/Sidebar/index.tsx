@@ -95,11 +95,29 @@ const Sidebar: React.FC = () => {
                 "Generate Photoshoot"
               ) : activeTab === 3 && viewMore?.status == true ? (
                 <div
-                  style={{ cursor: "pointer", display:"flex", gap: "0px", justifyContent: "start", alignItems: "center"}}
+                  style={{
+                    cursor: "pointer",
+                    display: "flex",
+                    gap: "0px",
+                    justifyContent: "start",
+                    alignItems: "center",
+                  }}
                   onClick={() => setViewMore({ status: false })}
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                  {" "}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-chevron-left"
+                  >
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                  </svg>{" "}
                   {viewMore.title}{" "}
                 </div>
               ) : activeTab === 3 ? (
@@ -132,7 +150,7 @@ const Sidebar: React.FC = () => {
 
 const SideBar = styled.div`
   .new {
-    min-height: 100vh;
+    height: 100vh;
     display: flex;
   }
   .selectbox {
@@ -195,8 +213,8 @@ const SideBar = styled.div`
     gap: 28px;
     display: flex;
     flex-direction: column;
-    padding-left: 65px;
-    padding-right: 30px;
+    padding-left: 25px;
+    padding-right: 25px;
     padding-top: 30px;
     border-right: 2px solid ${({ theme }) => theme.bgBorder};
     width: max-content;
@@ -280,11 +298,11 @@ const SideBar = styled.div`
     padding-left: 15px;
     padding-right: 15px;
     padding-top: 30px;
-    padding-bottom: 70px;
+    /* padding-bottom: 70px; */
     border-right: 2px solid ${({ theme }) => theme.bgBorder};
     padding-top: ${({ theme }) => theme.paddings.paddingTop};
     width: 100% !important;
-
+    height: 100%;
     overflow: auto;
   }
   ${({ theme }) => theme.mediaWidth.upToMedium`

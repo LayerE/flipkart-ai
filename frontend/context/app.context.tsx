@@ -14,6 +14,9 @@ type ContextProviderProps = {
 interface ContextITFC {
   activeTab: number | null;
   setActiveTab: (tabID: number) => void;
+  downlaodImg: string | null;
+  setDownloadImage: (downlaodImg: string) => void;
+
   file: File | null;
   setFile: (file: File | null) => void;
 
@@ -102,6 +105,10 @@ interface ContextITFC {
 export const AppContext = createContext<ContextITFC>({
   activeTab: 2,
   setActiveTab: () => {},
+  downlaodImg: null,
+  setDownloadImage: () => {},
+
+
   file: null,
   setFile: () => {},
   selectedOption: "",
@@ -189,6 +196,8 @@ export const AppContext = createContext<ContextITFC>({
 });
 
 export const AppContextProvider = ({ children }: ContextProviderProps) => {
+  const [downlaodImg, setDownloadImage] = useState<string | null>(null);
+
   const [activeTab, setActiveTab] = useState<number | null>(1);
   const [file, setFile] = useState<File | null>(null);
   const [selectedOption, setSelectedOption] = useState<string>("");
@@ -241,6 +250,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   return (
     <AppContext.Provider
       value={{
+  downlaodImg, setDownloadImage,
+
         activeTab,
         setActiveTab,
         file,

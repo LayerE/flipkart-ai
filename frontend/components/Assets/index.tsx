@@ -61,9 +61,16 @@ const Assets: React.FC = () => {
         </ResponsiveRowWraptwo>
       </div>
       <div className="gap">
-        <Row>
+        {
+          upladedArray.length ? 
+          <Row>
           <Label>Uploaded Assets</Label>
         </Row>
+          :
+
+          null
+        }
+      
 
         <ResponsiveRowWraptwo>
           {upladedArray.map((test, i) => (

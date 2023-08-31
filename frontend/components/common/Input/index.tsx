@@ -11,6 +11,7 @@ export const Input = styled.input`
   border-radius: 0.45rem;
   background-color: transparent;
   width: 100%;
+
   font-size: 12px;
 
   &:disabled {
@@ -19,6 +20,43 @@ export const Input = styled.input`
       color: #fff7f7 !important;
     }
   }
+`;
+export const Suggestion1 = styled.div`
+  position:absolute;
+  top: 100%;
+  background-color: #fff;
+  z-index: 10;
+  left: 0;
+  right: 0;
+  max-height: 200px;
+  overflow: scroll;
+  /* border: 1px solid #5555; */
+  border-radius: 8px;
+  width: max-content;
+
+  &::-webkit-scrollbar{
+    display: none;
+  }
+  padding: 5px 5px;
+
+
+  .item{
+    background-color: #f3f3f3;
+    padding: 5px 10px;
+    margin-bottom: 5px;
+  border-radius: 8px;
+  transition: all 0.3s ease-out;
+
+
+  &:hover{
+    background-color: #e4e2e2;
+
+
+  }
+
+
+  }
+
 `;
 export const TestArea = styled.textarea`
   padding: 0.5rem 0.75rem;

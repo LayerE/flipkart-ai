@@ -7,6 +7,8 @@ import { styled } from "styled-components";
 import { category, test } from "@/store/dropdown";
 import { useAppState } from "@/context/app.context";
 import { elemest, platformEelement } from "@/store/listOfElement";
+import { fabric } from "fabric";
+
 
 const Element: React.FC = () => {
   const {
@@ -19,6 +21,53 @@ const Element: React.FC = () => {
     setViewMore,
   } = useAppState();
 
+  const getBase64FromUrl = async (url: string) => {
+    const data = await fetch(url);
+    const blob = await data.blob();
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(blob);
+      reader.onloadend = () => {
+        const base64data = reader.result;
+        resolve(base64data);
+      };
+    });
+  };
+
+  // useEffect(() => {
+  //   const add = document.getElementById("add");
+
+  //   add.addEventListener("click", async () => {
+  //     fabric.Image.fromURL(
+  //       await getBase64FromUrl(
+  //         "https://image.imgcreator.ai/ImgCreator/c3b7fbf516f74638820f53c25f40c744/hq/ae988912-f0b0-11ed-988f-0242ac110002_0.webp"
+  //       ),
+  //       function (img) {
+  //         // Set the image's dimensions
+  //         img.scaleToWidth(300);
+  //         // img.scaleToHeight(150);
+  //         // Scale the image to have the same width and height as the rectangle
+  //         // const scaleX = downloadRect.width / img.width;
+  //         // const scaleY = downloadRect.height / img.height;
+
+  //         // Position the image to be in the center of the rectangle
+  //         img.set({
+  //           left: 100,
+  //           top: 100,
+  //           // scaleX: scaleX,
+  //           // scaleY: scaleY,
+  //         });
+
+  //         // canvasInstanceRef.add(img);
+  //         // canvasInstanceRef.renderAll();
+  //       }
+  //     );
+  //   });
+
+   
+  // }, [])
+  
+
   return (
     <ElemtWraspper>
       <div className="accest">
@@ -28,6 +77,7 @@ const Element: React.FC = () => {
           </Row>
           <Row>
             <FileUpload1 />
+            {/* <button id="add">dsfgsd</button> */}
           </Row>
         </div>
         <div className="gap">
@@ -152,6 +202,12 @@ export const ElemtWraspper = styled(Row)`
     /* height: 120px; */
 
     min-width: 100px !important;
+    height: 100px;
+    overflow: hidden;
+    img{
+      object-fit: contain;
+    }
+    
   }
 `;
 

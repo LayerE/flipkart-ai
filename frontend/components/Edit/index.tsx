@@ -20,6 +20,8 @@ const fadeIn = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 1 } },
 };
+import { saveAs } from "file-saver";
+
 
 import { motion } from "framer-motion";
 import { arrayBufferToDataURL, dataURLtoFile } from "@/utils/BufferToDataUrl";
@@ -61,9 +63,9 @@ const Edit = () => {
     setModifidImageArray,
     undoArray,
     setUndoArray,
-  magicImage, setMagicImage,
-
-
+    magicImage,
+    setMagicImage,
+    downlaodImg,
     setBack,
   } = useAppState();
 
@@ -94,10 +96,18 @@ const Edit = () => {
   }
 
   const handileDownload = () => {
-    downloadImage(
-      modifidImageArray[modifidImageArray.length - 1].url,
-      "new.png"
-    );
+    // downloadImage(
+    //   modifidImageArray[modifidImageArray.length - 1].url,
+    //   "new.png"
+    // );
+    if (downlaodImg) {
+      const url = downlaodImg;
+      console.log(url);
+
+      saveAs(url, "downloaded-image.png");
+    } else {
+      alert("No image selected!");
+    }
   };
   const HandleBgRemover = async () => {
     setBgRemove(true);
@@ -113,16 +123,14 @@ const Edit = () => {
     }
     const modifiedData = await BgRemover(temp, "hero.png");
 
-    if(modifiedData){
-      
+    if (modifiedData) {
       setModifidImageArray((pre) => [
         ...pre,
         { url: modifiedData, tool: "bgRemove" },
       ]);
-    
-  
+
       setUndoArray([]);
-  
+
       setSelectedImage((prevState) => ({
         ...prevState,
         tools: {
@@ -139,21 +147,20 @@ const Edit = () => {
     setPriviewLoader(true);
     setSuperResolution(true);
     let temp;
-    if (!modifidImageArray.length ) {
+    if (!modifidImageArray.length) {
       temp = selectedImage.baseUrl;
     } else {
       temp = modifidImageArray[modifidImageArray.length - 1].url;
     }
     const modifiedData = await superResolutionFuc(temp, "hero.png");
     // setModifidImage(await modifiedData);
-    if(modifiedData){
-      
+    if (modifiedData) {
       setModifidImageArray((pre) => [
         ...pre,
         { url: modifiedData, tool: "superResolution" },
       ]);
       setUndoArray([]);
-  
+
       setSelectedImage((prevState) => ({
         ...prevState,
         tools: {
@@ -162,7 +169,6 @@ const Edit = () => {
         },
       }));
     }
-
 
     setPriviewLoader(false);
   };
@@ -181,9 +187,11 @@ const Edit = () => {
     const modifiedData = await PortraitSurfaceNormals(temp, "hero.png");
     // setModifidImage(await modifiedData);
 
-    if(modifiedData){
-      
-      setModifidImageArray((pre) => [...pre, { url: modifiedData, tool: "psn" }]);
+    if (modifiedData) {
+      setModifidImageArray((pre) => [
+        ...pre,
+        { url: modifiedData, tool: "psn" },
+      ]);
       setSelectedImage((prevState) => ({
         ...prevState,
         tools: {
@@ -210,10 +218,12 @@ const Edit = () => {
 
     const modifiedData = await PortraitDepthEstimation(temp, "hero.png");
     // setModifidImage(await modifiedData);
-    if(modifiedData){
-      
-      setModifidImageArray((pre) => [...pre, { url: modifiedData, tool: "pde" }]);
-  
+    if (modifiedData) {
+      setModifidImageArray((pre) => [
+        ...pre,
+        { url: modifiedData, tool: "pde" },
+      ]);
+
       setSelectedImage((prevState) => ({
         ...prevState,
         tools: {
@@ -239,13 +249,12 @@ const Edit = () => {
 
     const modifiedData = await Replacebackground(temp, "hero.png", bgpromt);
     // setModifidImage(await modifiedData);
-    if(modifiedData){
-      
+    if (modifiedData) {
       setModifidImageArray((pre) => [
         ...pre,
         { url: modifiedData, tool: "replaceBg" },
       ]);
-  
+
       setSelectedImage((prevState) => ({
         ...prevState,
         tools: {
@@ -271,13 +280,12 @@ const Edit = () => {
 
     const modifiedData = await RemoveText(temp, "hero.png");
     // setModifidImage(await modifiedData);
-    if(modifiedData){
-
+    if (modifiedData) {
       setModifidImageArray((pre) => [
         ...pre,
         { url: modifiedData, tool: "removeText" },
       ]);
-  
+
       setSelectedImage((prevState) => ({
         ...prevState,
         tools: {
@@ -325,7 +333,7 @@ const Edit = () => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
-  
+
       reader.onload = () => resolve(reader.result);
       reader.onerror = (error) => reject(error);
     });
@@ -337,22 +345,19 @@ const Edit = () => {
     const reader = new FileReader();
     reader.onloadend = () => {
       setMagicImage(reader.result);
-      console.log(magicImage)
+      console.log(magicImage);
     };
     reader.readAsDataURL(blob);
+  };
+  const handeleMG = async () => {
+    setMagickErase(!magickErase);
 
-
-};
-  const  handeleMG=async () =>{
-    setMagickErase(!magickErase)
-
-    const urlfile = modifidImageArray[modifidImageArray.length -1]?.url
-    const tofilr = await blobUrlToDataUrl(urlfile)
+    const urlfile = modifidImageArray[modifidImageArray.length - 1]?.url;
+    const tofilr = await blobUrlToDataUrl(urlfile);
     // const newurl = await fileToBase64(tofilr)
-  
-  // magicImage, setMagicImage
 
-  }
+    // magicImage, setMagicImage
+  };
 
   return (
     <motion.div
@@ -360,6 +365,7 @@ const Edit = () => {
       animate="visible"
       variants={fadeIn}
       className={selectedImage.url ? "accest" : "accest blure"}
+      style={{paddingBottom: "50px", }}
     >
       <div className="gap">
         {/* <Row>
@@ -384,7 +390,7 @@ const Edit = () => {
         </div>
       </div>
 
-      <div className="gap">
+      {/* <div className="gap">
         <Label>Color</Label>
         <div className="rowwothtwo">
           <DropdownInput
@@ -400,7 +406,7 @@ const Edit = () => {
             <Input onChange={(e) => setColore(e.target.value)} />
           </div>
         </div>
-      </div>
+      </div> */}
       <div className="gap">
         <Label>Tools</Label>
         <div className="gap">
@@ -462,10 +468,10 @@ const Edit = () => {
             </div>
             {bgClick ? (
               <div className="gen">
-                <Input
+                {/* <Input
                   value={bgpromt}
                   onChange={(e) => setBgpromt(e.target.value)}
-                />
+                /> */}
                 <Button
                   disabled={bgpromt === "" ? true : false}
                   onClick={() => HandleReplacebackground()}

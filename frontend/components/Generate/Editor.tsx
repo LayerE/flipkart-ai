@@ -1,12 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Row } from "../common/Row";
-import { Input, TestArea } from "../common/Input";
+import { Input, Suggestion1, TestArea } from "../common/Input";
 import Button from "../common/Button";
 import Label, { DisabledLabel } from "../common/Label";
 import DropdownInput, { DropdownNOBorder } from "../common/Dropdown";
 import {
   BackgroundList,
+  BackgroundSuggestions,
+  BackgrowundSuggestionsPrash,
+  PlacementSuggestions,
+  SurrontedSuggestionsPrash,
+  SurroundedSuggestions,
+  coloreStrength,
+  outlineStrength,
   placementList,
+  productSuggestions,
+  productSuggestionsPrash,
+  renderStrength,
   resultList,
   surroundingList,
   test,
@@ -17,11 +27,11 @@ import { BgRemover, generateimge } from "@/store/api";
 
 const fadeIn = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 1 } }
+  visible: { opacity: 1, transition: { duration: 1 } },
 };
 
-
 import { motion } from "framer-motion";
+import SuggetionInput from "./SuggetionInput";
 
 const EditorSection = () => {
   const {
@@ -53,58 +63,96 @@ const EditorSection = () => {
     selectedImage,
     modifidImage,
     setModifidImage,
-    imageArray, setImageArray,
-    previewLoader, setPriviewLoader,
-    generationLoader, setGenerationLoader,
-    setModifidImageArray
+    imageArray,
+    setImageArray,
+    previewLoader,
+    setPriviewLoader,
+    generationLoader,
+    setGenerationLoader,
+    setModifidImageArray,
   } = useAppState();
-
 
   // const imageArrays = JSON.parse(localStorage.getItem("g-images")) || [];
 
   console.log(imageArray);
   const generateImageHandeler = async () => {
-    setGenerationLoader(true)
+    setGenerationLoader(true);
     try {
       const data = await generateimge(promt);
       console.log(data, "dff");
       if (data) {
-        setImageArray((prev) => [...prev, {url:data.url, baseUrl:data.baseUrl}]);
-      
+        setImageArray((prev) => [
+          ...prev,
+          { url: data.url, baseUrl: data.baseUrl },
+        ]);
       }
-      console.log(data, "dff",imageArray);
-
+      console.log(data, "dff", imageArray);
     } catch (error) {
       console.error("Error generating image:", error);
-    } finally{
-      setGenerationLoader(false)
+    } finally {
+      setGenerationLoader(false);
     }
   };
 
+  const ProductSuggestionsFilter = productSuggestions.filter((suggestion) =>
+    suggestion.toLowerCase().includes(product.toLowerCase())
+  );
+  const PlacementSuggestionsFilter = PlacementSuggestions.filter((suggestion) =>
+    suggestion.toLowerCase().includes(placementTest.toLowerCase())
+  );
+  const PlacementSuggesPrahtionsFilter = productSuggestionsPrash.filter(
+    (suggestion) =>
+      suggestion.toLowerCase().includes(placementTest.toLowerCase())
+  );
+  const SurrondingSuggesPrahtionsFilter = SurroundedSuggestions.filter(
+    (suggestion) =>
+      suggestion.toLowerCase().includes(surroundingTest.toLowerCase())
+  );
+  const SurrontedSuggestionsPrashFilter = SurrontedSuggestionsPrash.filter(
+    (suggestion) =>
+      suggestion.toLowerCase().includes(placementTest.toLowerCase())
+  );
+  const BackgroundSuggestionsFilter = BackgroundSuggestions.filter(
+    (suggestion) =>
+      suggestion.toLowerCase().includes(backgroundTest.toLowerCase())
+  );
+  const BackgrowundSuggestionsPrashFilter = BackgrowundSuggestionsPrash.filter(
+    (suggestion) =>
+      suggestion.toLowerCase().includes(placementTest.toLowerCase())
+  );
+
   return (
-    <motion.div 
-    initial="hidden"
-    animate="visible"
-    variants={fadeIn}
-    className="accest">
-      
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={fadeIn}
+      className="accest"
+    >
       <div className="filde gap">
         <DisabledLabel>Product</DisabledLabel>
-        <Input value={product}  onChange={(e)=> setProduct(e.target.value)}></Input>
+        <SuggetionInput
+          value={product}
+          setValue={setProduct}
+          suggetion={ProductSuggestionsFilter}
+        />
       </div>
       <div className="gap">
         <DisabledLabel>Placement</DisabledLabel>
         <div className="two-side">
           <DropdownInput
             data={{
-              list: placementList,
+              list: PlacementSuggestions,
               action: setSelectedPlacement,
               label: "placement",
 
               activeTab: selectPlacement,
             }}
           ></DropdownInput>
-          <Input value={placementTest}  onChange={(e)=> setPlacementTest(e.target.value)}></Input>
+          <SuggetionInput
+            value={placementTest}
+            setValue={setPlacementTest}
+            suggetion={PlacementSuggestionsFilter}
+          />
         </div>
       </div>
       <div className="gap">
@@ -112,15 +160,18 @@ const EditorSection = () => {
         <div className="two-side">
           <DropdownInput
             data={{
-              list: surroundingList,
+              list: SurrontedSuggestionsPrash,
               action: setSelectedSurrounding,
               label: "surrounding",
 
-              
               activeTab: selectSurrounding,
             }}
           ></DropdownInput>
-          <Input value={surroundingTest}  onChange={(e)=> setSurroundingTest(e.target.value)}></Input>
+          <SuggetionInput
+            value={surroundingTest}
+            setValue={setSurroundingTest}
+            suggetion={SurrondingSuggesPrahtionsFilter}
+          />
         </div>
       </div>
       <div className="gap">
@@ -128,14 +179,18 @@ const EditorSection = () => {
         <div className="two-side">
           <DropdownInput
             data={{
-              list: BackgroundList,
+              list: BackgroundSuggestions,
               label: "background",
 
               action: setSelectedBackground,
               activeTab: selectBackground,
             }}
           ></DropdownInput>
-          <Input value={backgroundTest}  onChange={(e)=> setBackgrundTest(e.target.value)}></Input>
+          <SuggetionInput
+            value={backgroundTest}
+            setValue={setBackgrundTest}
+            suggetion={BackgroundSuggestionsFilter}
+          />
         </div>
       </div>
       <div className="rowwothtwo">
@@ -155,7 +210,7 @@ const EditorSection = () => {
         <div className="dropdown-smaill">
           <DropdownNOBorder
             data={{
-              list: resultList,
+              list: renderStrength,
               action: setSelectedRender,
               activeTab: selectRunder,
             }}
@@ -167,7 +222,7 @@ const EditorSection = () => {
         <div className="dropdown-smaill">
           <DropdownNOBorder
             data={{
-              list: resultList,
+              list: coloreStrength,
               action: setSelectedColoreStrength,
               activeTab: selectColoreStrength,
             }}
@@ -179,7 +234,7 @@ const EditorSection = () => {
         <div className="dropdown-smaill">
           <DropdownNOBorder
             data={{
-              list: resultList,
+              list: outlineStrength,
               action: setSelectedOutline,
               activeTab: selectOutLline,
             }}

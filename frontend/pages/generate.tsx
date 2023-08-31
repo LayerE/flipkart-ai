@@ -52,6 +52,8 @@ export default function Home() {
     setFile,
     setMagickErase,
     setInpainting,
+  downlaodImg, setDownloadImage
+
   } = useAppState();
 
   // useEffect(() => {
@@ -153,7 +155,7 @@ export default function Home() {
   const canvasRef = useRef(null);
   // const canvasInstanceRef  = useRef(null);
   // let canvasInstance
-  const [selectedImaged, setDownloadImage] = useState(null);
+  // const [selectedImaged, setDownloadImage] = useState(null);
   let canvasInstance;
   // let selectedImaged = null;
 
@@ -209,10 +211,6 @@ export default function Home() {
         // // Now, base64URL contains the Base64 URL representation of the image.
         // // You can store it, send it somewhere, or log it
         // console.log(base64URL);
-
-
-
-
       };
 
       e.preventDefault();
@@ -231,7 +229,7 @@ export default function Home() {
 
     // const bringToFrontBtn = document.getElementById("bringToFrontBtn");
     // const sendToBackBtn = document.getElementById("sendToBackBtn");
-    // const add = document.getElementById("asdd");
+    // const add = document.getElementById("add");
 
     // sendToBackBtn.addEventListener("click", () => {
     //   const activeObject = canvasInstanceRef.getActiveObject();
@@ -334,32 +332,31 @@ export default function Home() {
 
     // const deleteBtn = document.getElementById("deleteBtn");
 
-// deleteBtn.addEventListener("click", () => {
-//   const activeObject = canvasInstanceRef.getActiveObject();
+    // deleteBtn.addEventListener("click", () => {
+    //   const activeObject = canvasInstanceRef.getActiveObject();
 
-//   if (activeObject) {
-//     canvasInstanceRef.remove(activeObject);
-//     canvasInstanceRef.renderAll();
-//   }
-// });
+    //   if (activeObject) {
+    //     canvasInstanceRef.remove(activeObject);
+    //     canvasInstanceRef.renderAll();
+    //   }
+    // });
 
-document.addEventListener("keydown", (e) => {
-  // Check if the pressed key is 'Delete' (code: 46) or 'Backspace' (code: 8) for wider compatibility
-  if (e.keyCode === 46 || e.keyCode === 8) {
-      const activeObject = canvasInstanceRef.getActiveObject();
+    document.addEventListener("keydown", (e) => {
+      // Check if the pressed key is 'Delete' (code: 46) or 'Backspace' (code: 8) for wider compatibility
+      if (e.keyCode === 46 || e.keyCode === 8) {
+        const activeObject = canvasInstanceRef.getActiveObject();
 
-      if (activeObject) {
+        if (activeObject) {
           canvasInstanceRef.remove(activeObject);
           canvasInstanceRef.renderAll();
-      }
+        }
 
-      // Prevent the default behavior of the backspace key (going back in browser history)
-      if (e.keyCode === 8) {
-          e.preventDefault();
+        // Prevent the default behavior of the backspace key (going back in browser history)
+        // if (e.keyCode === 8) {
+        //   e.preventDefault();
+        // }
       }
-  }
-});
-
+    });
 
     // bringToFrontBtn.addEventListener("click", () => {
     //   const activeObject = canvasInstanceRef.getActiveObject();
@@ -380,13 +377,11 @@ document.addEventListener("keydown", (e) => {
     canvasInstanceRef.getElement().ondragover = function (e) {
       e.preventDefault();
     };
-
-   
   }, []);
 
   function downloadCanvasContent() {
-    if (selectedImaged) {
-      const url = selectedImaged;
+    if (downlaodImg) {
+      const url = downlaodImg;
       console.log(url);
 
       saveAs(url, "downloaded-image.png");
@@ -397,13 +392,13 @@ document.addEventListener("keydown", (e) => {
 
   return (
     <MainPages>
-      {/* <Apps /> */}
       <motion.div
         initial="hidden"
         animate="visible"
         variants={fadeIn}
         className="news"
       >
+       
         <Sidebar />
         <div className="Editor" ref={outerDivRef}>
           <div className="main-privier">
@@ -476,13 +471,7 @@ document.addEventListener("keydown", (e) => {
             <button id="deleteBtn">Delete Selected</button>
           </div> */}
 
-          <div
-            className="convas-continer"
-            // onDrop={handleDrop}
-            // onDragOver={(e) => e.preventDefault()}
-            // onDrop={onDrop}
-            // onDragOver={(e) => e.preventDefault()}
-          >
+          <div className="convas-continer">
             <canvas ref={canvasRef} />
           </div>
         </div>
@@ -490,6 +479,7 @@ document.addEventListener("keydown", (e) => {
     </MainPages>
   );
 }
+
 const MainPages = styled.div`
   display: block;
   width: 100%;

@@ -26,38 +26,14 @@ import Tamplates from "./Templates";
 
 const Generate = () => {
   const {
-    selectPlacement,
-    setSelectedPlacement,
-    selectSurrounding,
-    setSelectedSurrounding,
-    selectBackground,
-    setSelectedBackground,
-    selectResult,
-    setSelectedresult,
-    selectRunder,
-    setSelectedRender,
-    selectColoreStrength,
-    setSelectedColoreStrength,
-    selectOutLline,
-    setSelectedOutline,
+    product,
+    placementTest,
+    backgroundTest,
+    surroundingTest,
     promt,
     setpromt,
-    product,
-    setProduct,
-    placementTest,
-    setPlacementTest,
-    backgroundTest,
-    setBackgrundTest,
-    surroundingTest,
-    setSurroundingTest,
-    setSelectedImage,
-    selectedImage,
-    modifidImage,
-    setModifidImage,
     imageArray,
     setImageArray,
-    previewLoader,
-    setPriviewLoader,
     generationLoader,
     setGenerationLoader,
     setModifidImageArray,
@@ -94,12 +70,46 @@ const Generate = () => {
     >
       <div className="gap">
         <Row>
-          <TestArea value={promt} onChange={(e) => setpromt(e.target.value)} />
+          {/* <TestArea value={promt} onChange={(e) => setpromt(e.target.value)} /> */}
+          <PromtGeneratePreview className="generatePreview">
+            {product !== null && product !== "" ? (
+              <label
+                htmlFor="prompt-editor-subject-0-input"
+                className="promtText"
+              >
+                {product}{" "}
+              </label>
+            ) : null}
+            {placementTest !== null && placementTest !== "" ? (
+              <label
+                htmlFor="prompt-editor-subject-1-input"
+                className="promtText"
+              >
+                {placementTest}{" "}
+              </label>
+            ) : null}
+            {surroundingTest !== null && surroundingTest !== "" ? (
+              <label
+                htmlFor="prompt-editor-subject-2-input"
+                className="promtText"
+              >
+                {surroundingTest}{" "}
+              </label>
+            ) : null}
+            {backgroundTest !== null && backgroundTest !== "" ? (
+              <label
+                htmlFor="prompt-editor-subject-3-input"
+                className="promtText"
+              >
+                {","} {backgroundTest}{" "}
+              </label>
+            ) : null}
+          </PromtGeneratePreview>
         </Row>
         <Row>
           <Button
             onClick={() => generateImageHandeler()}
-            disabled={promt === "" ? true : false}
+            disabled={product === "" ? true : false}
           >
             {generationLoader ? "Loading..." : "Generate"}
           </Button>
@@ -108,9 +118,7 @@ const Generate = () => {
       <div className="bigGap">
         {/* <Label>Edit the the prompt in the form below.</Label> */}
       </div>
-      <div className="gap">
-       
-      </div>
+      <div className="gap"></div>
       <SwchichBtn className="swich">
         <div
           className={changeTab ? "btnswitch " : "btnswitch activeSwitch"}
@@ -126,15 +134,29 @@ const Generate = () => {
         </div>
       </SwchichBtn>
       <Wrapper className="wrappper">
-      {changeTab ? <EditorSection /> : <Tamplates/>
-}
-      
+        {changeTab ? <EditorSection /> : <Tamplates />}
       </Wrapper>
     </motion.div>
   );
 };
 
 export default Generate;
+
+export const PromtGeneratePreview = styled.div`
+  border: 1px solid rgba(0, 0, 0, 1);
+  padding: 10px;
+  border-radius: 8px;
+  width: 100%;
+  min-height: 40px;
+
+  .promtText {
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    &:hover {
+      color: rgba(249, 208, 13, 1);
+    }
+  }
+`;
 export const ResponsiveRowWraptwo = styled(Row)`
   display: grid !important;
   gap: 1rem;
@@ -162,8 +184,6 @@ export const SwchichBtn = styled(Row)`
   }
 `;
 export const Wrapper = styled.div`
-max-height: 600px;
-overflow-y: scroll;
- 
-
+  max-height: 600px;
+  overflow-y: scroll;
 `;

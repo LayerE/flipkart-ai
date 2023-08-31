@@ -80,21 +80,11 @@ const Tamplates = () => {
                 selectedImage.id === i ? "imageBox ativeimg" : "imageBox"
               }
               onClick={() => {
-                setSelectedImage({
-                  id: i,
-                  url: test.image,
-                  baseUrl: test.image,
-                  tools: {
-                    bgRemove: false,
-                    removeText: false,
-                    replaceBg: false,
-                    psn: false,
-                    pde: false,
-                    superResolution: false,
-                    magic: false,
-                  },
-                });
-                setModifidImageArray([]);
+               setProduct(test.product)
+               setPlacementTest(test.placement)
+               setSurroundingTest(test.surrounding)
+               setBackgrundTest(test.background)
+             
               }}
             >
               <picture>

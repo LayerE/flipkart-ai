@@ -16,37 +16,117 @@ export const test = [
 
   export const BackgroundList = ["Mobile", "Electronics", "Large Items", "Furnitures"];
   export const coloreList = ["Mobile", "Electronics", "Large Items", "Furnitures"];
-  export const resultList = [1, 2, 3, 4,5,6,7,8,9];
+
+  export const productSuggestions = ["bottle", "can", "box", "bag", "device"];
+  export const PlacementSuggestions = ["circular platform", "circular reflective platform", "rocks", "a marble block", "a mound of grass", "a grassy hill" ];
+  export const productSuggestionsPrash = ["on", "standing on", "laying on", "balancing on", "buried in", "emerging from", "in"];
+  export const SurroundedSuggestions = ["circular platform", "circular reflective platform", "rocks", "a marble block", "a mound of grass", "a grassy hill" ];
+  export const SurrontedSuggestionsPrash = ["on", "standing on", "laying on", "balancing on", "buried in", "emerging from", "in"];
+  export const BackgroundSuggestions = ["circular platform", "circular reflective platform", "rocks", "a marble block", "a mound of grass", "a grassy hill" ];
+  export const BackgrowundSuggestionsPrash = ["on", "standing on", "laying on", "balancing on", "buried in", "emerging from", "in"];
+  export const resultList = [
+    {
+      tittle:1,
+    },
+    {
+      tittle:2,
+    },{
+      tittle:3,
+    },{
+      tittle:4,
+    },
+  ];
+
+  export const renderStrength = [
+    {
+      tittle:"Extra Weak",
+    },
+    {
+      tittle:"Weak",
+    },
+    {
+      tittle:"Default",
+    },
+    {
+      tittle:"Strong ",
+    },
+    {
+      tittle:"Extra Strong",
+    },
+    
+  ]
+  export const coloreStrength = [
+    {
+      tittle:"None",
+    },
+    {
+      tittle:"Weak",
+    },
+    {
+      tittle:"Default",
+    },
+    {
+      tittle:"Strong ",
+    },
+    {
+      tittle:"Extra Strong",
+    },
+    
+  ]
+  export const outlineStrength = [
+    {
+      tittle:"None",
+    },
+    {
+      tittle:"Extra Weak",
+    },
+    {
+      tittle:"Weak",
+    },
+    {
+      tittle:"Default",
+    },
+    {
+      tittle:"Strong ",
+    },
+    {
+      tittle:"Extra Strong",
+    },
+    
+  ]
+
 
 
   export const templets = [
     {
       image: "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/b3250ecd-e67f-4f5d-8813-864444fb2100/256",
-      promt: "montain"
+      promt: "montain",
+      product: "",
+      placement: "ripples in a lake",
+      surrounding: "surrounded by plants and flowers",
+      background: "with sunlight streaming down"
     },
     {
       image: "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/c603596d-958b-40b1-c333-ec7f71d67100/256",
-      promt: "montain"
+      promt: "montain",
+      product: "",
+      placement: "on top of a natural hill and rocks",
+      surrounding: "surrounded by flowers",
+      background: ""
     },  {
       image: "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/ec0c2e98-c02b-43a1-8c61-cec2f2e19400/256",
-      promt: "montain"
+      promt: "montain",
+      product: "",
+      placement: "ripples in a lake",
+      surrounding: "surrounded by plants and flowers",
+      background: "with sunlight streaming down"
     },  {
       image: "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/f55418ca-1796-4ebf-1571-a3d92da3af00/256",
-      promt: "montain"
-    },  {
-      image: "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/68b6af6d-fd18-46f8-2a75-87f65d3ce200/256",
-      promt: "montain"
-    },  {
-      image: "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/ade716c4-cd63-4de7-bb83-8bf53912ad00/256",
-      promt: "montain"
-    },
-    {
-      image: "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/4c5202d6-2fdc-4835-313e-dc41595b9300/256",
-      promt: "montain"
-    },
-    {
-      image: "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/92cc22a8-389a-4733-141b-146ec538f300/256",
-      promt: "montain"
+      promt: "montain",
+      product: "",
+      placement: " on grassy patch of moss",
+      surrounding: "surrounded by clovers and flowers,",
+      background: "against a lush and dense forest and sunlight streaming down in the background"
     }, 
   ];
 
