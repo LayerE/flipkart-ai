@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Label from "../common/Label";
 import { FileUpload, Input } from "../common/Input";
 import { Row } from "../common/Row";
 import DropdownInput from "../common/Dropdown";
 import Button from "../common/Button";
-import { coloreList } from "@/store/dropdown";
+import { coloreList, coloreMode } from "@/store/dropdown";
 import { useAppState } from "@/context/app.context";
 import {
   BgRemover,
@@ -22,11 +22,14 @@ const fadeIn = {
 };
 import { saveAs } from "file-saver";
 
-
+import { SketchPicker } from "react-color";
 import { motion } from "framer-motion";
 import { arrayBufferToDataURL, dataURLtoFile } from "@/utils/BufferToDataUrl";
 
 const Edit = () => {
+  const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
+  const popupRef = useRef<HTMLDivElement>(null);
+
   const {
     colore,
     setColore,
@@ -59,261 +62,90 @@ const Edit = () => {
     setSuperResolution,
     bgpromt,
     setBgpromt,
-    modifidImageArray,
-    setModifidImageArray,
+
     undoArray,
     setUndoArray,
     magicImage,
     setMagicImage,
-    downlaodImg,
+    selectedImg,
+    canvasInstance,
     setBack,
   } = useAppState();
 
   useEffect(() => {
-    console.log("ss");
-  }, [previewLoader, bgRemove, modifidImageArray]);
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node)
+      ) {
+        setIsPopupOpen(false);
+      }
+    };
+
+    document.addEventListener("click", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("click", handleOutsideClick);
+    };
+  }, []);
+
+  const handleButtonClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
+    setIsPopupOpen((prevIsPopupOpen) => !prevIsPopupOpen);
+  };
 
   const [bgClick, setBgClick] = useState(false);
 
-  const { selectColore, setSelectedColore } = useAppState();
-
-  function downloadImage(blob: Blob, filename: string) {
-    const url = blob;
-
-    const anchor = document.createElement("a");
-    anchor.href = url;
-    anchor.download = filename;
-
-    // Append the anchor to the document and programmatically click on it
-    document.body.appendChild(anchor);
-    anchor.click();
-
-    // Remove the anchor from the document
-    document.body.removeChild(anchor);
-
-    // Revoke the object URL to release memory
-    URL.revokeObjectURL(url);
-  }
+  const { setSelectedColoreMode, selectColoreMode } = useAppState();
 
   const handileDownload = () => {
-    // downloadImage(
-    //   modifidImageArray[modifidImageArray.length - 1].url,
-    //   "new.png"
-    // );
-    if (downlaodImg) {
-      const url = downlaodImg;
+    if (selectedImg) {
+      const url = selectedImg;
       console.log(url);
 
-      saveAs(url, "downloaded-image.png");
+      saveAs(url, `image${Date.now()}.png`);
     } else {
-      alert("No image selected!");
+      // alert("No image selected!");
     }
   };
   const HandleBgRemover = async () => {
-    setBgRemove(true);
-    setPriviewLoader(true);
-    console.log(bgRemove);
-    console.log("sdfws", bgRemove);
-
-    let temp;
-    if (!modifidImageArray.length) {
-      temp = selectedImage.baseUrl;
-    } else {
-      temp = modifidImageArray[modifidImageArray.length - 1].url;
-    }
-    const modifiedData = await BgRemover(temp, "hero.png");
-
-    if (modifiedData) {
-      setModifidImageArray((pre) => [
-        ...pre,
-        { url: modifiedData, tool: "bgRemove" },
-      ]);
-
-      setUndoArray([]);
-
-      setSelectedImage((prevState) => ({
-        ...prevState,
-        tools: {
-          ...prevState.tools,
-          bgRemove: true,
-        },
-      }));
-    }
-
-    setPriviewLoader(false);
+    // setBgRemove(true);
+    // setPriviewLoader(true);
+    // setPriviewLoader(false);
   };
 
   const HandleSuperResolutin = async () => {
-    setPriviewLoader(true);
-    setSuperResolution(true);
-    let temp;
-    if (!modifidImageArray.length) {
-      temp = selectedImage.baseUrl;
-    } else {
-      temp = modifidImageArray[modifidImageArray.length - 1].url;
-    }
-    const modifiedData = await superResolutionFuc(temp, "hero.png");
-    // setModifidImage(await modifiedData);
-    if (modifiedData) {
-      setModifidImageArray((pre) => [
-        ...pre,
-        { url: modifiedData, tool: "superResolution" },
-      ]);
-      setUndoArray([]);
-
-      setSelectedImage((prevState) => ({
-        ...prevState,
-        tools: {
-          ...prevState.tools,
-          superResolution: true,
-        },
-      }));
-    }
-
-    setPriviewLoader(false);
+    // setPriviewLoader(true);
+    // setSuperResolution(true);
+    // let temp;
+    // setPriviewLoader(false);
   };
 
   const HandlePortraitSurfaceNormals = async () => {
-    setPriviewLoader(true);
-    let temp;
-
-    if (!modifidImageArray.length) {
-      temp = selectedImage.baseUrl;
-    } else {
-      temp = modifidImageArray[modifidImageArray.length - 1].url;
-    }
-    setPSN(true);
-
-    const modifiedData = await PortraitSurfaceNormals(temp, "hero.png");
-    // setModifidImage(await modifiedData);
-
-    if (modifiedData) {
-      setModifidImageArray((pre) => [
-        ...pre,
-        { url: modifiedData, tool: "psn" },
-      ]);
-      setSelectedImage((prevState) => ({
-        ...prevState,
-        tools: {
-          ...prevState.tools,
-          psn: true,
-        },
-      }));
-      setUndoArray([]);
-    }
-
-    setPriviewLoader(false);
+    // setPriviewLoader(true);
+    // let temp;
+    // setPriviewLoader(false);
   };
 
   const HandlePortraitDepthEstimation = async () => {
-    setPriviewLoader(true);
-    let temp;
-
-    if (!modifidImageArray.length) {
-      temp = selectedImage.baseUrl;
-    } else {
-      temp = modifidImageArray[modifidImageArray.length - 1].url;
-    }
-    setPDE(true);
-
-    const modifiedData = await PortraitDepthEstimation(temp, "hero.png");
-    // setModifidImage(await modifiedData);
-    if (modifiedData) {
-      setModifidImageArray((pre) => [
-        ...pre,
-        { url: modifiedData, tool: "pde" },
-      ]);
-
-      setSelectedImage((prevState) => ({
-        ...prevState,
-        tools: {
-          ...prevState.tools,
-          pde: true,
-        },
-      }));
-      setUndoArray([]);
-    }
-
-    setPriviewLoader(false);
+    // setPriviewLoader(true);
+    // let temp;
+    // setPriviewLoader(false);
   };
 
   const HandleReplacebackground = async () => {
-    setPriviewLoader(true);
-    setReplaceBg(true);
-    let temp;
-    if (!modifidImageArray.length) {
-      temp = selectedImage.baseUrl;
-    } else {
-      temp = modifidImageArray[modifidImageArray.length - 1].url;
-    }
-
-    const modifiedData = await Replacebackground(temp, "hero.png", bgpromt);
-    // setModifidImage(await modifiedData);
-    if (modifiedData) {
-      setModifidImageArray((pre) => [
-        ...pre,
-        { url: modifiedData, tool: "replaceBg" },
-      ]);
-
-      setSelectedImage((prevState) => ({
-        ...prevState,
-        tools: {
-          ...prevState.tools,
-          replaceBg: true,
-        },
-      }));
-      setUndoArray([]);
-    }
-
-    setPriviewLoader(false);
+    // setPriviewLoader(false);
   };
 
   const HandleRemoveText = async () => {
-    setPriviewLoader(true);
-    let temp;
-    if (!modifidImageArray.length) {
-      temp = selectedImage.baseUrl;
-    } else {
-      temp = modifidImageArray[modifidImageArray.length - 1].url;
-    }
-    setRemoveText(true);
-
-    const modifiedData = await RemoveText(temp, "hero.png");
-    // setModifidImage(await modifiedData);
-    if (modifiedData) {
-      setModifidImageArray((pre) => [
-        ...pre,
-        { url: modifiedData, tool: "removeText" },
-      ]);
-
-      setSelectedImage((prevState) => ({
-        ...prevState,
-        tools: {
-          ...prevState.tools,
-          removeText: true,
-        },
-      }));
-      setUndoArray([]);
-    }
-
-    setPriviewLoader(false);
+    // setPriviewLoader(true);
+    // setRemoveText(true);
+    // setPriviewLoader(false);
   };
 
   const HandleInpainting = async () => {
-    setPriviewLoader(true);
-    let temp;
-    if (modifidImage === null || modifidImage === "") {
-      temp = selectedImage.baseUrl;
-    } else {
-      temp = modifidImageArray[modifidImageArray.length - 1].url;
-    }
-    setInpainting(true);
-
-    const modifiedData = await Inpainting(temp, "hero.png");
-    setModifidImage(await modifiedData);
-    setUndoArray([]);
-
-    setPriviewLoader(false);
+    // setPriviewLoader(true);
+    // setPriviewLoader(false);
   };
 
   // const handleImageChange = (file) => {
@@ -329,34 +161,64 @@ const Edit = () => {
   //     reader.readAsDataURL(file);
   //   }
   // };
-  function fileToBase64(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
 
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
-    });
+  function addColorOverlayToSelectedImage(color, mode) {
+    const canvas = canvasInstance.current;
+    const activeObject = canvas.getActiveObject();
+
+    if (activeObject && activeObject.type === "image") {
+      activeObject.filters = []; // Clear existing filters
+
+      if (mode !== "none") {
+        let filter;
+        switch (mode) {
+          case "Overlay":
+            filter = new fabric.Image.filters.BlendColor({
+              color: color,
+              mode: "overlay",
+              alpha: 0.5,
+            });
+            break;
+          case "Multiply":
+            filter = new fabric.Image.filters.BlendColor({
+              color: color,
+              mode: "multiply",
+              alpha: 1,
+            });
+            break;
+          case "Add":
+            filter = new fabric.Image.filters.BlendColor({
+              color: color,
+              mode: "add",
+              alpha: 1,
+            });
+            break;
+          case "Tint":
+            filter = new fabric.Image.filters.Tint({
+              color: color,
+              opacity: 0.5,
+            });
+            break;
+        }
+
+        if (filter) {
+          activeObject.filters.push(filter);
+        }
+      }
+
+      activeObject.applyFilters();
+      canvas.renderAll();
+    } else {
+      // alert("Please select an image on the canvas first.");
+    }
   }
 
-  const blobUrlToDataUrl = async (blobUrl) => {
-    const response = await fetch(blobUrl);
-    const blob = await response.blob();
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setMagicImage(reader.result);
-      console.log(magicImage);
-    };
-    reader.readAsDataURL(blob);
-  };
-  const handeleMG = async () => {
-    setMagickErase(!magickErase);
+  useEffect(() => {
+    addColorOverlayToSelectedImage(colore, selectColoreMode);
+  }, [selectColoreMode]);
 
-    const urlfile = modifidImageArray[modifidImageArray.length - 1]?.url;
-    const tofilr = await blobUrlToDataUrl(urlfile);
-    // const newurl = await fileToBase64(tofilr)
-
-    // magicImage, setMagicImage
+  const handleChangeComplete = (color) => {
+    setColore(color.hex);
   };
 
   return (
@@ -364,8 +226,8 @@ const Edit = () => {
       initial="hidden"
       animate="visible"
       variants={fadeIn}
-      className={selectedImage.url ? "accest" : "accest blure"}
-      style={{paddingBottom: "50px", }}
+      className={selectedImg ? "accest" : "accest blure"}
+      style={{ paddingBottom: "50px" }}
     >
       <div className="gap">
         {/* <Row>
@@ -390,23 +252,35 @@ const Edit = () => {
         </div>
       </div>
 
-      {/* <div className="gap">
+      <div className="gap">
         <Label>Color</Label>
         <div className="rowwothtwo">
           <DropdownInput
             data={{
-              list: coloreList,
+              list: coloreMode,
               label: "color",
-              action: setSelectedColore,
-              activeTab: selectColore,
+              action: setSelectedColoreMode,
+              activeTab: selectColoreMode,
             }}
           />
           <div className="clolorpicker">
-            <div className="colorBox" style={{ background: colore }}></div>
-            <Input onChange={(e) => setColore(e.target.value)} />
+            <div
+              className="colorBox"
+              style={{ background: colore }}
+              onClick={handleButtonClick}
+            ></div>
+            {isPopupOpen && (
+              <div className="pikkeropen" ref={popupRef}>
+                <SketchPicker
+                  color={colore}
+                  onChangeComplete={handleChangeComplete}
+                />
+              </div>
+            )}
+            <Input value={colore} style={{ width: "100px" }} />
           </div>
         </div>
-      </div> */}
+      </div>
       <div className="gap">
         <Label>Tools</Label>
         <div className="gap">
@@ -533,27 +407,12 @@ const Edit = () => {
               <p>Paint over objects to erase from the image</p>
             </div>
           </div>
-          {/* <div
-            className={upScale ? "selectTool ativeimg" : "selectTool"}
-            onClick={() => setupscale(!upScale)}
-          >
-            <Label>Upscale</Label>
-            <div>
-              <p>Upscale image up to 2k resolution</p>
-            </div>
-          </div> */}
         </div>
       </div>
       <Row>
         <Button
           onClick={() => handileDownload()}
-          disabled={
-            previewLoader === true
-              ? true
-              : modifidImageArray.length
-              ? false
-              : false
-          }
+          disabled={previewLoader === true ? true : false}
         >
           Download
         </Button>

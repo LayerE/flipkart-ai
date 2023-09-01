@@ -1,23 +1,14 @@
-import React, { useRef, useState, useEffect } from "react";
+import React from "react";
 import { Row } from "../common/Row";
 import Label from "../common/Label";
-import { FileUpload, FileUpload1 } from "../common/Input";
-import DropdownInput from "../common/Dropdown";
 import { styled } from "styled-components";
-import { category, test } from "@/store/dropdown";
 import { useAppState } from "@/context/app.context";
-import { productList } from "@/store/listOfElement";
+
 
 const ListOf: React.FC = () => {
   const {
-    selectedImage,
-    setSelectedImage,
-    selectCategory,
-    setSelectedCategory,
-    imageArray,
-    upladedArray,
     viewMore,
-    setModifidImageArray
+    addimgToCanvas,
   } = useAppState();
 
   return (
@@ -26,30 +17,14 @@ const ListOf: React.FC = () => {
         <Row>
           <Label>Select an element to add</Label>
         </Row>
-       
+
         <ResponsiveRowWraptwo>
-          {viewMore?.list?.map((test, i) => (
+          {viewMore?.list?.map((test:string, i:number) => (
             <div
               key={i}
-              className={
-                selectedImage.id === i ? "imageBox ativeimg" : "imageBox"
-              }
+              className={"imageBox"}
               onClick={() => {
-                setSelectedImage({
-                  id: i,
-                  url: test,
-                  baseUrl: test,
-                  tools: {
-                    bgRemove: false,
-                    removeText: false,
-                    replaceBg: false,
-                    psn: false,
-                    pde: false,
-                    superResolution: false,
-                    magic: false,
-                  },
-                });
-                setModifidImageArray([]);
+                addimgToCanvas(test);
               }}
             >
               <picture>
@@ -59,9 +34,6 @@ const ListOf: React.FC = () => {
           ))}
         </ResponsiveRowWraptwo>
       </div>
-     
-      
-  
     </div>
   );
 };

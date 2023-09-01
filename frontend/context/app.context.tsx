@@ -5,23 +5,31 @@ import {
   useContext,
   useEffect,
   useState,
+  useRef
 } from "react";
+import { fabric } from "fabric";
+
 
 type ContextProviderProps = {
   children: React.ReactNode;
 };
 
 interface ContextITFC {
+  canvasInstance: React.MutableRefObject<any | null>;
+  addimgToCanvas: (url:string) => void;
+  getBase64FromUrl: (url:string) => void;
+
+ 
+
   activeTab: number | null;
   setActiveTab: (tabID: number) => void;
-  downlaodImg: string | null;
-  setDownloadImage: (downlaodImg: string) => void;
+  selectedImg: string | null;
+  setSelectedImg: (selectedImg: string) => void;
 
   file: File | null;
   setFile: (file: File | null) => void;
 
-  selectedOption: string;
-  setSelectedOption: (selectedOption: string) => void;
+
   selectedImage: object;
   setSelectedImage: (selectedImage: object) => void;
   viewMore: object;
@@ -31,12 +39,14 @@ interface ContextITFC {
   setSelectedCategory: (selectCategory: string) => void;
   selectPlacement: string;
   setSelectedPlacement: (selectPlacement: string) => void;
+surroundingtype: string;
+  setSurroundingtype: (surroundingtype: string) => void;
   selectSurrounding: string;
   setSelectedSurrounding: (selectSurrounding: string) => void;
   selectBackground: string;
   setSelectedBackground: (selectBackground: string) => void;
-  selectColore: string;
-  setSelectedColore: (selectColore: string) => void;
+  selectColoreMode: string;
+  setSelectedColoreMode: (selectColoreMode: string) => void;
   selectResult: number;
   setSelectedresult: (selectResult: number) => void;
   selectRunder: number;
@@ -73,12 +83,12 @@ interface ContextITFC {
   setBack: (back: boolean) => void;
   modifidImage: string;
   setModifidImage: (modifidImage: string) => void;
-  imageArray: string[];
-  setImageArray: (imageArray: string[]) => void;
+  uploadedProductlist: string[];
+  setUploadedProductlist: (uploadedProductlist: string[]) => void;
   upladedArray: string[];
   setUpladedArray: (upladedArray: string[]) => void;
   modifidImageArray: string[];
-  setModifidImageArray: (modifidImageArray: string[]) => void;
+  setModifiduploadedProductlist: (modifidImageArray: string[]) => void;
   undoArray: string[];
   setUndoArray: (undoArray: string[]) => void;
 
@@ -105,14 +115,20 @@ interface ContextITFC {
 export const AppContext = createContext<ContextITFC>({
   activeTab: 2,
   setActiveTab: () => {},
-  downlaodImg: null,
-  setDownloadImage: () => {},
+  selectedImg: null,
+  setSelectedImg: () => {},
+  canvasInstance:  null,
+  addimgToCanvas: () => {},
+  getBase64FromUrl: () => {},
+
+
+  
+
 
 
   file: null,
   setFile: () => {},
-  selectedOption: "",
-  setSelectedOption: (selectedOption: string) => {},
+
   selectedImage: {},
   setSelectedImage: (selectedImage: Object) => {},
   viewMore: {},
@@ -121,12 +137,15 @@ export const AppContext = createContext<ContextITFC>({
   setSelectedCategory: (selectCategory: string) => {},
   selectPlacement: "",
   setSelectedPlacement: (selectPlacement: string) => {},
+ 
+  surroundingtype: "",
+  setSurroundingtype: (surroundingtype: string) => {},
   selectSurrounding: "",
   setSelectedSurrounding: (selectSurrounding: string) => {},
   selectBackground: "",
   setSelectedBackground: (selectBackground: string) => {},
-  selectColore: "",
-  setSelectedColore: (selectColore: string) => {},
+  selectColoreMode: "",
+  setSelectedColoreMode: (selectColoreMode: string) => {},
   selectResult: 1,
   setSelectedresult: (selectResult: number) => {},
   selectRunder: 1,
@@ -165,10 +184,10 @@ export const AppContext = createContext<ContextITFC>({
   modifidImage: "",
   setModifidImage: () => {},
 
-  imageArray: [],
-  setImageArray: (imageArray: string[]) => {},
+  uploadedProductlist: [],
+  setUploadedProductlist: (uploadedProductlist: string[]) => {},
   modifidImageArray: [],
-  setModifidImageArray: (modifidImageArray: string[]) => {},
+  setModifiduploadedProductlist: (modifidImageArray: string[]) => {},
   upladedArray: [],
   setUpladedArray: (upladedArray: string[]) => {},
 
@@ -196,16 +215,18 @@ export const AppContext = createContext<ContextITFC>({
 });
 
 export const AppContextProvider = ({ children }: ContextProviderProps) => {
-  const [downlaodImg, setDownloadImage] = useState<string | null>(null);
+  const canvasInstance  = useRef(null);
+
+  const [selectedImg, setSelectedImg] = useState<string | null>(null);
 
   const [activeTab, setActiveTab] = useState<number | null>(1);
   const [file, setFile] = useState<File | null>(null);
-  const [selectedOption, setSelectedOption] = useState<string>("");
+ 
   const [selectedImage, setSelectedImage] = useState<object>({});
   const [viewMore, setViewMore] = useState<object>({});
 
   const [modifidImage, setModifidImage] = useState<string>("");
-  const [modifidImageArray, setModifidImageArray] = useState<string[]>([]);
+  const [modifidImageArray, setModifiduploadedProductlist] = useState<string[]>([]);
   const [upladedArray, setUpladedArray] = useState<string[]>([]);
 
   const [undoArray, setUndoArray] = useState<string[]>([]);
@@ -213,8 +234,10 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [selectCategory, setSelectedCategory] = useState<string>("");
   const [selectPlacement, setSelectedPlacement] = useState<string>("");
   const [selectSurrounding, setSelectedSurrounding] = useState<string>("");
+  const [surroundingtype, setSurroundingtype] = useState<string>("");
+
   const [selectBackground, setSelectedBackground] = useState<string>("");
-  const [selectColore, setSelectedColore] = useState<string>("");
+  const [selectColoreMode, setSelectedColoreMode] = useState<string>("");
   const [selectResult, setSelectedresult] = useState<number>(0);
   const [selectRunder, setSelectedRender] = useState<number>(0);
   const [selectColoreStrength, setSelectedColoreStrength] = useState<number>(0);
@@ -235,7 +258,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [upScale, setupscale] = useState<boolean>(false);
   const [front, setFront] = useState<boolean>(false);
   const [back, setBack] = useState<boolean>(false);
-  const [imageArray, setImageArray] = useState<string[]>([]);
+  const [uploadedProductlist, setUploadedProductlist] = useState<string[]>([]);
 
   const [previewLoader, setPriviewLoader] = useState<boolean>(false);
   const [generationLoader, setGenerationLoader] = useState<boolean>(false);
@@ -247,17 +270,52 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [PSN, setPSN] = useState<boolean>(false);
   const [superResolution, setSuperResolution] = useState<boolean>(false);
 
+  const getBase64FromUrl = async (url: string) => {
+    const data = await fetch(url);
+    const blob = await data.blob();
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(blob);
+      reader.onloadend = () => {
+        const base64data = reader.result;
+        resolve(base64data);
+      };
+    });
+  };
+
+  const addimgToCanvas = async (url: string) => {
+    fabric.Image.fromURL(await getBase64FromUrl(url), function (img: any) {
+      // Set the image's dimensions
+      img.scaleToWidth(200);
+      // img.scaleToHeight(150);
+      // Scale the image to have the same width and height as the rectangle
+      // const scaleX = downloadRect.width / img.width;
+      // const scaleY = downloadRect.height / img.height;
+
+      // Position the image to be in the center of the rectangle
+      img.set({
+        left: 100,
+        top: 200,
+        // scaleX: scaleX,
+        // scaleY: scaleY,
+      });
+
+      canvasInstance.current.add(img);
+      canvasInstance.current.renderAll();
+    });
+  };
+
   return (
     <AppContext.Provider
       value={{
-  downlaodImg, setDownloadImage,
-
+        canvasInstance,
+        addimgToCanvas,
+  selectedImg, setSelectedImg,
+  getBase64FromUrl,
         activeTab,
         setActiveTab,
         file,
         setFile,
-        selectedOption,
-        setSelectedOption,
         selectedImage,
         setSelectedImage,
         selectCategory,
@@ -266,10 +324,11 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setSelectedPlacement,
         selectSurrounding,
         setSelectedSurrounding,
+        surroundingtype, setSurroundingtype,
         selectBackground,
         setSelectedBackground,
-        selectColore,
-        setSelectedColore,
+        selectColoreMode,
+        setSelectedColoreMode,
         selectResult,
         setSelectedresult,
         selectRunder,
@@ -302,8 +361,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setBack,
         modifidImage,
         setModifidImage,
-        imageArray,
-        setImageArray,
+        uploadedProductlist,
+        setUploadedProductlist,
         previewLoader,
         setPriviewLoader,
         generationLoader,
@@ -323,7 +382,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         bgpromt,
         setBgpromt,
         modifidImageArray,
-        setModifidImageArray,
+        setModifiduploadedProductlist,
         upladedArray,
         setUpladedArray,
         undoArray,

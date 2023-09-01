@@ -1,26 +1,67 @@
-import Head from "next/head";
+
 import Image from "next/image";
 import { Inter } from "next/font/google";
-import styles from "@/styles/Home.module.css";
-import Sidebar from "@/components/Sidebar";
 import { styled } from "styled-components";
 import assets from "@/public/assets";
 import Link from "next/link";
 
 const fadeIn = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 1 } }
+  visible: { opacity: 1, transition: { duration: 1 } },
 };
-
 
 import { motion } from "framer-motion";
 
 const inter = Inter({ subsets: ["latin"] });
-const MainPage = styled.div`
-.new{
-  display: flex;
 
+export default function Home() {
+  return (
+    <MainPage>
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        variants={fadeIn}
+        className="new"
+      >
+        <div className="sidebar">
+          <div className="tab  active-tab">
+            <Image src={assets.icons.project_icon} alt="" />
+            Projets
+          </div>
+        </div>
+        <div className="dashbaord">
+          <div className="gridebox">
+            <Link href={"/generate"}>
+              <div className="createbox">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 14 14"
+                  fill="none"
+                >
+                  <path
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M7 0C7.26522 0 7.51957 0.105357 7.70711 0.292893C7.89464 0.48043 8 0.734784 8 1V6H13C13.2652 6 13.5196 6.10536 13.7071 6.29289C13.8946 6.48043 14 6.73478 14 7C14 7.26522 13.8946 7.51957 13.7071 7.70711C13.5196 7.89464 13.2652 8 13 8H8V13C8 13.2652 7.89464 13.5196 7.70711 13.7071C7.51957 13.8946 7.26522 14 7 14C6.73478 14 6.48043 13.8946 6.29289 13.7071C6.10536 13.5196 6 13.2652 6 13V8H1C0.734784 8 0.48043 7.89464 0.292893 7.70711C0.105357 7.51957 0 7.26522 0 7C0 6.73478 0.105357 6.48043 0.292893 6.29289C0.48043 6.10536 0.734784 6 1 6H6V1C6 0.734784 6.10536 0.48043 6.29289 0.292893C6.48043 0.105357 6.73478 0 7 0Z"
+                    fill="#585858"
+                  />
+                </svg>
+
+                <div className="testcreat">Create new project</div>
+              </div>
+            </Link>
+          </div>
+        </div>
+      </motion.div>
+    </MainPage>
+  );
 }
+
+const MainPage = styled.div`
+  .new {
+    display: flex;
+  }
   .sidebar {
     border-right: 1px solid rgba(238, 238, 238, 1);
     min-height: 100vh;
@@ -155,49 +196,4 @@ const MainPage = styled.div`
   }
 `}
   }
-
- 
 `;
-
-export default function Home() {
-  return (
-    <MainPage>
-    <motion.div
-    initial="hidden"
-    animate="visible"
-    variants={fadeIn}
-    className="new">
-      <div className="sidebar">
-        <div className="tab  active-tab">
-          <Image src={assets.icons.project_icon} alt="" />
-          Projets
-        </div>
-      </div>
-      <div className="dashbaord">
-        <div className="gridebox">
-          <Link href={"/generate"}>
-            <div className="createbox">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="14"
-                height="14"
-                viewBox="0 0 14 14"
-                fill="none"
-              >
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M7 0C7.26522 0 7.51957 0.105357 7.70711 0.292893C7.89464 0.48043 8 0.734784 8 1V6H13C13.2652 6 13.5196 6.10536 13.7071 6.29289C13.8946 6.48043 14 6.73478 14 7C14 7.26522 13.8946 7.51957 13.7071 7.70711C13.5196 7.89464 13.2652 8 13 8H8V13C8 13.2652 7.89464 13.5196 7.70711 13.7071C7.51957 13.8946 7.26522 14 7 14C6.73478 14 6.48043 13.8946 6.29289 13.7071C6.10536 13.5196 6 13.2652 6 13V8H1C0.734784 8 0.48043 7.89464 0.292893 7.70711C0.105357 7.51957 0 7.26522 0 7C0 6.73478 0.105357 6.48043 0.292893 6.29289C0.48043 6.10536 0.734784 6 1 6H6V1C6 0.734784 6.10536 0.48043 6.29289 0.292893C6.48043 0.105357 6.73478 0 7 0Z"
-                  fill="#585858"
-                />
-              </svg>
-
-              <div className="testcreat">Create new project</div>
-            </div>
-          </Link>
-        </div>
-      </div>
-    </motion.div>
-    </MainPage>
-  );
-}

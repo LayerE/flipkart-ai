@@ -51,33 +51,48 @@ const TabData = [
 
     image: assets.icons.edit_icon,
     tittle: "Edit",
+    disable : assets.icons.edit_icon_diable
   },
 ];
 
 const Sidebar: React.FC = () => {
-  const { activeTab, setActiveTab, viewMore, setViewMore } = useAppState();
+  const { activeTab, setActiveTab, viewMore, setViewMore, selectedImg } =
+    useAppState();
 
   return (
     <SideBar>
       <motion.div className="new">
         <div className="columWrapper">
-          {TabData.map((elemenmt, i) => (
+          {TabData.map((elemenmt, i) =>
             // <Column>
-            <div
-              key={i}
-              className={
-                activeTab === elemenmt.id ? "active tabBox " : "tabBox"
-              }
-              onClick={() => {
-                setActiveTab(elemenmt.id);
-                setViewMore({ status: false });
-              }}
-            >
-              <Image src={elemenmt.image} alt="" width={16} />
-              <span>{elemenmt.tittle}</span>
-            </div>
+            !selectedImg && elemenmt?.id === 5 ? (
+              <div
+                key={i}
+                className={
+                  "tabBox disable"
+                }
+               
+              >
+                <Image src={elemenmt.disable} alt="" width={16} />
+                <span>{elemenmt.tittle}</span>
+              </div>
+            ) : (
+              <div
+                key={i}
+                className={
+                  activeTab === elemenmt.id ? "active tabBox " : "tabBox"
+                }
+                onClick={() => {
+                  setActiveTab(elemenmt.id);
+                  setViewMore({ status: false });
+                }}
+              >
+                <Image src={elemenmt.image} alt="" width={16} />
+                <span>{elemenmt.tittle}</span>
+              </div>
+            )
             // </Column>
-          ))}
+          )}
         </div>
         <div className="larfer">
           <motion.div
@@ -202,6 +217,14 @@ const SideBar = styled.div`
   .clolorpicker {
     display: flex;
     gap: 0.3rem;
+    position: relative;
+  }
+  .pikkeropen{
+    position: absolute;
+    z-index: 10;
+    top: 50px;
+    right: 0;
+
   }
   .colorBox {
     background: #000;
@@ -282,6 +305,10 @@ const SideBar = styled.div`
       font-size: 10px;
       font-weight: 500;
     }
+  }
+  .disable{
+    color: #d1c8c8;
+
   }
 
   ${({ theme }) => theme.mediaWidth.upToMedium`

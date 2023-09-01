@@ -7,6 +7,7 @@ import { styled } from "styled-components";
 import { category, test } from "@/store/dropdown";
 import { useAppState } from "@/context/app.context";
 import { productList } from "@/store/listOfElement";
+import { fabric } from "fabric";
 
 const Assets: React.FC = () => {
   const {
@@ -14,10 +15,14 @@ const Assets: React.FC = () => {
     setSelectedImage,
     selectCategory,
     setSelectedCategory,
-    imageArray,
+    uploadedProductlist,
     upladedArray,
-    setModifidImageArray
+    setUploadedProductlist,
+    canvasInstance,
+    addimgToCanvas
   } = useAppState();
+
+
 
   return (
     <div className="accest">
@@ -25,32 +30,19 @@ const Assets: React.FC = () => {
         <Row>
           <Label>Product</Label>
         </Row>
+
         <Row>
-          <FileUpload1 />
+          <FileUpload  type={"product"}  title={"Upload Product Photo"}/>
         </Row>
         <ResponsiveRowWraptwo>
           {productList.map((test, i) => (
             <div
               key={i}
-              className={
-                selectedImage.id === i ? "imageBox ativeimg" : "imageBox"
-              }
+              className={"imageBox"}
               onClick={() => {
-                setSelectedImage({
-                  id: i,
-                  url: test,
-                  baseUrl: test,
-                  tools: {
-                    bgRemove: false,
-                    removeText: false,
-                    replaceBg: false,
-                    psn: false,
-                    pde: false,
-                    superResolution: false,
-                    magic: false,
-                  },
-                });
-                setModifidImageArray([]);
+                addimgToCanvas(test);
+                
+               
               }}
             >
               <picture>
@@ -61,40 +53,23 @@ const Assets: React.FC = () => {
         </ResponsiveRowWraptwo>
       </div>
       <div className="gap">
-        {
-          upladedArray.length ? 
+        {uploadedProductlist.length ? (
           <Row>
-          <Label>Uploaded Assets</Label>
-        </Row>
-          :
-
-          null
-        }
-      
+            <Label>Uploaded Assets</Label>
+          </Row>
+        ) : null}
 
         <ResponsiveRowWraptwo>
-          {upladedArray.map((test, i) => (
+          {uploadedProductlist.map((test, i) => (
             <div
               key={i}
               className={
-                selectedImage.id === i ? "imageBox ativeimg" : "imageBox"
+                "imageBox"
               }
               onClick={() => {
-                setSelectedImage({
-                  id: i,
-                  url: test.url,
-                  baseUrl: test.baseUrl,
-                  tools: {
-                    bgRemove: false,
-                    removeText: false,
-                    replaceBg: false,
-                    psn: false,
-                    pde: false,
-                    superResolution: false,
-                    magic: false,
-                  },
-                });
-                setModifidImageArray([]);
+                addimgToCanvas(test);
+
+               
               }}
             >
               <picture>
@@ -104,21 +79,7 @@ const Assets: React.FC = () => {
           ))}
         </ResponsiveRowWraptwo>
       </div>
-      {/* <div className="gap">
-        <Row>
-          <Label>Select product category</Label>
-        </Row>
-        <Row>
-          <DropdownInput
-            data={{
-              list: category,
-              action: setSelectedCategory,
-              label: "category",
-              activeTab: selectCategory,
-            }}
-          ></DropdownInput>
-        </Row>
-      </div> */}
+     
     </div>
   );
 };

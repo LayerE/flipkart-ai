@@ -69,7 +69,7 @@ const EditorSection = () => {
     setPriviewLoader,
     generationLoader,
     setGenerationLoader,
-    setModifidImageArray,
+
   } = useAppState();
 
   // const imageArrays = JSON.parse(localStorage.getItem("g-images")) || [];

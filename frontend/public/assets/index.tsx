@@ -2,6 +2,8 @@
 import assets_icon from './icons/assets.svg';
 import dropdown_icon from './icons/dropdown.svg';
 import edit_icon from './icons/edit.svg';
+import edit_icon_diable from './icons/edit-disble.svg';
+
 import element_icon from './icons/element.svg';
 import generate_icon from './icons/generate.svg';
 import project_icon from './icons/projeect.svg';
@@ -25,7 +27,8 @@ const icons = {
     element_icon,
     generate_icon,
     project_icon,
-    user_icon
+    user_icon,
+    edit_icon_diable
 
 }
 const images = {

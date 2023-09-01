@@ -68,7 +68,6 @@ const MainPage = styled.div`
   }
 
   .main-privier {
-    /* position: relative; */
     padding: 2rem;
     padding-top: ${({ theme }) => theme.paddings.paddingTop};
     width: 100%;
@@ -162,7 +161,6 @@ const MainPage = styled.div`
 
       .undo {
         picture {
-          /* max-width: max-content !importent; */
         }
         img {
           cursor: pointer;
@@ -174,15 +172,10 @@ const MainPage = styled.div`
   }
   .tgrideOne {
     position: relative !important;
-    /* left:0; */
     display: grid;
     grid-template-columns: 1fr;
-    /* gap: 20px; */
-    /* background: red; */
-    /* height: 100%; */
-    /* position: relative; */
+
     .magicPrevie {
-      /* position: relative; */
       display: flex;
       justify-content: center;
       align-items: center;
@@ -190,16 +183,7 @@ const MainPage = styled.div`
       width: 100%;
 
       canvas {
-        /* position: absolute; */
-        /* position: relative; */
-        /* top: 100px; */
-
-        /* background: #4444; */
-
         z-index: 30000;
-        /* top: 0; */
-        /* width: 500px;
-        height: 500px; */
       }
     }
   }
@@ -216,12 +200,10 @@ const MainPage = styled.div`
     }
     .button {
       padding: 10px 80px !important;
-      /* background: transparent;
       border: 1px solid ${({ theme }) => theme.btnPrimary} */
       width: max-content;
     }
     input[type="range"] {
-      /* overflow: hidden; */
       width: 250px;
       height: 15px;
       -webkit-appearance: none;
@@ -246,9 +228,7 @@ const MainPage = styled.div`
       background: #434343;
       /* box-shadow: -80px 0 0 80px #43e5f7; */
     }
-    input {
-      color: ;
-    }
+   
     .activeTool {
       background: ${({ theme }) => theme.btnPrimary};
     }
@@ -268,155 +248,18 @@ const MainPage = styled.div`
 
 export default function Home() {
   const {
-    selectedImage,
-    setSelectedImage,
-    modifidImage,
-    setModifidImage,
     previewLoader,
     setPriviewLoader,
     modifidImageArray,
-    bgRemove,
-    setModifidImageArray,
     undoArray,
     setUndoArray,
     magickErase,
     setFile,
     setMagickErase,
-    setInpainting,
   } = useAppState();
 
-  useEffect(() => {
-    console.log("new render");
-  }, [previewLoader, modifidImage, modifidImageArray]);
-  const handileUndo = () => {
-    if (modifidImageArray.length > 0) {
-      setUndoArray((pre) => [
-        ...pre,
-        modifidImageArray[modifidImageArray.length - 1],
-      ]);
+ 
 
-      setModifidImageArray((pre) => {
-        const lastElement = pre[pre.length - 1];
-        if (lastElement && lastElement.tool) {
-          setSelectedImage((prevState) => ({
-            ...prevState,
-            tools: {
-              ...prevState.tools,
-              [lastElement.tool]: false,
-            },
-          }));
-        }
-
-        return pre.slice(0, -1);
-      });
-    }
-  };
-  const handilePre = () => {
-    if (undoArray.length > 0) {
-      setModifidImageArray((pre) => [...pre, undoArray[undoArray.length - 1]]);
-      setUndoArray((pre) => {
-        const lastElement = pre[pre.length - 1];
-        if (lastElement && lastElement.tool) {
-          setSelectedImage((prevState) => ({
-            ...prevState,
-            tools: {
-              ...prevState.tools,
-              [lastElement.tool]: true,
-            },
-          }));
-        }
-
-        return pre.slice(0, -1);
-      });
-    }
-  };
-
-  useEffect(() => {
-    if (magickErase && selectedImage.url) {
-      // drawImageOnCanvas(selectedImage?.url)
-    }
-  }, [magickErase, selectedImage]);
-
-  const [drawing, setDrawing] = useState(false);
-  const [lines, setLines] = useState([]);
-  const [linesHistory, setLinesHistory] = useState([]);
-  const [mode, setMode] = useState("pen");
-  // const [scale, setScale] = useState(1);
-  const imgRef = useRef(null);
-
-  const [imageWidth, setImageWidth] = useState(0);
-  const [imageHeight, setImageHeight] = useState(0);
-  const [brushSize, setBrushSize] = useState(5);
-
-  const stageRef = useRef(null);
-
-  let temp;
-
-  if (!modifidImageArray.length) {
-    temp = selectedImage.baseUrl;
-  } else {
-    temp = modifidImageArray[modifidImageArray.length - 1]?.url;
-  }
-
-  const [img, status] = useImage(temp);
-  const handleMouseDown = () => {
-    setDrawing(true);
-    const pos = stageRef.current.getPointerPosition();
-    setLinesHistory([...linesHistory, lines]);
-
-    setLines([...lines, { mode, points: [pos.x, pos.y] }]);
-  };
-
-  useEffect(() => {
-    if (status === "loaded") {
-      setImageWidth(img.width);
-      setImageHeight(img.height);
-    }
-  }, [img, status]);
-
-  const handleMouseMove = (e) => {
-    if (!drawing) return;
-
-    const stage = stageRef.current;
-    const point = stage.getPointerPosition();
-    let lastLine = lines[lines.length - 1];
-
-    if (lastLine) {
-      lastLine.points = [...lastLine.points, point.x, point.y];
-      setLines([...lines.slice(0, -1), lastLine]);
-    }
-  };
-
-  const handleMouseUp = () => {
-    setDrawing(false);
-  };
-
-  const [bgColor, setBgColor] = useState("transparent");
-
-  const handleDownload = () => {
-    const stage = stageRef.current;
-
-    // Update the coloring
-    stage.findOne("Image").hide();
-    setBgColor("black"); // Setting the background color using state
-
-    stage.find("Line").forEach((line) => {
-      line.stroke("white");
-    });
-    setBgColor("black");
-
-    const link = document.createElement("a");
-    link.download = "canvas.png";
-    link.href = stage.toDataURL({ pixelRatio: 3 });
-    link.click();
-
-    // Reset the coloring (or refresh the component to reset)
-    stage.findOne("Image").show();
-    setBgColor("black"); // Resetting the background color
-    stage.find("Line").forEach((line) => {
-      line.stroke("white");
-    });
-  };
   const saveCanvasToBlobURL = () => {
     const canvas = stageRef.current;
     canvas.findOne("Image").hide();
@@ -425,87 +268,6 @@ export default function Home() {
 
     return base;
   };
-  const saveImage = () => {
-    const stage = stageRef.current;
-
-    const dataURL = stage.toDataURL();
-
-    return dataURL;
-  };
-
-  const HandleInpainting = async () => {
-    setPriviewLoader(true);
-
-    let temp;
-    if (!modifidImageArray.length) {
-      temp = selectedImage.baseUrl;
-    } else {
-      temp = modifidImageArray[modifidImageArray.length - 1]?.url;
-    }
-    setInpainting(true);
-    const mask = await saveCanvasToBlobURL();
-    const ogimage = await saveImage();
-    setLines([]);
-
-    const modifiedData = await Inpainting(ogimage, "hero.png", mask);
-
-    if (modifiedData) {
-      setModifidImageArray((pre) => [
-        ...pre,
-        { url: modifiedData, tool: "magic" },
-      ]);
-      setUndoArray([]);
-
-      setSelectedImage((prevState) => ({
-        ...prevState,
-        tools: {
-          ...prevState.tools,
-          magic: true,
-        },
-      }));
-    }
-
-    setPriviewLoader(false);
-  };
-  const [scale, setScale] = useState(1);
-  const handleZoomIn = () => {
-    setScale(scale * 1.2);
-  };
-  const handleZoomOut = () => {
-    setScale(scale / 1.2);
-  };
-  const undoLastDrawing = () => {
-    if (linesHistory.length === 0) return;
-
-    const lastVersion = linesHistory[linesHistory.length - 1];
-    setLines(lastVersion);
-
-    // Remove the last version from history
-    setLinesHistory(linesHistory.slice(0, linesHistory.length - 1));
-  };
-  const [stagePos, setStagePos] = useState({ x: 0, y: 0 });
-  const handleWheel = (e) => {
-    e.evt.preventDefault();
-
-    const scaleBy = 1.1;
-    const stage = e.target.getStage();
-    const oldScale = stage.scaleX();
-
-    const pointer = stage.getPointerPosition();
-
-    const mousePointTo = {
-      x: (pointer.x - stage.x()) / oldScale,
-      y: (pointer.y - stage.y()) / oldScale,
-    };
-
-    const newScale = e.evt.deltaY > 0 ? oldScale * scaleBy : oldScale / scaleBy;
-    setScale(newScale);
-    setStagePos({
-      x: pointer.x - mousePointTo.x * newScale,
-      y: pointer.y - mousePointTo.y * newScale,
-    });
-  };
-  // canvs
 
   return (
     <MainPage>
@@ -548,7 +310,7 @@ export default function Home() {
               </div>
             </div>
           ) : null}
-          {!magickErase ? (
+         
             <div className="tgide">
               <motion.div
                 className="preBox"
@@ -609,12 +371,12 @@ export default function Home() {
                   <div className="imgadd">
                     {modifidImageArray.length ? (
                       <picture>
-                      <img
-                        src={
-                          modifidImageArray[modifidImageArray.length - 1].url
-                        }
-                        alt=""
-                      />
+                        <img
+                          src={
+                            modifidImageArray[modifidImageArray.length - 1].url
+                          }
+                          alt=""
+                        />
                       </picture>
                     ) : (
                       <div className="more">
@@ -631,82 +393,9 @@ export default function Home() {
                 </motion.div>
               ) : null}
             </div>
-          ) : null}
+     
 
-          {magickErase ? (
-            <div className="tgrideOne">
-              <div className="closs" onClick={() => setMagickErase(false)}>
-                X
-              </div>
-              <div className="tools">
-                {/* <button onClick={() => setMode("pen")} className={mode === "pen"? "activeTool": ""}>Pen</button> */}
-                {/* <button onClick={() => setMode("eraser")} className={mode === "eraser"? "activeTool": ""}>Eraser</button> */}
-                {/* <button onClick={() => handleZoomi()}>Zoom In</button>
-                <button onClick={() => handleZoomOut()}>Zoom Out</button> */}
-                <input
-                  type="range"
-                  max={100}
-                  min={5}
-                  onChange={(e) => setBrushSize(e.target.value)}
-                />
-                <button className="btn" onClick={undoLastDrawing}>
-                  Undo
-                </button>
-                {/* <button onClick={handleDownload}>Download</button> */}
-                <Button className="button" onClick={HandleInpainting}>
-                  Erase
-                </Button>
-              </div>
-              <div style={{ margin: "20px" }}>
-                {previewLoader ? (
-                  <div className="loaderq">Loading...</div>
-                ) : null}
-                <Stage
-                  width={600}
-                  height={600}
-                  scaleX={scale}
-                  scaleY={scale}
-                  onMouseDown={handleMouseDown}
-                  onMouseMove={handleMouseMove}
-                  onMouseUp={handleMouseUp}
-                  // x={stagePos.x}
-                  // y={stagePos.y}
-                  // onWheel={handleWheel}
-                  ref={stageRef}
-                >
-                  <Layer>
-                    {/* <Rect
-                      width={imageWidth}
-                      height={imageHeight}
-                      fill={bgColor}
-                    /> */}
-                    <KonvaImage image={img} width={600} height={600} />
-                    {lines.map((line, i) => (
-                      <Line
-                        key={i}
-                        points={line.points}
-                        stroke={line.mode !== "pen" ? "white" : "white"}
-                        strokeWidth={brushSize}
-                        tension={0.5}
-                        lineCap="round"
-                        globalCompositeOperation={
-                          line.mode === "pen"
-                            ? "source-over"
-                            : "destination-out"
-                        }
-                      />
-                    ))}
-                  </Layer>
-                </Stage>
-                {/* <img
-                  src="https://preview.redd.it/need-an-npm-package-that-lets-you-create-an-image-mask-v0-12kzpoiivwha1.png?width=512&format=png&auto=webp&s=e19be5fdbd7406757e148f419eca861b7ae7f2dd"
-                  alt="hidden"
-                  ref={imgRef}
-                  style={{ display: "none" }}
-                /> */}
-              </div>
-            </div>
-          ) : null}
+         
         </div>
       </motion.div>
     </MainPage>

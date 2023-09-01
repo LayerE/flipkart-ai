@@ -15,7 +15,7 @@ export const test = [
   export const surroundingList = ["Mobile", "Electronics", "Large Items", "Furnitures"];
 
   export const BackgroundList = ["Mobile", "Electronics", "Large Items", "Furnitures"];
-  export const coloreList = ["Mobile", "Electronics", "Large Items", "Furnitures"];
+  export const coloreMode = ["None", "Add", "Multiply", "Overlay"];
 
   export const productSuggestions = ["bottle", "can", "box", "bag", "device"];
   export const PlacementSuggestions = ["circular platform", "circular reflective platform", "rocks", "a marble block", "a mound of grass", "a grassy hill" ];

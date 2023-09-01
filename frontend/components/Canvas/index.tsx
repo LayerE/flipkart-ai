@@ -6,32 +6,59 @@ import styles from "@/styles/Home.module.css";
 import Sidebar from "@/components/Sidebar";
 import { styled } from "styled-components";
 import { useAppState } from "@/context/app.context";
+import assets from "@/public/assets";
 import { useEffect } from "react";
+import { FileUpload, Input } from "@/components/common/Input";
 import { motion } from "framer-motion";
+import { theme } from "@/theme";
+import {
+  Stage,
+  Layer,
+  Rect,
+  Text,
+  Image as KonvaImage,
+  Line,
+} from "react-konva";
+import Konva from "konva";
+import useImage from "use-image";
+import { Inpainting } from "@/store/api";
+import { arrayBufferToDataURL } from "@/utils/BufferToDataUrl";
+import Button from "@/components/common/Button";
 import { fabric } from "fabric";
+import Apps from "@/components/Canvas";
 import { saveAs } from "file-saver";
-
+import Draggable from "react-draggable";
 const fadeIn = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 1 } },
 };
 
+const inter = Inter({ subsets: ["latin"] });
+
 export default function Home() {
   const {
+    selectedImage,
     setSelectedImage,
+    modifidImage,
+    setModifidImage,
+    previewLoader,
+    setPriviewLoader,
     modifidImageArray,
-
+    bgRemove,
+    setModifidImageArray,
     undoArray,
     setUndoArray,
     magickErase,
-    selectedImg,
-    setSelectedImg,
-    canvasInstance,
-    getBase64FromUrl,
-    setActiveTab,
-    setSelectedColoreMode
+    setFile,
+    setMagickErase,
+    setInpainting,
+  downlaodImg, setDownloadImage
+
   } = useAppState();
 
+  // useEffect(() => {
+  //   console.log("new render");
+  // }, [previewLoader, modifidImage, modifidImageArray]);
   const handileUndo = () => {
     if (modifidImageArray.length > 0) {
       setUndoArray((pre) => [
@@ -39,25 +66,25 @@ export default function Home() {
         modifidImageArray[modifidImageArray.length - 1],
       ]);
 
-      // setModifidImageArray((pre) => {
-      //   const lastElement = pre[pre.length - 1];
-      //   if (lastElement && lastElement.tool) {
-      //     setSelectedImage((prevState) => ({
-      //       ...prevState,
-      //       tools: {
-      //         ...prevState.tools,
-      //         [lastElement.tool]: false,
-      //       },
-      //     }));
-      //   }
+      setModifidImageArray((pre) => {
+        const lastElement = pre[pre.length - 1];
+        if (lastElement && lastElement.tool) {
+          setSelectedImage((prevState) => ({
+            ...prevState,
+            tools: {
+              ...prevState.tools,
+              [lastElement.tool]: false,
+            },
+          }));
+        }
 
-      //   return pre.slice(0, -1);
-      // });
+        return pre.slice(0, -1);
+      });
     }
   };
   const handilePre = () => {
     if (undoArray.length > 0) {
-      // setModifidImageArray((pre) => [...pre, undoArray[undoArray.length - 1]]);
+      setModifidImageArray((pre) => [...pre, undoArray[undoArray.length - 1]]);
       setUndoArray((pre) => {
         const lastElement = pre[pre.length - 1];
         if (lastElement && lastElement.tool) {
@@ -75,35 +102,41 @@ export default function Home() {
     }
   };
 
-  // const [drawing, setDrawing] = useState(false);
-  // const [lines, setLines] = useState([]);
-  // const [linesHistory, setLinesHistory] = useState([]);
-  // const [mode, setMode] = useState("pen");
-  // // const [scale, setScale] = useState(1);
-  // const imgRef = useRef(null);
+  // useEffect(() => {
+  //   if (magickErase && selectedImage.url) {
+  //     // drawImageOnCanvas(selectedImage?.url)
+  //   }
+  // }, [magickErase, selectedImage]);
 
-  // const [imageWidth, setImageWidth] = useState(0);
-  // const [imageHeight, setImageHeight] = useState(0);
-  // const [brushSize, setBrushSize] = useState(5);
-  // // const [canvas, setCanvas] = useState(null);
-  // const stageRef = useRef(null);
+  const [drawing, setDrawing] = useState(false);
+  const [lines, setLines] = useState([]);
+  const [linesHistory, setLinesHistory] = useState([]);
+  const [mode, setMode] = useState("pen");
+  // const [scale, setScale] = useState(1);
+  const imgRef = useRef(null);
 
-  // let temp;
+  const [imageWidth, setImageWidth] = useState(0);
+  const [imageHeight, setImageHeight] = useState(0);
+  const [brushSize, setBrushSize] = useState(5);
+  // const [canvas, setCanvas] = useState(null);
+  const stageRef = useRef(null);
 
-  // if (!modifidImageArray.length) {
-  //   temp = selectedImage.baseUrl;
-  // } else {
-  //   temp = modifidImageArray[modifidImageArray.length - 1]?.url;
-  // }
+  let temp;
 
-  // const [img, status] = useImage(temp);
-  // const handleMouseDown = () => {
-  //   setDrawing(true);
-  //   const pos = stageRef.current.getPointerPosition();
-  //   setLinesHistory([...linesHistory, lines]);
+  if (!modifidImageArray.length) {
+    temp = selectedImage.baseUrl;
+  } else {
+    temp = modifidImageArray[modifidImageArray.length - 1]?.url;
+  }
 
-  //   setLines([...lines, { mode, points: [pos.x, pos.y] }]);
-  // };
+  const [img, status] = useImage(temp);
+  const handleMouseDown = () => {
+    setDrawing(true);
+    const pos = stageRef.current.getPointerPosition();
+    setLinesHistory([...linesHistory, lines]);
+
+    setLines([...lines, { mode, points: [pos.x, pos.y] }]);
+  };
 
   // useEffect(() => {
   //   if (status === "loaded") {
@@ -112,45 +145,54 @@ export default function Home() {
   //   }
   // }, [img, status]);
 
-  // const [bgColor, setBgColor] = useState("transparent");
+  const [bgColor, setBgColor] = useState("transparent");
 
-  // const [scale, setScale] = useState(1);
+  const [scale, setScale] = useState(1);
 
   // canvs
   const outerDivRef = useRef(null);
+
   const canvasRef = useRef(null);
-  // const canvasInstance = useRef(null);
+  const canvasInstance  = useRef(null);
+  // let canvasInstance
+  // const [selectedImaged, setDownloadImage] = useState(null);
+  // let canvasInstance;
+  // let selectedImaged = null;
+  const selectRef = useRef(null);
 
-  // const selectRef = useRef(null);
 
-  // const getBase64FromUrl = async (url: string) => {
-  //   const data = await fetch(url);
-  //   const blob = await data.blob();
-  //   return new Promise((resolve) => {
-  //     const reader = new FileReader();
-  //     reader.readAsDataURL(blob);
-  //     reader.onloadend = () => {
-  //       const base64data = reader.result;
-  //       resolve(base64data);
-  //     };
-  //   });
-  // };
-
+  const getBase64FromUrl = async (url: string) => {
+    const data = await fetch(url);
+    const blob = await data.blob();
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(blob);
+      reader.onloadend = () => {
+        const base64data = reader.result;
+        resolve(base64data);
+      };
+    });
+  };
+  
   useEffect(() => {
     if (!canvasInstance.current) {
       canvasInstance.current = new fabric.Canvas(canvasRef.current, {
-        width: outerDivRef.current.clientWidth,
-        height: outerDivRef.current.clientHeight,
+          width: outerDivRef.current.clientWidth,
+          height: outerDivRef.current.clientHeight,
       });
-    }
-    const canvasInstanceRef = canvasInstance.current;
+  }
+  const canvasInstanceRef = canvasInstance.current;
+  //   const canvasInstanceRef = new fabric.Canvas(canvasRef.current, {
+  //     width: outerDivRef.current.clientWidth,
+  //     height: outerDivRef.current.clientHeight,
+  //   });
 
     // Allow dropping of images onto the canvas
-    canvasInstanceRef.on("drop", async function (options) {
+    canvasInstanceRef.on("drop", function (options) {
       const e = options.e;
+
       const img = new Image();
-      const dataUrl = await getBase64FromUrl(e.dataTransfer.getData("text"));
-      img.src = dataUrl;
+      img.src = e.dataTransfer.getData("text");
 
       img.onload = function () {
         const fabricImg = new fabric.Image(img, {
@@ -169,7 +211,16 @@ export default function Home() {
         canvasInstanceRef.setActiveObject(fabricImg);
         fabricImg.set("selectable", true);
 
+        // const tempCanvas = document.createElement('canvas');
+        // tempCanvas.width = img.width;
+        // tempCanvas.height = img.height;
+        // const ctx = tempCanvas.getContext('2d');
+        // ctx.drawImage(img, 0, 0);
+        // const base64URL = tempCanvas.toDataURL("image/png");
 
+        // // Now, base64URL contains the Base64 URL representation of the image.
+        // // You can store it, send it somewhere, or log it
+        // console.log(base64URL);
       };
 
       e.preventDefault();
@@ -177,23 +228,26 @@ export default function Home() {
     // When a user clicks on an image on the canvas
     canvasInstanceRef.on("mouse:down", function (options) {
       if (options.target && options.target.type === "image") {
-        let selectedObject;
-        if (options.target._element instanceof Image) {
-            selectedObject = options.target._element.src;
-        } else if (options.target._element instanceof HTMLCanvasElement) {
-            selectedObject = options.target._element.toDataURL();
-        }
-        
-        if (selectedObject) {
-            setSelectedImg(selectedObject);
-            setSelectedColoreMode("None")
-        }
-    }
+        const selectedObject = options.target._element.src;
+
+        setDownloadImage(selectedObject);
+      }
     });
     canvasInstanceRef.on("object:selected", function (event) {
       console.log("Object selected:", event.target);
-      
     });
+
+    // const bringToFrontBtn = document.getElementById("bringToFrontBtn");
+    // const sendToBackBtn = document.getElementById("sendToBackBtn");
+    // const add = document.getElementById("add");
+
+    // sendToBackBtn.addEventListener("click", () => {
+    //   const activeObject = canvasInstanceRef.getActiveObject();
+    //   if (activeObject) {
+    //     activeObject.sendToBack();
+    //     canvasInstanceRef.renderAll();
+    //   }
+    // });
 
     // ractanghlw
     const downloadRect = new fabric.Rect({
@@ -231,7 +285,7 @@ export default function Home() {
         width: downloadRect.width,
         height: downloadRect.height,
       });
-      setSelectedImg(dataURL);
+      setDownloadImage(dataURL);
 
       // Reset the rectangle's fill color
       downloadRect.set("fill", originalFillColor);
@@ -249,20 +303,60 @@ export default function Home() {
       stroke: "rgba(249, 208, 13, 1)", // border color of the rectangle
       strokeWidth: 1,
     });
-    // Zoom and Pan event handlers
-    canvasInstanceRef.on("mouse:wheel", (opt) => {
+     // Zoom and Pan event handlers
+     canvasInstanceRef.on('mouse:wheel', (opt) => {
       const delta = opt.e.deltaY;
       let zoom = canvasInstanceRef.getZoom();
       zoom *= 0.999 ** delta;
       if (zoom > 20) zoom = 20;
       if (zoom < 0.01) zoom = 0.01;
-      canvasInstanceRef.zoomToPoint(
-        { x: canvasInstanceRef.width / 2, y: canvasInstanceRef.height / 2 },
-        zoom
-      );
+      canvasInstanceRef.zoomToPoint({ x: canvasInstanceRef.width / 2, y: canvasInstanceRef.height / 2 }, zoom);
       opt.e.preventDefault();
       opt.e.stopPropagation();
     });
+  //    canvasInstanceRef.on('mouse:wheel', (opt) => {
+  //     const delta = opt.e.deltaY;
+  //     const vpt = canvasInstanceRef.viewportTransform;
+  //     vpt[4] += delta;  // Adjust this value to change horizontal pan
+  //     vpt[5] += delta;  // Adjust this value to change vertical pan
+  //     canvasInstanceRef.requestRenderAll();
+  //     opt.e.preventDefault();
+  //     opt.e.stopPropagation();
+  // });
+
+  //    canvasInstanceRef.on('mouse:wheel', (opt) => {
+  //     const delta = opt.e.deltaY;
+  //     let zoom = canvasInstanceRef.getZoom();
+  //     zoom *= 0.999 ** delta;
+  //     if (zoom > 20) zoom = 20;
+  //     if (zoom < 0.01) zoom = 0.01;
+  //     canvasInstanceRef.setZoom(zoom);
+  //     opt.e.preventDefault();
+  //     opt.e.stopPropagation();
+  // });
+//   canvasInstanceRef.on('mouse:down', (opt) => {
+//     const evt = opt.e;
+//     canvasInstanceRef.isDragging = true;
+//     canvasInstanceRef.selection = false;
+//     canvasInstanceRef.lastPosX = evt.clientX;
+//     canvasInstanceRef.lastPosY = evt.clientY;
+// });
+
+//   canvasInstanceRef.on('mouse:move', (opt) => {
+//     if (canvasInstanceRef.isDragging) {
+//         const e = opt.e;
+//         const vpt = canvasInstanceRef.viewportTransform;
+//         vpt[4] += e.clientX - canvasInstanceRef.lastPosX;
+//         vpt[5] += e.clientY - canvasInstanceRef.lastPosY;
+//         canvasInstanceRef.requestRenderAll();
+//         canvasInstanceRef.lastPosX = e.clientX;
+//         canvasInstanceRef.lastPosY = e.clientY;
+//     }
+// });
+// canvasInstanceRef.on('mouse:up', () => {
+//   canvasInstanceRef.isDragging = false;
+//   canvasInstanceRef.selection = true;
+// });
 
     const imageGenText = new fabric.Text("Add Image", {
       left: 100 + 75, // center of the rectangle
@@ -272,6 +366,34 @@ export default function Home() {
       originY: "center",
       selectable: false,
     });
+    
+
+    // add.addEventListener("click", async () => {
+    //   fabric.Image.fromURL(
+    //     await getBase64FromUrl(
+    //       "https://image.imgcreator.ai/ImgCreator/c3b7fbf516f74638820f53c25f40c744/hq/ae988912-f0b0-11ed-988f-0242ac110002_0.webp"
+    //     ),
+    //     function (img) {
+    //       // Set the image's dimensions
+    //       img.scaleToWidth(downloadRect.width);
+    //       // img.scaleToHeight(150);
+    //       // Scale the image to have the same width and height as the rectangle
+    //       const scaleX = downloadRect.width / img.width;
+    //       const scaleY = downloadRect.height / img.height;
+
+    //       // Position the image to be in the center of the rectangle
+    //       img.set({
+    //         left: downloadRect.left,
+    //         top: downloadRect.top,
+    //         scaleX: scaleX,
+    //         scaleY: scaleY,
+    //       });
+
+    //       canvasInstanceRef.add(img);
+    //       canvasInstanceRef.renderAll();
+    //     }
+    //   );
+    // });
 
     // const deleteBtn = document.getElementById("deleteBtn");
 
@@ -288,13 +410,27 @@ export default function Home() {
       // Check if the pressed key is 'Delete' (code: 46) or 'Backspace' (code: 8) for wider compatibility
       if (e.keyCode === 46 || e.keyCode === 8) {
         const activeObject = canvasInstanceRef.getActiveObject();
+
         if (activeObject) {
           canvasInstanceRef.remove(activeObject);
           canvasInstanceRef.renderAll();
         }
+
+        // Prevent the default behavior of the backspace key (going back in browser history)
+        // if (e.keyCode === 8) {
+        //   e.preventDefault();
+        // }
       }
     });
 
+    // bringToFrontBtn.addEventListener("click", () => {
+    //   const activeObject = canvasInstanceRef.getActiveObject();
+    //   console.log(activeObject, "dfdsf");
+    //   if (activeObject) {
+    //     activeObject.bringToFront();
+    //     canvasInstanceRef.renderAll();
+    //   }
+    // });
     canvasInstanceRef.add(imageGenRect);
     // canvasInstanceRef.add(imageGenText);
 
@@ -306,63 +442,39 @@ export default function Home() {
     canvasInstanceRef.getElement().ondragover = function (e) {
       e.preventDefault();
     };
-    canvasInstanceRef.on("selection:cleared", function () {
-      setSelectedImg(null); // Set selectedImg to null when no items are selected
-      setActiveTab(1);
-    });
 
-   canvasInstanceRef.renderAll();
-  }, [setSelectedImg]);
+   
+
+    //   // Use addEventListener for the dropdown
+    //   const handleZoomChange = (event) => {
+    //     const zoomPercentage = event.target.value;
+    //     canvasInstanceRef.setZoom(zoomPercentage / 100);
+    //     canvasInstanceRef.requestRenderAll();
+    // }
+    
+    // selectRef.current.addEventListener('change', handleZoomChange);
+
+    // // Cleanup the event listener on component unmount
+    // return () => {
+    //     selectRef.current.removeEventListener('change', handleZoomChange);
+    // };
+    return () => {
+      canvas.off('mouse:down', handleMouseDown);
+      // ... remove other event listeners ...
+  }
+
+  }, [setDownloadImage]);
 
   function downloadCanvasContent() {
-    if (selectedImg) {
-      const url = selectedImg;
+    if (downlaodImg) {
+      const url = downlaodImg;
       console.log(url);
 
-      saveAs(url, `image${Date.now()}.png`);
+      saveAs(url, "downloaded-image.png");
     } else {
       // alert("No image selected!");
     }
   }
-  function addColorOverlayToSelectedImage(color) {
-    const canvas = canvasInstance.current;
-    const activeObject = canvas.getActiveObject();
-
-    // Check if the selected object is an image
-    if (activeObject && activeObject.type === "image") {
-        const filter = new fabric.Image.filters.BlendColor({
-            color: color, // The color you want to blend with
-            mode: "multiply", // Blend mode, can be multiply, add, etc.
-            alpha: 0.5 // Opacity of the overlay
-        });
-
-        activeObject.filters.push(filter);
-        activeObject.applyFilters();
-        canvas.renderAll();
-    } else {
-        // alert("Please select an image on the canvas first.");
-    }
-}
-
-  const bringImageToFront = () => {
-    const activeObject = canvasInstance.current.getActiveObject();
-    if (activeObject) {
-      activeObject.bringToFront();
-      canvasInstance.current.renderAll();
-    }
-  };
-
-  const sendImageToBack = () => {
-    const activeObject = canvasInstance.current.getActiveObject();
-    if (!activeObject) {
-      // alert("Please select an object on the canvas first.");
-      return;
-    }
-    // if (activeObject) {
-    activeObject.sendToBack();
-    canvasInstance.current.renderAll();
-    // }
-  };
 
   return (
     <MainPages>
@@ -372,81 +484,14 @@ export default function Home() {
         variants={fadeIn}
         className="news"
       >
-        <Sidebar />
-        <div className="Editor" ref={outerDivRef}>
-          <div className="main-privier">
-            {modifidImageArray.length > 0 && !magickErase ? (
-              <div className="undoBox">
-                <div className="undoWrapper">
-                  {modifidImageArray.length > 0 ? (
-                    <div className="undo" onClick={() => handileUndo()}>
-                      <picture>
-                        <img
-                          width="80"
-                          height="80"
-                          src="https://img.icons8.com/dotty/80/undo.png"
-                          alt="undo"
-                        />
-                      </picture>
-                    </div>
-                  ) : null}
-                  {undoArray.length > 0 ? (
-                    <div className="undo" onClick={() => handilePre()}>
-                      <picture>
-                        <img
-                          width="80"
-                          height="80"
-                          src="https://img.icons8.com/dotty/80/redo.png"
-                          alt="redo"
-                        />
-                      </picture>
-                    </div>
-                  ) : null}
-                </div>
-              </div>
-            ) : null}
-            {!magickErase ? (
-              <div className="tgide">
-                <motion.div
-                  className="preBox"
-                  initial="hidden"
-                  animate="visible"
-                  variants={fadeIn}
-                >
-                  <p>Place Your Product Here</p>
-                  <div className="imgadd"></div>
-                  <p className="center">
-                    Step 1: Place your product inside here
-                  </p>
-                </motion.div>
-                {/* {selectedImage?.id > -1 ? ( */}
-                <motion.div
-                  initial="hidden"
-                  animate="visible"
-                  variants={fadeIn}
-                  className="preBox"
-                >
-                  <p>Place Your Product Here</p>
-
-                  <div className="imgadd"></div>
-                  <p className="center">
-                    Step 1: Place your product inside here
-                  </p>
-                </motion.div>
-              </div>
-            ) : null}
-          </div>
+       
+       
+      
           {/* <div className="overlay">
             <button onClick={downloadCanvasContent}>Download Image</button>
-            <button id="bringToFrontBtn" onClick={bringImageToFront}>
-              Bring to Front
-            </button>
-            <button id="sendToBackBtn" onClick={sendImageToBack}>
-              Send to Back
-            </button>
+            <button id="bringToFrontBtn">Bring to Front</button>
+            <button id="sendToBackBtn">Send to Back</button>
             <button id="asdd">Add</button>
-            <button onClick={() => addColorOverlayToSelectedImage('#FF0000')}>Add Red Overlay</button>
-
             <button id="deleteBtn">Delete Selected</button>
             <select ref={selectRef}>
                 <option value="50">50%</option>
@@ -456,6 +501,8 @@ export default function Home() {
                 <option value="150">150%</option>
             </select>
           </div> */}
+
+         
 
           <div className="convas-continer">
             <canvas ref={canvasRef} />
