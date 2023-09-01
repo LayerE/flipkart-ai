@@ -20,7 +20,6 @@ export default function Home() {
   const {
     setSelectedImage,
     modifidImageArray,
-
     undoArray,
     setUndoArray,
     magickErase,
@@ -29,51 +28,9 @@ export default function Home() {
     canvasInstance,
     getBase64FromUrl,
     setActiveTab,
-    setSelectedColoreMode
+    setSelectedColoreMode,
   } = useAppState();
 
-  const handileUndo = () => {
-    if (modifidImageArray.length > 0) {
-      setUndoArray((pre) => [
-        ...pre,
-        modifidImageArray[modifidImageArray.length - 1],
-      ]);
-
-      // setModifidImageArray((pre) => {
-      //   const lastElement = pre[pre.length - 1];
-      //   if (lastElement && lastElement.tool) {
-      //     setSelectedImage((prevState) => ({
-      //       ...prevState,
-      //       tools: {
-      //         ...prevState.tools,
-      //         [lastElement.tool]: false,
-      //       },
-      //     }));
-      //   }
-
-      //   return pre.slice(0, -1);
-      // });
-    }
-  };
-  const handilePre = () => {
-    if (undoArray.length > 0) {
-      // setModifidImageArray((pre) => [...pre, undoArray[undoArray.length - 1]]);
-      setUndoArray((pre) => {
-        const lastElement = pre[pre.length - 1];
-        if (lastElement && lastElement.tool) {
-          setSelectedImage((prevState) => ({
-            ...prevState,
-            tools: {
-              ...prevState.tools,
-              [lastElement.tool]: true,
-            },
-          }));
-        }
-
-        return pre.slice(0, -1);
-      });
-    }
-  };
 
   // const [drawing, setDrawing] = useState(false);
   // const [lines, setLines] = useState([]);
@@ -168,8 +125,6 @@ export default function Home() {
         canvasInstanceRef.add(fabricImg).renderAll();
         canvasInstanceRef.setActiveObject(fabricImg);
         fabricImg.set("selectable", true);
-
-
       };
 
       e.preventDefault();
@@ -179,20 +134,19 @@ export default function Home() {
       if (options.target && options.target.type === "image") {
         let selectedObject;
         if (options.target._element instanceof Image) {
-            selectedObject = options.target._element.src;
+          selectedObject = options.target._element.src;
         } else if (options.target._element instanceof HTMLCanvasElement) {
-            selectedObject = options.target._element.toDataURL();
+          selectedObject = options.target._element.toDataURL();
         }
-        
+
         if (selectedObject) {
-            setSelectedImg(selectedObject);
-            setSelectedColoreMode("None")
+          setSelectedImg(selectedObject);
+          setSelectedColoreMode("None");
         }
-    }
+      }
     });
     canvasInstanceRef.on("object:selected", function (event) {
       console.log("Object selected:", event.target);
-      
     });
 
     // ractanghlw
@@ -311,8 +265,14 @@ export default function Home() {
       setActiveTab(1);
     });
 
-   canvasInstanceRef.renderAll();
-  }, [setSelectedImg]);
+    canvasInstanceRef.renderAll();
+  }, [
+    setSelectedImg,
+    canvasInstance,
+    getBase64FromUrl,
+    setActiveTab,
+    setSelectedColoreMode,
+  ]);
 
   function downloadCanvasContent() {
     if (selectedImg) {
@@ -330,19 +290,19 @@ export default function Home() {
 
     // Check if the selected object is an image
     if (activeObject && activeObject.type === "image") {
-        const filter = new fabric.Image.filters.BlendColor({
-            color: color, // The color you want to blend with
-            mode: "multiply", // Blend mode, can be multiply, add, etc.
-            alpha: 0.5 // Opacity of the overlay
-        });
+      const filter = new fabric.Image.filters.BlendColor({
+        color: color, // The color you want to blend with
+        mode: "multiply", // Blend mode, can be multiply, add, etc.
+        alpha: 0.5, // Opacity of the overlay
+      });
 
-        activeObject.filters.push(filter);
-        activeObject.applyFilters();
-        canvas.renderAll();
+      activeObject.filters.push(filter);
+      activeObject.applyFilters();
+      canvas.renderAll();
     } else {
-        // alert("Please select an image on the canvas first.");
+      // alert("Please select an image on the canvas first.");
     }
-}
+  }
 
   const bringImageToFront = () => {
     const activeObject = canvasInstance.current.getActiveObject();
@@ -419,7 +379,6 @@ export default function Home() {
                     Step 1: Place your product inside here
                   </p>
                 </motion.div>
-                {/* {selectedImage?.id > -1 ? ( */}
                 <motion.div
                   initial="hidden"
                   animate="visible"

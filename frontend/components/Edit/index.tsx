@@ -215,7 +215,7 @@ const Edit = () => {
 
   useEffect(() => {
     addColorOverlayToSelectedImage(colore, selectColoreMode);
-  }, [selectColoreMode]);
+  }, [selectColoreMode,addColorOverlayToSelectedImage,colore]);
 
   const handleChangeComplete = (color) => {
     setColore(color.hex);
