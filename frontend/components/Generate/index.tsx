@@ -47,7 +47,7 @@ const Generate = () => {
       const scaleY = 400 / img.height;
       // Position the image to be in the center of the rectangle
       img.set({
-        left: 550,
+        left: 450,
         top: 200,
         scaleX: scaleX,
         scaleY: scaleY,
@@ -77,7 +77,7 @@ const Generate = () => {
       // selectedImg // img url to generate images for the canvas
 
       // add thegenerated imag herar 
-      addimgToCanvas(
+      await addimgToCanvas(
         "https://www.hindustantimes.com/ht-img/img/2023/09/01/550x309/Screenshot_2023-09-01_140200_1693557169316_1693557177265.png"
       );
     } catch (error) {
