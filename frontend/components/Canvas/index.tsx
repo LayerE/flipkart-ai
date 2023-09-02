@@ -1,6 +1,4 @@
-import Head from "next/head";
 import React, { useRef, useState } from "react";
-
 import { useAppState } from "@/context/app.context";
 import { useEffect } from "react";
 import { fabric } from "fabric";
@@ -157,28 +155,7 @@ export default function CanvasBox() {
         canvasInstanceRef.remove(EditorBoxText);
         canvasInstanceRef.renderAll();
       }
-      // else{
-      //   canvasInstanceRef.add(EditorBoxText);
-      //   canvasInstanceRef.renderAll();
-      // }
-
-      // Check if the moved object is an image
-      // if (movedObject.type === 'image') {
-      //     // Get the four corners of the moving image
-      //     const topLeft = movedObject.getPointByOrigin('left', 'top');
-      //     const topRight = movedObject.getPointByOrigin('right', 'top');
-      //     const bottomLeft = movedObject.getPointByOrigin('left', 'bottom');
-      //     const bottomRight = movedObject.getPointByOrigin('right', 'bottom');
-
-      //     // Check if all four corners are inside the EditorBox
-      //     if (EditorBox.containsPoint(topLeft) &&
-      //         EditorBox.containsPoint(topRight) &&
-      //         EditorBox.containsPoint(bottomLeft) &&
-      //         EditorBox.containsPoint(bottomRight)) {
-      //         canvasInstanceRef.remove(EditorBoxText);
-      //         canvasInstanceRef.renderAll();
-      //     }
-      // }
+   
     });
 
     // When a user clicks on an image on the canvas
@@ -216,16 +193,7 @@ export default function CanvasBox() {
       opt.e.stopPropagation();
     });
 
-    // const deleteBtn = document.getElementById("deleteBtn");
-
-    // deleteBtn.addEventListener("click", () => {
-    //   const activeObject = canvasInstanceRef.getActiveObject();
-
-    //   if (activeObject) {
-    //     canvasInstanceRef.remove(activeObject);
-    //     canvasInstanceRef.renderAll();
-    //   }
-    // });
+   
 
     document.addEventListener("keydown", (e) => {
       // Check if the pressed key is 'Delete' (code: 46) or 'Backspace' (code: 8) for wider compatibility
@@ -249,7 +217,7 @@ export default function CanvasBox() {
       e.preventDefault();
     };
     canvasInstanceRef.on("selection:cleared", function () {
-      setDownloadImg(null); // Set  to null when no items are selected
+      setDownloadImg(null); 
 
       console.log(activeTab);
       if (activeTab === 5) {
@@ -257,17 +225,9 @@ export default function CanvasBox() {
       }
     });
 
-    // To disable selection on an actively selected image:
-    //  canvasInstanceRef.on("mouse:down", function (options) {
-    //   if (options.target) {
-    //     canvasInstanceRef.setActiveObject(null);
-    //     canvasInstanceRef.renderAll();
-    //   }
-    // });
-
-   
-    // canvasInstanceRef.renderAll();
   }, []);
+
+
   const [isEraseMode, setIsEraseMode] = useState(false);
 
  
