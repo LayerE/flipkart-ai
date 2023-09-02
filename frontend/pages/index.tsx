@@ -30,7 +30,7 @@ export default function Home() {
         </div>
         <div className="dashbaord">
           <div className="gridebox">
-            <Link href={"/generate"}>
+            <a href={"/generate"}>
               <div className="createbox">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -49,7 +49,7 @@ export default function Home() {
 
                 <div className="testcreat">Create new project</div>
               </div>
-            </Link>
+            </a>
             <Link href={"/"}>
               <div className="projectfile">
                 <div className="testcreat">Untitled Project</div>

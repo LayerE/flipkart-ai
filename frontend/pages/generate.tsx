@@ -1,10 +1,11 @@
 import Head from "next/head";
-import React, { useRef, useState } from "react";
+import React, {lazy, useRef, useState } from "react";
 import Sidebar from "@/components/Sidebar";
 import { styled } from "styled-components";
 import { useAppState } from "@/context/app.context";
 import { motion } from "framer-motion";
-import CanvasBox from "@/components/Canvas";
+// import CanvasBox from "@/components/Canvas";
+const CanvasBox = lazy(() => import("@/components/Canvas"));
 
 const fadeIn = {
   hidden: { opacity: 0 },
@@ -53,27 +54,7 @@ export default function Home() {
               </motion.div>
             </div> */}
           </div>
-          {/* <div className="overlay">
-            <button onClick={downloadCanvasContent}>Download Image</button>
-            <button id="bringToFrontBtn" onClick={bringImageToFront}>
-              Bring to Front
-            </button>
-            <button id="sendToBackBtn" onClick={sendImageToBack}>
-              Send to Back
-            </button>
-            <button id="asdd">Add</button>
-            <button onClick={() => addColorOverlayToSelectedImage('#FF0000')}>Add Red Overlay</button>
-
-            <button id="deleteBtn">Delete Selected</button>
-            <select ref={selectRef}>
-                <option value="50">50%</option>
-                <option value="75">75%</option>
-                <option value="100" selected>100%</option>
-                <option value="125">125%</option>
-                <option value="150">150%</option>
-            </select>
-          </div> */}
-
+    
          <CanvasBox />
         </div>
       </motion.div>
@@ -82,6 +63,7 @@ export default function Home() {
 }
 
 const MainPages = styled.div`
+
   display: block;
   width: 100%;
   min-height: 100vh;

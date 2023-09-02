@@ -25,20 +25,19 @@ export default function CanvasBox() {
 
   const canvasRef = useRef(null);
 
-  const history = useRef([]);
-  const historyIndex = useRef(-1);
+
 /* eslint-disable */
   useEffect(() => {
     if (!canvasInstance.current) {
       canvasInstance.current = new fabric.Canvas(canvasRef.current, {
-        width: outerDivRef.current.clientWidth,
-        height: outerDivRef.current.clientHeight,
+        width: outerDivRef?.current?.clientWidth,
+        height: outerDivRef?.current?.clientHeight,
       });
     }
     const canvasInstanceRef = canvasInstance.current;
 
     const EditorBox = new fabric.Rect({
-      left: 130,
+      left: 30,
       top: 200,
       width: 380,
       height: 400,
@@ -52,7 +51,7 @@ export default function CanvasBox() {
     canvasInstanceRef.add(EditorBox);
     // Adding the Image Generator Rectangle
     const imageGenRect = new fabric.Rect({
-      left: 550,
+      left: 450,
       top: 200,
       width: 380,
       height: 400,
@@ -63,7 +62,7 @@ export default function CanvasBox() {
     canvasInstanceRef.add(imageGenRect);
 
     const imageGenText = new fabric.Text("Generated image will appear here", {
-      left: 550 + 20,
+      left: 450 + 20,
       top: 200 + 20,
       fontSize: 16,
       // originX: "center",
@@ -72,7 +71,7 @@ export default function CanvasBox() {
       fill: "rgba(0, 0, 0, 1)",
     });
     const EditorBoxText = new fabric.Text("Place Your Product Here", {
-      left: 130 + 20, // center of the rectangle
+      left: 30 + 20, // center of the rectangle
       top: 200 + 20, // center of the rectangle
       fontSize: 16,
       // originX: "center",
@@ -225,38 +224,13 @@ export default function CanvasBox() {
       }
     });
 
+
   }, []);
 
 
-  const [isEraseMode, setIsEraseMode] = useState(false);
 
- 
-  const downloadCanvas = () => {
-    const dataURL = canvasInstance.current.toDataURL({ format: "png" });
-    const a = document.createElement("a");
-    a.href = dataURL;
-    a.download = "canvas.png";
-    document.body.appendChild(a);
-    a.click();
-  };
 
-  const undoAction = () => {
-    if (historyIndex.current === 0) return;
 
-    historyIndex.current -= 1;
-    const prevState = JSON.parse(history.current[historyIndex.current]);
-    canvasInstance.current.loadFromJSON(prevState);
-  };
-
-  const clearDrawing = () => {
-    const objects = canvasInstance.current.getObjects();
-    objects.forEach((object) => {
-      if (object.type === "path") {
-        // Assuming paths are used for free drawing and erasing
-        canvasInstance.current.remove(object);
-      }
-    });
-  };
 
   const bringImageToFront = () => {
     const activeObject = canvasInstance.current.getActiveObject();
