@@ -4,6 +4,7 @@ import Sidebar from "@/components/Sidebar";
 import { styled } from "styled-components";
 import { useAppState } from "@/context/app.context";
 import { motion } from "framer-motion";
+import PopupUpload from "@/components/Popup";
 // import CanvasBox from "@/components/Canvas";
 const CanvasBox = lazy(() => import("@/components/Canvas"));
 
@@ -14,7 +15,8 @@ const fadeIn = {
 
 export default function Home() {
   const {
-    outerDivRef
+    outerDivRef,
+    popup
   } = useAppState();
 
 
@@ -27,9 +29,36 @@ export default function Home() {
         variants={fadeIn}
         className="news"
       >
+        {
+          popup?.status?
+
+          <PopupUpload />
+          :null
+        }
         <Sidebar />
         <div className="Editor" ref={outerDivRef}>
+        <div className="generatedBox">
+           
+           <div className="itemsWrapper">
+
+           <div className="items">
+              <img src={"https://res.cloudinary.com/dmkarf8ed/image/fetch/https://files.chromaticlens.com/cd2216a8fe11611f1d0447452397c40bebd15eda33d3b7b729606122b636d0ef/995d60de-56af-4088-9232-029ba449703d/modified_images/modified_4.png"} alt="" />
+            </div>
+            <div className="items">
+              <img src={"https://res.cloudinary.com/dmkarf8ed/image/fetch/https://files.chromaticlens.com/cd2216a8fe11611f1d0447452397c40bebd15eda33d3b7b729606122b636d0ef/995d60de-56af-4088-9232-029ba449703d/modified_images/modified_4.png"} alt="" />
+            </div>
+            <div className="items">
+              <img src={"https://res.cloudinary.com/dmkarf8ed/image/fetch/https://files.chromaticlens.com/cd2216a8fe11611f1d0447452397c40bebd15eda33d3b7b729606122b636d0ef/995d60de-56af-4088-9232-029ba449703d/modified_images/modified_4.png"} alt="" />
+            </div>
+            <div className="items">
+              <img src={"https://res.cloudinary.com/dmkarf8ed/image/fetch/https://files.chromaticlens.com/cd2216a8fe11611f1d0447452397c40bebd15eda33d3b7b729606122b636d0ef/995d60de-56af-4088-9232-029ba449703d/modified_images/modified_4.png"} alt="" />
+            </div>
+           </div>
+          </div>
+          
           <div className="main-privier">
+
+
             {/* <div className="tgide">
               <motion.div
                 className="preBox"
@@ -63,6 +92,33 @@ export default function Home() {
 }
 
 const MainPages = styled.div`
+
+.generatedBox{
+width: 100%;
+  display: flex;
+  position: absolute;
+  bottom: 40px;
+left: auto;
+right: auto;
+justify-content: center;
+z-index: 10;
+
+.itemsWrapper{
+  display: flex;
+  gap: 10px;
+  background-color: #e0d7d79f;
+  padding: 1% 20px;
+  border-radius: 8px;
+
+}
+  .items{
+    img{
+      width: 100px;
+      height: 100px;
+    }
+
+  }
+}
 
   display: block;
   width: 100%;
@@ -108,6 +164,7 @@ const MainPages = styled.div`
   .Editor {
     width: 100%;
     min-height: 100%;
+    position: relative;
   }
   .main-privier {
     padding: 2rem;

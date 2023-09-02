@@ -160,6 +160,7 @@ export const FileUpload: React.FC = ({ type, title }) => {
     upladedArray,
     setUpladedArray,
     addimgToCanvas,
+    setPopup
   } = useAppState();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -174,10 +175,12 @@ export const FileUpload: React.FC = ({ type, title }) => {
         if (type === "element") {
           addimgToCanvas(reader.result);
         } else {
-          setUploadedProductlist((prev) => [
-            ...prev,
-            { url: blobUrl, baseUrl: reader.result },
-          ]);
+          setPopup({status:true, data:reader.result});
+
+          // setUploadedProductlist((prev) => [
+          //   ...prev,
+          //   { url: blobUrl, baseUrl: reader.result },
+          // ]);
         }
         // setUpladedArray((prev) => [
         //   ...prev,

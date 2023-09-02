@@ -103,7 +103,14 @@ const EditorSection = () => {
       variants={fadeIn}
       className="accest"
     >
-     
+      <div className="filde gap">
+        <DisabledLabel>Product</DisabledLabel>
+        <SuggetionInput
+          value={product}
+          setValue={setProduct}
+          suggetion={ProductSuggestionsFilter}
+        />
+      </div>
       <div className="gap">
         <DisabledLabel>Placement</DisabledLabel>
         <div className="two-side">
@@ -173,7 +180,7 @@ const EditorSection = () => {
           ></DropdownNOBorder>
         </div>
       </div>
-      <div className="rowwothtwo">
+      {/* <div className="rowwothtwo">
         <Label>Render strength</Label>
         <div className="dropdown-smaill">
           <DropdownNOBorder
@@ -208,7 +215,7 @@ const EditorSection = () => {
             }}
           ></DropdownNOBorder>
         </div>
-      </div>
+      </div> */}
     </motion.div>
   );
 };

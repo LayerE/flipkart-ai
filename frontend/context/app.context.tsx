@@ -54,10 +54,16 @@ interface ContextITFC {
   setColore: (colore: string) => void;
   uploadedProductlist: string[];
   setUploadedProductlist: (uploadedProductlist: string[]) => void;
+  generatedImgList: string[];
+  setGeneratedImgList: (generatedImgList: string[]) => void;
+
   previewLoader: boolean;
   setPriviewLoader: (previewLoader: boolean) => void;
   generationLoader: boolean;
   setGenerationLoader: (generationLoader: boolean) => void;
+  popup: object;
+  setPopup: (popup: object) => void;
+
 }
 export const AppContext = createContext<ContextITFC>({
   activeTab: 1,
@@ -108,10 +114,17 @@ export const AppContext = createContext<ContextITFC>({
   setColore: () => {},
   uploadedProductlist: [],
   setUploadedProductlist: (uploadedProductlist: string[]) => {},
+  generatedImgList: [],
+  setGeneratedImgList: (generatedImgList: string[]) => {},
+
   previewLoader: false,
   setPriviewLoader: () => {},
   generationLoader: false,
   setGenerationLoader: () => {},
+  popup: {},
+  setPopup: () => {},
+
+
 });
 
 export const AppContextProvider = ({ children }: ContextProviderProps) => {
@@ -141,6 +154,10 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [uploadedProductlist, setUploadedProductlist] = useState<string[]>([]);
   const [previewLoader, setPriviewLoader] = useState<boolean>(false);
   const [generationLoader, setGenerationLoader] = useState<boolean>(false);
+
+  const [popup, setPopup] = useState<object>({});
+  const [generatedImgList, setGeneratedImgList] = useState<string[]>([]);
+
 
   const getBase64FromUrl = async (url: string) => {
     const data = await fetch(url);
@@ -229,6 +246,10 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setIsMagic,
         downloadImg,
         setDownloadImg,
+  popup, setPopup,
+  generatedImgList, setGeneratedImgList
+
+
       }}
     >
       {children}
