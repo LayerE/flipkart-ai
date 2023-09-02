@@ -9,11 +9,15 @@ interface ContextITFC {
   canvasInstance: React.MutableRefObject<any | null>;
   outerDivRef: React.MutableRefObject<any | null>;
   addimgToCanvas: (url: string) => void;
+  addimgToCanvasSubject: (url: string) => void;
+
+
+  
   getBase64FromUrl: (url: string) => void;
   activeTab: number | null;
   setActiveTab: (tabID: number) => void;
-  selectedImg: string | null;
-  setSelectedImg: (selectedImg: string) => void;
+  selectedImg: object | null;
+  setSelectedImg: (selectedImg: object) => void;
 
   downloadImg: string | null;
   setDownloadImg: (downloadImg: string) => void;
@@ -79,6 +83,10 @@ export const AppContext = createContext<ContextITFC>({
   canvasInstance: null,
   outerDivRef: null,
   addimgToCanvas: () => {},
+  addimgToCanvasSubject: () => {},
+
+
+  
   getBase64FromUrl: () => {},
   file: null,
   setFile: () => {},
@@ -130,7 +138,7 @@ export const AppContext = createContext<ContextITFC>({
 export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const canvasInstance = useRef(null);
   const outerDivRef = useRef(null);
-  const [selectedImg, setSelectedImg] = useState<string | null>(null);
+  const [selectedImg, setSelectedImg] = useState<object | null>(null);
   const [downloadImg, setDownloadImg] = useState<string | null>(null);
   const [isMagic, setIsMagic] = useState<boolean | null>(false);
 
@@ -187,8 +195,52 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         // scaleX: scaleX,
         // scaleY: scaleY,
       });
+      img.set("category", "mask");
+
 
       canvasInstance.current.add(img);
+      canvasInstance.current.renderAll();
+    });
+  };
+  const addimgToCanvasSubject = async (url: string) => {
+    fabric.Image.fromURL(await getBase64FromUrl(url), function (img: any) {
+      // Set the image's dimensions
+      img.scaleToWidth(200);
+      const canvasWidth =  canvasInstance.current.getWidth();
+      const canvasHeight =  canvasInstance.current.getHeight();
+      const imageAspectRatio = img.width / img.height;
+
+        // Calculate the maximum width and height based on the canvas size
+        const maxWidth = canvasWidth;
+        const maxHeight = canvasHeight;
+
+          // Calculate the scaled width and height while maintaining the aspect ratio
+          let scaledWidth = maxWidth;
+          let scaledHeight = scaledWidth / imageAspectRatio;
+  
+          // If the scaled height exceeds the canvas height, scale it down
+          if (scaledHeight > maxHeight) {
+            scaledHeight = maxHeight;
+            scaledWidth = scaledHeight * imageAspectRatio;
+          }
+
+          img.scaleToWidth(scaledWidth);
+          img.scaleToHeight(scaledHeight);
+      // img.scaleToHeight(150);
+      // Scale the image to have the same width and height as the rectangle
+      // const scaleX = downloadRect.width / img.width;
+      // const scaleY = downloadRect.height / img.height;
+      // Position the image to be in the center of the rectangle
+      // img.set({
+      //   left: 100,
+      //   top: 200,
+      //   // scaleX: scaleX,
+      //   // scaleY: scaleY,
+      // });
+      img.set("category", "subject");
+      canvasInstance.current.clear();
+      canvasInstance.current.add(img);
+      canvasInstance.current.setActiveObject(img);
       canvasInstance.current.renderAll();
     });
   };
@@ -199,6 +251,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         canvasInstance,
         outerDivRef,
         addimgToCanvas,
+        addimgToCanvasSubject,
         selectedImg,
         setSelectedImg,
         getBase64FromUrl,

@@ -61,13 +61,9 @@ const EditorSection = () => {
     setPriviewLoader,
     generationLoader,
     setGenerationLoader,
-
   } = useAppState();
 
   // const imageArrays = JSON.parse(localStorage.getItem("g-images")) || [];
-
-
- 
 
   const ProductSuggestionsFilter = productSuggestions.filter((suggestion) =>
     suggestion.toLowerCase().includes(product.toLowerCase())

@@ -15,7 +15,8 @@ const Assets: React.FC = () => {
     uploadedProductlist,
 
     setUploadedProductlist,
-    addimgToCanvas
+    // addimgToCanvas,
+    addimgToCanvasSubject
   } = useAppState();
 
 
@@ -36,7 +37,7 @@ const Assets: React.FC = () => {
               key={i}
               className={"imageBox"}
               onClick={() => {
-                addimgToCanvas(test);
+                addimgToCanvasSubject(test);
                 
                
               }}
@@ -63,7 +64,7 @@ const Assets: React.FC = () => {
                 "imageBox"
               }
               onClick={() => {
-                addimgToCanvas(test.url);
+                addimgToCanvasSubject(test.url);
 
                
               }}

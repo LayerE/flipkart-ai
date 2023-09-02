@@ -1,10 +1,11 @@
 import Head from "next/head";
-import React, {lazy, useRef, useState } from "react";
+import React, { lazy, useEffect, useRef, useState } from "react";
 import Sidebar from "@/components/Sidebar";
 import { styled } from "styled-components";
 import { useAppState } from "@/context/app.context";
 import { motion } from "framer-motion";
 import PopupUpload from "@/components/Popup";
+import Canvas from "@/components/Canvas/Canvas";
 // import CanvasBox from "@/components/Canvas";
 const CanvasBox = lazy(() => import("@/components/Canvas"));
 
@@ -14,12 +15,12 @@ const fadeIn = {
 };
 
 export default function Home() {
-  const {
-    outerDivRef,
-    popup
-  } = useAppState();
+  const { outerDivRef, popup, generatedImgList, selectedImg,setSelectedImg } = useAppState();
 
-
+  useEffect(() => {
+   console.log("render")
+  }, [selectedImg, setSelectedImg])
+  
 
   return (
     <MainPages>
@@ -29,62 +30,44 @@ export default function Home() {
         variants={fadeIn}
         className="news"
       >
-        {
-          popup?.status?
-
-          <PopupUpload />
-          :null
-        }
+        {popup?.status ? <PopupUpload /> : null}
         <Sidebar />
         <div className="Editor" ref={outerDivRef}>
-        <div className="generatedBox">
-           
-           <div className="itemsWrapper">
+          {generatedImgList?.length ? (
+            <div className="generatedBox">
+              <div className="itemsWrapper">
+                {generatedImgList?.map((item) => (
+                  <div
+                    className="items"
+                    onClick={() =>
+                      setSelectedImg({ status: true, image: item })
+                    }
+                  >
+                    <picture>
+                      <img src={item} alt="" />
+                    </picture>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
 
-           <div className="items">
-              <img src={"https://res.cloudinary.com/dmkarf8ed/image/fetch/https://files.chromaticlens.com/cd2216a8fe11611f1d0447452397c40bebd15eda33d3b7b729606122b636d0ef/995d60de-56af-4088-9232-029ba449703d/modified_images/modified_4.png"} alt="" />
-            </div>
-            <div className="items">
-              <img src={"https://res.cloudinary.com/dmkarf8ed/image/fetch/https://files.chromaticlens.com/cd2216a8fe11611f1d0447452397c40bebd15eda33d3b7b729606122b636d0ef/995d60de-56af-4088-9232-029ba449703d/modified_images/modified_4.png"} alt="" />
-            </div>
-            <div className="items">
-              <img src={"https://res.cloudinary.com/dmkarf8ed/image/fetch/https://files.chromaticlens.com/cd2216a8fe11611f1d0447452397c40bebd15eda33d3b7b729606122b636d0ef/995d60de-56af-4088-9232-029ba449703d/modified_images/modified_4.png"} alt="" />
-            </div>
-            <div className="items">
-              <img src={"https://res.cloudinary.com/dmkarf8ed/image/fetch/https://files.chromaticlens.com/cd2216a8fe11611f1d0447452397c40bebd15eda33d3b7b729606122b636d0ef/995d60de-56af-4088-9232-029ba449703d/modified_images/modified_4.png"} alt="" />
-            </div>
-           </div>
+          <div className="main-privier"></div>
+          <div className="canvase">
+            {selectedImg?.status ? (
+              <div className="generated">
+                <picture>
+                  <img
+                    src={selectedImg?.image}
+                    alt=""
+                  />
+                </picture>
+              </div>
+            ) : (
+              <Canvas />
+            )}
           </div>
-          
-          <div className="main-privier">
-
-
-            {/* <div className="tgide">
-              <motion.div
-                className="preBox"
-                initial="hidden"
-                animate="visible"
-                variants={fadeIn}
-              >
-                <p>Place Your Product Here</p>
-                <div className="imgadd"></div>
-                <p className="center">Step 1: Place your product inside here</p>
-              </motion.div>
-              <motion.div
-                initial="hidden"
-                animate="visible"
-                variants={fadeIn}
-                className="preBox"
-              >
-                <p>Place Your Product Here</p>
-
-                <div className="imgadd"></div>
-                <p className="center">Step 1: Place your product inside here</p>
-              </motion.div>
-            </div> */}
-          </div>
-    
-         <CanvasBox />
+          {/* <CanvasBox /> */}
         </div>
       </motion.div>
     </MainPages>
@@ -92,33 +75,68 @@ export default function Home() {
 }
 
 const MainPages = styled.div`
+  .generated {
+    width: 360px;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    border: 2px solid rgba(249, 208, 13, 1);
+  
+    overflow: hidden;
 
-.generatedBox{
-width: 100%;
-  display: flex;
-  position: absolute;
-  bottom: 40px;
-left: auto;
-right: auto;
-justify-content: center;
-z-index: 10;
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 6px;
+    transition: all 0.3s ease;
+      
+      /* &:hover{
+      transform: scale(1.01);
+    } */
+    }
+  }
+  .canvase {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    gap: 0.5rem;
+  }
 
-.itemsWrapper{
-  display: flex;
-  gap: 10px;
-  background-color: #e0d7d79f;
-  padding: 1% 20px;
-  border-radius: 8px;
+  .generatedBox {
+    width: 100%;
+    display: flex;
+    position: absolute;
+    bottom: 40px;
+    left: auto;
+    right: auto;
+    justify-content: center;
+    z-index: 10;
 
-}
-  .items{
-    img{
-      width: 100px;
-      height: 100px;
+    .itemsWrapper {
+      display: flex;
+      gap: 10px;
+      background-color: #e0d7d79f;
+      padding: 1% 20px;
+      border-radius: 8px;
+    }
+    .items {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+    overflow:hidden;
+    &:hover{
+      transform: scale(1.1);
     }
 
+      img {
+        width: 100px;
+        height: 100px;
+      }
+    }
   }
-}
 
   display: block;
   width: 100%;
@@ -170,6 +188,7 @@ z-index: 10;
     padding: 2rem;
     padding-top: ${({ theme }) => theme.paddings.paddingTop};
     width: 100%;
+    height: 100%;
     display: none;
   }
   ${({ theme }) => theme.mediaWidth.upToMedium`
