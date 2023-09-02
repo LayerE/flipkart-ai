@@ -17,6 +17,7 @@ import { motion } from "framer-motion";
 import Humans from "../Humans";
 import Element from "../Element";
 import ListOf from "../List OfProduct";
+import MagicEraser from "../MagicErase";
 const fadeIn = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 1 } },
@@ -51,28 +52,28 @@ const TabData = [
 
     image: assets.icons.edit_icon,
     tittle: "Edit",
-    disable : assets.icons.edit_icon_diable
+    disable: assets.icons.edit_icon_diable,
   },
 ];
 
 const Sidebar: React.FC = () => {
-  const { activeTab, setActiveTab, viewMore, setViewMore, selectedImg } =
-    useAppState();
+  const {
+    activeTab,
+    setActiveTab,
+    viewMore,
+    setViewMore,
+    downloadImg,
+    isMagic,
+    setIsMagic
+  } = useAppState();
 
   return (
     <SideBar>
       <motion.div className="new">
         <div className="columWrapper">
           {TabData.map((elemenmt, i) =>
-            // <Column>
-            !selectedImg && elemenmt?.id === 5 ? (
-              <div
-                key={i}
-                className={
-                  "tabBox disable"
-                }
-               
-              >
+            !downloadImg && elemenmt?.id === 5 ? (
+              <div key={i} className={"tabBox disable"}>
                 <Image src={elemenmt.disable} alt="" width={16} />
                 <span>{elemenmt.tittle}</span>
               </div>
@@ -85,13 +86,13 @@ const Sidebar: React.FC = () => {
                 onClick={() => {
                   setActiveTab(elemenmt.id);
                   setViewMore({ status: false });
+                  setIsMagic(false)
                 }}
               >
                 <Image src={elemenmt.image} alt="" width={16} />
                 <span>{elemenmt.tittle}</span>
               </div>
             )
-            // </Column>
           )}
         </div>
         <div className="larfer">
@@ -121,12 +122,12 @@ const Sidebar: React.FC = () => {
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="18"
+                    width="20"
+                    height="20"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    stroke-width="2"
+                    stroke-width="3"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     class="lucide lucide-chevron-left"
@@ -139,7 +140,37 @@ const Sidebar: React.FC = () => {
                 "Add Element"
               ) : activeTab === 4 ? (
                 "Add Humans"
-              ) : (
+              ) 
+              : activeTab === 5 && isMagic == true ? (
+                <div
+                  style={{
+                    cursor: "pointer",
+                    display: "flex",
+                    gap: "0px",
+                    justifyContent: "start",
+                    alignItems: "center",
+                  }}
+                  onClick={() => setIsMagic( false)}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-chevron-left"
+                  >
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                  </svg>{" "}
+                  Magic Erase{" "}
+                </div>
+              )
+              
+              : (
                 "Edit Image"
               )}
             </div>
@@ -153,6 +184,8 @@ const Sidebar: React.FC = () => {
               <Element />
             ) : activeTab === 4 ? (
               <Humans />
+            ) : activeTab === 5 && isMagic == true ? (
+              <MagicEraser />
             ) : (
               <Edit />
             )}
@@ -219,12 +252,11 @@ const SideBar = styled.div`
     gap: 0.3rem;
     position: relative;
   }
-  .pikkeropen{
+  .pikkeropen {
     position: absolute;
     z-index: 10;
     top: 50px;
     right: 0;
-
   }
   .colorBox {
     background: #000;
@@ -306,9 +338,8 @@ const SideBar = styled.div`
       font-weight: 500;
     }
   }
-  .disable{
+  .disable {
     color: #d1c8c8;
-
   }
 
   ${({ theme }) => theme.mediaWidth.upToMedium`

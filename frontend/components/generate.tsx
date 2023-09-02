@@ -10,22 +10,6 @@ import assets from "@/public/assets";
 import { useEffect } from "react";
 import { FileUpload, Input } from "@/components/common/Input";
 import { motion } from "framer-motion";
-import { theme } from "@/theme";
-import {
-  Stage,
-  Layer,
-  Rect,
-  Text,
-  Image as KonvaImage,
-  Line,
-} from "react-konva";
-import Konva from "konva";
-import useImage from "use-image";
-import { Inpainting } from "@/store/api";
-import { arrayBufferToDataURL } from "@/utils/BufferToDataUrl";
-import Button from "@/components/common/Button";
-
-import Apps from "@/components/Canvas";
 
 const fadeIn = {
   hidden: { opacity: 0 },
@@ -258,8 +242,6 @@ export default function Home() {
     setMagickErase,
   } = useAppState();
 
- 
-
   const saveCanvasToBlobURL = () => {
     const canvas = stageRef.current;
     canvas.findOne("Image").hide();
@@ -280,122 +262,82 @@ export default function Home() {
       >
         <Sidebar />
         <div className="main-privier">
-          {modifidImageArray.length > 0 && !magickErase ? (
-            <div className="undoBox">
-              <div className="undoWrapper">
-                {modifidImageArray.length > 0 ? (
-                  <div className="undo" onClick={() => handileUndo()}>
+          <div className="tgide">
+            <motion.div
+              className="preBox"
+              initial="hidden"
+              animate="visible"
+              variants={fadeIn}
+            >
+              {selectedImage?.url ? (
+                <div
+                  className="close"
+                  onClick={() => {
+                    setFile(null);
+                  }}
+                >
+                  X
+                </div>
+              ) : null}
+              <p>Place Your Product Here</p>
+              <div className="imgadd">
+                {selectedImage?.url ? (
+                  <>
+                    {" "}
+                    <div className="file"></div>
                     <picture>
                       <img
-                        width="80"
-                        height="80"
-                        src="https://img.icons8.com/dotty/80/undo.png"
-                        alt="undo"
+                        src={
+                          selectedImage?.url
+                            ? selectedImage?.url
+                            : assets.images.dotbox
+                        }
+                        alt=""
                       />
                     </picture>
+                  </>
+                ) : (
+                  <div className="more">
+                    <div className="file">
+                      <FileUpload />
+                    </div>
+                    <NextImage src={assets.images.dotbox} alt=""></NextImage>
                   </div>
-                ) : null}
-                {undoArray.length > 0 ? (
-                  <div className="undo" onClick={() => handilePre()}>
-                    <picture>
-                      <img
-                        width="80"
-                        height="80"
-                        src="https://img.icons8.com/dotty/80/redo.png"
-                        alt="redo"
-                      />
-                    </picture>
-                  </div>
-                ) : null}
+                )}
               </div>
-            </div>
-          ) : null}
-         
-            <div className="tgide">
+              <p className="center">Step 1: Place your product inside here</p>
+            </motion.div>
+            {selectedImage?.id > -1 ? (
               <motion.div
-                className="preBox"
                 initial="hidden"
                 animate="visible"
                 variants={fadeIn}
+                className="preBox"
               >
-                {selectedImage?.url ? (
-                  <div
-                    className="close"
-                    onClick={() => {
-                      setSelectedImage({});
-                      setFile(null);
-                    }}
-                  >
-                    X
-                  </div>
-                ) : null}
                 <p>Place Your Product Here</p>
+                {previewLoader ? (
+                  <div className="loader">Loading...</div>
+                ) : null}
                 <div className="imgadd">
-                  {selectedImage?.url ? (
-                    <>
-                      {" "}
-                      <div className="file"></div>
-                      <picture>
-                        <img
-                          src={
-                            selectedImage?.url
-                              ? selectedImage?.url
-                              : assets.images.dotbox
-                          }
-                          alt=""
-                        />
-                      </picture>
-                    </>
+                  {modifidImageArray.length ? (
+                    <picture>
+                      <img
+                        src={
+                          modifidImageArray[modifidImageArray.length - 1].url
+                        }
+                        alt=""
+                      />
+                    </picture>
                   ) : (
                     <div className="more">
-                      <div className="file">
-                        <FileUpload />
-                      </div>
                       <NextImage src={assets.images.dotbox} alt=""></NextImage>
                     </div>
                   )}
                 </div>
                 <p className="center">Step 1: Place your product inside here</p>
               </motion.div>
-              {selectedImage?.id > -1 ? (
-                <motion.div
-                  initial="hidden"
-                  animate="visible"
-                  variants={fadeIn}
-                  className="preBox"
-                >
-                  <p>Place Your Product Here</p>
-                  {previewLoader ? (
-                    <div className="loader">Loading...</div>
-                  ) : null}
-                  <div className="imgadd">
-                    {modifidImageArray.length ? (
-                      <picture>
-                        <img
-                          src={
-                            modifidImageArray[modifidImageArray.length - 1].url
-                          }
-                          alt=""
-                        />
-                      </picture>
-                    ) : (
-                      <div className="more">
-                        <NextImage
-                          src={assets.images.dotbox}
-                          alt=""
-                        ></NextImage>
-                      </div>
-                    )}
-                  </div>
-                  <p className="center">
-                    Step 1: Place your product inside here
-                  </p>
-                </motion.div>
-              ) : null}
-            </div>
-     
-
-         
+            ) : null}
+          </div>
         </div>
       </motion.div>
     </MainPage>

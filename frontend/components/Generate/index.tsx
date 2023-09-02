@@ -1,19 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Row } from "../common/Row";
-import { Input, TestArea } from "../common/Input";
 import Button from "../common/Button";
-import Label, { DisabledLabel } from "../common/Label";
-import DropdownInput, { DropdownNOBorder } from "../common/Dropdown";
-import {
-  BackgroundList,
-  placementList,
-  resultList,
-  surroundingList,
-  test,
-} from "@/store/dropdown";
 import { useAppState } from "@/context/app.context";
 import { styled } from "styled-components";
-import { BgRemover, generateimge } from "@/store/api";
 
 const fadeIn = {
   hidden: { opacity: 0 },
@@ -23,6 +12,7 @@ const fadeIn = {
 import { motion } from "framer-motion";
 import EditorSection from "./Editor";
 import Tamplates from "./Templates";
+import { fabric } from "fabric";
 
 const Generate = () => {
   const {
@@ -30,31 +20,45 @@ const Generate = () => {
     placementTest,
     backgroundTest,
     surroundingTest,
-    promt,
-    setpromt,
-    imageArray,
-    setImageArray,
     generationLoader,
     setGenerationLoader,
-    setModifidImageArray,
+    selectPlacement,
+    selectSurrounding,
+    selectBackground,
+    getBase64FromUrl,
+    canvasInstance,
   } = useAppState();
 
   const [changeTab, setChangeTab] = useState(false);
   // const imageArrays = JSON.parse(localStorage.getItem("g-images")) || [];
 
-  console.log(imageArray);
+  const addimgToCanvas = async (url: string) => {
+    fabric.Image.fromURL(await getBase64FromUrl(url), function (img: any) {
+      // Set the image's dimensions
+      img.scaleToWidth(380);
+      img.scaleToHeight(400);
+      // Scale the image to have the same width and height as the rectangle
+      const scaleX = 380 / img.width;
+      const scaleY = 400 / img.height;
+      // Position the image to be in the center of the rectangle
+      img.set({
+        left: 550,
+        top: 200,
+        scaleX: scaleX,
+        scaleY: scaleY,
+      });
+
+      canvasInstance.current.add(img);
+      canvasInstance.current.renderAll();
+    });
+  };
+
   const generateImageHandeler = async () => {
     setGenerationLoader(true);
     try {
-      const data = await generateimge(promt);
-      console.log(data, "dff");
-      if (data) {
-        setImageArray((prev) => [
-          ...prev,
-          { url: data.url, baseUrl: data.baseUrl },
-        ]);
-      }
-      console.log(data, "dff", imageArray);
+      addimgToCanvas(
+        "https://www.hindustantimes.com/ht-img/img/2023/09/01/550x309/Screenshot_2023-09-01_140200_1693557169316_1693557177265.png"
+      );
     } catch (error) {
       console.error("Error generating image:", error);
     } finally {
@@ -70,7 +74,6 @@ const Generate = () => {
     >
       <div className="gap">
         <Row>
-          {/* <TestArea value={promt} onChange={(e) => setpromt(e.target.value)} /> */}
           <PromtGeneratePreview className="generatePreview">
             {product !== null && product !== "" ? (
               <label
@@ -78,6 +81,14 @@ const Generate = () => {
                 className="promtText"
               >
                 {product}{" "}
+              </label>
+            ) : null}
+            {selectPlacement !== null && selectPlacement !== "" ? (
+              <label
+                htmlFor="prompt-editor-subject-1-input"
+                className="promtText"
+              >
+                {selectPlacement}{" "}
               </label>
             ) : null}
             {placementTest !== null && placementTest !== "" ? (
@@ -88,12 +99,28 @@ const Generate = () => {
                 {placementTest}{" "}
               </label>
             ) : null}
+            {selectSurrounding !== null && selectSurrounding !== "" ? (
+              <label
+                htmlFor="prompt-editor-subject-1-input"
+                className="promtText"
+              >
+                {selectSurrounding}{" "}
+              </label>
+            ) : null}
             {surroundingTest !== null && surroundingTest !== "" ? (
               <label
                 htmlFor="prompt-editor-subject-2-input"
                 className="promtText"
               >
                 {surroundingTest}{" "}
+              </label>
+            ) : null}
+            {selectBackground !== null && selectBackground !== "" ? (
+              <label
+                htmlFor="prompt-editor-subject-1-input"
+                className="promtText"
+              >
+                {selectBackground}{" "}
               </label>
             ) : null}
             {backgroundTest !== null && backgroundTest !== "" ? (
@@ -157,6 +184,7 @@ export const PromtGeneratePreview = styled.div`
     }
   }
 `;
+
 export const ResponsiveRowWraptwo = styled(Row)`
   display: grid !important;
   gap: 1rem;

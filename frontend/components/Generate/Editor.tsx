@@ -43,14 +43,12 @@ const EditorSection = () => {
     setSelectedBackground,
     selectResult,
     setSelectedresult,
-    selectRunder,
+    selectRender,
     setSelectedRender,
     selectColoreStrength,
     setSelectedColoreStrength,
     selectOutLline,
     setSelectedOutline,
-    promt,
-    setpromt,
     product,
     setProduct,
     placementTest,
@@ -59,12 +57,6 @@ const EditorSection = () => {
     setBackgrundTest,
     surroundingTest,
     setSurroundingTest,
-    setSelectedImage,
-    selectedImage,
-    modifidImage,
-    setModifidImage,
-    imageArray,
-    setImageArray,
     previewLoader,
     setPriviewLoader,
     generationLoader,
@@ -74,25 +66,8 @@ const EditorSection = () => {
 
   // const imageArrays = JSON.parse(localStorage.getItem("g-images")) || [];
 
-  console.log(imageArray);
-  const generateImageHandeler = async () => {
-    setGenerationLoader(true);
-    try {
-      const data = await generateimge(promt);
-      console.log(data, "dff");
-      if (data) {
-        setImageArray((prev) => [
-          ...prev,
-          { url: data.url, baseUrl: data.baseUrl },
-        ]);
-      }
-      console.log(data, "dff", imageArray);
-    } catch (error) {
-      console.error("Error generating image:", error);
-    } finally {
-      setGenerationLoader(false);
-    }
-  };
+
+ 
 
   const ProductSuggestionsFilter = productSuggestions.filter((suggestion) =>
     suggestion.toLowerCase().includes(product.toLowerCase())
@@ -212,7 +187,7 @@ const EditorSection = () => {
             data={{
               list: renderStrength,
               action: setSelectedRender,
-              activeTab: selectRunder,
+              activeTab: selectRender,
             }}
           ></DropdownNOBorder>
         </div>

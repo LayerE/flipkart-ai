@@ -11,14 +11,11 @@ import { fabric } from "fabric";
 
 const Assets: React.FC = () => {
   const {
-    selectedImage,
-    setSelectedImage,
-    selectCategory,
+
     setSelectedCategory,
     uploadedProductlist,
-    upladedArray,
+
     setUploadedProductlist,
-    canvasInstance,
     addimgToCanvas
   } = useAppState();
 

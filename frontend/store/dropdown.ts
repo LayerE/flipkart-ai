@@ -102,6 +102,9 @@ export const test = [
       image: "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/b3250ecd-e67f-4f5d-8813-864444fb2100/256",
       promt: "montain",
       product: "",
+      placementType: "rocks ",
+      surroundingType:"",
+      backgroundType:"",
       placement: "ripples in a lake",
       surrounding: "surrounded by plants and flowers",
       background: "with sunlight streaming down"
@@ -109,6 +112,9 @@ export const test = [
     {
       image: "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/c603596d-958b-40b1-c333-ec7f71d67100/256",
       promt: "montain",
+      placementType: "",
+      surroundingType:"",
+      backgroundType:"",
       product: "",
       placement: "on top of a natural hill and rocks",
       surrounding: "surrounded by flowers",
@@ -116,6 +122,9 @@ export const test = [
     },  {
       image: "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/ec0c2e98-c02b-43a1-8c61-cec2f2e19400/256",
       promt: "montain",
+      placementType: "",
+      surroundingType:"",
+      backgroundType:"",
       product: "",
       placement: "ripples in a lake",
       surrounding: "surrounded by plants and flowers",
@@ -123,6 +132,9 @@ export const test = [
     },  {
       image: "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/f55418ca-1796-4ebf-1571-a3d92da3af00/256",
       promt: "montain",
+      placementType: "",
+      surroundingType:"",
+      backgroundType:"",
       product: "",
       placement: " on grassy patch of moss",
       surrounding: "surrounded by clovers and flowers,",
