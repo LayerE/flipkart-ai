@@ -12,7 +12,6 @@ import { fabric } from "fabric";
 const Assets: React.FC = () => {
   const {
 
-    setSelectedCategory,
     uploadedProductlist,
 
     setUploadedProductlist,
@@ -64,7 +63,7 @@ const Assets: React.FC = () => {
                 "imageBox"
               }
               onClick={() => {
-                addimgToCanvas(test);
+                addimgToCanvas(test.url);
 
                
               }}

@@ -13,6 +13,9 @@ import { motion } from "framer-motion";
 import EditorSection from "./Editor";
 import Tamplates from "./Templates";
 import { fabric } from "fabric";
+import Label, { DisabledLabel } from "../common/Label";
+import SuggetionInput from "./SuggetionInput";
+import { PlacementSuggestions, productSuggestions } from "@/store/dropdown";
 
 const Generate = () => {
   const {
@@ -27,6 +30,8 @@ const Generate = () => {
     selectBackground,
     getBase64FromUrl,
     canvasInstance,
+    setProduct,
+    selectedImg
   } = useAppState();
 
   const [changeTab, setChangeTab] = useState(false);
@@ -54,8 +59,23 @@ const Generate = () => {
   };
 
   const generateImageHandeler = async () => {
+    const promt =
+      product +" "+
+      selectPlacement + " "+
+      placementTest + " "+
+      selectSurrounding + " "+
+      surroundingTest + " "+
+      selectBackground + " "+
+      backgroundTest;
+
+      console.log(promt)
+
     setGenerationLoader(true);
     try {
+
+      selectedImg // img url to generate images for the canvas
+
+      // add thegenerated imag herar 
       addimgToCanvas(
         "https://www.hindustantimes.com/ht-img/img/2023/09/01/550x309/Screenshot_2023-09-01_140200_1693557169316_1693557177265.png"
       );
@@ -65,6 +85,11 @@ const Generate = () => {
       setGenerationLoader(false);
     }
   };
+
+  const ProductSuggestionsFilter = productSuggestions.filter((suggestion) =>
+    suggestion.toLowerCase().includes(product.toLowerCase())
+  );
+
   return (
     <motion.div
       initial="hidden"
@@ -73,6 +98,14 @@ const Generate = () => {
       className="accest"
     >
       <div className="gap">
+        <div className="filde ">
+          <Label>What's your Product</Label>
+          <SuggetionInput
+            value={product}
+            setValue={setProduct}
+            suggetion={ProductSuggestionsFilter}
+          />
+        </div>
         <Row>
           <PromtGeneratePreview className="generatePreview">
             {product !== null && product !== "" ? (
