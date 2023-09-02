@@ -30,6 +30,8 @@ const Edit = () => {
     canvasInstance,
     isMagic, setIsMagic
   } = useAppState();
+/* eslint-disable */
+
 
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {

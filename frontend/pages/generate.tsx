@@ -36,8 +36,9 @@ export default function Home() {
           {generatedImgList?.length ? (
             <div className="generatedBox">
               <div className="itemsWrapper">
-                {generatedImgList?.map((item) => (
+                {generatedImgList?.map((item, i) => (
                   <div
+                  key={i}
                     className="items"
                     onClick={() =>
                       setSelectedImg({ status: true, image: item })

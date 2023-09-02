@@ -16,7 +16,7 @@ const MagicEraser: React.FC = () => {
         history.current.push(JSON.stringify(canvasInstance.current.toJSON()));
         historyIndex.current += 1;
       });
-  }, [size])
+  }, [size,canvasInstance])
   
 
   const toggleEraseMode = () => {
