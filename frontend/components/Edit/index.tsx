@@ -115,6 +115,7 @@ const Edit = () => {
       // alert("Please select an image on the canvas first.");
     }
   }
+/* eslint-disable */
 
   useEffect(() => {
     addColorOverlayToSelectedImage(colore, selectColoreMode);

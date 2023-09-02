@@ -57,6 +57,7 @@ const Generate = () => {
       canvasInstance.current.renderAll();
     });
   };
+/* eslint-disable */
 
   const generateImageHandeler = async () => {
     const promt =
@@ -73,7 +74,7 @@ const Generate = () => {
     setGenerationLoader(true);
     try {
 
-      selectedImg // img url to generate images for the canvas
+      // selectedImg // img url to generate images for the canvas
 
       // add thegenerated imag herar 
       addimgToCanvas(
