@@ -39,8 +39,5 @@
   },
   "resolutions": {
     "styled-components": "^6.0.5"
-  },
-  "engines": {
-    "node": "14.x"
   }
 }
