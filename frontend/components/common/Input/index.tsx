@@ -173,8 +173,12 @@ export const FileUpload: React.FC = ({ type, title }) => {
       const reader = new FileReader();
       reader.onloadend = () => {
         if (type === "element") {
-          addimgToCanvas(reader.result);
+          const filename = `img${Date.now()}`
+          addimgToCanvas(reader.result, "img");
         } else {
+          BgRemover(reader.result)
+
+
           setPopup({status:true, data:reader.result});
 
           // setUploadedProductlist((prev) => [
