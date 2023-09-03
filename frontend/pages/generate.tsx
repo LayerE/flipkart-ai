@@ -6,6 +6,7 @@ import { useAppState } from "@/context/app.context";
 import { motion } from "framer-motion";
 import PopupUpload from "@/components/Popup";
 import Canvas from "@/components/Canvas/Canvas";
+import Loader from "@/components/Loader";
 // import CanvasBox from "@/components/Canvas";
 const CanvasBox = lazy(() => import("@/components/Canvas"));
 
@@ -15,15 +16,58 @@ const fadeIn = {
 };
 
 export default function Home() {
-  const { outerDivRef, popup, generatedImgList, selectedImg,setSelectedImg } = useAppState();
+  const {
+    outerDivRef,
+    popup,
+    generatedImgList,
+    selectedImg,
+    setSelectedImg,
+    loader,
+    setLoader,
+  } = useAppState();
 
   useEffect(() => {
-   console.log("render")
-  }, [selectedImg, setSelectedImg])
-  
+    console.log("render");
+  }, [selectedImg, setSelectedImg, loader]);
+
+  const fetchImages = async () => {
+    try {
+      const response = await fetch(
+        "https://tvjjvhjhvxwpkohjqxld.supabase.co/rest/v1/public_images?select=*&order=created_at.desc",
+        {
+          method: "GET",
+          headers: {
+            apikey:
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2amp2aGpodnh3cGtvaGpxeGxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTI4Njg5NDQsImV4cCI6MjAwODQ0NDk0NH0.dwKxNDrr7Jw5OjeHgIbk8RLyvJuQVwZ_48Bv71P1n3Y", // Replace with your actual API key
+          },
+        }
+      );
+      const data = await response.json();
+      // setImages(data); // Update the state with the fetched images
+      // setGeneratedImgList(data)
+
+      // if(data[0]?.prompt === prompt){
+
+      // }
+      // return data;
+    } catch (error) {
+      console.error("Error fetching images:", error);
+    }
+  };
+
+  useEffect(() => {
+    const pollInterval = setInterval(() => {
+      fetchImages(); // Fetch images every 10
+    }, 10000); // Adjust the interval as needed (e.g., 20000 for 20 seconds)
+
+    // Don't forget to clean up the interval when the component unmounts
+    return () => clearInterval(pollInterval);
+  }, []); // Empty dependency array ensures the effect runs only once when the component mounts
 
   return (
     <MainPages>
+      {loader ? <Loader /> : null}
+
       <motion.div
         initial="hidden"
         animate="visible"
@@ -38,7 +82,7 @@ export default function Home() {
               <div className="itemsWrapper">
                 {generatedImgList?.map((item, i) => (
                   <div
-                  key={i}
+                    key={i}
                     className="items"
                     onClick={() =>
                       setSelectedImg({ status: true, image: item })
@@ -55,7 +99,7 @@ export default function Home() {
 
           <div className="main-privier"></div>
           <div className="canvase">
-            {selectedImg?.status ? (
+            {/* {selectedImg?.status ? (
               <div className="generated">
                 <picture>
                   <img
@@ -64,9 +108,9 @@ export default function Home() {
                   />
                 </picture>
               </div>
-            ) : (
-              <Canvas />
-            )}
+            ) : ( */}
+            <Canvas />
+            {/* )} */}
           </div>
           {/* <CanvasBox /> */}
         </div>
@@ -84,15 +128,15 @@ const MainPages = styled.div`
     justify-content: center;
     padding: 20px;
     border: 2px solid rgba(249, 208, 13, 1);
-  
+
     overflow: hidden;
 
     img {
       width: 100%;
       height: 100%;
       border-radius: 6px;
-    transition: all 0.3s ease;
-      
+      transition: all 0.3s ease;
+
       /* &:hover{
       transform: scale(1.01);
     } */
@@ -107,30 +151,32 @@ const MainPages = styled.div`
   }
 
   .generatedBox {
-    width: 100%;
+    /* width: 100%; */
     display: flex;
     position: absolute;
     bottom: 40px;
-    left: auto;
-    right: auto;
-    justify-content: center;
+    /* left: auto; */
+    right: 20px;
+    justify-content: right;
     z-index: 10;
 
     .itemsWrapper {
       display: flex;
+    flex-direction: column;
+
       gap: 10px;
       background-color: #e0d7d79f;
       padding: 1% 20px;
       border-radius: 8px;
     }
     .items {
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border-radius: 4px;
-    overflow:hidden;
-    &:hover{
-      transform: scale(1.1);
-    }
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-radius: 4px;
+      overflow: hidden;
+      &:hover {
+        transform: scale(1.1);
+      }
 
       img {
         width: 100px;

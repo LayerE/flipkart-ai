@@ -36,7 +36,7 @@ const Tamplates = () => {
             key={i}
             className={"imageBox"}
             onClick={() => {
-              setProduct(test.product);
+              // setProduct(test.product);
               setPlacementTest(test.placement);
               setSurroundingTest(test.surrounding);
               setBackgrundTest(test.background);

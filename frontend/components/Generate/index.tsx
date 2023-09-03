@@ -29,15 +29,31 @@ const Generate = () => {
     selectSurrounding,
     selectBackground,
     getBase64FromUrl,
+    addimgToCanvasGen,
     canvasInstance,
     setGeneratedImgList,
     generatedImgList,
     setSelectedImg,
+    setLoader,
     selectedImg,
   } = useAppState();
 
   const [changeTab, setChangeTab] = useState(false);
   // const imageArrays = JSON.parse(localStorage.getItem("g-images")) || [];
+  const promt =
+    product +
+    " " +
+    selectPlacement +
+    " " +
+    placementTest +
+    " " +
+    selectSurrounding +
+    " " +
+    surroundingTest +
+    " " +
+    selectBackground +
+    " " +
+    backgroundTest;
 
   const addimgToCanvas = async (url: string) => {
     fabric.Image.fromURL(await getBase64FromUrl(url), function (img: any) {
@@ -59,25 +75,48 @@ const Generate = () => {
       canvasInstance.current.renderAll();
     });
   };
+
+  const fetchImages = async () => {
+    try {
+      const response = await fetch(
+        "https://tvjjvhjhvxwpkohjqxld.supabase.co/rest/v1/public_images?select=*&order=created_at.desc",
+        {
+          method: "GET",
+          headers: {
+            apikey:
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2amp2aGpodnh3cGtvaGpxeGxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTI4Njg5NDQsImV4cCI6MjAwODQ0NDk0NH0.dwKxNDrr7Jw5OjeHgIbk8RLyvJuQVwZ_48Bv71P1n3Y", // Replace with your actual API key
+          },
+        }
+      );
+      const data = await response.json();
+      // setImages(data); // Update the state with the fetched images
+      // setGeneratedImgList(data)
+
+      // if(data[0]?.prompt === prompt){
+
+      // }
+      return data;
+    } catch (error) {
+      console.error("Error fetching images:", error);
+    }
+  };
+
+  useEffect(() => {
+    const pollInterval = setInterval(() => {
+      fetchImages(); // Fetch images every 10
+    }, 10000); // Adjust the interval as needed (e.g., 20000 for 20 seconds)
+
+    // Don't forget to clean up the interval when the component unmounts
+    return () => clearInterval(pollInterval);
+  }, []); // Empty dependency array ensures the effect runs only once when the component mounts
+
   /* eslint-disable */
 
-  const generateImageHandeler = async () => {
-    const promt =
-      product +
-      " " +
-      selectPlacement +
-      " " +
-      placementTest +
-      " " +
-      selectSurrounding +
-      " " +
-      surroundingTest +
-      " " +
-      selectBackground +
-      " " +
-      backgroundTest;
+ 
 
+  const generateImageHandeler = async () => {
     console.log(promt);
+    setLoader(true)
 
     setGenerationLoader(true);
     try {
@@ -120,22 +159,58 @@ const Generate = () => {
       });
       const subjectDataUrl = subjectCanvas.toDataURL("image/png");
 
-      console.log("subjectDataUrl", maskDataUrl);
-
-      setSelectedImg({
-        status: true,
-        image:
-          "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/c603596d-958b-40b1-c333-ec7f71d67100/256",
+      // const textForPrompt = promt.trim() === "" ?   prompt;
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          dataUrl: subjectDataUrl,
+          maskDataUrl: maskDataUrl,
+          prompt: promt,
+        }),
       });
 
-      setGeneratedImgList([
-        "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/f55418ca-1796-4ebf-1571-a3d92da3af00/256",
-        "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/ec0c2e98-c02b-43a1-8c61-cec2f2e19400/256",
-        "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/ec0c2e98-c02b-43a1-8c61-cec2f2e19400/256",
-      ]);
+      const generate_response = await response.json();
+      const message_sent = generate_response?.ok ?? false;
+
+      console.log(generate_response, "dsfdsfds");
+
+      setTimeout(async function () {
+        const loadeImge = await fetchImages();
+
+        console.log(loadeImge);
+        setSelectedImg({
+          status: true,
+          image: loadeImge[0]?.image_url,
+          modifiedImage: loadeImge[0]?.modified_image_url,
+        });
+
+        addimgToCanvasGen(loadeImge[0]?.modified_image_url)
+        setGeneratedImgList([
+          "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/f55418ca-1796-4ebf-1571-a3d92da3af00/256",
+          "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/ec0c2e98-c02b-43a1-8c61-cec2f2e19400/256",
+          "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/ec0c2e98-c02b-43a1-8c61-cec2f2e19400/256",
+        ]);
+
+        setLoader(false)
+      }, 5000);
+
+      // if(loadeImge[0]?.prompt === prompt){
+
+      // }
+
+      //  const pollInterval = setInterval(() => {
+      //     fetchImages(); // Fetch images every 10
+      //   }, 10000); // Adj
+
+      console.log("maskDataUrl", maskDataUrl);
+      console.log("subjectDataUrl", subjectDataUrl);
+
 
       //clear the canvas
-      canvas1.clear();
+      // canvas1.clear();
     } catch (error) {
       console.error("Error generating image:", error);
     } finally {

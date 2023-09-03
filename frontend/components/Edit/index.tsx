@@ -5,7 +5,6 @@ import DropdownInput from "../common/Dropdown";
 import Button from "../common/Button";
 import { useAppState } from "@/context/app.context";
 
-
 const fadeIn = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 1 } },
@@ -28,10 +27,12 @@ const Edit = () => {
     setPriviewLoader,
     downloadImg,
     canvasInstance,
-    isMagic, setIsMagic
+    addimgToCanvasGen,
+    isMagic,
+    setIsMagic,
+    setLoader,
   } = useAppState();
-/* eslint-disable */
-
+  /* eslint-disable */
 
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
@@ -117,7 +118,62 @@ const Edit = () => {
       // alert("Please select an image on the canvas first.");
     }
   }
-/* eslint-disable */
+  /* eslint-disable */
+
+  const HandelBG = async () => {
+    setLoader(true);
+    const response = await fetch(
+      "https://dhanushreddy29-remove-background.hf.space/run/predict",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          data: [downloadImg],
+        }),
+      }
+    );
+    const data = await response.json();
+    if (data) {
+      addimgToCanvasGen(data?.data[0]);
+    }
+
+    setLoader(false);
+  };
+
+  async function toB64(imgUrl: string): Promise<string> {
+    const response = await fetch(imgUrl);
+    const arrayBuffer = await response.arrayBuffer();
+    const base64String = btoa(new Uint8Array(arrayBuffer).reduce((data, byte) => data + String.fromCharCode(byte), ''));
+    return base64String;
+  }
+  
+  const UpscaleBG = async () => {
+    setLoader(true);
+
+    const datatacke = {
+      image: await toB64(downloadImg),
+      scale: 2,
+    };
+    
+    const response = await fetch(
+      "https://api.segmind.com/v1/esrgan",
+      {
+        method: "POST",
+        headers: { 
+          'x-api-key': "SG_86fe6533d0888ca0",
+          "Content-Type": "application/json" },
+        body: JSON.stringify(datatacke),
+      }
+    );
+    const data = await response;
+
+    console.log(await data, "upscale ");
+    if (data) {
+      // addimgToCanvasGen(data?.data[0]);
+    }
+
+    setLoader(false);
+  };
 
   useEffect(() => {
     addColorOverlayToSelectedImage(colore, selectColoreMode);
@@ -183,7 +239,7 @@ const Edit = () => {
           <div
             className={"selectTool"}
             onClick={() => {
-              "";
+              HandelBG();
             }}
           >
             <Label>Remove Background</Label>
@@ -198,7 +254,7 @@ const Edit = () => {
 
               //  "selectTool ativeimg"
             }
-            onClick={() => ""}
+            onClick={() => UpscaleBG()}
           >
             <Label>Upscale</Label>
             <div>

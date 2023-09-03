@@ -159,8 +159,9 @@ export const FileUpload: React.FC = ({ type, title }) => {
     setUploadedProductlist,
     upladedArray,
     setUpladedArray,
+    setLoader,
     addimgToCanvas,
-    setPopup
+    setPopup,
   } = useAppState();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -168,18 +169,36 @@ export const FileUpload: React.FC = ({ type, title }) => {
     setFile(selectedFile);
     const blobUrl = URL.createObjectURL(selectedFile);
     const idG = uploadedProductlist.length;
-
+    setLoader(true);
+    console.log(event.target.result, "fdsfsdg");
     if (selectedFile) {
       const reader = new FileReader();
-      reader.onloadend = () => {
+
+      reader.onloadend = async () => {
         if (type === "element") {
-          const filename = `img${Date.now()}`
-          addimgToCanvas(reader.result, "img");
+          addimgToCanvas(reader.result);
         } else {
-          BgRemover(reader.result)
+          const filename = `img${Date.now()}`;
 
+          const response = await fetch(
+            "https://dhanushreddy29-remove-background.hf.space/run/predict",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                data: [reader.result],
+              }),
+            }
+          );
+          const data = await response.json();
+          console.log(data);
 
-          setPopup({status:true, data:reader.result});
+          // BgRemover(reader.result, filename);
+          if (data) {
+            setPopup({ status: true, data: data?.data[0] });
+          } else {
+            console.log("bg not removed");
+          }
 
           // setUploadedProductlist((prev) => [
           //   ...prev,
@@ -193,6 +212,7 @@ export const FileUpload: React.FC = ({ type, title }) => {
       };
       reader.readAsDataURL(selectedFile);
     }
+    setLoader(false);
   };
 
   const handleRemoveFile = () => {

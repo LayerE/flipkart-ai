@@ -10,6 +10,7 @@ interface ContextITFC {
   outerDivRef: React.MutableRefObject<any | null>;
   addimgToCanvas: (url: string) => void;
   addimgToCanvasSubject: (url: string) => void;
+  addimgToCanvasGen : (url: string) => void;
 
 
   
@@ -65,6 +66,11 @@ interface ContextITFC {
   setPriviewLoader: (previewLoader: boolean) => void;
   generationLoader: boolean;
   setGenerationLoader: (generationLoader: boolean) => void;
+
+  loader: boolean;
+  setLoader: (loader: boolean) => void;
+
+
   popup: object;
   setPopup: (popup: object) => void;
 
@@ -84,6 +90,7 @@ export const AppContext = createContext<ContextITFC>({
   outerDivRef: null,
   addimgToCanvas: () => {},
   addimgToCanvasSubject: () => {},
+  addimgToCanvasGen :()=> {},
 
 
   
@@ -129,6 +136,9 @@ export const AppContext = createContext<ContextITFC>({
   setPriviewLoader: () => {},
   generationLoader: false,
   setGenerationLoader: () => {},
+  loader: false,
+  setLoader: () => {},
+
   popup: {},
   setPopup: () => {},
 
@@ -162,6 +172,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [uploadedProductlist, setUploadedProductlist] = useState<string[]>([]);
   const [previewLoader, setPriviewLoader] = useState<boolean>(false);
   const [generationLoader, setGenerationLoader] = useState<boolean>(false);
+  const [loader, setLoader] = useState<boolean>(false);
+
 
   const [popup, setPopup] = useState<object>({});
   const [generatedImgList, setGeneratedImgList] = useState<string[]>([]);
@@ -245,10 +257,44 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     });
   };
 
+  const addimgToCanvasGen = async (url: string) => {
+    fabric.Image.fromURL(await getBase64FromUrl(url), function (img: any) {
+      // Set the image's dimensions
+      img.scaleToWidth(200);
+      const canvasWidth =  canvasInstance.current.getWidth();
+      const canvasHeight =  canvasInstance.current.getHeight();
+      const imageAspectRatio = img.width / img.height;
+
+        // Calculate the maximum width and height based on the canvas size
+        const maxWidth = canvasWidth;
+        const maxHeight = canvasHeight;
+
+          // Calculate the scaled width and height while maintaining the aspect ratio
+          let scaledWidth = maxWidth;
+          let scaledHeight = scaledWidth / imageAspectRatio;
+  
+          // If the scaled height exceeds the canvas height, scale it down
+          if (scaledHeight > maxHeight) {
+            scaledHeight = maxHeight;
+            scaledWidth = scaledHeight * imageAspectRatio;
+          }
+
+          img.scaleToWidth(scaledWidth);
+          img.scaleToHeight(scaledHeight);
+
+      img.set("category", "generated");
+      canvasInstance.current.clear();
+      canvasInstance.current.add(img);
+      canvasInstance.current.setActiveObject(img);
+      canvasInstance.current.renderAll();
+    });
+  };
+
   return (
     <AppContext.Provider
       value={{
         canvasInstance,
+        addimgToCanvasGen,
         outerDivRef,
         addimgToCanvas,
         addimgToCanvasSubject,
@@ -300,7 +346,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         downloadImg,
         setDownloadImg,
   popup, setPopup,
-  generatedImgList, setGeneratedImgList
+  generatedImgList, setGeneratedImgList,
+  loader, setLoader
+
 
 
       }}

@@ -10,6 +10,7 @@ import assets from "@/public/assets";
 import { useEffect } from "react";
 import { FileUpload, Input } from "@/components/common/Input";
 import { motion } from "framer-motion";
+import Loader from "./Loader";
 
 const fadeIn = {
   hidden: { opacity: 0 },
@@ -239,6 +240,8 @@ export default function Home() {
     setUndoArray,
     magickErase,
     setFile,
+  loader, setLoader
+
     setMagickErase,
   } = useAppState();
 
@@ -254,6 +257,8 @@ export default function Home() {
   return (
     <MainPage>
       {/* <Apps /> */}
+  
+
       <motion.div
         initial="hidden"
         animate="visible"
