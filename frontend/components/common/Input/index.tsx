@@ -169,7 +169,6 @@ export const FileUpload: React.FC = ({ type, title }) => {
     setFile(selectedFile);
     const blobUrl = URL.createObjectURL(selectedFile);
     const idG = uploadedProductlist.length;
-    setLoader(true);
     console.log(event.target.result, "fdsfsdg");
     if (selectedFile) {
       const reader = new FileReader();
@@ -179,6 +178,8 @@ export const FileUpload: React.FC = ({ type, title }) => {
           addimgToCanvas(reader.result);
         } else {
           const filename = `img${Date.now()}`;
+    setLoader(true);
+
 
           const response = await fetch(
             "https://dhanushreddy29-remove-background.hf.space/run/predict",
@@ -196,8 +197,12 @@ export const FileUpload: React.FC = ({ type, title }) => {
           // BgRemover(reader.result, filename);
           if (data) {
             setPopup({ status: true, data: data?.data[0] });
+    setLoader(false);
+
           } else {
             console.log("bg not removed");
+    setLoader(false);
+
           }
 
           // setUploadedProductlist((prev) => [
@@ -212,7 +217,6 @@ export const FileUpload: React.FC = ({ type, title }) => {
       };
       reader.readAsDataURL(selectedFile);
     }
-    setLoader(false);
   };
 
   const handleRemoveFile = () => {

@@ -36,6 +36,8 @@ const Generate = () => {
     setSelectedImg,
     setLoader,
     selectedImg,
+    selectResult,
+    setSelectedresult
   } = useAppState();
 
   const [changeTab, setChangeTab] = useState(false);
@@ -159,23 +161,42 @@ const Generate = () => {
       });
       const subjectDataUrl = subjectCanvas.toDataURL("image/png");
 
-      // const textForPrompt = promt.trim() === "" ?   prompt;
-      const response = await fetch("/api/generate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          dataUrl: subjectDataUrl,
-          maskDataUrl: maskDataUrl,
-          prompt: promt,
-        }),
-      });
+      for (let i = 0; i < selectResult; i++) {
+        const response = await fetch("/api/generate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            dataUrl: subjectDataUrl,
+            maskDataUrl: maskDataUrl,
+            prompt: prompt,
+          }),
+        });
+    
+        const generate_response = await response.json();
+    
+        // You can do something with the generate_response here
+        console.log(`Request ${i + 1} completed:`, generate_response);
+      }
 
-      const generate_response = await response.json();
+      // // const textForPrompt = promt.trim() === "" ?   prompt;
+      // const response = await fetch("/api/generate", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({
+      //     dataUrl: subjectDataUrl,
+      //     maskDataUrl: maskDataUrl,
+      //     prompt: promt,
+      //   }),
+      // });
+
+      // const generate_response = await response.json();
     
 
-      console.log(generate_response);
+      // console.log(generate_response);
 
       setTimeout(async function () {
         const loadeImge = await fetchImages();
@@ -188,18 +209,16 @@ const Generate = () => {
         });
 
         addimgToCanvasGen(loadeImge[0]?.modified_image_url)
-        setGeneratedImgList([
-          "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/f55418ca-1796-4ebf-1571-a3d92da3af00/256",
-          "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/ec0c2e98-c02b-43a1-8c61-cec2f2e19400/256",
-          "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/ec0c2e98-c02b-43a1-8c61-cec2f2e19400/256",
-        ]);
+        setGeneratedImgList(loadeImge.slice(0, selectResult))
+
+        setSelectedresult(1)
 
         // setGeneratedImgList(
         //   loadeImge
         // )
 
         setLoader(false)
-      }, 5000);
+      }, 8000);
 
       // if(loadeImge[0]?.prompt === prompt){
 

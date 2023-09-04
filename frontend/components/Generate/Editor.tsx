@@ -170,7 +170,7 @@ const EditorSection = () => {
           <DropdownNOBorder
             data={{
               list: resultList,
-              action: setSelectedRender,
+              action: setSelectedresult,
               activeTab: selectResult,
             }}
           ></DropdownNOBorder>

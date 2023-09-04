@@ -23,7 +23,9 @@ export default function Home() {
     selectedImg,
     setSelectedImg,
     loader,
+    addimgToCanvasGen,
     setLoader,
+    canvasInstance
   } = useAppState();
 
   useEffect(() => {
@@ -55,6 +57,15 @@ export default function Home() {
     }
   };
 
+  const upateImage = (url)=>{
+
+    setSelectedImg({ status: true, image: url })
+
+    canvasInstance.current.clear();
+
+    addimgToCanvasGen(url)
+  }
+
   useEffect(() => {
     const pollInterval = setInterval(() => {
       fetchImages(); // Fetch images every 10
@@ -77,7 +88,7 @@ export default function Home() {
         {popup?.status ? <PopupUpload /> : null}
         <Sidebar />
         <div className="Editor" ref={outerDivRef}>
-          {generatedImgList?.length ? (
+          {generatedImgList?.length > 1 ? (
             <div className="generatedBox">
               <div className="itemsWrapper">
                 {generatedImgList?.map((item, i) => (
@@ -85,11 +96,11 @@ export default function Home() {
                     key={i}
                     className="items"
                     onClick={() =>
-                      setSelectedImg({ status: true, image: item })
+                      upateImage(item?.modified_image_url)
                     }
                   >
                     <picture>
-                      <img src={item} alt="" />
+                      <img src={item?.modified_image_url} alt="" />
                     </picture>
                   </div>
                 ))}
