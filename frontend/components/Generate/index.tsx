@@ -3,7 +3,7 @@ import { Row } from "../common/Row";
 import Button from "../common/Button";
 import { useAppState } from "@/context/app.context";
 import { styled } from "styled-components";
-
+import { useAuth } from "@clerk/nextjs";
 const fadeIn = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 1 } },
@@ -18,6 +18,7 @@ import SuggetionInput from "./SuggetionInput";
 import { PlacementSuggestions, productSuggestions } from "@/store/dropdown";
 
 const Generate = () => {
+  const { userId } = useAuth();
   const {
     product,
     placementTest,
@@ -79,11 +80,13 @@ const Generate = () => {
       canvasInstance.current.renderAll();
     });
   };
+  console.log(userId,"userId=" + userId)
 
   const fetchImages = async () => {
     try {
+      // &user_id=eq.${userId}
       const response = await fetch(
-        "https://tvjjvhjhvxwpkohjqxld.supabase.co/rest/v1/public_images?select=*&order=created_at.desc&user_id=eq.",
+        `https://tvjjvhjhvxwpkohjqxld.supabase.co/rest/v1/public_images?select=*&order=created_at.desc`,
         {
           method: "GET",
           headers: {
@@ -99,6 +102,7 @@ const Generate = () => {
       // if(data[0]?.prompt === prompt){
 
       // }
+
       return data;
     } catch (error) {
       console.error("Error fetching images:", error);
@@ -256,8 +260,8 @@ const Generate = () => {
       //     fetchImages(); // Fetch images every 10
       //   }, 10000); // Adj
 
-      console.log("maskDataUrl", maskDataUrl);
-      console.log("subjectDataUrl", subjectDataUrl);
+      // console.log("maskDataUrl", maskDataUrl);
+      // console.log("subjectDataUrl", subjectDataUrl);
 
       //clear the canvas
       // canvas1.clear();
