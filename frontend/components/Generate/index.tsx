@@ -83,7 +83,7 @@ const Generate = () => {
   const fetchImages = async () => {
     try {
       const response = await fetch(
-        "https://tvjjvhjhvxwpkohjqxld.supabase.co/rest/v1/public_images?select=*&order=created_at.desc",
+        "https://tvjjvhjhvxwpkohjqxld.supabase.co/rest/v1/public_images?select=*&order=created_at.desc&user_id=eq.",
         {
           method: "GET",
           headers: {

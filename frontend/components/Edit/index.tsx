@@ -64,7 +64,7 @@ const Edit = () => {
 
   const handileDownload = () => {
     if (modifidImageArray.length) {
-      const url = modifidImageArray[modifidImageArray.length -1]?.url;
+      const url = modifidImageArray[modifidImageArray.length - 1]?.url;
       console.log(url);
 
       saveAs(url, `image${Date.now()}.png`);
@@ -132,7 +132,7 @@ const Edit = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          data: [modifidImageArray[modifidImageArray.length -1]?.url],
+          data: [modifidImageArray[modifidImageArray.length - 1]?.url],
         }),
       }
     );
@@ -141,18 +141,14 @@ const Edit = () => {
       // addimgToCanvasGen(data?.data[0]);
       setSelectedImg({ status: true, image: data?.data[0] });
 
-
       setModifidImageArray((pre) => [
         ...pre,
         { url: data?.data[0], tool: "upscale" },
-  
-      ])
+      ]);
     }
 
     setLoader(false);
   };
-
-
 
   async function toB64(imgUrl: string): Promise<string> {
     const response = await fetch(imgUrl);
@@ -166,36 +162,31 @@ const Edit = () => {
     return base64String;
   }
 
- 
-
-   const upSacle = async (
-    photo: string,
-    filename: string
-  ): Promise<string> => {
-
-    
+  const upSacle = async (photo: string, filename: string): Promise<string> => {
     const form = new FormData();
     const fileItem = await dataURLtoFile(photo, filename);
     form.append("image_file", fileItem);
-  form.append('target_width', 2048)
-  form.append('target_height', 2048)
-    const response = await fetch("https://clipdrop-api.co/image-upscaling/v1/upscale", {
-      method: "POST",
-      headers: {
-        "x-api-key":
-          "ca2c46b3fec7f2917642e99ab5c48d3e23a2f940293a0a3fbec2e496566107f9d8b192d030b7ecfd85cfb02b6adb32f4",
-      },
-      body: form,
-    });
-  
+    form.append("target_width", 2048);
+    form.append("target_height", 2048);
+    const response = await fetch(
+      "https://clipdrop-api.co/image-upscaling/v1/upscale",
+      {
+        method: "POST",
+        headers: {
+          "x-api-key":
+            "ca2c46b3fec7f2917642e99ab5c48d3e23a2f940293a0a3fbec2e496566107f9d8b192d030b7ecfd85cfb02b6adb32f4",
+        },
+        body: form,
+      }
+    );
+
     const buffer = await response.arrayBuffer();
     const dataURL = await arrayBufferToDataURL(buffer);
     localStorage.setItem("m-images", JSON.stringify(dataURL));
     console.log(buffer, response, dataURL, "imgs");
-  
+
     return dataURL;
   };
-
 
   const UpscaleBG = async () => {
     setLoader(true);
@@ -204,7 +195,6 @@ const Edit = () => {
     //   image: await toB64(downloadImg),
     //   scale: 2,
     // };
-
     // const response = await fetch("https://api.segmind.com/v1/esrgan", {
     //   method: "POST",
     //   headers: {
@@ -214,22 +204,19 @@ const Edit = () => {
     //   body: JSON.stringify(datatacke),
     // });
     // const data = await response;
-
     // console.log(await data, "upscale ");
 
-   const data = await upSacle(modifidImageArray[modifidImageArray.length -1]?.url,"imger")
-   console.log(data, "upscale ");
+    const data = await upSacle(
+      modifidImageArray[modifidImageArray.length - 1]?.url,
+      "imger"
+    );
+    console.log(data, "upscale ");
 
     if (data) {
       // addimgToCanvasGen(data);
-    setSelectedImg({ status: true, image: data });
+      setSelectedImg({ status: true, image: data });
 
-
-      setModifidImageArray((pre) => [
-        ...pre,
-        { url: data, tool: "upscale" },
-  
-      ])
+      setModifidImageArray((pre) => [...pre, { url: data, tool: "upscale" }]);
     }
 
     setLoader(false);
@@ -259,7 +246,7 @@ const Edit = () => {
       alert("Please select an object on the canvas first.");
       return;
     }
-    console.log(activeObject)
+    console.log(activeObject);
     canvasInstance.current.sendBackwards(activeObject);
     canvasInstance.current.discardActiveObject();
     // canvas.requestRenderAll();
@@ -334,7 +321,6 @@ const Edit = () => {
           <div
             className={
               "selectTool "
-
               //  "selectTool ativeimg"
             }
             onClick={() => UpscaleBG()}

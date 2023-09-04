@@ -50,11 +50,11 @@ export default function Home() {
                 <div className="testcreat">Create new project</div>
               </div>
             </a>
-            <Link href={"/"}>
+            {/* <Link href={"/"}>
               <div className="projectfile">
                 <div className="testcreat">Untitled Project</div>
               </div>
-            </Link>
+            </Link> */}
           
           </div>
         </div>

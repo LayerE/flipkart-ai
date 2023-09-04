@@ -4,12 +4,15 @@ import Head from "next/head";
 import styled from "styled-components";
 import Header from "@/components/Header"
 
+
 const LayoutContentWrapper = styled.div`
   width: 100%;
   height: 100%;
   position: relative;
 
 `;
+
+
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
