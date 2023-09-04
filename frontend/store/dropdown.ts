@@ -147,51 +147,156 @@ export const outlineStrength = [
 export const templets = [
   {
     image:
-      "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/b3250ecd-e67f-4f5d-8813-864444fb2100/256",
-    promt: "montain",
+      "https://chromaticlens.com/_next/image?url=%2Fplaces%2Fabstract.jpeg&w=256&q=75",
+    promt: "in an abstract background",
     product: "",
-    placementType: "on  ",
+    placementType: "in",
     surroundingType: "",
-    backgroundType: "in front",
-    placement: "top of a natural hill",
-    surrounding: "",
-    background: "of mountains and cloudy skies in the background",
-  },
-  {
-    image:
-      "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/c603596d-958b-40b1-c333-ec7f71d67100/256",
-    promt: "montain",
-    placementType: "emerging from",
-    surroundingType: "surrounded by",
-    backgroundType: "with",
-    product: "",
-    placement: "ripples in a lake",
-    surrounding: "plants and flowers,",
-    background: "sunlight streaming down",
-  },
-  {
-    image:
-      "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/ec0c2e98-c02b-43a1-8c61-cec2f2e19400/256",
-    promt: "montain",
-    placementType: "on",
-    surroundingType: "surrounded by",
     backgroundType: "",
-    product: "",
-    placement: "top of a natural hill and rocks",
-    surrounding: "flowers",
+    placement: " an abstract background",
+    surrounding: "",
     background: "",
   },
   {
     image:
-      "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/f55418ca-1796-4ebf-1571-a3d92da3af00/256",
-    promt: "montain",
-    placementType: "on",
-    surroundingType: "surrounded by",
-    backgroundType: "against",
+      "https://chromaticlens.com/_next/image?url=%2Fplaces%2Ffabric.jpeg&w=256&q=75",
+    promt: "against a fabric background",
+    placementType: "against",
+    surroundingType: "",
+    backgroundType: "",
     product: "",
-    placement: "grassy patch of moss",
-    surrounding: "clovers and flowers,",
+    placement: "a fabric background",
+    surrounding: "",
+    background: "",
+  },
+  {
+    image:
+      "https://chromaticlens.com/_next/image?url=%2Fplaces%2Fminimal.jpeg&w=256&q=75",
+    promt: " in a minimalistic background",
+    placementType: "in",
+    surroundingType: "",
+    backgroundType: "",
+    product: "",
+    placement: "a minimalistic background",
+    surrounding: "",
+    background: "",
+  },
+ 
+  {
+    image:
+      "https://chromaticlens.com/_next/image?url=%2Fplaces%2Froad.jpeg&w=256&q=75",
+    promt: "on",
+    placementType: "on",
+    surroundingType: "",
+    backgroundType: "",
+    product: "",
+    placement: "a roads",
+    surrounding: "",
     background:
-      "a lush and dense forest and sunlight streaming down in the background",
+      "",
+  },
+  {
+    image:
+      "https://chromaticlens.com/_next/image?url=%2Fplaces%2Fstand.jpeg&w=256&q=75",
+    promt: "on a stand",
+    placementType: "on",
+    surroundingType: "",
+    backgroundType: "",
+    product: "",
+    placement: "a stand",
+    surrounding: "",
+    background:
+      "",
+  },
+  {
+    image:
+      "https://chromaticlens.com/_next/image?url=%2Fplaces%2Fstones.jpeg&w=256&q=75",
+    promt: "in a background of stones",
+    placementType: "in",
+    surroundingType: "",
+    backgroundType: "",
+    product: "",
+    placement: "a background of stones",
+    surrounding: "",
+    background:
+      "",
+  },
+  {
+    image:
+      "https://chromaticlens.com/_next/image?url=%2Fplaces%2Ftable.jpeg&w=256&q=75",
+    promt: "on a table",
+    placementType: "on",
+    surroundingType: "",
+    backgroundType: "",
+    product: "",
+    placement: "a table",
+    surrounding: "",
+    background:
+      "",
+  },
+  {
+    image:
+      "https://chromaticlens.com/_next/image?url=%2Fplaces%2Ftexture.jpeg&w=256&q=75",
+    promt: "against a textured background",
+    placementType: "against",
+    surroundingType: "",
+    backgroundType: "",
+    product: "",
+    placement: "a textured background",
+    surrounding: "",
+    background:
+      "",
+  },
+  {
+    image:
+      "https://chromaticlens.com/_next/image?url=%2Fplaces%2Fwood.jpeg&w=256&q=75",
+    promt: "against a wooden background",
+    placementType: "against",
+    surroundingType: "",
+    backgroundType: "",
+    product: "",
+    placement: "a wooden background",
+    surrounding: "",
+    background:
+      "",
+  },
+  {
+    image:
+      "https://chromaticlens.com/_next/image?url=%2Fplaces%2Fcolorful.jpeg&w=256&q=75",
+    promt: "against a colorful background",
+    placementType: "against",
+    surroundingType: "",
+    backgroundType: "",
+    product: "",
+    placement: "a colorful backgroun",
+    surrounding: "",
+    background:
+      "",
+  },
+  {
+    image:
+      "https://chromaticlens.com/_next/image?url=%2Fplaces%2Fwall.jpeg&w=256&q=75",
+    promt: "against a wall",
+    placementType: "against",
+    surroundingType: "",
+    backgroundType: "",
+    product: "",
+    placement: "a wall",
+    surrounding: "",
+    background:
+      "",
+  },
+  {
+    image:
+      "https://chromaticlens.com/_next/image?url=%2Fplaces%2Fbeach.jpeg&w=256&q=75",
+    promt: "on a beach",
+    placementType: "on",
+    surroundingType: "",
+    backgroundType: "",
+    product: "",
+    placement: "a beach",
+    surrounding: "",
+    background:
+      "",
   },
 ];

@@ -36,23 +36,25 @@ const Generate = () => {
     setSelectedImg,
     setLoader,
     selectedImg,
+    undoArray,
+    setModifidImageArray,
     selectResult,
-    setSelectedresult
+    setSelectedresult,
   } = useAppState();
 
   const [changeTab, setChangeTab] = useState(false);
   // const imageArrays = JSON.parse(localStorage.getItem("g-images")) || [];
   const promt =
     product +
-    " " +
+    ", " +
     selectPlacement +
     " " +
     placementTest +
-    " " +
+    ", " +
     selectSurrounding +
     " " +
     surroundingTest +
-    " " +
+    ", " +
     selectBackground +
     " " +
     backgroundTest;
@@ -114,11 +116,9 @@ const Generate = () => {
 
   /* eslint-disable */
 
- 
-
   const generateImageHandeler = async () => {
     console.log(promt);
-    setLoader(true)
+    setLoader(true);
 
     setGenerationLoader(true);
     try {
@@ -162,47 +162,46 @@ const Generate = () => {
       const subjectDataUrl = subjectCanvas.toDataURL("image/png");
 
       const promtText =
-      product +
-      " " +
-      selectPlacement +
-      " " +
-      placementTest +
-      " " +
-      selectSurrounding +
-      " " +
-      surroundingTest +
-      " " +
-      selectBackground +
-      " " +
-      backgroundTest;
-  
+        product +
+        ", " +
+        selectPlacement +
+        " " +
+        placementTest +
+        ", " +
+        selectSurrounding +
+        " " +
+        surroundingTest +
+        ", " +
+        selectBackground +
+        " " +
+        backgroundTest;
 
       // for (let i = 0; i < selectResult; i++) {
-        const response = await fetch("/api/generate", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            dataUrl: subjectDataUrl,
-            maskDataUrl: maskDataUrl,
-            prompt: promtText.trim(),
-          }),
-        });
-    
-        const generate_response = await response.json();
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          dataUrl: subjectDataUrl,
+          maskDataUrl: maskDataUrl,
+          prompt: promtText.trim(),
+        }),
+      });
 
-        if (generate_response?.error){
-          alert("add your product , mask and promt")
-        setLoader(false)
+      const generate_response = await response.json();
 
-          return false;
-        }
+      if (generate_response?.error) {
+        alert("add your product , mask and promt");
+        setLoader(false);
 
-        console.log("dfcdf",generate_response)
-    
-        // You can do something with the generate_response here
-        // console.log(`Request ${i + 1} completed:`, generate_response);
+        return false;
+      }
+
+      console.log("dfcdf", generate_response);
+
+      // You can do something with the generate_response here
+      // console.log(`Request ${i + 1} completed:`, generate_response);
       // }
 
       // // const textForPrompt = promt.trim() === "" ?   prompt;
@@ -219,7 +218,6 @@ const Generate = () => {
       // });
 
       // const generate_response = await response.json();
-    
 
       // console.log(generate_response);
 
@@ -229,20 +227,25 @@ const Generate = () => {
         console.log(loadeImge);
         setSelectedImg({
           status: true,
-          image: loadeImge[0]?.image_url,
+          image: loadeImge[0]?.modified_image_url,
           modifiedImage: loadeImge[0]?.modified_image_url,
         });
 
-        addimgToCanvasGen(loadeImge[0]?.modified_image_url)
-        setGeneratedImgList(loadeImge.slice(0, selectResult))
+        setModifidImageArray((pre) => [
+          ...pre,
+          { url: loadeImge[0]?.modified_image_url, tool: "generated" },
+        ]);
 
-        setSelectedresult(1)
+        // addimgToCanvasGen(loadeImge[0]?.modified_image_url)
+        setGeneratedImgList(loadeImge.slice(0, selectResult));
+
+        setSelectedresult(1);
 
         // setGeneratedImgList(
         //   loadeImge
         // )
 
-        setLoader(false)
+        setLoader(false);
       }, 30000);
 
       // if(loadeImge[0]?.prompt === prompt){
@@ -255,7 +258,6 @@ const Generate = () => {
 
       console.log("maskDataUrl", maskDataUrl);
       console.log("subjectDataUrl", subjectDataUrl);
-
 
       //clear the canvas
       // canvas1.clear();
@@ -285,7 +287,8 @@ const Generate = () => {
                 htmlFor="prompt-editor-subject-0-input"
                 className="promtText"
               >
-                {product}{" "}
+                {product}
+                {", "}
               </label>
             ) : null}
             {selectPlacement !== null && selectPlacement !== "" ? (

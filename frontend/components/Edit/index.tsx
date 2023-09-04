@@ -29,8 +29,11 @@ const Edit = () => {
     downloadImg,
     canvasInstance,
     addimgToCanvasGen,
+    modifidImageArray,
     isMagic,
     setIsMagic,
+    setModifidImageArray,
+    setSelectedImg,
     setLoader,
   } = useAppState();
   /* eslint-disable */
@@ -60,8 +63,8 @@ const Edit = () => {
   const { setSelectedColoreMode, selectColoreMode } = useAppState();
 
   const handileDownload = () => {
-    if (downloadImg) {
-      const url = downloadImg;
+    if (modifidImageArray.length) {
+      const url = modifidImageArray[modifidImageArray.length -1]?.url;
       console.log(url);
 
       saveAs(url, `image${Date.now()}.png`);
@@ -129,13 +132,21 @@ const Edit = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          data: [downloadImg],
+          data: [modifidImageArray[modifidImageArray.length -1]?.url],
         }),
       }
     );
     const data = await response.json();
     if (data) {
-      addimgToCanvasGen(data?.data[0]);
+      // addimgToCanvasGen(data?.data[0]);
+      setSelectedImg({ status: true, image: data?.data[0] });
+
+
+      setModifidImageArray((pre) => [
+        ...pre,
+        { url: data?.data[0], tool: "upscale" },
+  
+      ])
     }
 
     setLoader(false);
@@ -206,11 +217,19 @@ const Edit = () => {
 
     // console.log(await data, "upscale ");
 
-   const data = await upSacle(downloadImg,"imger")
+   const data = await upSacle(modifidImageArray[modifidImageArray.length -1]?.url,"imger")
    console.log(data, "upscale ");
 
     if (data) {
-      addimgToCanvasGen(data);
+      // addimgToCanvasGen(data);
+    setSelectedImg({ status: true, image: data });
+
+
+      setModifidImageArray((pre) => [
+        ...pre,
+        { url: data, tool: "upscale" },
+  
+      ])
     }
 
     setLoader(false);
@@ -335,8 +354,8 @@ const Edit = () => {
       </div>
       <Row>
         <Button
+          disabled={!modifidImageArray.length ? true : false}
           onClick={() => handileDownload()}
-          disabled={previewLoader === true ? true : false}
         >
           Download
         </Button>

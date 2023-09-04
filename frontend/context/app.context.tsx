@@ -10,10 +10,8 @@ interface ContextITFC {
   outerDivRef: React.MutableRefObject<any | null>;
   addimgToCanvas: (url: string) => void;
   addimgToCanvasSubject: (url: string) => void;
-  addimgToCanvasGen : (url: string) => void;
+  addimgToCanvasGen: (url: string) => void;
 
-
-  
   getBase64FromUrl: (url: string) => void;
   activeTab: number | null;
   setActiveTab: (tabID: number) => void;
@@ -69,11 +67,13 @@ interface ContextITFC {
 
   loader: boolean;
   setLoader: (loader: boolean) => void;
-
+  modifidImageArray: string[];
+  setModifidImageArray: (modifidImageArray: string[]) => void;
+  undoArray: string[];
+  setUndoArray: (undoArray: string[]) => void;
 
   popup: object;
   setPopup: (popup: object) => void;
-
 }
 export const AppContext = createContext<ContextITFC>({
   activeTab: 1,
@@ -90,10 +90,12 @@ export const AppContext = createContext<ContextITFC>({
   outerDivRef: null,
   addimgToCanvas: () => {},
   addimgToCanvasSubject: () => {},
-  addimgToCanvasGen :()=> {},
+  addimgToCanvasGen: () => {},
+  modifidImageArray: [],
+  setModifidImageArray: (modifidImageArray: string[]) => {},
+  undoArray: [],
+  setUndoArray: (undoArray: string[]) => {},
 
-
-  
   getBase64FromUrl: () => {},
   file: null,
   setFile: () => {},
@@ -141,8 +143,6 @@ export const AppContext = createContext<ContextITFC>({
 
   popup: {},
   setPopup: () => {},
-
-
 });
 
 export const AppContextProvider = ({ children }: ContextProviderProps) => {
@@ -173,11 +173,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [previewLoader, setPriviewLoader] = useState<boolean>(false);
   const [generationLoader, setGenerationLoader] = useState<boolean>(false);
   const [loader, setLoader] = useState<boolean>(false);
+  const [modifidImageArray, setModifidImageArray] = useState<string[]>([]);
 
+  const [undoArray, setUndoArray] = useState<string[]>([]);
 
   const [popup, setPopup] = useState<object>({});
   const [generatedImgList, setGeneratedImgList] = useState<string[]>([]);
-
 
   const getBase64FromUrl = async (url: string) => {
     const data = await fetch(url);
@@ -209,7 +210,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       });
       img.set("category", "mask");
 
-
       canvasInstance.current.add(img);
       canvasInstance.current.renderAll();
     });
@@ -218,26 +218,26 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     fabric.Image.fromURL(await getBase64FromUrl(url), function (img: any) {
       // Set the image's dimensions
       img.scaleToWidth(200);
-      const canvasWidth =  canvasInstance.current.getWidth();
-      const canvasHeight =  canvasInstance.current.getHeight();
+      const canvasWidth = canvasInstance.current.getWidth();
+      const canvasHeight = canvasInstance.current.getHeight();
       const imageAspectRatio = img.width / img.height;
 
-        // Calculate the maximum width and height based on the canvas size
-        const maxWidth = canvasWidth;
-        const maxHeight = canvasHeight;
+      // Calculate the maximum width and height based on the canvas size
+      const maxWidth = canvasWidth;
+      const maxHeight = canvasHeight;
 
-          // Calculate the scaled width and height while maintaining the aspect ratio
-          let scaledWidth = maxWidth;
-          let scaledHeight = scaledWidth / imageAspectRatio;
-  
-          // If the scaled height exceeds the canvas height, scale it down
-          if (scaledHeight > maxHeight) {
-            scaledHeight = maxHeight;
-            scaledWidth = scaledHeight * imageAspectRatio;
-          }
+      // Calculate the scaled width and height while maintaining the aspect ratio
+      let scaledWidth = maxWidth;
+      let scaledHeight = scaledWidth / imageAspectRatio;
 
-          img.scaleToWidth(scaledWidth);
-          img.scaleToHeight(scaledHeight);
+      // If the scaled height exceeds the canvas height, scale it down
+      if (scaledHeight > maxHeight) {
+        scaledHeight = maxHeight;
+        scaledWidth = scaledHeight * imageAspectRatio;
+      }
+
+      img.scaleToWidth(scaledWidth);
+      img.scaleToHeight(scaledHeight);
       // img.scaleToHeight(150);
       // Scale the image to have the same width and height as the rectangle
       // const scaleX = downloadRect.width / img.width;
@@ -261,26 +261,26 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     fabric.Image.fromURL(await getBase64FromUrl(url), function (img: any) {
       // Set the image's dimensions
       img.scaleToWidth(200);
-      const canvasWidth =  canvasInstance.current.getWidth();
-      const canvasHeight =  canvasInstance.current.getHeight();
+      const canvasWidth = canvasInstance.current.getWidth();
+      const canvasHeight = canvasInstance.current.getHeight();
       const imageAspectRatio = img.width / img.height;
 
-        // Calculate the maximum width and height based on the canvas size
-        const maxWidth = canvasWidth;
-        const maxHeight = canvasHeight;
+      // Calculate the maximum width and height based on the canvas size
+      const maxWidth = canvasWidth;
+      const maxHeight = canvasHeight;
 
-          // Calculate the scaled width and height while maintaining the aspect ratio
-          let scaledWidth = maxWidth;
-          let scaledHeight = scaledWidth / imageAspectRatio;
-  
-          // If the scaled height exceeds the canvas height, scale it down
-          if (scaledHeight > maxHeight) {
-            scaledHeight = maxHeight;
-            scaledWidth = scaledHeight * imageAspectRatio;
-          }
+      // Calculate the scaled width and height while maintaining the aspect ratio
+      let scaledWidth = maxWidth;
+      let scaledHeight = scaledWidth / imageAspectRatio;
 
-          img.scaleToWidth(scaledWidth);
-          img.scaleToHeight(scaledHeight);
+      // If the scaled height exceeds the canvas height, scale it down
+      if (scaledHeight > maxHeight) {
+        scaledHeight = maxHeight;
+        scaledWidth = scaledHeight * imageAspectRatio;
+      }
+
+      img.scaleToWidth(scaledWidth);
+      img.scaleToHeight(scaledHeight);
 
       img.set("category", "generated");
       canvasInstance.current.clear();
@@ -345,12 +345,17 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setIsMagic,
         downloadImg,
         setDownloadImg,
-  popup, setPopup,
-  generatedImgList, setGeneratedImgList,
-  loader, setLoader
+        popup,
+        setPopup,
+        generatedImgList,
+        setGeneratedImgList,
+        loader,
+        setLoader,
 
-
-
+        undoArray,
+        setUndoArray,
+        modifidImageArray,
+        setModifidImageArray,
       }}
     >
       {children}

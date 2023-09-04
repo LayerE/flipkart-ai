@@ -112,7 +112,7 @@ const EditorSection = () => {
         <div className="two-side">
           <DropdownInput
             data={{
-              list: PlacementSuggestions,
+              list: PlacementSuggesPrahtionsFilter,
               action: setSelectedPlacement,
               label: "placement",
 
@@ -150,7 +150,7 @@ const EditorSection = () => {
         <div className="two-side">
           <DropdownInput
             data={{
-              list: BackgroundSuggestions,
+              list: BackgrowundSuggestionsPrash,
               label: "background",
 
               action: setSelectedBackground,

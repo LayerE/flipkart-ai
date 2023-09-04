@@ -9,6 +9,8 @@ export const HumansList = [
   "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/c7bbb737-60de-44e9-b86a-06a026707c00/128",
   "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/e18ebc9a-bb49-408e-5457-6345518c9300/128",
   "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/5ff25680-edc7-41c6-5a31-cb83b0250c00/128",
+  "https://commerce-copilot.vercel.app/_next/image?url=%2Felements%2Fsurrounded-hands.png&w=256&q=75",
+  "https://commerce-copilot.vercel.app/_next/image?url=%2Felements%2Fstand.png&w=256&q=75"
 ];
 export const elemest = [
   {

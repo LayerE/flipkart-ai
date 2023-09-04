@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import PopupUpload from "@/components/Popup";
 import Canvas from "@/components/Canvas/Canvas";
 import Loader from "@/components/Loader";
+import BottomTab from "@/components/BottomTab";
 // import CanvasBox from "@/components/Canvas";
 const CanvasBox = lazy(() => import("@/components/Canvas"));
 
@@ -25,7 +26,9 @@ export default function Home() {
     loader,
     addimgToCanvasGen,
     setLoader,
-    canvasInstance
+    canvasInstance,
+    modifidImageArray,
+    setModifidImageArray
   } = useAppState();
 
   useEffect(() => {
@@ -57,14 +60,18 @@ export default function Home() {
     }
   };
 
-  const upateImage = (url)=>{
+  const upateImage = (url) => {
+    setSelectedImg({ status: true, image: url });
+    setModifidImageArray((pre) => [
+      ...pre,
+      { url: url, tool: "generated-selected" },
 
-    setSelectedImg({ status: true, image: url })
+    ])
 
-    canvasInstance.current.clear();
+    // canvasInstance.current.clear();
 
-    addimgToCanvasGen(url)
-  }
+    // addimgToCanvasGen(url);
+  };
 
   useEffect(() => {
     const pollInterval = setInterval(() => {
@@ -88,6 +95,8 @@ export default function Home() {
         {popup?.status ? <PopupUpload /> : null}
         <Sidebar />
         <div className="Editor" ref={outerDivRef}>
+          <BottomTab/>
+          
           {generatedImgList?.length > 1 ? (
             <div className="generatedBox">
               <div className="itemsWrapper">
@@ -95,9 +104,7 @@ export default function Home() {
                   <div
                     key={i}
                     className="items"
-                    onClick={() =>
-                      upateImage(item?.modified_image_url)
-                    }
+                    onClick={() => upateImage(item?.modified_image_url)}
                   >
                     <picture>
                       <img src={item?.modified_image_url} alt="" />
@@ -110,18 +117,18 @@ export default function Home() {
 
           <div className="main-privier"></div>
           <div className="canvase">
-            {/* {selectedImg?.status ? (
-              <div className="generated">
-                <picture>
-                  <img
-                    src={selectedImg?.image}
-                    alt=""
-                  />
-                </picture>
-              </div>
-            ) : ( */}
             <Canvas />
-            {/* )} */}
+            <div className="generated">
+              {selectedImg?.status ? (
+                <picture>
+                  {/* <img src={selectedImg?.image} alt="" /> */}
+                  <img src={modifidImageArray[modifidImageArray.length -1]?.url} alt="" />
+
+                  
+                </picture>
+              ) : null}
+            </div>
+            {/* // ) : ( */}
           </div>
           {/* <CanvasBox /> */}
         </div>
@@ -137,8 +144,9 @@ const MainPages = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    /* padding: 20px; */
     border: 2px solid rgba(249, 208, 13, 1);
+    border-radius: 16px;
 
     overflow: hidden;
 
@@ -155,10 +163,14 @@ const MainPages = styled.div`
   }
   .canvase {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    gap: 0.5rem;
+    /* justify-content: center; */
+    /* align-items: center; */
+    height: 75%;
+    /* background-color: #13bba4; */
+    gap: 2rem;
+    padding: 20px;
+    padding-top: 100px;
+    
   }
 
   .generatedBox {
@@ -166,18 +178,18 @@ const MainPages = styled.div`
     display: flex;
     position: absolute;
     bottom: 40px;
-    /* left: auto; */
-    right: 20px;
+    left: 20px;
+    /* right: 20px; */
     justify-content: right;
     z-index: 10;
 
     .itemsWrapper {
       display: flex;
-    flex-direction: column;
+      /* flex-direction: column; */
 
       gap: 10px;
-      background-color: #e0d7d79f;
-      padding: 1% 20px;
+      background-color: rgba(248, 248, 248, 1);
+      padding: 10px 20px;
       border-radius: 8px;
     }
     .items {

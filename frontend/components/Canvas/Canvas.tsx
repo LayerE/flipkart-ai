@@ -184,6 +184,8 @@ const CnavasWrapper = styled.div`
 canvas{
 
     border: 2px solid rgba(249, 208, 13, 1);
+    border-radius: 16PX;
+
 }
 
     
