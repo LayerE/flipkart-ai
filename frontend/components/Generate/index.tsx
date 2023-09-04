@@ -161,7 +161,23 @@ const Generate = () => {
       });
       const subjectDataUrl = subjectCanvas.toDataURL("image/png");
 
-      for (let i = 0; i < selectResult; i++) {
+      const promtText =
+      product +
+      " " +
+      selectPlacement +
+      " " +
+      placementTest +
+      " " +
+      selectSurrounding +
+      " " +
+      surroundingTest +
+      " " +
+      selectBackground +
+      " " +
+      backgroundTest;
+  
+
+      // for (let i = 0; i < selectResult; i++) {
         const response = await fetch("/api/generate", {
           method: "POST",
           headers: {
@@ -170,15 +186,24 @@ const Generate = () => {
           body: JSON.stringify({
             dataUrl: subjectDataUrl,
             maskDataUrl: maskDataUrl,
-            prompt: prompt,
+            prompt: promtText.trim(),
           }),
         });
     
         const generate_response = await response.json();
+
+        if (generate_response?.error){
+          alert("add your product , mask and promt")
+        setLoader(false)
+
+          return false;
+        }
+
+        console.log("dfcdf",generate_response)
     
         // You can do something with the generate_response here
-        console.log(`Request ${i + 1} completed:`, generate_response);
-      }
+        // console.log(`Request ${i + 1} completed:`, generate_response);
+      // }
 
       // // const textForPrompt = promt.trim() === "" ?   prompt;
       // const response = await fetch("/api/generate", {
@@ -218,7 +243,7 @@ const Generate = () => {
         // )
 
         setLoader(false)
-      }, 8000);
+      }, 30000);
 
       // if(loadeImge[0]?.prompt === prompt){
 

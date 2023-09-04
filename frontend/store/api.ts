@@ -47,6 +47,31 @@ export const BgRemover = async (
 
   return dataURL;
 };
+export const upSacle = async (
+  photo: string,
+  filename: string
+): Promise<string> => {
+  const form = new FormData();
+  const fileItem = await dataURLtoFile(photo, filename);
+  form.append("image_file", fileItem);
+form.append('target_width', 2048)
+form.append('target_height', 2048)
+  const response = await fetch("https://clipdrop-api.co/image-upscaling/v1/upscale", {
+    method: "POST",
+    headers: {
+      "x-api-key":
+        "5f28e1037978f6eee7cfc6d61439fc02dd23c4ca3b73fc1ee7521b3948b852d06cfae5fd52cc626460bd1eabce6120fd",
+    },
+    body: form,
+  });
+
+  const buffer = await response.arrayBuffer();
+  const dataURL = await arrayBufferToDataURL(buffer);
+  localStorage.setItem("m-images", JSON.stringify(dataURL));
+  console.log(buffer, response, dataURL, "imgs");
+
+  return dataURL;
+};
 
 export const superResolutionFuc = async (
   photo: string,

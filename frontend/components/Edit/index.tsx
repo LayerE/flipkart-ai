@@ -15,6 +15,7 @@ import { motion } from "framer-motion";
 import { arrayBufferToDataURL, dataURLtoFile } from "@/utils/BufferToDataUrl";
 import { coloreMode } from "@/store/dropdown";
 import { Input } from "../common/Input";
+import { Console } from "console";
 
 const Edit = () => {
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
@@ -140,47 +141,110 @@ const Edit = () => {
     setLoader(false);
   };
 
+
+
   async function toB64(imgUrl: string): Promise<string> {
     const response = await fetch(imgUrl);
     const arrayBuffer = await response.arrayBuffer();
-    const base64String = btoa(new Uint8Array(arrayBuffer).reduce((data, byte) => data + String.fromCharCode(byte), ''));
+    const base64String = btoa(
+      new Uint8Array(arrayBuffer).reduce(
+        (data, byte) => data + String.fromCharCode(byte),
+        ""
+      )
+    );
     return base64String;
   }
+
+ 
+
+   const upSacle = async (
+    photo: string,
+    filename: string
+  ): Promise<string> => {
+
+    
+    const form = new FormData();
+    const fileItem = await dataURLtoFile(photo, filename);
+    form.append("image_file", fileItem);
+  form.append('target_width', 2048)
+  form.append('target_height', 2048)
+    const response = await fetch("https://clipdrop-api.co/image-upscaling/v1/upscale", {
+      method: "POST",
+      headers: {
+        "x-api-key":
+          "ca2c46b3fec7f2917642e99ab5c48d3e23a2f940293a0a3fbec2e496566107f9d8b192d030b7ecfd85cfb02b6adb32f4",
+      },
+      body: form,
+    });
   
+    const buffer = await response.arrayBuffer();
+    const dataURL = await arrayBufferToDataURL(buffer);
+    localStorage.setItem("m-images", JSON.stringify(dataURL));
+    console.log(buffer, response, dataURL, "imgs");
+  
+    return dataURL;
+  };
+
+
   const UpscaleBG = async () => {
     setLoader(true);
 
-    const datatacke = {
-      image: await toB64(downloadImg),
-      scale: 2,
-    };
-    
-    const response = await fetch(
-      "https://api.segmind.com/v1/esrgan",
-      {
-        method: "POST",
-        headers: { 
-          'x-api-key': "SG_86fe6533d0888ca0",
-          "Content-Type": "application/json" },
-        body: JSON.stringify(datatacke),
-      }
-    );
-    const data = await response;
+    // const datatacke = {
+    //   image: await toB64(downloadImg),
+    //   scale: 2,
+    // };
 
-    console.log(await data, "upscale ");
+    // const response = await fetch("https://api.segmind.com/v1/esrgan", {
+    //   method: "POST",
+    //   headers: {
+    //     "x-api-key": "SG_86fe6533d0888ca0",
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(datatacke),
+    // });
+    // const data = await response;
+
+    // console.log(await data, "upscale ");
+
+   const data = await upSacle(downloadImg,"imger")
+   console.log(data, "upscale ");
+
     if (data) {
-      // addimgToCanvasGen(data?.data[0]);
+      addimgToCanvasGen(data);
     }
 
     setLoader(false);
   };
-
   useEffect(() => {
     addColorOverlayToSelectedImage(colore, selectColoreMode);
   }, [selectColoreMode, addColorOverlayToSelectedImage, colore]);
 
   const handleChangeComplete = (color: string) => {
     setColore(color.hex);
+  };
+
+  const bringImageToFront = () => {
+    const activeObject = canvasInstance.current.getActiveObject();
+    if (activeObject) {
+      activeObject.sendBackwards();
+
+      canvasInstance.current.bringToFront(activeObject);
+      canvasInstance.current.discardActiveObject();
+      canvasInstance.current.renderAll();
+    }
+  };
+
+  const sendImageToBack = () => {
+    const activeObject = canvasInstance.current.getActiveObject();
+    if (!activeObject) {
+      alert("Please select an object on the canvas first.");
+      return;
+    }
+    console.log(activeObject)
+    canvasInstance.current.sendBackwards(activeObject);
+    canvasInstance.current.discardActiveObject();
+    // canvas.requestRenderAll();
+    canvasInstance.current.renderAll();
   };
 
   return (
@@ -195,10 +259,10 @@ const Edit = () => {
       <div className="gap">
         <Label>Arrange</Label>
         <div className="selectbox">
-          <div className={"selectone"} onClick={() => ""}>
+          <div className={"selectone"} onClick={() => bringImageToFront()}>
             Bring to Front
           </div>
-          <div className={"selectone"} onClick={() => ""}>
+          <div className={"selectone"} onClick={() => sendImageToBack()}>
             Send to back
           </div>
         </div>
@@ -261,12 +325,12 @@ const Edit = () => {
               <p>Super resolution</p>
             </div>
           </div>
-          <div className={"selectTool"} onClick={() => setIsMagic(true)}>
+          {/* <div className={"selectTool"} onClick={() => setIsMagic(true)}>
             <Label>Magic Erase</Label>
             <div>
               <p>Paint over objects to erase from the image</p>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
       <Row>

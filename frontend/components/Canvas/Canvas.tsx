@@ -159,25 +159,7 @@ useEffect(() => {
 
 
 
-  const bringImageToFront = () => {
-    const activeObject = canvasInstance.current.getActiveObject();
-    if (activeObject) {
-      activeObject.bringToFront();
-      canvasInstance.current.renderAll();
-    }
-  };
-
-  const sendImageToBack = () => {
-    const activeObject = canvasInstance.current.getActiveObject();
-    if (!activeObject) {
-      // alert("Please select an object on the canvas first.");
-      return;
-    }
-    // if (activeObject) {
-    activeObject.sendToBack();
-    canvasInstance.current.renderAll();
-    // }
-  };
+ 
 
   return (
     <>
