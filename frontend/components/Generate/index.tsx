@@ -173,9 +173,9 @@ const Generate = () => {
       });
 
       const generate_response = await response.json();
-      const message_sent = generate_response?.ok ?? false;
+    
 
-      console.log(generate_response, "dsfdsfds");
+      console.log(generate_response);
 
       setTimeout(async function () {
         const loadeImge = await fetchImages();
@@ -193,6 +193,10 @@ const Generate = () => {
           "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/ec0c2e98-c02b-43a1-8c61-cec2f2e19400/256",
           "https://imagedelivery.net/i1XPW6iC_chU01_6tBPo8Q/ec0c2e98-c02b-43a1-8c61-cec2f2e19400/256",
         ]);
+
+        // setGeneratedImgList(
+        //   loadeImge
+        // )
 
         setLoader(false)
       }, 5000);
