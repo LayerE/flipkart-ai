@@ -28,7 +28,7 @@ export default function Home() {
     setLoader,
     canvasInstance,
     modifidImageArray,
-    setModifidImageArray
+    setModifidImageArray,
   } = useAppState();
 
   useEffect(() => {
@@ -65,8 +65,7 @@ export default function Home() {
     setModifidImageArray((pre) => [
       ...pre,
       { url: url, tool: "generated-selected" },
-
-    ])
+    ]);
 
     // canvasInstance.current.clear();
 
@@ -94,9 +93,9 @@ export default function Home() {
       >
         {popup?.status ? <PopupUpload /> : null}
         <Sidebar />
-        <div className="Editor" ref={outerDivRef}>
-          <BottomTab/>
-          
+        <div className="Editor">
+          <BottomTab />
+
           {generatedImgList?.length > 1 ? (
             <div className="generatedBox">
               <div className="itemsWrapper">
@@ -122,9 +121,10 @@ export default function Home() {
               {selectedImg?.status ? (
                 <picture>
                   {/* <img src={selectedImg?.image} alt="" /> */}
-                  <img src={modifidImageArray[modifidImageArray.length -1]?.url} alt="" />
-
-                  
+                  <img
+                    src={modifidImageArray[modifidImageArray.length - 1]?.url}
+                    alt=""
+                  />
                 </picture>
               ) : null}
             </div>
@@ -139,8 +139,9 @@ export default function Home() {
 
 const MainPages = styled.div`
   .generated {
-    width: 360px;
-    height: 400px;
+    /* width: 400px;
+    height: 440px; */
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -162,7 +163,9 @@ const MainPages = styled.div`
     }
   }
   .canvase {
-    display: flex;
+    display: grid;
+    padding-right: 100px !important;
+    grid-template-columns: 1fr 1fr;
     /* justify-content: center; */
     /* align-items: center; */
     height: 75%;
@@ -170,7 +173,6 @@ const MainPages = styled.div`
     gap: 2rem;
     padding: 20px;
     padding-top: 100px;
-    
   }
 
   .generatedBox {
@@ -425,9 +427,7 @@ const MainPages = styled.div`
       background: #434343;
       /* box-shadow: -80px 0 0 80px #43e5f7; */
     }
-    input {
-      color: ;
-    }
+
     .activeTool {
       background: ${({ theme }) => theme.btnPrimary};
     }

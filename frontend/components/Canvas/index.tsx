@@ -25,8 +25,7 @@ export default function CanvasBox() {
 
   const canvasRef = useRef(null);
 
-
-/* eslint-disable */
+  /* eslint-disable */
   useEffect(() => {
     if (!canvasInstance.current) {
       canvasInstance.current = new fabric.Canvas(canvasRef.current, {
@@ -154,7 +153,6 @@ export default function CanvasBox() {
         canvasInstanceRef.remove(EditorBoxText);
         canvasInstanceRef.renderAll();
       }
-   
     });
 
     // When a user clicks on an image on the canvas
@@ -192,8 +190,6 @@ export default function CanvasBox() {
       opt.e.stopPropagation();
     });
 
-   
-
     document.addEventListener("keydown", (e) => {
       // Check if the pressed key is 'Delete' (code: 46) or 'Backspace' (code: 8) for wider compatibility
       if (e.keyCode === 46 || e.keyCode === 8) {
@@ -216,21 +212,14 @@ export default function CanvasBox() {
       e.preventDefault();
     };
     canvasInstanceRef.on("selection:cleared", function () {
-      setDownloadImg(null); 
+      setDownloadImg(null);
 
       console.log(activeTab);
       if (activeTab === 5) {
         setActiveTab(1);
       }
     });
-
-
   }, []);
-
-
-
-
-
 
   const bringImageToFront = () => {
     const activeObject = canvasInstance.current.getActiveObject();
