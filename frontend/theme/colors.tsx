@@ -12,6 +12,8 @@ interface Colors {
   
     // Buttons
     btnPrimary: Color;
+    btnPrimaryHover: Color;
+
     btnActive: Color;
   
     // Gradients(-)
@@ -31,6 +33,8 @@ export function colors(): Colors {
    
     // Buttons
     btnPrimary: "rgba(249, 208, 13, 1)",
+    btnPrimaryHover: "#f9d20d73",
+
     btnActive:
       "radial-gradient(100% 100% at 50% 0%, rgba(22, 12, 39, 0) 0%, #3A2164 100%), #160C27;",
 

@@ -14,7 +14,9 @@ interface ContextITFC {
 
   getBase64FromUrl: (url: string) => void;
   activeTab: number | null;
-  setActiveTab: (tabID: number) => void;
+  setActiveTab: (activeTab: number) => void;
+  activeTabHome: number | null;
+  setActiveTabHome: (activeTabHome: number) => void;
   selectedImg: object | null;
   setSelectedImg: (selectedImg: object) => void;
 
@@ -78,6 +80,8 @@ interface ContextITFC {
 export const AppContext = createContext<ContextITFC>({
   activeTab: 1,
   setActiveTab: () => {},
+  activeTabHome: 1,
+  setActiveTabHome: () => {},
   selectedImg: null,
   setSelectedImg: () => {},
 
@@ -153,6 +157,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [isMagic, setIsMagic] = useState<boolean | null>(false);
 
   const [activeTab, setActiveTab] = useState<number | null>(1);
+  const [activeTabHome, setActiveTabHome] = useState<number | null>(1);
+
   const [file, setFile] = useState<File | null>(null);
   const [viewMore, setViewMore] = useState<object>({});
   const [selectPlacement, setSelectedPlacement] = useState<string>("");
@@ -303,6 +309,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         getBase64FromUrl,
         activeTab,
         setActiveTab,
+        activeTabHome,
+        setActiveTabHome,
+
         file,
         setFile,
         selectPlacement,

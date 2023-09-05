@@ -333,13 +333,23 @@ const SideBar = styled.div`
     justify-content: center;
     gap: 5px;
     cursor: pointer;
+    transition: all 0.3s ease;
     span {
       font-size: 10px;
       font-weight: 500;
     }
+    &:hover{
+    background-color: ${({ theme }) => theme.btnPrimaryHover};
+
+    }
   }
   .disable {
     color: #d1c8c8;
+    cursor: not-allowed;
+    &:hover{
+    background-color: transparent;
+
+    }
   }
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
