@@ -86,7 +86,7 @@ const Generate = () => {
     try {
       // &user_id=eq.${userId}
       const response = await fetch(
-        `https://tvjjvhjhvxwpkohjqxld.supabase.co/rest/v1/public_images?select=*&order=created_at.desc`,
+        `https://tvjjvhjhvxwpkohjqxld.supabase.co/rest/v1/public_images?select=*&order=created_at.desc&user_id=eq.${userId}`,
         {
           method: "GET",
           headers: {
@@ -190,13 +190,14 @@ const Generate = () => {
           dataUrl: subjectDataUrl,
           maskDataUrl: maskDataUrl,
           prompt: promtText.trim(),
+          user_id: userId,
         }),
       });
 
       const generate_response = await response.json();
 
       if (generate_response?.error) {
-        alert("add your product , mask and promt");
+        alert(generate_response?.error);
         setLoader(false);
 
         return false;
