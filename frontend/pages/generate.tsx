@@ -10,6 +10,8 @@ import Loader from "@/components/Loader";
 import BottomTab from "@/components/BottomTab";
 // import CanvasBox from "@/components/Canvas";
 const CanvasBox = lazy(() => import("@/components/Canvas"));
+import { useAuth } from "@clerk/nextjs";
+
 
 const fadeIn = {
   hidden: { opacity: 0 },
@@ -17,6 +19,8 @@ const fadeIn = {
 };
 
 export default function Home() {
+  const { userId } = useAuth();
+
   const {
     outerDivRef,
     popup,
@@ -38,7 +42,7 @@ export default function Home() {
   const fetchImages = async () => {
     try {
       const response = await fetch(
-        "https://tvjjvhjhvxwpkohjqxld.supabase.co/rest/v1/public_images?select=*&order=created_at.desc",
+        `https://tvjjvhjhvxwpkohjqxld.supabase.co/rest/v1/public_images?select=*&order=created_at.desc&user_id=eq.${userId}`,
         {
           method: "GET",
           headers: {

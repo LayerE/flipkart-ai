@@ -70,7 +70,7 @@ const MainPage = styled.div`
   .sidebar {
     border-right: 1px solid rgba(238, 238, 238, 1);
     min-height: 100vh;
-    padding-left: 70px;
+    padding-left: 24px;
     padding-right: 24px;
     padding-top: ${({ theme }) => theme.paddings.paddingTop};
 

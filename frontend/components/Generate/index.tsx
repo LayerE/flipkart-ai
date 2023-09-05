@@ -80,7 +80,7 @@ const Generate = () => {
       canvasInstance.current.renderAll();
     });
   };
-  console.log(userId,"userId=" + userId)
+  console.log(userId, "userId=" + userId);
 
   const fetchImages = async () => {
     try {
