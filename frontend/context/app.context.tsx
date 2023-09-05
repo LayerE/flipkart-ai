@@ -161,7 +161,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [selectBackground, setSelectedBackground] = useState<string>("");
   const [selectColoreMode, setSelectedColoreMode] = useState<string>("");
   const [selectResult, setSelectedresult] = useState<number>(0);
-  const [selectRender, setSelectedRender] = useState<number>(1);
+  const [selectRender, setSelectedRender] = useState<number>(4);
   const [selectColoreStrength, setSelectedColoreStrength] = useState<number>(0);
   const [selectOutLline, setSelectedOutline] = useState<number>(0);
   const [product, setProduct] = useState<string>("");
