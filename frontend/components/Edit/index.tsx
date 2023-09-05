@@ -63,8 +63,10 @@ const Edit = () => {
   const { setSelectedColoreMode, selectColoreMode } = useAppState();
 
   const handileDownload = () => {
-    if (modifidImageArray.length) {
-      const url = modifidImageArray[modifidImageArray.length - 1]?.url;
+    if (downloadImg) {
+      // const url = modifidImageArray[modifidImageArray.length - 1]?.url;
+      const url = downloadImg;
+
       console.log(url);
 
       saveAs(url, `image${Date.now()}.png`);
@@ -340,7 +342,7 @@ const Edit = () => {
       </div>
       <Row>
         <Button
-          disabled={!modifidImageArray.length ? true : false}
+          disabled={previewLoader === true ? true : false}
           onClick={() => handileDownload()}
         >
           Download

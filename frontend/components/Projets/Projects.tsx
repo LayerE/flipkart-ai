@@ -2,6 +2,8 @@ import React from "react";
 import { styled } from "styled-components";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import assets from "@/public/assets";
+import ProjectCard from "./ProjectCard";
 const fadeIn = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 1 } },
@@ -36,11 +38,9 @@ const Projects = () => {
             <div className="testcreat">Create new project</div>
           </div>
         </a>
-        <Link href={"/"}>
-              <div className="projectfile">
-                <div className="testcreat">Untitled Project</div>
-              </div>
-            </Link>
+        {/* <Link href={"/"}> */}
+              <ProjectCard />
+            {/* </Link> */}
       </ProjectWrapper>
     </motion.div>
   );
@@ -53,29 +53,7 @@ const ProjectWrapper = styled.div`
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr;
   gap: 12px;
-  .projectfile {
-    width: 100%;
-    height: 100%;
-    border-radius: 16px;
-    border: 1px solid #585858;
-    position: relative;
-    transition: all 0.3s;
-
-    &:hover {
-      border: 1px solid #f9d00d;
-    }
-    .testcreat {
-      border-radius: 0px 0px 16px 16px;
-      background: #e3e3e3;
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      text-align: center;
-      padding: 16px;
-      font-size: 14px;
-      transition: all 0.3s;
-    }
-  }
+ 
 
   .createbox {
     cursor: pointer;
@@ -84,7 +62,7 @@ const ProjectWrapper = styled.div`
     border-radius: 16px;
     background: #f8f8f8;
     border-radius: 16px;
-    border: 1px solid #585858;
+    border: 1px solid #d9d9d9;
     position: relative;
     display: flex;
     justify-content: center;

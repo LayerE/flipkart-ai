@@ -1,3 +1,5 @@
+"use client";
+
 import Head from "next/head";
 import React, { lazy, useEffect, useRef, useState } from "react";
 import Sidebar from "@/components/Sidebar";
@@ -11,7 +13,8 @@ import BottomTab from "@/components/BottomTab";
 // import CanvasBox from "@/components/Canvas";
 const CanvasBox = lazy(() => import("@/components/Canvas"));
 import { useAuth } from "@clerk/nextjs";
-
+import assert from "assert";
+import assets from "@/public/assets";
 
 const fadeIn = {
   hidden: { opacity: 0 },
@@ -33,6 +36,8 @@ export default function Home() {
     canvasInstance,
     modifidImageArray,
     setModifidImageArray,
+
+    setGeneratedImgList,
   } = useAppState();
 
   useEffect(() => {
@@ -52,6 +57,10 @@ export default function Home() {
         }
       );
       const data = await response.json();
+
+      setGeneratedImgList(await data);
+      // addimgToCanvasGen(loadeImge[0]?.modified_image_url);
+
       // setImages(data); // Update the state with the fetched images
       // setGeneratedImgList(data)
 
@@ -65,6 +74,7 @@ export default function Home() {
   };
 
   const upateImage = (url) => {
+    addimgToCanvasGen(url);
     setSelectedImg({ status: true, image: url });
     setModifidImageArray((pre) => [
       ...pre,
@@ -77,13 +87,20 @@ export default function Home() {
   };
 
   useEffect(() => {
-    const pollInterval = setInterval(() => {
-      fetchImages(); // Fetch images every 10
-    }, 10000); // Adjust the interval as needed (e.g., 20000 for 20 seconds)
+    let pollInterval;
+
+    if (userId) {
+      console.log("dfd", userId);
+
+      pollInterval = setInterval(() => {
+        console.log("polling", userId);
+        fetchImages(); // Fetch images every 10
+      }, 5000); // Adjust the interval as needed (e.g., 20000 for 20 seconds)
+    }
 
     // Don't forget to clean up the interval when the component unmounts
     return () => clearInterval(pollInterval);
-  }, []); // Empty dependency array ensures the effect runs only once when the component mounts
+  }, [setGeneratedImgList, generatedImgList]); // Empty dependency array ensures the effect runs only once when the component mounts
 
   return (
     <MainPages>
@@ -97,7 +114,15 @@ export default function Home() {
       >
         {popup?.status ? <PopupUpload /> : null}
         <Sidebar />
-        <div className="Editor">
+        <div
+          className="Editor"
+          ref={outerDivRef}
+          style={
+            {
+              // overflow: 'auto', // Enable scrollbars
+            }
+          }
+        >
           <BottomTab />
 
           {generatedImgList?.length > 1 ? (
@@ -114,17 +139,33 @@ export default function Home() {
                     </picture>
                   </div>
                 ))}
+                <div  className="itemsadd" onClick={() => ""}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 14 14"
+                    fill="none"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M7 0C7.26522 0 7.51957 0.105357 7.70711 0.292893C7.89464 0.48043 8 0.734784 8 1V6H13C13.2652 6 13.5196 6.10536 13.7071 6.29289C13.8946 6.48043 14 6.73478 14 7C14 7.26522 13.8946 7.51957 13.7071 7.70711C13.5196 7.89464 13.2652 8 13 8H8V13C8 13.2652 7.89464 13.5196 7.70711 13.7071C7.51957 13.8946 7.26522 14 7 14C6.73478 14 6.48043 13.8946 6.29289 13.7071C6.10536 13.5196 6 13.2652 6 13V8H1C0.734784 8 0.48043 7.89464 0.292893 7.70711C0.105357 7.51957 0 7.26522 0 7C0 6.73478 0.105357 6.48043 0.292893 6.29289C0.48043 6.10536 0.734784 6 1 6H6V1C6 0.734784 6.10536 0.48043 6.29289 0.292893C6.48043 0.105357 6.73478 0 7 0Z"
+                      fill="#585858"
+                    />
+                  </svg>
+                </div>
               </div>
             </div>
           ) : null}
 
           <div className="main-privier"></div>
-          <div className="canvase">
+          {/* <div className="canvase">
             <Canvas />
             <div className="generated">
               {selectedImg?.status ? (
                 <picture>
-                  {/* <img src={selectedImg?.image} alt="" /> */}
+               
                   <img
                     src={modifidImageArray[modifidImageArray.length - 1]?.url}
                     alt=""
@@ -132,9 +173,9 @@ export default function Home() {
                 </picture>
               ) : null}
             </div>
-            {/* // ) : ( */}
-          </div>
-          {/* <CanvasBox /> */}
+            
+          </div> */}
+          <CanvasBox />
         </div>
       </motion.div>
     </MainPages>
@@ -180,10 +221,11 @@ const MainPages = styled.div`
   }
 
   .generatedBox {
-    /* width: 100%; */
+    width: 100%;
     display: flex;
     position: absolute;
     bottom: 40px;
+    padding-right: 30px;
     left: 20px;
     /* right: 20px; */
     justify-content: right;
@@ -192,16 +234,18 @@ const MainPages = styled.div`
     .itemsWrapper {
       display: flex;
       /* flex-direction: column; */
-
+      width: 100%;
       gap: 10px;
       background-color: rgba(248, 248, 248, 1);
       padding: 10px 20px;
       border-radius: 8px;
+      overflow: auto;
     }
     .items {
       cursor: pointer;
       transition: all 0.3s ease;
       border-radius: 4px;
+      min-width: 100px;
       overflow: hidden;
       &:hover {
         transform: scale(1.1);
@@ -210,6 +254,26 @@ const MainPages = styled.div`
       img {
         width: 100px;
         height: 100px;
+      }
+    }
+    .itemsadd {
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-radius: 4px;
+      min-width: 100px;
+      overflow: hidden;
+      width: 100px;
+      height: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #dee0e0;
+
+      &:hover {
+        transform: scale(1.1);
+      }
+
+      img {
       }
     }
   }

@@ -40,6 +40,8 @@ const Generate = () => {
     undoArray,
     setModifidImageArray,
     selectResult,
+    editorBox,
+    jobId, setJobId,
     setSelectedresult,
   } = useAppState();
 
@@ -129,6 +131,7 @@ const Generate = () => {
       const canvas1 = canvasInstance.current;
 
       // selectedImg // img url to generate images for the canvas
+      canvas1.renderAll();
 
       const objects = canvas1.getObjects();
       const maskObjects = [];
@@ -144,11 +147,13 @@ const Generate = () => {
           subjectObjects.push(object);
         }
       });
-
+      
       // Make image with only the mask objects
       const maskCanvas = new fabric.StaticCanvas(null, {
-        width: canvas1.getWidth(),
-        height: canvas1.getHeight(),
+        width: 410,
+        height: 480,
+        top: 120,
+        left: 30,
       });
       maskObjects.forEach((object) => {
         maskCanvas.add(object);
@@ -157,14 +162,23 @@ const Generate = () => {
 
       // Make image with only the subject objects
       const subjectCanvas = new fabric.StaticCanvas(null, {
-        width: canvas1.getWidth(),
-        height: canvas1.getHeight(),
+        // width: canvas1.getWidth(),
+        // height: canvas1.getHeight(),
+        width: 410,
+        height: 480,
+        top: 120,
+        left: 30,
       });
       subjectObjects.forEach((object) => {
         subjectCanvas.add(object);
       });
-      const subjectDataUrl = subjectCanvas.toDataURL("image/png");
 
+      // Add the mask and subject canvases to the newEditorBox
+      // editorBox.addWithUpdate(maskCanvas);
+      // editorBox.addWithUpdate(subjectCanvas);
+
+      const subjectDataUrl = subjectCanvas.toDataURL("image/png");
+      console.log(subjectDataUrl, "dfd", maskDataUrl);
       const promtText =
         product +
         ", " +
@@ -201,6 +215,8 @@ const Generate = () => {
         setLoader(false);
 
         return false;
+      }else{
+        setJobId([generate_response?.job_id]);
       }
 
       console.log("dfcdf", generate_response);
@@ -241,8 +257,10 @@ const Generate = () => {
           { url: loadeImge[0]?.modified_image_url, tool: "generated" },
         ]);
 
-        // addimgToCanvasGen(loadeImge[0]?.modified_image_url)
-        setGeneratedImgList(loadeImge.slice(0, selectResult));
+        addimgToCanvasGen(loadeImge[0]?.modified_image_url);
+        // canvas1.remove(editorBox).renderAll();
+        
+        setGeneratedImgList(loadeImge.slice(0, 20));
 
         setSelectedresult(1);
 

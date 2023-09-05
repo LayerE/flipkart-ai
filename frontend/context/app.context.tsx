@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useRef } from "react";
+import { createContext, useContext, useState, useRef, useEffect } from "react";
 import { fabric } from "fabric";
 
 type ContextProviderProps = {
@@ -11,6 +11,8 @@ interface ContextITFC {
   addimgToCanvas: (url: string) => void;
   addimgToCanvasSubject: (url: string) => void;
   addimgToCanvasGen: (url: string) => void;
+  editorBox: fabric.Rect | null;
+  setEditorBox: (editorBox: fabric.Rect | null) => void;
 
   getBase64FromUrl: (url: string) => void;
   activeTab: number | null;
@@ -73,7 +75,7 @@ interface ContextITFC {
   setModifidImageArray: (modifidImageArray: string[]) => void;
   undoArray: string[];
   setUndoArray: (undoArray: string[]) => void;
-
+  EditorBox : any;
   popup: object;
   setPopup: (popup: object) => void;
 }
@@ -89,6 +91,9 @@ export const AppContext = createContext<ContextITFC>({
   setDownloadImg: () => {},
   isMagic: null,
   setIsMagic: () => {},
+  EditorBox: null,
+  editorBox: null,
+  setEditorBox: () => {},
 
   canvasInstance: null,
   outerDivRef: null,
@@ -166,7 +171,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [surroundingtype, setSurroundingtype] = useState<string>("");
   const [selectBackground, setSelectedBackground] = useState<string>("");
   const [selectColoreMode, setSelectedColoreMode] = useState<string>("");
-  const [selectResult, setSelectedresult] = useState<number>(0);
+  const [selectResult, setSelectedresult] = useState<number>(4);
   const [selectRender, setSelectedRender] = useState<number>(4);
   const [selectColoreStrength, setSelectedColoreStrength] = useState<number>(0);
   const [selectOutLline, setSelectedOutline] = useState<number>(0);
@@ -182,9 +187,11 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [modifidImageArray, setModifidImageArray] = useState<string[]>([]);
 
   const [undoArray, setUndoArray] = useState<string[]>([]);
+  const [editorBox, setEditorBox] = useState<fabric.Rect | null>(null);
 
   const [popup, setPopup] = useState<object>({});
   const [generatedImgList, setGeneratedImgList] = useState<string[]>([]);
+  const [jobId, setJobId] = useState<string[]>([]);
 
   const getBase64FromUrl = async (url: string) => {
     const data = await fetch(url);
@@ -199,6 +206,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     });
   };
 
+  const addEditorBoxToCanvas = () => {
+    if (canvasInstance.current && editorBox) {
+      canvasInstance.current.add(editorBox);
+      canvasInstance.current.renderAll();
+    }
+  };
   const addimgToCanvas = async (url: string) => {
     fabric.Image.fromURL(await getBase64FromUrl(url), function (img: any) {
       // Set the image's dimensions
@@ -208,9 +221,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       // const scaleX = downloadRect.width / img.width;
       // const scaleY = downloadRect.height / img.height;
       // Position the image to be in the center of the rectangle
+      const getRandomPosition = (max) => Math.floor(Math.random() * max);
+      const randomLeft = getRandomPosition(canvasInstance.current.width - img.width);
+      const randomTop = getRandomPosition(canvasInstance.current.height - img.height);
       img.set({
-        left: 100,
-        top: 200,
+        left: randomLeft,
+        top: randomTop,
         // scaleX: scaleX,
         // scaleY: scaleY,
       });
@@ -224,13 +240,23 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     fabric.Image.fromURL(await getBase64FromUrl(url), function (img: any) {
       // Set the image's dimensions
       img.scaleToWidth(200);
-      const canvasWidth = canvasInstance.current.getWidth();
-      const canvasHeight = canvasInstance.current.getHeight();
+      const canvasWidth = 360;
+      const canvasHeight = 400;
       const imageAspectRatio = img.width / img.height;
 
       // Calculate the maximum width and height based on the canvas size
       const maxWidth = canvasWidth;
       const maxHeight = canvasHeight;
+      const getRandomPosition = (max) => Math.floor(Math.random() * max);
+
+      const randomLeft = getRandomPosition(canvasInstance.current.width - img.width);
+      const randomTop = getRandomPosition(canvasInstance.current.height - img.height);
+      img.set({
+        left: randomLeft,
+        top: randomTop,
+        // scaleX: scaleX,
+        // scaleY: scaleY,
+      });
 
       // Calculate the scaled width and height while maintaining the aspect ratio
       let scaledWidth = maxWidth;
@@ -256,19 +282,21 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       //   // scaleY: scaleY,
       // });
       img.set("category", "subject");
-      canvasInstance.current.clear();
+      // canvasInstance.current.clear();
       canvasInstance.current.add(img);
       canvasInstance.current.setActiveObject(img);
       canvasInstance.current.renderAll();
     });
   };
 
+
+
   const addimgToCanvasGen = async (url: string) => {
     fabric.Image.fromURL(await getBase64FromUrl(url), function (img: any) {
       // Set the image's dimensions
       img.scaleToWidth(200);
-      const canvasWidth = canvasInstance.current.getWidth();
-      const canvasHeight = canvasInstance.current.getHeight();
+      const canvasWidth = 360;
+      const canvasHeight = 400;
       const imageAspectRatio = img.width / img.height;
 
       // Calculate the maximum width and height based on the canvas size
@@ -287,18 +315,28 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
       img.scaleToWidth(scaledWidth);
       img.scaleToHeight(scaledHeight);
+      // Set the position of the image
+    img.set({ left: 450, top: 120 });
 
       img.set("category", "generated");
-      canvasInstance.current.clear();
+      // canvasInstance.current.clear();
       canvasInstance.current.add(img);
       canvasInstance.current.setActiveObject(img);
       canvasInstance.current.renderAll();
     });
   };
+  const canvasHistoryRef = useRef([]);
+  const [currentStep, setCurrentStep] = useState(-1);
+
+  useEffect(() => {
+   
+  }, [])
+  
 
   return (
     <AppContext.Provider
       value={{
+
         canvasInstance,
         addimgToCanvasGen,
         outerDivRef,
@@ -311,6 +349,11 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setActiveTab,
         activeTabHome,
         setActiveTabHome,
+        editorBox, setEditorBox,
+        addEditorBoxToCanvas,
+        jobId, setJobId,
+        canvasHistoryRef,
+        currentStep, setCurrentStep,
 
         file,
         setFile,

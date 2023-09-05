@@ -1,65 +1,85 @@
 import { useAppState } from '@/context/app.context';
-import React from 'react'
+import React, { useState } from 'react'
 import { styled } from 'styled-components'
 
 const BottomTab = () => {
 
     const {
-      
+        canvasInstance,
         undoArray,
         setUndoArray,
         modifidImageArray,
         setModifidImageArray,
-        setSelectedImg
+        setSelectedImg,
+        currentStep, setCurrentStep,
+        canvasHistoryRef
       } = useAppState();
     
       // canvs
     
     //   const canvasRef = useRef(null);
 
+    // const [canvas, setCanvas] = useState(null);
+    // const [canvasHistory, setCanvasHistory] = useState([]);
+    // const [currentStep, setCurrentStep] = useState(-1);
+      // Initialize the canvas when the component mounts
 
 
     const handileUndo = () => {
-        if (modifidImageArray.length > 1) {
-          setUndoArray((pre) => [
-            ...pre,
-            modifidImageArray[modifidImageArray.length - 1],
-          ]);
+        if (currentStep > 0) {
+            setCurrentStep(currentStep - 1);
+            const canvasData = canvasHistoryRef.current[currentStep - 1];
+            canvasInstance.current.loadFromDatalessJSON(canvasData, () => {
+              canvasInstance.current.renderAll();
+            });
+          }
+        // if (modifidImageArray.length > 1) {
+        //   setUndoArray((pre) => [
+        //     ...pre,
+        //     modifidImageArray[modifidImageArray.length - 1],
+        //   ]);
     
-          setModifidImageArray((pre) => {
-            const lastElement = pre[pre.length - 1];
-            if (lastElement && lastElement.tool) {
-                setSelectedImg((prevState) => ({
-                ...prevState,
-                tools: {
-                  ...prevState.tools,
-                  [lastElement.tool]: false,
-                },
-              }));
-            }
+        //   setModifidImageArray((pre) => {
+        //     const lastElement = pre[pre.length - 1];
+        //     if (lastElement && lastElement.tool) {
+        //         setSelectedImg((prevState) => ({
+        //         ...prevState,
+        //         tools: {
+        //           ...prevState.tools,
+        //           [lastElement.tool]: false,
+        //         },
+        //       }));
+        //     }
     
-            return pre.slice(0, -1);
-          });
-        }
+        //     return pre.slice(0, -1);
+        //   });
+        // }
       };
       const handilePre = () => {
-        if (undoArray.length > 0) {
-          setModifidImageArray((pre) => [...pre, undoArray[undoArray.length - 1]]);
-          setUndoArray((pre) => {
-            const lastElement = pre[pre.length - 1];
-            if (lastElement && lastElement.tool) {
-                setSelectedImg((prevState) => ({
-                ...prevState,
-                tools: {
-                  ...prevState.tools,
-                  [lastElement.tool]: true,
-                },
-              }));
-            }
+        if (currentStep < canvasHistoryRef.current.length - 1) {
+            setCurrentStep(currentStep + 1);
+            const canvasData = canvasHistoryRef.current[currentStep + 1];
+            canvasInstance.current.loadFromDatalessJSON(canvasData, () => {
+              canvasInstance.current.renderAll();
+            });
+          }
+        // if (undoArray.length > 0) {
+        //   setModifidImageArray((pre) => [...pre, undoArray[undoArray.length - 1]]);
+        //   setUndoArray((pre) => {
+        //     const lastElement = pre[pre.length - 1];
+        //     if (lastElement && lastElement.tool) {
+        //         setSelectedImg((prevState) => ({
+        //         ...prevState,
+        //         tools: {
+        //           ...prevState.tools,
+        //           [lastElement.tool]: true,
+        //         },
+        //       }));
+        //     }
     
-            return pre.slice(0, -1);
-          });
-        }
+        //     return pre.slice(0, -1);
+        //   });
+        // }
       };
   return (
     <BottomTabWtapper>
@@ -113,6 +133,7 @@ align-items: center;
 height: 50px;
 width: 100%;
 padding: 0 50px;
+z-index: 100;
 
 
 .bottomTab{
