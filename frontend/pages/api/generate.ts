@@ -33,7 +33,7 @@ export default async (req: NextRequest) => {
     }
 
     const body = await req.json();
-    const { dataUrl, prompt, maskDataUrl } = body;
+    const { dataUrl, prompt, maskDataUrl, user_id } = body;
 
     if (!dataUrl) {
       return NextResponse.json({ error: "Missing dataUrl" });
@@ -65,6 +65,7 @@ export default async (req: NextRequest) => {
         image_url: imageUrl + "?tr=orig-true",
         prompt: prompt,
         mask_image: maskDataUrl,
+        user_id: user_id,
       }),
     });
 
