@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { useAppState } from "@/context/app.context";
 import { useEffect } from "react";
 import { fabric } from "fabric";
+import { styled } from "styled-components";
 
 export default function CanvasBox() {
   const {
@@ -17,8 +18,15 @@ export default function CanvasBox() {
     // newEditorBox
     editorBox,
     canvasHistoryRef,
-    currentStep, setCurrentStep,
+    currentStep,
+    setCurrentStep,
     setEditorBox,
+    bringImageToFront,
+    sendImageToBack,
+    PosisionbtnRef,
+    regenerateRef,
+    setRegeneratePopup,
+    btnVisible,
   } = useAppState();
 
   const canvasRef = useRef(null);
@@ -29,19 +37,35 @@ export default function CanvasBox() {
       canvasInstance.current = new fabric.Canvas(canvasRef.current, {
         width: window.innerWidth,
         height: window.innerHeight,
+        transparentCorners: false,
+        originX: "center",
+        originY: "center",
       });
       canvasHistoryRef.current.push(canvasInstance.current.toDatalessJSON());
       setCurrentStep(0);
     }
     const canvasInstanceRef = canvasInstance.current;
 
-      // Load saved canvas data from local storage
-      const savedCanvasData = localStorage.getItem('canvasData');
-      if (savedCanvasData) {
-       canvasInstanceRef.loadFromJSON(savedCanvasData, () => {
-         canvasInstanceRef.renderAll();
-        });
-      }
+    // Add a custom method to the Fabric canvas prototype
+    fabric.Canvas.prototype.getAbsoluteCoords = function (object) {
+      return {
+        left: object.left + this._offset.left,
+        top: object.top + this._offset.top,
+      };
+    };
+
+    // Get references to the button element and set its initial position
+    const btn = PosisionbtnRef.current;
+
+    // Load saved canvas data from local storage
+    const savedCanvasData = localStorage.getItem("canvasData");
+    if (savedCanvasData) {
+      canvasInstanceRef.loadFromJSON(savedCanvasData, () => {
+        canvasInstanceRef.renderAll();
+      });
+    }
+
+    // Load and add an image to the canvas
  
 
     // When a user clicks on an image on the canvas
@@ -198,9 +222,12 @@ export default function CanvasBox() {
         }
       }
     });
-
+    canvasInstanceRef.on("selection:created", () => {
+      btn.style.display = "block";
+    });
     canvasInstanceRef.on("selection:cleared", function () {
       setDownloadImg(null);
+      btn.style.display = "none";
       console.log(activeTab);
       if (activeTab === 5) {
         setActiveTab(1);
@@ -215,10 +242,9 @@ export default function CanvasBox() {
       });
     });
 
-   
     return () => {
       window.removeEventListener("resize", null);
-       // Clean up resources (if needed) when the component unmounts
+      // Clean up resources (if needed) when the component unmounts
       //  canvasInstanceRef.dispose();
       // saveCanvasDataToLocal()
     };
@@ -229,14 +255,58 @@ export default function CanvasBox() {
   const saveCanvasDataToLocal = () => {
     // Serialize canvas data to JSON and save it to local storage
     const canvasData = JSON.stringify(canvasInstance.current.toJSON());
-    localStorage.setItem('canvasData', canvasData);
+    localStorage.setItem("canvasData", canvasData);
   };
 
   return (
-    <>
+    <Wrapper>
       <div className="convas-continer">
+        <div id="inline-btn" ref={PosisionbtnRef}>
+          <button className="selectone" onClick={() => bringImageToFront()}>
+            Front
+          </button>
+          <button className="selectone" onClick={() => sendImageToBack()}>
+            Back
+          </button>
+        </div>
+        <div
+          id="inline-btn"
+          className="regenrat"
+          ref={regenerateRef}
+          style={{ display: btnVisible ? "block" : "none" }}
+          onClick={() => {
+            setRegeneratePopup({ status: true, url: "" });
+            console.log("sdsfs");
+          }}
+        >
+          {/* <button>
+          Regenrate Product
+
+          </button> */}
+        </div>
         <canvas ref={canvasRef} />
       </div>
-    </>
+    </Wrapper>
   );
 }
+
+const Wrapper = styled.div`
+  #inline-btn {
+    position: absolute;
+    z-index: 200;
+  }
+  .selectone {
+    border-radius: 4px;
+    cursor: pointer;
+    border: 2px solid #d9d9d9;
+    padding: 8px 13px;
+
+    font-size: 12px;
+    font-weight: bold;
+    transition: all 0.3 ease;
+
+    &:hover {
+      border: 2px solid rgba(249, 208, 13, 1);
+    }
+  }
+`;

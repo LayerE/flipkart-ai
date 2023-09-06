@@ -3,7 +3,6 @@ import { fabric } from "fabric";
 import { useAuth } from "@clerk/nextjs";
 import { saveAs } from "file-saver";
 
-
 type ContextProviderProps = {
   children: React.ReactNode;
 };
@@ -194,14 +193,17 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
   const [popup, setPopup] = useState<object>({});
   const [popupImage, setPopupImage] = useState<object>({});
+  const [regeneratePopup, setRegeneratePopup] = useState<object>({});
+
 
   const [generatedImgList, setGeneratedImgList] = useState<string[]>([]);
   const [jobId, setJobId] = useState<string[]>([]);
+  const PosisionbtnRef = useRef(null);
+  const regenerateRef = useRef(null);
 
-  const handileDownload = (url:string) => {
-
-      saveAs(url, `image${Date.now()}.png`);
-    
+  const [btnVisible, setBtnVisible] = useState(false);
+  const handileDownload = (url: string) => {
+    saveAs(url, `image${Date.now()}.png`);
   };
 
   const getBase64FromUrl = async (url: string) => {
@@ -245,6 +247,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         // scaleX: scaleX,
         // scaleY: scaleY,
       });
+      img.on("moving", () => {
+        positionBtn(img);
+      });
       img.set("category", "mask");
 
       canvasInstance.current.add(img);
@@ -265,10 +270,10 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       const getRandomPosition = (max) => Math.floor(Math.random() * max);
 
       const randomLeft = getRandomPosition(
-        canvasInstance.current.width - img.width
+        canvasInstance.current.width /2- img.width
       );
       const randomTop = getRandomPosition(
-        canvasInstance.current.height - img.height
+        300
       );
       img.set({
         left: randomLeft,
@@ -300,6 +305,24 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       //   // scaleX: scaleX,
       //   // scaleY: scaleY,
       // });
+
+      img.on("moving", () => {
+        positionBtn(img);
+        RegeneratepositionBtn(img);
+      });
+
+      img.on("mouseover", () => {
+        // regenerateRef.current.style.display = 'block';
+        setBtnVisible(true);
+      });
+
+      // Hide the button when moving the mouse away from the image
+      img.on("mouseout", (e) => {
+        // regenerateRef.current.style.display = 'none';
+        if (!e?.target?.containsPoint(e.e.clientX, e.e.clientY)) {
+          setBtnVisible(false);
+        }
+      });
       img.set("category", "subject");
       // canvasInstance.current.clear();
       canvasInstance.current.add(img);
@@ -307,6 +330,19 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       canvasInstance.current.renderAll();
     });
   };
+  function positionBtn(obj) {
+    const btn = PosisionbtnRef.current;
+    const absCoords = canvasInstance.current.getAbsoluteCoords(obj);
+    btn.style.left = absCoords.left - 310 - 80 / 2 + "px";
+    btn.style.top = absCoords.top - 20 / 2 + "px";
+  }
+
+  function RegeneratepositionBtn(obj) {
+    const btns = regenerateRef.current;
+    const absCoords = canvasInstance.current.getAbsoluteCoords(obj);
+    btns.style.left = absCoords.left - 310 - 80 / 2 + "px";
+    btns.style.top = absCoords.top + 600 / 2 + "px";
+  }
 
   const addimgToCanvasGen = async (url: string) => {
     fabric.Image.fromURL(await getBase64FromUrl(url), function (img: any) {
@@ -329,7 +365,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         scaledHeight = maxHeight;
         scaledWidth = scaledHeight * imageAspectRatio;
       }
-
+      img.on("moving", () => {
+        positionBtn(img);
+      });
       img.scaleToWidth(scaledWidth);
       img.scaleToHeight(scaledHeight);
       // Set the position of the image
@@ -383,9 +421,162 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     }
   };
 
+  const bringImageToFront = () => {
+    const activeObject = canvasInstance.current.getActiveObject();
+    if (activeObject) {
+      activeObject.sendBackwards();
+
+      canvasInstance.current.bringToFront(activeObject);
+      canvasInstance.current.discardActiveObject();
+      canvasInstance.current.renderAll();
+    }
+  };
+
+  const sendImageToBack = () => {
+    const activeObject = canvasInstance.current.getActiveObject();
+    if (!activeObject) {
+      alert("Please select an object on the canvas first.");
+      return;
+    }
+    console.log(activeObject);
+    canvasInstance.current.sendBackwards(activeObject);
+    canvasInstance.current.discardActiveObject();
+    // canvas.requestRenderAll();
+    canvasInstance.current.renderAll();
+  };
+
+  const generateImageHandeler = async () => {
+    // console.log(promt);
+    setLoader(true);
+    setGenerationLoader(true);
+    try {
+      const canvas1 = canvasInstance.current;
+
+      // selectedImg // img url to generate images for the canvas
+      canvas1.renderAll();
+      const objects = canvas1.getObjects();
+      const maskObjects = [];
+      const subjectObjects = [];
+      objects.forEach((object) => {
+        // If the object is a mask, add it to the mask objects array
+        if (object.category === "mask") {
+          maskObjects.push(object);
+        }
+        // If the object is a subject, add it to the subject objects array
+        if (object.category === "subject") {
+          subjectObjects.push(object);
+        }
+      });
+
+      // Make image with only the mask objects
+      const maskCanvas = new fabric.StaticCanvas(null, {
+        width: 410,
+        height: 480,
+        top: 120,
+        left: 30,
+      });
+      maskObjects.forEach((object) => {
+        maskCanvas.add(object);
+      });
+      const maskDataUrl = maskCanvas.toDataURL("image/png");
+
+      // Make image with only the subject objects
+      const subjectCanvas = new fabric.StaticCanvas(null, {
+        // width: canvas1.getWidth(),
+        // height: canvas1.getHeight(),
+        width: 410,
+        height: 480,
+        top: 120,
+        left: 30,
+      });
+      subjectObjects.forEach((object) => {
+        subjectCanvas.add(object);
+      });
+
+      const subjectDataUrl = subjectCanvas.toDataURL("image/png");
+    
+      const promtText =
+        product +
+        ", " +
+        selectPlacement +
+        " " +
+        placementTest +
+        ", " +
+        selectSurrounding +
+        " " +
+        surroundingTest +
+        ", " +
+        selectBackground +
+        " " +
+        backgroundTest;
+
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          dataUrl: subjectDataUrl,
+          maskDataUrl: maskDataUrl,
+          prompt: promtText.trim(),
+          user_id: userId,
+        }),
+      });
+
+      const generate_response = await response.json();
+
+      if (generate_response?.error) {
+        alert(generate_response?.error);
+        setLoader(false);
+
+        return false;
+      } else {
+        setJobId((pre) => [...pre, generate_response?.job_id]);
+        localStorage.setItem("jobId", jobId);
+      }
+
+      setTimeout(async function () {
+        const loadeImge = await fetchGeneratedImages();
+
+       
+        setSelectedImg({
+          status: true,
+          image: loadeImge[0]?.modified_image_url,
+          modifiedImage: loadeImge[0]?.modified_image_url,
+        });
+
+        setModifidImageArray((pre) => [
+          ...pre,
+          { url: loadeImge[0]?.modified_image_url, tool: "generated" },
+        ]);
+
+        addimgToCanvasGen(loadeImge[0]?.modified_image_url);
+        // canvas1.remove(editorBox).renderAll();
+
+        setGeneratedImgList(loadeImge.slice(0, 20));
+
+        setSelectedresult(1);
+
+        setLoader(false);
+      }, 30000);
+    } catch (error) {
+      console.error("Error generating image:", error);
+    } finally {
+      setGenerationLoader(false);
+    }
+  };
+
   return (
     <AppContext.Provider
       value={{
+        regeneratePopup, setRegeneratePopup,
+        btnVisible,
+        generateImageHandeler,
+        setBtnVisible,
+        PosisionbtnRef,
+        regenerateRef,
+        bringImageToFront,
+        sendImageToBack,
         fetchGeneratedImages,
         handileDownload,
         canvasInstance,
@@ -408,7 +599,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         canvasHistoryRef,
         currentStep,
         setCurrentStep,
-        popupImage, setPopupImage,
+        popupImage,
+        setPopupImage,
 
         file,
         setFile,

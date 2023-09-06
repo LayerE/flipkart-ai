@@ -113,7 +113,7 @@ const EditorSection = () => {
         <div className="two-side">
           <DropdownInput
             data={{
-              list: PlacementSuggesPrahtionsFilter,
+              list: productSuggestionsPrash,
               action: setSelectedPlacement,
               label: "placement",
 

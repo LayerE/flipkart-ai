@@ -34,6 +34,8 @@ const Edit = () => {
     setIsMagic,
     setModifidImageArray,
     setSelectedImg,
+    bringImageToFront,
+    sendImageToBack,
     setLoader,
   } = useAppState();
   /* eslint-disable */
@@ -231,29 +233,7 @@ const Edit = () => {
     setColore(color.hex);
   };
 
-  const bringImageToFront = () => {
-    const activeObject = canvasInstance.current.getActiveObject();
-    if (activeObject) {
-      activeObject.sendBackwards();
-
-      canvasInstance.current.bringToFront(activeObject);
-      canvasInstance.current.discardActiveObject();
-      canvasInstance.current.renderAll();
-    }
-  };
-
-  const sendImageToBack = () => {
-    const activeObject = canvasInstance.current.getActiveObject();
-    if (!activeObject) {
-      alert("Please select an object on the canvas first.");
-      return;
-    }
-    console.log(activeObject);
-    canvasInstance.current.sendBackwards(activeObject);
-    canvasInstance.current.discardActiveObject();
-    // canvas.requestRenderAll();
-    canvasInstance.current.renderAll();
-  };
+ 
 
   return (
     <motion.div

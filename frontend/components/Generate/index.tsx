@@ -46,6 +46,7 @@ const Generate = () => {
     jobId,
     setJobId,
     setSelectedresult,
+    generateImageHandeler
   } = useAppState();
 
   const [changeTab, setChangeTab] = useState(false);
@@ -65,153 +66,8 @@ const Generate = () => {
     " " +
     backgroundTest;
 
-  const fetchImages = async () => {
-    try {
-      // &user_id=eq.${userId}
-      const response = await fetch(
-        `https://tvjjvhjhvxwpkohjqxld.supabase.co/rest/v1/public_images?select=*&order=created_at.desc&user_id=eq.${userId}`,
-        {
-          method: "GET",
-          headers: {
-            apikey:
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2amp2aGpodnh3cGtvaGpxeGxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTI4Njg5NDQsImV4cCI6MjAwODQ0NDk0NH0.dwKxNDrr7Jw5OjeHgIbk8RLyvJuQVwZ_48Bv71P1n3Y", // Replace with your actual API key
-          },
-        }
-      );
-      const data = await response.json();
-      // setImages(data); // Update the state with the fetched images
-      // setGeneratedImgList(data)
+ 
 
-      // if(data[0]?.prompt === prompt){
-
-      // }
-
-      return data;
-    } catch (error) {
-      console.error("Error fetching images:", error);
-    }
-  };
-
-  const generateImageHandeler = async () => {
-    console.log(promt);
-    setLoader(true);
-    setGenerationLoader(true);
-    try {
-      const canvas1 = canvasInstance.current;
-
-      // selectedImg // img url to generate images for the canvas
-      canvas1.renderAll();
-      const objects = canvas1.getObjects();
-      const maskObjects = [];
-      const subjectObjects = [];
-      objects.forEach((object) => {
-        // If the object is a mask, add it to the mask objects array
-        if (object.category === "mask") {
-          maskObjects.push(object);
-        }
-        // If the object is a subject, add it to the subject objects array
-        if (object.category === "subject") {
-          subjectObjects.push(object);
-        }
-      });
-
-      // Make image with only the mask objects
-      const maskCanvas = new fabric.StaticCanvas(null, {
-        width: 410,
-        height: 480,
-        top: 120,
-        left: 30,
-      });
-      maskObjects.forEach((object) => {
-        maskCanvas.add(object);
-      });
-      const maskDataUrl = maskCanvas.toDataURL("image/png");
-
-      // Make image with only the subject objects
-      const subjectCanvas = new fabric.StaticCanvas(null, {
-        // width: canvas1.getWidth(),
-        // height: canvas1.getHeight(),
-        width: 410,
-        height: 480,
-        top: 120,
-        left: 30,
-      });
-      subjectObjects.forEach((object) => {
-        subjectCanvas.add(object);
-      });
-
-      const subjectDataUrl = subjectCanvas.toDataURL("image/png");
-    
-      const promtText =
-        product +
-        ", " +
-        selectPlacement +
-        " " +
-        placementTest +
-        ", " +
-        selectSurrounding +
-        " " +
-        surroundingTest +
-        ", " +
-        selectBackground +
-        " " +
-        backgroundTest;
-
-      const response = await fetch("/api/generate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          dataUrl: subjectDataUrl,
-          maskDataUrl: maskDataUrl,
-          prompt: promtText.trim(),
-          user_id: userId,
-        }),
-      });
-
-      const generate_response = await response.json();
-
-      if (generate_response?.error) {
-        alert(generate_response?.error);
-        setLoader(false);
-
-        return false;
-      } else {
-        setJobId((pre) => [...pre, generate_response?.job_id]);
-        localStorage.setItem("jobId", jobId);
-      }
-
-      setTimeout(async function () {
-        const loadeImge = await fetchImages();
-
-       
-        setSelectedImg({
-          status: true,
-          image: loadeImge[0]?.modified_image_url,
-          modifiedImage: loadeImge[0]?.modified_image_url,
-        });
-
-        setModifidImageArray((pre) => [
-          ...pre,
-          { url: loadeImge[0]?.modified_image_url, tool: "generated" },
-        ]);
-
-        addimgToCanvasGen(loadeImge[0]?.modified_image_url);
-        // canvas1.remove(editorBox).renderAll();
-
-        setGeneratedImgList(loadeImge.slice(0, 20));
-
-        setSelectedresult(1);
-
-        setLoader(false);
-      }, 30000);
-    } catch (error) {
-      console.error("Error generating image:", error);
-    } finally {
-      setGenerationLoader(false);
-    }
-  };
 
   return (
     <motion.div
