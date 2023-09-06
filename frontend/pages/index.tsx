@@ -6,7 +6,7 @@ import Link from "next/link";
 
 const fadeIn = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 1 } },
+  visible: { opacity: 1, transition: { duration: 0.5 } },
 };
 
 import { motion } from "framer-motion";

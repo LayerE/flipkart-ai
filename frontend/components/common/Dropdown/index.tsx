@@ -1,5 +1,5 @@
 import { useAppState } from "@/context/app.context";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import { styled } from "styled-components";
 const Dropdown = styled.div`
   position: relative;
@@ -73,6 +73,7 @@ const Dropdown = styled.div`
 
 const DropdownInput: React.FC = ({ data }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const popupRef = useRef<HTMLDivElement>(null);
 
   const handleToggleDropdown = () => {
     setIsDropdownOpen((prevState) => !prevState);
@@ -82,10 +83,26 @@ const DropdownInput: React.FC = ({ data }) => {
     data.action(option);
     setIsDropdownOpen(false);
   };
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node)
+      ) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("click", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("click", handleOutsideClick);
+    };
+  }, []);
 
   return (
     <Dropdown>
-      <div className="dropdown-container">
+      <div className="dropdown-container" ref={popupRef}>
         <div
           className="dropdown-input"
           onClick={handleToggleDropdown}
@@ -129,7 +146,7 @@ const DropdownInput: React.FC = ({ data }) => {
           </span>
         </div>
         {isDropdownOpen && (
-          <div className="dropdown-content">
+          <div className="dropdown-content" >
             {/* Place your dropdown options here */}
             {data.list.map((items, i) => (
               <p key={i} onClick={() => handleOptionSelect(items)}>
@@ -192,6 +209,7 @@ const DropdownWrapper = styled.div`
 
     }
   }
+  
 `;
 
 export const DropdownNOBorder: React.FC = ({ data }) => {

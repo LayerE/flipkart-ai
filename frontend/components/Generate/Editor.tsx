@@ -99,6 +99,7 @@ const EditorSection = () => {
       variants={fadeIn}
       className="accest"
     >
+      <BoxOff className="boxof">
       <div className="filde gap">
         <DisabledLabel>Product</DisabledLabel>
         <SuggetionInput
@@ -164,7 +165,7 @@ const EditorSection = () => {
           />
         </div>
       </div>
-      <div className="rowwothtwo">
+      {/* <div className="rowwothtwo">
         <Label>Number of results</Label>
         <div className="dropdown-smaill">
           <DropdownNOBorder
@@ -175,7 +176,7 @@ const EditorSection = () => {
             }}
           ></DropdownNOBorder>
         </div>
-      </div>
+      </div> */}
       {/* <div className="rowwothtwo">
         <Label>Render strength</Label>
         <div className="dropdown-smaill">
@@ -212,11 +213,17 @@ const EditorSection = () => {
           ></DropdownNOBorder>
         </div>
       </div> */}
+      </BoxOff>
     </motion.div>
   );
 };
 
 export default EditorSection;
+export const BoxOff = styled.div`
+/* height: 100%; */
+/* overflow: hidden; */
+  
+`;
 export const ResponsiveRowWraptwo = styled(Row)`
   display: grid !important;
   gap: 1rem;

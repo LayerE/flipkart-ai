@@ -38,11 +38,12 @@ export const Suggestion1 = styled.div`
   left: 0;
   right: 0;
   max-width: 300px;
-  max-height: 250px;
+  max-height: 150px;
   overflow: scroll;
   border-radius: 8px;
   width:200px;
-  overflow: hidden;
+  margin-bottom: 20px;
+  /* overflow: hidden; */
   /* white-space: nowrap; */
   
 
