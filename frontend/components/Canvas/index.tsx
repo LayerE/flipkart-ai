@@ -35,6 +35,15 @@ export default function CanvasBox() {
     }
     const canvasInstanceRef = canvasInstance.current;
 
+      // Load saved canvas data from local storage
+      const savedCanvasData = localStorage.getItem('canvasData');
+      if (savedCanvasData) {
+       canvasInstanceRef.loadFromJSON(savedCanvasData, () => {
+         canvasInstanceRef.renderAll();
+        });
+      }
+ 
+
     // When a user clicks on an image on the canvas
     canvasInstanceRef.on("mouse:down", function (options) {
       if (options.target && options.target.type === "image") {
@@ -64,8 +73,8 @@ export default function CanvasBox() {
       strokeWidth: 1,
     });
 
-    canvasInstance.current.add(newEditorBox);
-    canvasInstance.current.renderAll();
+    canvasInstanceRef.add(newEditorBox);
+    canvasInstanceRef.renderAll();
 
     const EditorBoxText = new fabric.Text("Place Your Product Here", {
       left: newEditorBox.left + 20, // center of the rectangle
@@ -94,7 +103,10 @@ export default function CanvasBox() {
       fontSize: 16,
       // originX: "center",
       // originY: "center",
-      selectable: false,
+
+      selectable: false, // Make it non-selectable
+      evented: false, // Make it non-selectable
+      hasControls: false,
       fill: "rgba(0, 0, 0, 1)",
     });
 
@@ -203,12 +215,22 @@ export default function CanvasBox() {
       });
     });
 
+   
     return () => {
       window.removeEventListener("resize", null);
+       // Clean up resources (if needed) when the component unmounts
+      //  canvasInstanceRef.dispose();
+      // saveCanvasDataToLocal()
     };
   }, []);
 
   useEffect(() => {}, []);
+
+  const saveCanvasDataToLocal = () => {
+    // Serialize canvas data to JSON and save it to local storage
+    const canvasData = JSON.stringify(canvasInstance.current.toJSON());
+    localStorage.setItem('canvasData', canvasData);
+  };
 
   return (
     <>

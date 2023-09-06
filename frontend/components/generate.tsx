@@ -36,39 +36,16 @@ export default function Home() {
     canvasInstance,
     modifidImageArray,
     setModifidImageArray,
-    setGeneratedImgList
+    setGeneratedImgList,
+    fetchGeneratedImages,
+    jobId
   } = useAppState();
 
   useEffect(() => {
     console.log("render");
   }, [selectedImg, setSelectedImg, loader]);
 
-  const fetchImages = async () => {
-    try {
-      const response = await fetch(
-        `https://tvjjvhjhvxwpkohjqxld.supabase.co/rest/v1/public_images?select=*&order=created_at.desc&user_id=eq.${userId}`,
-        {
-          method: "GET",
-          headers: {
-            apikey:
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2amp2aGpodnh3cGtvaGpxeGxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTI4Njg5NDQsImV4cCI6MjAwODQ0NDk0NH0.dwKxNDrr7Jw5OjeHgIbk8RLyvJuQVwZ_48Bv71P1n3Y", // Replace with your actual API key
-          },
-        }
-      );
-      const data = await response.json();
-
-      setGeneratedImgList(await data)
-      // setImages(data); // Update the state with the fetched images
-      // setGeneratedImgList(data)
-
-      // if(data[0]?.prompt === prompt){
-
-      // }
-      // return data;
-    } catch (error) {
-      console.error("Error fetching images:", error);
-    }
-  };
+ 
 
   const upateImage = (url) => {
     setSelectedImg({ status: true, image: url });
@@ -82,24 +59,29 @@ export default function Home() {
     // addimgToCanvasGen(url);
   };
 
+  const [filteredArray, setFilteredArray] = useState([]);
+
+// const [imagesGenerateList, setImagesGenerateList] = useState()
+//   const handelGenratedImage = () => {
+
+//     generatedImgList?.map(item =>{
+
+//     })
+
+
+
+//   }
+
+  
   useEffect(() => {
-    let pollInterval
+    // Filter the array of objects based on the arrayOfIds
+    const filteredResult = generatedImgList.filter(obj => jobId.includes(obj.task_id));
 
-    if(userId){
-      console.log("dfd", userId)
+    // Set the filtered array in the state
+    setFilteredArray(filteredResult);
+  }, [jobId]);
 
-
-    
-     pollInterval = setInterval(() => {
-
-      console.log("polling", userId)
-      fetchImages(); // Fetch images every 10
-    }, 10000); // Adjust the interval as needed (e.g., 20000 for 20 seconds)
-  }
-
-    // Don't forget to clean up the interval when the component unmounts
-    return () => clearInterval(pollInterval);
-  }, []); // Empty dependency array ensures the effect runs only once when the component mounts
+ 
 
   return (
     <MainPages>
@@ -116,10 +98,10 @@ export default function Home() {
         <div className="Editor">
           <BottomTab />
 
-          {generatedImgList?.length > 1 ? (
+          {filteredArray?.length > 1 ? (
             <div className="generatedBox">
               <div className="itemsWrapper">
-                {generatedImgList?.map((item, i) => (
+                {filteredArray?.map((item, i) => (
                   <div
                     key={i}
                     className="items"

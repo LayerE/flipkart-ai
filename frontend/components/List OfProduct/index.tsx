@@ -9,6 +9,18 @@ const ListOf: React.FC = () => {
   const {
     viewMore,
     addimgToCanvas,
+    activeTab,
+    setPlacementTest,
+    setSurroundingTest,
+    setBackgrundTest,
+    setSelectedPlacement,
+    setSelectedSurrounding,
+    setSelectedBackground
+
+
+
+
+
   } = useAppState();
 
   return (
@@ -24,11 +36,27 @@ const ListOf: React.FC = () => {
               key={i}
               className={"imageBox"}
               onClick={() => {
+                if(activeTab=== 2){
+                  setPlacementTest(test.placement);
+                  setSurroundingTest(test.surrounding);
+                  setBackgrundTest(test.background);
+                  setSelectedPlacement(test.placementType);
+                  setSelectedSurrounding(test.surroundingType);
+                  setSelectedBackground(test.backgroundType);
+
+                }else
                 addimgToCanvas(test);
               }}
             >
               <picture>
-                <img src={test} alt="" />
+                {
+                  activeTab=== 2 ?
+                  <img src={test.image} alt="" />
+
+                  :
+                  <img src={test} alt="" />
+
+                }
               </picture>
             </div>
           ))}

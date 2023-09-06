@@ -25,7 +25,7 @@ const Button = styled.button<{
   font-weight: 700;
   /* transition: 0.2s; */
   :hover {
-    background: #0d30f9 !important;
+    /* background: #0d30f9 !important; */
 
   }
   &:disabled {

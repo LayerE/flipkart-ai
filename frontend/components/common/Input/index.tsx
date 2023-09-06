@@ -5,7 +5,7 @@ import { styled } from "styled-components";
 import { uid } from "uid";
 export const Input = styled.input`
   padding: 0.5rem 0.75rem;
-  border: 1px solid ${(props) => props.theme.stroke};
+  border: 2px solid #d9d9d9;
   outline: none;
   color: #000;
   border-radius: 0.45rem;
@@ -20,18 +20,31 @@ export const Input = styled.input`
       color: #fff7f7 !important;
     }
   }
+
+  &:hover{
+  /* border: 2px solid #d9d9d9; */
+  border: 2px solid ${(props) => props.theme.btnPrimary};
+
+
+
+  }
 `;
 export const Suggestion1 = styled.div`
   position: absolute;
   top: 100%;
+  right: 0;
   background-color: #fff;
   z-index: 10;
   left: 0;
   right: 0;
-  max-height: 200px;
+  max-width: 300px;
+  max-height: 250px;
   overflow: scroll;
   border-radius: 8px;
-  width: max-content;
+  width:200px;
+  overflow: hidden;
+  /* white-space: nowrap; */
+  
 
   &::-webkit-scrollbar {
     display: none;
@@ -44,6 +57,8 @@ export const Suggestion1 = styled.div`
     margin-bottom: 5px;
     border-radius: 8px;
     transition: all 0.3s ease-out;
+  font-size: 12px;
+
 
     &:hover {
       background-color: #e4e2e2;
@@ -132,7 +147,7 @@ const InputFile1 = styled.div`
     gap: 12px;
     height: 50px;
     border-radius: 6px;
-    border: 2px solid #888;
+    border: 2px solid #d9d9d9;
     transition: all 0.3s ease-in-out;
     width: 100%;
     &:hover {

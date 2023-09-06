@@ -104,7 +104,7 @@ export const ElemtWraspper = styled(Row)`
   }
   .imageBoxs {
     border-radius: 8px;
-    border: 2px solid #b1b1b1;
+    border: 2px solid #d9d9d9;
     padding: 10px 10px;
     /* height: 120px; */
 
@@ -112,7 +112,19 @@ export const ElemtWraspper = styled(Row)`
     height: 100px;
     overflow: hidden;
     img {
+    transition: all 0.3s ease-in-out;
+
       object-fit: contain;
+      &:hover{
+    transform: scale(1.1);
+
+    }
+    }
+    transition: all 0.3s ease-in-out;
+
+    &:hover{
+    border: 2px solid rgba(249, 208, 13, 1);
+
     }
   }
 `;

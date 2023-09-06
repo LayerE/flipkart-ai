@@ -64,7 +64,7 @@ const Sidebar: React.FC = () => {
     setViewMore,
     downloadImg,
     isMagic,
-    setIsMagic
+    setIsMagic,
   } = useAppState();
 
   return (
@@ -86,7 +86,7 @@ const Sidebar: React.FC = () => {
                 onClick={() => {
                   setActiveTab(elemenmt.id);
                   setViewMore({ status: false });
-                  setIsMagic(false)
+                  setIsMagic(false);
                 }}
               >
                 <Image src={elemenmt.image} alt="" width={16} />
@@ -107,7 +107,34 @@ const Sidebar: React.FC = () => {
             <div className="tittle">
               {activeTab === 1 ? (
                 "Add assets"
-              ) : activeTab === 2 ? (
+              ) : activeTab === 2  && viewMore?.status == true ? (
+                <div
+                  style={{
+                    cursor: "pointer",
+                    display: "flex",
+                    gap: "0px",
+                    justifyContent: "start",
+                    alignItems: "center",
+                  }}
+                  onClick={() => setViewMore({ status: false })}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    className="lucide lucide-chevron-left"
+                  >
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                  </svg>{" "}
+                  {viewMore.title}{" "}
+                </div>
+              ) : activeTab === 2 ?(
                 "Generate Photoshoot"
               ) : activeTab === 3 && viewMore?.status == true ? (
                 <div
@@ -140,8 +167,7 @@ const Sidebar: React.FC = () => {
                 "Add Element"
               ) : activeTab === 4 ? (
                 "Add Humans"
-              ) 
-              : activeTab === 5 && isMagic == true ? (
+              ) : activeTab === 5 && isMagic == true ? (
                 <div
                   style={{
                     cursor: "pointer",
@@ -150,7 +176,7 @@ const Sidebar: React.FC = () => {
                     justifyContent: "start",
                     alignItems: "center",
                   }}
-                  onClick={() => setIsMagic( false)}
+                  onClick={() => setIsMagic(false)}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -168,15 +194,15 @@ const Sidebar: React.FC = () => {
                   </svg>{" "}
                   Magic Erase{" "}
                 </div>
-              )
-              
-              : (
+              ) : (
                 "Edit Image"
               )}
             </div>
             {activeTab === 1 ? (
               <Assets />
-            ) : activeTab === 2 ? (
+            ) : activeTab === 2  && viewMore?.status == true ? (
+              <ListOf />
+            ) : activeTab === 2 ?(
               <Generate />
             ) : activeTab === 3 && viewMore?.status == true ? (
               <ListOf />
@@ -211,19 +237,29 @@ const SideBar = styled.div`
   .selectone {
     border-radius: 4px;
     cursor: pointer;
-    border: 1px solid #c7c3c3;
+    border: 2px solid #d9d9d9;
     padding: 8px 13px;
 
     font-size: 12px;
     font-weight: bold;
+    transition: all 0.3 ease;
+
+    &:hover {
+      border: 2px solid rgba(249, 208, 13, 1);
+    }
   }
 
   .selectTool {
     cursor: pointer;
     border-radius: 7px;
-    border: 1px solid #838383;
+    border: 2px solid #d9d9d9;
     padding: 1.3rem 1.2rem;
     position: relative;
+    transition: all 0.3 ease;
+
+    &:hover {
+      border: 2px solid rgba(249, 208, 13, 1);
+    }
     .cardClose {
       position: absolute;
       right: 15px;
@@ -338,17 +374,15 @@ const SideBar = styled.div`
       font-size: 10px;
       font-weight: 500;
     }
-    &:hover{
-    background-color: ${({ theme }) => theme.btnPrimaryHover};
-
+    &:hover {
+      background-color: ${({ theme }) => theme.btnPrimaryHover};
     }
   }
   .disable {
     color: #d1c8c8;
     cursor: not-allowed;
-    &:hover{
-    background-color: transparent;
-
+    &:hover {
+      background-color: transparent;
     }
   }
 
@@ -393,17 +427,27 @@ const SideBar = styled.div`
 
   .imageBox {
     border-radius: 8px;
-    border: 2px solid #b1b1b1;
+    border: 2px solid #d9d9d9;
     padding: 10px 10px;
     height: 120px;
     picture {
       width: 100%;
       height: 100%;
     }
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+      border: 2px solid rgba(249, 208, 13, 1);
+    }
     img {
       width: 100%;
       height: 100%;
       object-fit: contain;
+      transition: all 0.3s ease-in-out;
+
+      &:hover {
+        transform: scale(1.1);
+      }
     }
   }
   .ativeimg {

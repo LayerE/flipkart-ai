@@ -16,6 +16,7 @@ import { fabric } from "fabric";
 import Label, { DisabledLabel } from "../common/Label";
 import SuggetionInput from "./SuggetionInput";
 import { PlacementSuggestions, productSuggestions } from "@/store/dropdown";
+import TextLoader from "../Loader/text";
 
 const Generate = () => {
   const { userId } = useAuth();
@@ -41,12 +42,14 @@ const Generate = () => {
     setModifidImageArray,
     selectResult,
     editorBox,
-    jobId, setJobId,
+    loader,
+    jobId,
+    setJobId,
     setSelectedresult,
   } = useAppState();
 
   const [changeTab, setChangeTab] = useState(false);
-  // const imageArrays = JSON.parse(localStorage.getItem("g-images")) || [];
+
   const promt =
     product +
     ", " +
@@ -61,28 +64,6 @@ const Generate = () => {
     selectBackground +
     " " +
     backgroundTest;
-
-  const addimgToCanvas = async (url: string) => {
-    fabric.Image.fromURL(await getBase64FromUrl(url), function (img: any) {
-      // Set the image's dimensions
-      img.scaleToWidth(380);
-      img.scaleToHeight(400);
-      // Scale the image to have the same width and height as the rectangle
-      const scaleX = 380 / img.width;
-      const scaleY = 400 / img.height;
-      // Position the image to be in the center of the rectangle
-      img.set({
-        left: 50,
-        top: 100,
-        scaleX: scaleX,
-        scaleY: scaleY,
-      });
-
-      canvasInstance.current.add(img);
-      canvasInstance.current.renderAll();
-    });
-  };
-  console.log(userId, "userId=" + userId);
 
   const fetchImages = async () => {
     try {
@@ -111,28 +92,15 @@ const Generate = () => {
     }
   };
 
-  useEffect(() => {
-    const pollInterval = setInterval(() => {
-      fetchImages(); // Fetch images every 10
-    }, 10000); // Adjust the interval as needed (e.g., 20000 for 20 seconds)
-
-    // Don't forget to clean up the interval when the component unmounts
-    return () => clearInterval(pollInterval);
-  }, []); // Empty dependency array ensures the effect runs only once when the component mounts
-
-  /* eslint-disable */
-
   const generateImageHandeler = async () => {
     console.log(promt);
     setLoader(true);
-
     setGenerationLoader(true);
     try {
       const canvas1 = canvasInstance.current;
 
       // selectedImg // img url to generate images for the canvas
       canvas1.renderAll();
-
       const objects = canvas1.getObjects();
       const maskObjects = [];
       const subjectObjects = [];
@@ -141,13 +109,12 @@ const Generate = () => {
         if (object.category === "mask") {
           maskObjects.push(object);
         }
-
         // If the object is a subject, add it to the subject objects array
         if (object.category === "subject") {
           subjectObjects.push(object);
         }
       });
-      
+
       // Make image with only the mask objects
       const maskCanvas = new fabric.StaticCanvas(null, {
         width: 410,
@@ -173,12 +140,8 @@ const Generate = () => {
         subjectCanvas.add(object);
       });
 
-      // Add the mask and subject canvases to the newEditorBox
-      // editorBox.addWithUpdate(maskCanvas);
-      // editorBox.addWithUpdate(subjectCanvas);
-
       const subjectDataUrl = subjectCanvas.toDataURL("image/png");
-      console.log(subjectDataUrl, "dfd", maskDataUrl);
+    
       const promtText =
         product +
         ", " +
@@ -194,7 +157,6 @@ const Generate = () => {
         " " +
         backgroundTest;
 
-      // for (let i = 0; i < selectResult; i++) {
       const response = await fetch("/api/generate", {
         method: "POST",
         headers: {
@@ -215,37 +177,15 @@ const Generate = () => {
         setLoader(false);
 
         return false;
-      }else{
-        setJobId([generate_response?.job_id]);
+      } else {
+        setJobId((pre) => [...pre, generate_response?.job_id]);
+        localStorage.setItem("jobId", jobId);
       }
-
-      console.log("dfcdf", generate_response);
-
-      // You can do something with the generate_response here
-      // console.log(`Request ${i + 1} completed:`, generate_response);
-      // }
-
-      // // const textForPrompt = promt.trim() === "" ?   prompt;
-      // const response = await fetch("/api/generate", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({
-      //     dataUrl: subjectDataUrl,
-      //     maskDataUrl: maskDataUrl,
-      //     prompt: promt,
-      //   }),
-      // });
-
-      // const generate_response = await response.json();
-
-      // console.log(generate_response);
 
       setTimeout(async function () {
         const loadeImge = await fetchImages();
 
-        console.log(loadeImge);
+       
         setSelectedImg({
           status: true,
           image: loadeImge[0]?.modified_image_url,
@@ -259,41 +199,19 @@ const Generate = () => {
 
         addimgToCanvasGen(loadeImge[0]?.modified_image_url);
         // canvas1.remove(editorBox).renderAll();
-        
+
         setGeneratedImgList(loadeImge.slice(0, 20));
 
         setSelectedresult(1);
 
-        // setGeneratedImgList(
-        //   loadeImge
-        // )
-
         setLoader(false);
       }, 30000);
-
-      // if(loadeImge[0]?.prompt === prompt){
-
-      // }
-
-      //  const pollInterval = setInterval(() => {
-      //     fetchImages(); // Fetch images every 10
-      //   }, 10000); // Adj
-
-      // console.log("maskDataUrl", maskDataUrl);
-      // console.log("subjectDataUrl", subjectDataUrl);
-
-      //clear the canvas
-      // canvas1.clear();
     } catch (error) {
       console.error("Error generating image:", error);
     } finally {
       setGenerationLoader(false);
     }
   };
-
-  const ProductSuggestionsFilter = productSuggestions.filter((suggestion) =>
-    suggestion.toLowerCase().includes(product.toLowerCase())
-  );
 
   return (
     <motion.div
@@ -365,12 +283,18 @@ const Generate = () => {
           </PromtGeneratePreview>
         </Row>
         <Row>
+          {
+            loader?
+        <TextLoader/>
+        :
+
           <Button
             onClick={() => generateImageHandeler()}
             disabled={product === "" ? true : false}
           >
             {generationLoader ? "Loading..." : "Generate"}
           </Button>
+          }
         </Row>
       </div>
       <div className="bigGap">
@@ -401,7 +325,7 @@ const Generate = () => {
 export default Generate;
 
 export const PromtGeneratePreview = styled.div`
-  border: 1px solid rgba(0, 0, 0, 1);
+  border: 2px solid #d9d9d9;
   padding: 10px;
   border-radius: 8px;
   width: 100%;

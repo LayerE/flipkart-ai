@@ -1,5 +1,8 @@
 import { createContext, useContext, useState, useRef, useEffect } from "react";
 import { fabric } from "fabric";
+import { useAuth } from "@clerk/nextjs";
+import { saveAs } from "file-saver";
+
 
 type ContextProviderProps = {
   children: React.ReactNode;
@@ -75,7 +78,7 @@ interface ContextITFC {
   setModifidImageArray: (modifidImageArray: string[]) => void;
   undoArray: string[];
   setUndoArray: (undoArray: string[]) => void;
-  EditorBox : any;
+  EditorBox: any;
   popup: object;
   setPopup: (popup: object) => void;
 }
@@ -190,8 +193,16 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [editorBox, setEditorBox] = useState<fabric.Rect | null>(null);
 
   const [popup, setPopup] = useState<object>({});
+  const [popupImage, setPopupImage] = useState<object>({});
+
   const [generatedImgList, setGeneratedImgList] = useState<string[]>([]);
   const [jobId, setJobId] = useState<string[]>([]);
+
+  const handileDownload = (url:string) => {
+
+      saveAs(url, `image${Date.now()}.png`);
+    
+  };
 
   const getBase64FromUrl = async (url: string) => {
     const data = await fetch(url);
@@ -222,8 +233,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       // const scaleY = downloadRect.height / img.height;
       // Position the image to be in the center of the rectangle
       const getRandomPosition = (max) => Math.floor(Math.random() * max);
-      const randomLeft = getRandomPosition(canvasInstance.current.width - img.width);
-      const randomTop = getRandomPosition(canvasInstance.current.height - img.height);
+      const randomLeft = getRandomPosition(
+        canvasInstance.current.width - img.width
+      );
+      const randomTop = getRandomPosition(
+        canvasInstance.current.height - img.height
+      );
       img.set({
         left: randomLeft,
         top: randomTop,
@@ -249,8 +264,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       const maxHeight = canvasHeight;
       const getRandomPosition = (max) => Math.floor(Math.random() * max);
 
-      const randomLeft = getRandomPosition(canvasInstance.current.width - img.width);
-      const randomTop = getRandomPosition(canvasInstance.current.height - img.height);
+      const randomLeft = getRandomPosition(
+        canvasInstance.current.width - img.width
+      );
+      const randomTop = getRandomPosition(
+        canvasInstance.current.height - img.height
+      );
       img.set({
         left: randomLeft,
         top: randomTop,
@@ -289,8 +308,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     });
   };
 
-
-
   const addimgToCanvasGen = async (url: string) => {
     fabric.Image.fromURL(await getBase64FromUrl(url), function (img: any) {
       // Set the image's dimensions
@@ -316,7 +333,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       img.scaleToWidth(scaledWidth);
       img.scaleToHeight(scaledHeight);
       // Set the position of the image
-    img.set({ left: 450, top: 120 });
+      img.set({ left: 450, top: 120 });
 
       img.set("category", "generated");
       // canvasInstance.current.clear();
@@ -327,16 +344,50 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   };
   const canvasHistoryRef = useRef([]);
   const [currentStep, setCurrentStep] = useState(-1);
+  const { userId } = useAuth();
 
   useEffect(() => {
-   
-  }, [])
-  
+    const getUser = localStorage.getItem("userId");
+
+    setInterval(() => {
+      fetchGeneratedImages(getUser);
+    }, 5000);
+  }, []);
+
+  const fetchGeneratedImages = async (userId) => {
+    try {
+      const response = await fetch(
+        `https://tvjjvhjhvxwpkohjqxld.supabase.co/rest/v1/public_images?select=*&order=created_at.desc&user_id=eq.${userId}`,
+        {
+          method: "GET",
+          headers: {
+            apikey:
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2amp2aGpodnh3cGtvaGpxeGxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTI4Njg5NDQsImV4cCI6MjAwODQ0NDk0NH0.dwKxNDrr7Jw5OjeHgIbk8RLyvJuQVwZ_48Bv71P1n3Y", // Replace with your actual API key
+          },
+        }
+      );
+      const data = await response.json();
+      if (data?.length) {
+        setGeneratedImgList(await data);
+      }
+
+      // setImages(data); // Update the state with the fetched images
+      // setGeneratedImgList(data)
+
+      // if(data[0]?.prompt === prompt){
+
+      // }
+      return data;
+    } catch (error) {
+      console.error("Error fetching images:", error);
+    }
+  };
 
   return (
     <AppContext.Provider
       value={{
-
+        fetchGeneratedImages,
+        handileDownload,
         canvasInstance,
         addimgToCanvasGen,
         outerDivRef,
@@ -349,11 +400,15 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setActiveTab,
         activeTabHome,
         setActiveTabHome,
-        editorBox, setEditorBox,
+        editorBox,
+        setEditorBox,
         addEditorBoxToCanvas,
-        jobId, setJobId,
+        jobId,
+        setJobId,
         canvasHistoryRef,
-        currentStep, setCurrentStep,
+        currentStep,
+        setCurrentStep,
+        popupImage, setPopupImage,
 
         file,
         setFile,

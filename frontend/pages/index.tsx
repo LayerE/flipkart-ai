@@ -15,11 +15,28 @@ import Projects from "@/components/Projets/Projects";
 import { useAppState } from "@/context/app.context";
 import Tools from "@/components/Tools/Tools";
 import Gellery from "@/components/Gellery/Gellery";
+import AssetsDir from "@/components/AssetsDirectory";
+import { useAuth } from "@clerk/nextjs";
+import {useEffect} from "react"
+import PopupCard from "@/components/Popup/PopupCard";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
-  const { activeTabHome, setActiveTabHome } = useAppState();
+  const { userId } = useAuth();
+
+  const { activeTabHome, setActiveTabHome,popupImage } = useAppState();
+  useEffect(() => {
+
+    const getUser = localStorage.getItem("userId");
+    if(!getUser){
+      if(userId)
+      localStorage.setItem("userId", userId)
+
+    }
+  
+  }, [])
+  
   return (
     <MainPage>
       <motion.div
@@ -28,14 +45,20 @@ export default function Home() {
         variants={fadeIn}
         className="new"
       >
+        {
+          popupImage.status ? 
+          <PopupCard/>
+
+          :null
+        }
+
         <HomeSidebar />
 
         <div className="dashbaord">
           {activeTabHome === 1 ? (
-            
             <Projects />
           ) : activeTabHome === 2 ? (
-            <Projects />
+            <AssetsDir />
           ) : activeTabHome === 3 ? (
             <Gellery />
           ) : (
