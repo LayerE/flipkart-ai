@@ -46,7 +46,17 @@ export default function Home() {
 
     setGeneratedImgList,
   } = useAppState();
+  useEffect(() => {
 
+    const getUser = localStorage.getItem("userId");
+    if(!getUser){
+      if(userId)
+      localStorage.setItem("userId", userId)
+
+    }
+  
+  }, [])
+  
   useEffect(() => {
     console.log("render");
   }, [selectedImg, setSelectedImg, loader]);

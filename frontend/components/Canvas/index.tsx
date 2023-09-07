@@ -27,8 +27,11 @@ export default function CanvasBox() {
     regenerateRef,
     setRegeneratePopup,
     btnVisible,
+    previewBox,
+    generateBox,
   } = useAppState();
-
+  const [canvasZoom, setCanvasZoom] = useState(1);
+  const [canvasPosition, setCanvasPosition] = useState({ x: 0, y: 0 });
   const canvasRef = useRef(null);
 
   /* eslint-disable */
@@ -37,16 +40,18 @@ export default function CanvasBox() {
       canvasInstance.current = new fabric.Canvas(canvasRef.current, {
         width: window.innerWidth,
         height: window.innerHeight,
-        transparentCorners: false,
+        // transparentCorners: false,
         originX: "center",
         originY: "center",
       });
-      canvasHistoryRef.current.push(canvasInstance.current.toDatalessJSON());
-      setCurrentStep(0);
+      // canvasHistoryRef.current.push(canvasInstance.current.toDatalessJSON());
+      // setCurrentStep(0);
     }
     const canvasInstanceRef = canvasInstance.current;
-
+    fabric.Object.prototype.transparentCorners = false;
+    // fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
     // Add a custom method to the Fabric canvas prototype
+
     fabric.Canvas.prototype.getAbsoluteCoords = function (object) {
       return {
         left: object.left + this._offset.left,
@@ -56,6 +61,7 @@ export default function CanvasBox() {
 
     // Get references to the button element and set its initial position
     const btn = PosisionbtnRef.current;
+    const genBox = generateBox.current;
 
     // Load saved canvas data from local storage
     const savedCanvasData = localStorage.getItem("canvasData");
@@ -66,7 +72,6 @@ export default function CanvasBox() {
     }
 
     // Load and add an image to the canvas
- 
 
     // When a user clicks on an image on the canvas
     canvasInstanceRef.on("mouse:down", function (options) {
@@ -93,7 +98,7 @@ export default function CanvasBox() {
       height: 400,
       selectable: false,
       fill: "transparent",
-      stroke: "rgba(249, 208, 13, 1)",
+      // stroke: "rgba(249, 208, 13, 1)",
       strokeWidth: 1,
     });
 
@@ -116,7 +121,8 @@ export default function CanvasBox() {
       width: 380,
       height: 400,
       selectable: false,
-      fill: "rgba(249, 208, 13, 0.23)",
+      // fill: "rgba(249, 208, 13, 0.23)",
+      fill: "transparent",
     });
 
     canvasInstanceRef.add(imageGenRect);
@@ -134,6 +140,19 @@ export default function CanvasBox() {
       fill: "rgba(0, 0, 0, 1)",
     });
 
+    genBox.addEventListener("click", (e) => {
+      // Check if the pressed key is 'Delete' (code: 46) or 'Backspace' (code: 8) for wider compatibility
+      const dataURL = canvasInstanceRef.toDataURL({
+        format: "png",
+        left: parseInt(genBox.style.left),
+        top: parseInt(genBox.style.top),
+        width: parseInt(genBox.style.width),
+        height: parseInt(genBox.style.height),
+      });
+      // setDownloadImg(dataURL);
+      setDownloadImg(dataURL);
+    });
+
     newEditorBox.on("mousedown", function () {
       const originalStrokeColor = newEditorBox.stroke;
       const originalStrokeWidth = newEditorBox.strokeWidth;
@@ -142,15 +161,18 @@ export default function CanvasBox() {
       newEditorBox.set("stroke", "transparent");
       newEditorBox.set("strokeWidth", 0);
       canvasInstanceRef.renderAll();
+      console.log(parseInt(genBox.style.left), genBox.style.top);
+
       const dataURL = canvasInstanceRef.toDataURL({
         format: "png",
-        left: newEditorBox.left,
-        top: newEditorBox.top,
-        width: newEditorBox.width,
-        height: newEditorBox.height,
+        left: parseInt(genBox.style.left),
+        top: parseInt(genBox.style.top),
+        width: parseInt(genBox.style.width),
+        height: parseInt(genBox.style.height),
       });
-      setSelectedImg(dataURL);
+      // setDownloadImg(dataURL);
       setDownloadImg(dataURL);
+      setSelectedImg(dataURL);
 
       // Reset the rectangle's stroke properties
       newEditorBox.set("stroke", originalStrokeColor);
@@ -192,19 +214,24 @@ export default function CanvasBox() {
     });
 
     // Zoom and Pan event handlers
-    canvasInstanceRef.on("mouse:wheel", (opt) => {
-      const delta = opt.e.deltaY;
-      let zoom = canvasInstanceRef.getZoom();
-      zoom *= 0.999 ** delta;
-      if (zoom > 20) zoom = 20;
-      if (zoom < 0.01) zoom = 0.01;
-      canvasInstanceRef.zoomToPoint(
-        { x: canvasInstanceRef.width / 2, y: canvasInstanceRef.height / 2 },
-        zoom
-      );
-      opt.e.preventDefault();
-      opt.e.stopPropagation();
-    });
+    // canvasInstanceRef.on("mouse:wheel", (opt) => {
+    //   const delta = opt.e.deltaY;
+    //   let zoom = canvasInstanceRef.getZoom();
+    //   zoom *= 0.999 ** delta;
+    //   if (zoom > 20) zoom = 20;
+    //   if (zoom < 0.01) zoom = 0.01;
+    //   setCanvasZoom(zoom);
+    //   canvasInstanceRef.zoomToPoint(
+    //     { x: canvasInstanceRef.width / 2, y: canvasInstanceRef.height / 2 },
+    //     zoom
+    //   );
+    //   // setCanvasPosition({
+    //   //   x: canvasInstanceRef.viewportTransform[4],
+    //   //   y: canvasInstanceRef.viewportTransform[5],
+    //   // });
+    //   opt.e.preventDefault();
+    //   opt.e.stopPropagation();
+    // });
 
     document.addEventListener("keydown", (e) => {
       // Check if the pressed key is 'Delete' (code: 46) or 'Backspace' (code: 8) for wider compatibility
@@ -258,9 +285,35 @@ export default function CanvasBox() {
     localStorage.setItem("canvasData", canvasData);
   };
 
+  const generationBoxStyle = {
+    left: `${30 + canvasPosition.x}px`,
+    top: `${120 + canvasPosition.y}px`,
+    width: `${380 * canvasZoom}px`, // Adjust the width based on canvas zoom
+    height: `${400 * canvasZoom}px`, // Adjust the height based on canvas zoom
+  };
+  const PreviewBoxStyle = {
+    left: `${450 + canvasPosition.x}px`,
+    top: `${120 + canvasPosition.y}px`,
+    width: `${380 * canvasZoom}px`, // Adjust the width based on canvas zoom
+    height: `${400 * canvasZoom}px`, // Adjust the height based on canvas zoom
+    backgroundColor: "rgba(249, 208, 13, 0.23)",
+  };
+
   return (
     <Wrapper>
       <div className="convas-continer">
+        <div className="generationBox">
+          <div
+            className="leftbox"
+            ref={generateBox}
+            style={generationBoxStyle}
+          ></div>
+          <div
+            className="rightbox"
+            ref={previewBox}
+            style={PreviewBoxStyle}
+          ></div>
+        </div>
         <div id="inline-btn" ref={PosisionbtnRef}>
           <button className="selectone" onClick={() => bringImageToFront()}>
             Front
@@ -291,6 +344,25 @@ export default function CanvasBox() {
 }
 
 const Wrapper = styled.div`
+  .rightbox {
+  }
+  .leftbox,
+  .rightbox {
+    /* background-color: red; */
+    border: 1px solid rgba(249, 208, 13, 1);
+    pointer-events: none;
+    user-select: none;
+    width: 100px;
+    position: absolute;
+    /* z-index: 200; */
+  }
+  .generationBox {
+    /* border: 1px solid red; */
+    position: absolute;
+    /* z-index: 200; */
+    display: flex;
+    gap: 20px;
+  }
   #inline-btn {
     position: absolute;
     z-index: 200;

@@ -195,11 +195,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [popupImage, setPopupImage] = useState<object>({});
   const [regeneratePopup, setRegeneratePopup] = useState<object>({});
 
-
   const [generatedImgList, setGeneratedImgList] = useState<string[]>([]);
   const [jobId, setJobId] = useState<string[]>([]);
   const PosisionbtnRef = useRef(null);
   const regenerateRef = useRef(null);
+  const generateBox = useRef(null);
+  const previewBox = useRef(null);
 
   const [btnVisible, setBtnVisible] = useState(false);
   const handileDownload = (url: string) => {
@@ -250,6 +251,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       img.on("moving", () => {
         positionBtn(img);
       });
+      img.on("scaling", function () {
+        positionBtn(img);
+      });
       img.set("category", "mask");
 
       canvasInstance.current.add(img);
@@ -270,11 +274,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       const getRandomPosition = (max) => Math.floor(Math.random() * max);
 
       const randomLeft = getRandomPosition(
-        canvasInstance.current.width /2- img.width
+        canvasInstance.current.width / 2 - img.width
       );
-      const randomTop = getRandomPosition(
-        300
-      );
+      const randomTop = getRandomPosition(300);
       img.set({
         left: randomLeft,
         top: randomTop,
@@ -309,6 +311,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       img.on("moving", () => {
         positionBtn(img);
         RegeneratepositionBtn(img);
+      });
+      img.on("scaling", function () {
+        positionBtn(img);
       });
 
       img.on("mouseover", () => {
@@ -366,6 +371,10 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         scaledWidth = scaledHeight * imageAspectRatio;
       }
       img.on("moving", () => {
+        positionBtn(img);
+      });
+
+      img.on("scaling", function () {
         positionBtn(img);
       });
       img.scaleToWidth(scaledWidth);
@@ -449,12 +458,23 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     // console.log(promt);
     setLoader(true);
     setGenerationLoader(true);
+    const canvas1 = canvasInstance.current;
     try {
-      const canvas1 = canvasInstance.current;
+      const genBox = generateBox.current;
+      console.log(canvas1, "ssssssssssssss");
+
+      // canvas1.set({
+      //   left: 30,
+      //   top:200
+      // });
+      // canvas1.renderAll();
+      console.log(canvas1);
 
       // selectedImg // img url to generate images for the canvas
-      canvas1.renderAll();
+
       const objects = canvas1.getObjects();
+
+      console.log(objects);
       const maskObjects = [];
       const subjectObjects = [];
       objects.forEach((object) => {
@@ -467,34 +487,76 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           subjectObjects.push(object);
         }
       });
+      console.log(genBox.style.left, "dgfdg");
+      console.log(parseInt(genBox.style.top), "dgfdg");
 
       // Make image with only the mask objects
-      const maskCanvas = new fabric.StaticCanvas(null, {
-        width: 410,
-        height: 480,
-        top: 120,
-        left: 30,
+      const maskCanvas = new fabric.Canvas(null, {
+        // width: 410,
+        // height: 480,
+        // top: 120,
+        // left: 30,
+        left: parseInt(genBox.style.left),
+        top: parseInt(genBox.style.top),
+        width: parseInt(genBox.style.width),
+        height: parseInt(genBox.style.height),
       });
+      console.log(maskCanvas, "dgfdg");
+
       maskObjects.forEach((object) => {
+        // You can adjust the object's position relative to the canvas as needed
+        object.set({
+          left: object.left - parseInt(genBox.style.left),
+          top: object.top - parseInt(genBox.style.top),
+        });
         maskCanvas.add(object);
       });
       const maskDataUrl = maskCanvas.toDataURL("image/png");
 
       // Make image with only the subject objects
-      const subjectCanvas = new fabric.StaticCanvas(null, {
+      const subjectCanvas = new fabric.Canvas(null, {
         // width: canvas1.getWidth(),
         // height: canvas1.getHeight(),
-        width: 410,
-        height: 480,
-        top: 120,
-        left: 30,
+        // width: 410,
+        // height: 480,
+        // top: 120,
+        // left: 30,
+        left: parseInt(genBox.style.left),
+        top: parseInt(genBox.style.top),
+        width: parseInt(genBox.style.width),
+        height: parseInt(genBox.style.height),
       });
+      console.log(subjectCanvas, "dgfdg");
+
       subjectObjects.forEach((object) => {
+        object.set({
+          left: object.left - parseInt(genBox.style.left),
+          top: object.top - parseInt(genBox.style.top),
+        });
         subjectCanvas.add(object);
       });
 
       const subjectDataUrl = subjectCanvas.toDataURL("image/png");
-    
+
+      maskObjects.forEach((object) => {
+        // You can adjust the object's position relative to the canvas as needed
+        object.set({
+          left: object.left + parseInt(genBox.style.left),
+          top: object.top + parseInt(genBox.style.top),
+        });
+       
+      });
+      subjectObjects.forEach((object) => {
+        object.set({
+          left: object.left + parseInt(genBox.style.left),
+          top: object.top + parseInt(genBox.style.top),
+        });
+       
+      });
+
+      console.log(subjectDataUrl, "sub");
+      console.log(maskDataUrl, "mas");
+
       const promtText =
         product +
         ", " +
@@ -538,7 +600,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       setTimeout(async function () {
         const loadeImge = await fetchGeneratedImages();
 
-       
         setSelectedImg({
           status: true,
           image: loadeImge[0]?.modified_image_url,
@@ -563,13 +624,21 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       console.error("Error generating image:", error);
     } finally {
       setGenerationLoader(false);
+      // canvas1.set({
+      //   top: 0,
+      //   left: 0
+      // });
+      // canvas1.renderAll();
     }
   };
 
   return (
     <AppContext.Provider
       value={{
-        regeneratePopup, setRegeneratePopup,
+        previewBox,
+        generateBox,
+        regeneratePopup,
+        setRegeneratePopup,
         btnVisible,
         generateImageHandeler,
         setBtnVisible,
