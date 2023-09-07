@@ -28,6 +28,8 @@ export default function CanvasBox() {
     setRegeneratePopup,
     btnVisible,
     previewBox,
+    canvasHistory,
+    currentCanvasIndex,
     generateBox,
   } = useAppState();
   const [canvasZoom, setCanvasZoom] = useState(1);
@@ -44,8 +46,8 @@ export default function CanvasBox() {
         originX: "center",
         originY: "center",
       });
-      // canvasHistoryRef.current.push(canvasInstance.current.toDatalessJSON());
-      // setCurrentStep(0);
+      canvasHistory.current.push(canvasInstance.current.toDatalessJSON());
+      currentCanvasIndex.current++;
     }
     const canvasInstanceRef = canvasInstance.current;
     fabric.Object.prototype.transparentCorners = false;
@@ -61,6 +63,7 @@ export default function CanvasBox() {
 
     // Get references to the button element and set its initial position
     const btn = PosisionbtnRef.current;
+    const rebtn = regenerateRef.current
     const genBox = generateBox.current;
 
     // Load saved canvas data from local storage
@@ -251,10 +254,14 @@ export default function CanvasBox() {
     });
     canvasInstanceRef.on("selection:created", () => {
       btn.style.display = "block";
+      rebtn.style.display = "block";
+
     });
     canvasInstanceRef.on("selection:cleared", function () {
       setDownloadImg(null);
       btn.style.display = "none";
+      rebtn.style.display = "none";
+
       console.log(activeTab);
       if (activeTab === 5) {
         setActiveTab(1);
@@ -326,16 +333,17 @@ export default function CanvasBox() {
           id="inline-btn"
           className="regenrat"
           ref={regenerateRef}
-          style={{ display: btnVisible ? "block" : "none" }}
+          // style={{ display: btnVisible ? "block" : "none" }}
           onClick={() => {
             setRegeneratePopup({ status: true, url: "" });
+            setActiveTab(6)
             console.log("sdsfs");
           }}
         >
-          {/* <button>
+          <button className="selectone">
           Regenrate Product
 
-          </button> */}
+          </button>
         </div>
         <canvas ref={canvasRef} />
       </div>

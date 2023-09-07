@@ -78,7 +78,7 @@ const Edit = () => {
 
   function addColorOverlayToSelectedImage(color, mode) {
     const canvas = canvasInstance.current;
-    const activeObject = canvas.getActiveObject();
+    const activeObject = canvas?.getActiveObject();
 
     if (activeObject && activeObject.type === "image") {
       activeObject.filters = []; // Clear existing filters

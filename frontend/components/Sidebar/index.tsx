@@ -18,6 +18,7 @@ import Humans from "../Humans";
 import Element from "../Element";
 import ListOf from "../List OfProduct";
 import MagicEraser from "../MagicErase";
+import RegenratTab from "../RegenrateTab";
 const fadeIn = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 1 } },
@@ -194,9 +195,36 @@ const Sidebar: React.FC = () => {
                   </svg>{" "}
                   Magic Erase{" "}
                 </div>
-              ) : (
+              ) :  activeTab === 5  ? (
                 "Edit Image"
-              )}
+              ) : activeTab === 6  ? (
+                <div
+                  style={{
+                    cursor: "pointer",
+                    display: "flex",
+                    gap: "0px",
+                    justifyContent: "start",
+                    alignItems: "center",
+                  }}
+                  onClick={() => setViewMore({ status: false })}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    className="lucide lucide-chevron-left"
+                  >
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                  </svg>{" "}
+                  {"Regenrate" }{" "}
+                </div>
+              ) : null}
             </div>
             {activeTab === 1 ? (
               <Assets />
@@ -212,9 +240,13 @@ const Sidebar: React.FC = () => {
               <Humans />
             ) : activeTab === 5 && isMagic == true ? (
               <MagicEraser />
-            ) : (
+            ) :activeTab === 5? (
               <Edit />
-            )}
+            ): activeTab === 6?(
+              <RegenratTab/>
+            ): null
+          
+          }
           </motion.div>
         </div>
       </motion.div>

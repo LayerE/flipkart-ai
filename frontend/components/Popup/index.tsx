@@ -6,16 +6,16 @@ import Button from "../common/Button";
 import { useAppState } from "@/context/app.context";
 
 const PopupUpload = () => {
-  const { setPopup, popup, setUploadedProductlist,setProduct } = useAppState();
+  const { setPopup, popup, setUploadedProductlist, setProduct } = useAppState();
   const [productnew, setProductnew] = useState("");
 
   const HandileUpload = () => {
     if (productnew !== "") {
-        setUploadedProductlist((prev) => [
-            ...prev,
-            { url: popup?.data, tittle: productnew },
-        ]);
-        setProduct(productnew)
+      setUploadedProductlist((prev) => [
+        ...prev,
+        { url: popup?.data, tittle: productnew },
+      ]);
+      setProduct(productnew);
       setPopup({ status: false, data: null });
     }
   };
@@ -24,12 +24,15 @@ const PopupUpload = () => {
     <PopupWrapper>
       <div className="wrapper">
         <picture>
-        <img src={popup?.data} alt="" />
+          <img src={popup?.data} alt="" />
         </picture>
         <div className="test">
           <div>
             <Label>{"What's your product"}</Label>
-            <Input type="text" onChange={(e) => setProductnew(e.target.value)} />
+            <Input
+              type="text"
+              onChange={(e) => setProductnew(e.target.value)}
+            />
           </div>
           <Button onClick={HandileUpload}>Add image </Button>
         </div>

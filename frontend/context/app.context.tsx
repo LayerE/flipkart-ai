@@ -201,6 +201,10 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const regenerateRef = useRef(null);
   const generateBox = useRef(null);
   const previewBox = useRef(null);
+  const [regenratedImgsJobId, setRegenratedImgsJobid] = useState(null);
+
+  const canvasHistory = useRef([]);
+  const currentCanvasIndex = useRef(-1);
 
   const [btnVisible, setBtnVisible] = useState(false);
   const handileDownload = (url: string) => {
@@ -307,34 +311,55 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       //   // scaleX: scaleX,
       //   // scaleY: scaleY,
       // });
+      img.on("mouse:down", () => {
+        positionBtn(img);
+        // RegeneratepositionBtn(img);
+      });
 
       img.on("moving", () => {
         positionBtn(img);
-        RegeneratepositionBtn(img);
+        // RegeneratepositionBtn(img);
       });
       img.on("scaling", function () {
         positionBtn(img);
       });
 
-      img.on("mouseover", () => {
-        // regenerateRef.current.style.display = 'block';
-        setBtnVisible(true);
-      });
+      // img.on("mouseover", () => {
+      //   // regenerateRef.current.style.display = 'block';
+      //   setBtnVisible(true);
+      // });
 
       // Hide the button when moving the mouse away from the image
-      img.on("mouseout", (e) => {
-        // regenerateRef.current.style.display = 'none';
-        if (!e?.target?.containsPoint(e.e.clientX, e.e.clientY)) {
-          setBtnVisible(false);
-        }
-      });
+      // img.on("mouseout", (e) => {
+      //   // regenerateRef.current.style.display = 'none';
+      //   if (
+      //     e.e.clientX > regenerateRef.left ||
+      //     e.e.clientX < regenerateRef.left + regenerateRef.width ||
+      //     e.e.clientY > regenerateRef.top ||
+      //     e.e.clientY < regenerateRef.bottom
+      //   ) {
+      //     setBtnVisible(false);
+      //   } else {
+      //     setBtnVisible(true);
+      //   }
+      // });
       img.set("category", "subject");
       // canvasInstance.current.clear();
       canvasInstance.current.add(img);
       canvasInstance.current.setActiveObject(img);
       canvasInstance.current.renderAll();
+      saveCanvasState();
     });
   };
+
+  // Implement a function to save the current canvas state
+  const saveCanvasState = () => {
+    const canvasData = canvasInstance.current.toDatalessJSON();
+    canvasHistory.current.splice(currentCanvasIndex.current + 1);
+    canvasHistory.current.push(canvasData);
+    currentCanvasIndex.current++;
+  };
+
   function positionBtn(obj) {
     const btn = PosisionbtnRef.current;
     const absCoords = canvasInstance.current.getAbsoluteCoords(obj);
@@ -370,13 +395,43 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         scaledHeight = maxHeight;
         scaledWidth = scaledHeight * imageAspectRatio;
       }
+
+      img.on("mouse:down", () => {
+        positionBtn(img);
+        RegeneratepositionBtn(img);
+      });
+
       img.on("moving", () => {
         positionBtn(img);
+        RegeneratepositionBtn(img);
+
       });
 
       img.on("scaling", function () {
         positionBtn(img);
+        // RegeneratepositionBtn(img);
       });
+
+      // img.on("mouseover", () => {
+      //   RegeneratepositionBtn(img);
+
+      //   // regenerateRef.current.style.display = 'block';
+      //   setBtnVisible(true);
+      // });
+
+      // // Hide the button when moving the mouse away from the image
+      // img.on("mouseout", (e) => {
+      //   // regenerateRef.current.style.display = 'none';
+      //   if (
+      //     e.e.clientX < regenerateRef.left ||
+      //     e.e.clientX > regenerateRef.left + regenerateRef.width ||
+      //     e.e.clientY < regenerateRef.top ||
+      //     e.e.clientY > regenerateRef.bottom
+      //   ) {
+      //     setBtnVisible(false);
+      //   }
+      // });
+
       img.scaleToWidth(scaledWidth);
       img.scaleToHeight(scaledHeight);
       // Set the position of the image
@@ -526,7 +581,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         width: parseInt(genBox.style.width),
         height: parseInt(genBox.style.height),
       });
-      console.log(subjectCanvas, "dgfdg");
 
       subjectObjects.forEach((object) => {
         object.set({
@@ -544,14 +598,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           left: object.left + parseInt(genBox.style.left),
           top: object.top + parseInt(genBox.style.top),
         });
-       
       });
       subjectObjects.forEach((object) => {
         object.set({
           left: object.left + parseInt(genBox.style.left),
           top: object.top + parseInt(genBox.style.top),
         });
-       
       });
 
       console.log(subjectDataUrl, "sub");
@@ -594,6 +646,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         return false;
       } else {
         setJobId((pre) => [...pre, generate_response?.job_id]);
+        setRegenratedImgsJobid(generate_response?.job_id);
         localStorage.setItem("jobId", jobId);
       }
 
@@ -637,6 +690,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       value={{
         previewBox,
         generateBox,
+        canvasHistory,
+        currentCanvasIndex,
         regeneratePopup,
         setRegeneratePopup,
         btnVisible,

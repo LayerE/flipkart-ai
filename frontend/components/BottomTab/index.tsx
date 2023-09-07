@@ -12,7 +12,9 @@ const BottomTab = () => {
         setModifidImageArray,
         setSelectedImg,
         currentStep, setCurrentStep,
-        canvasHistoryRef
+        canvasHistoryRef,
+        canvasHistory,
+        currentCanvasIndex
       } = useAppState();
     
       // canvs
@@ -26,13 +28,11 @@ const BottomTab = () => {
 
 
     const handileUndo = () => {
-        if (currentStep > 0) {
-            setCurrentStep(currentStep - 1);
-            const canvasData = canvasHistoryRef.current[currentStep - 1];
-            canvasInstance.current.loadFromDatalessJSON(canvasData, () => {
-              canvasInstance.current.renderAll();
-            });
-          }
+      if (currentCanvasIndex.current > 0) {
+        currentCanvasIndex.current--;
+        canvasInstance.current.loadFromJSON(canvasHistory.current[currentCanvasIndex.current]);
+        canvasInstance.current.renderAll();
+      }
         // if (modifidImageArray.length > 1) {
         //   setUndoArray((pre) => [
         //     ...pre,
@@ -56,13 +56,11 @@ const BottomTab = () => {
         // }
       };
       const handilePre = () => {
-        if (currentStep < canvasHistoryRef.current.length - 1) {
-            setCurrentStep(currentStep + 1);
-            const canvasData = canvasHistoryRef.current[currentStep + 1];
-            canvasInstance.current.loadFromDatalessJSON(canvasData, () => {
-              canvasInstance.current.renderAll();
-            });
-          }
+        if (currentCanvasIndex.current < canvasHistory.current.length - 1) {
+          currentCanvasIndex.current++;
+          canvasInstance.current.loadFromJSON(canvasHistory.current[currentCanvasIndex.current]);
+          canvasInstance.current.renderAll();
+        }
         // if (undoArray.length > 0) {
         //   setModifidImageArray((pre) => [...pre, undoArray[undoArray.length - 1]]);
         //   setUndoArray((pre) => {
