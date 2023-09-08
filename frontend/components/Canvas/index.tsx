@@ -40,11 +40,11 @@ export default function CanvasBox() {
     GetProjexts,
     SaveProjexts,
     project,
-    canvasRef
+    // canvasRef
   } = useAppState();
   const [canvasZoom, setCanvasZoom] = useState(1);
   const [canvasPosition, setCanvasPosition] = useState({ x: 0, y: 0 });
-  // const canvasRef = useRef(null);
+  const canvasRef = useRef(null);
 
   /* eslint-disable */
   useEffect(() => {
@@ -55,10 +55,20 @@ export default function CanvasBox() {
         // transparentCorners: false,
         originX: "center",
         originY: "center",
+        renderOnAddRemove: false 
       });
+
+      fabric.util.enlivenObjects([{}, {}, {}], (objs) => {
+        objs.forEach((item) => {
+          canvasInstance.current.add(item);
+        });
+        canvasInstance.current.renderAll(); // Make sure to call this once you're ready!
+    });
+      canvasHistory.current.push(canvasInstance.current.toDatalessJSON());
+      currentCanvasIndex.current++;
     }
-    canvasHistory.current.push(canvasInstance.current.toDatalessJSON());
-    currentCanvasIndex.current++;
+
+
     const canvasInstanceRef = canvasInstance.current;
     fabric.Object.prototype.transparentCorners = false;
     // fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
@@ -116,8 +126,8 @@ export default function CanvasBox() {
       strokeWidth: 1,
     });
 
-    canvasInstanceRef.add(newEditorBox);
-    canvasInstanceRef.renderAll();
+    // canvasInstanceRef.add(newEditorBox);
+    // canvasInstanceRef.renderAll();
 
     const EditorBoxText = new fabric.Text("Place Your Product Here", {
       left: newEditorBox.left + 20, // center of the rectangle
@@ -288,12 +298,12 @@ export default function CanvasBox() {
     });
 
     return () => {
+      saveCanvasDataToLocal()
       window.removeEventListener("resize", null);
       // Clean up resources (if needed) when the component unmounts
-      //  canvasInstanceRef.dispose();
-      saveCanvasDataToLocal()
+      // canvasInstance?.current.dispose();
     };
-  }, []);
+  }, [canvasInstance.current]);
 
   useEffect(() => {}, []);
 
@@ -303,7 +313,8 @@ export default function CanvasBox() {
  // Serialize canvas data to JSON and save it to local storage
  const canvasData = JSON.stringify(canvasInstance.current.toJSON());
  localStorage.setItem("canvasData", canvasData);
- SaveProjexts(project,canvasData)
+ if(isReady)
+ SaveProjexts(userId, id,canvasData)
       
       
     // }
@@ -364,6 +375,7 @@ export default function CanvasBox() {
 
           </button>
         </div>
+        
         <canvas ref={canvasRef} />
       </div>
     </Wrapper>

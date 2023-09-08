@@ -131,7 +131,7 @@ router.post("/save/project", async function (req, res, next) {
   try {
     // const { id } = req.query;
     const { id, projectId, canvas } = req.body;
-console.log(id, projectId, canvas);
+console.log(id, projectId, canvas,"dfdf");
     const user = await Users.findOne({ userId: id });
     if (!user) {
       return res.json({

@@ -235,6 +235,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     }
   };
 
+  
 
   useEffect(() => {
     if (!canvasInstance.current) {
@@ -242,8 +243,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         width: window.innerWidth,
         height: window.innerHeight,
         // transparentCorners: false,
-        originX: "center",
-        originY: "center",
+        // originX: "center",
+        // originY: "center",
       });
       
     }
@@ -429,24 +430,35 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         return error;
       });
   };
-  const SaveProjexts = (project, canvas) => {
+  const SaveProjexts = async (userId, projectId, canvas) => {
     
     const json = JSON.stringify({
-      id: project?.userId,
-      projectId: project?.projectId,
+      id: userId,
+      projectId: projectId,
       canvas: canvas,
     });
+    try {
+      // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
+      const getUser = localStorage.getItem("userId");
+      console.log(getUser);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API}/save/project`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body:json,
+        }
+      );
+      return response.json();
 
-    axios
-      .post(`${process.env.NEXT_PUBLIC_API}/save/project`, json)
-      .then((response) => {
-        // setprojectlist(response.data)
-        return response.data;
-      })
-      .catch((error) => {
-        console.error(error);
-        return error;
-      });
+      // console.log(await response.json(), "dfvcvdfvdvcdsd");
+
+    } catch (error) {
+      // Handle error
+    }
+
   };
 
   function RegeneratepositionBtn(obj) {

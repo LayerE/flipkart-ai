@@ -25,9 +25,9 @@ const fadeIn = {
 
 export default function Home() {
   const { userId } = useAuth();
-  const {query,isReady} = useRouter();
+  const { query, isReady } = useRouter();
   // const { id } = query;
-  const id = (query.id as string[]) || []
+  const id = (query.id as string[]) || [];
 
   const {
     outerDivRef,
@@ -53,23 +53,17 @@ export default function Home() {
 
     setGeneratedImgList,
   } = useAppState();
+
   useEffect(() => {
     const getUser = localStorage.getItem("userId");
     if (!getUser) {
       if (userId) localStorage.setItem("userId", userId);
     }
-if(isReady){
-
-
-  GetProjextById(id);
-  
-}
-  
+    if (isReady) {
+      GetProjextById(id);
+    }
   }, [id]);
 
-  useEffect(() => {
-    console.log("render");
-  }, [selectedImg, setSelectedImg, loader]);
 
   const upateImage = (url) => {
     addimgToCanvasGen(url);
@@ -86,48 +80,32 @@ if(isReady){
   const [filteredArray, setFilteredArray] = useState([]);
 
   useEffect(() => {
-    if(isReady){
-    // Filter the array of objects based on the arrayOfIds
-    let filteredResult;
+    if (isReady) {
+      // Filter the array of objects based on the arrayOfIds
+      let filteredResult;
 
-    filteredResult = generatedImgList.filter((obj) =>
-      jobId.includes(obj?.task_id)
-    );
+      filteredResult = generatedImgList.filter((obj) =>
+        jobId.includes(obj?.task_id)
+      );
 
-    // Set the filtered array in the state
-    setFilteredArray(filteredResult);
-    const canvas1 = canvasInstance.current;
+      // Set the filtered array in the state
+      setFilteredArray(filteredResult);
+      const canvas1 = canvasInstance.current;
 
-    const objects = canvas1?.getObjects();
-    const subjectObjects = [];
-    objects?.forEach((object) => {
-      // If the object is a subject, add it to the subject objects array
-      if (object.category === "generated") {
-        subjectObjects.push(object);
+      const objects = canvas1?.getObjects();
+      const subjectObjects = [];
+      objects?.forEach((object) => {
+        // If the object is a subject, add it to the subject objects array
+        if (object.category === "generated") {
+          subjectObjects.push(object);
+        }
+      });
+
+      if (filteredResult?.length <= 4 && subjectObjects?.length <= 1) {
+        addimgToCanvasGen(filteredResult[0]?.modified_image_url);
       }
-    });
-    console.log(subjectObjects?.length )
-    
-    if(filteredResult?.length <= 4 && subjectObjects?.length <=1){
-
-      addimgToCanvasGen(filteredResult[0]?.modified_image_url)
-
     }
-  }
   }, [jobId, setGeneratedImgList, generatedImgList, regeneratePopup]);
-
-  // useEffect(() => {
-  //   let pollInterval;
-
-  //   if (userId) {
-
-  //     pollInterval = setInterval(() => {
-  //       console.log("polling", userId);
-  //       fetchImages(); // Fetch images every 10
-  //     }, 5000); // Adjust the interval as needed (e.g., 20000 for 20 seconds)
-  //   }
-
-  // }, [setGeneratedImgList, generatedImgList]); // Empty dependency array ensures the effect runs only once when the component mounts
 
   return (
     <MainPages>

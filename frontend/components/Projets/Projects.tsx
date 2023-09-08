@@ -34,13 +34,14 @@ const Projects = ({ onDelet }) => {
           }),
         }
       );
-      console.log(await response.json(), "dfvcvdfvdvcdsd");
+      // console.log(await response.json(), "dfvcvdfvdvcdsd");
+      const datares = await response.json()
       GetProjexts(getUser)
+      window.open(`/generate/${datares?._id}`, "_self");
     } catch (error) {
       // Handle error
     }
 
-    window.open("/generate", "_self");
   };
 
   const handleDelet = async (id:string) => {
@@ -94,14 +95,13 @@ const Projects = ({ onDelet }) => {
 
         {/* <Link href={"/"}> */}
         {projectlist?.map((item: any, i: number) => (
-          <a href={`/generate/${item._id}`}>
           <ProjectCard
-            key={i}
+            key={item._id}
             data={item}
             setProjects={setProjects}
             handleDelet={handleDelet}
           />
-          </a>
+        
         ))}
         {/* </Link> */}
       </ProjectWrapper>
