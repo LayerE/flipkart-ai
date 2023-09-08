@@ -1,10 +1,16 @@
 import React, { useRef, useState } from "react";
 import { useAppState } from "@/context/app.context";
-import { useEffect } from "react";
+import { useEffect ,useLayoutEffect } from "react";
 import { fabric } from "fabric";
 import { styled } from "styled-components";
+import { useRouter } from "next/router";
+import { useAuth } from "@clerk/nextjs";
 
 export default function CanvasBox() {
+  const { userId } = useAuth();
+  const {query,isReady} = useRouter();
+  // const { id } = query;
+  const id = (query.id as string[]) || []
   const {
     setSelectedImg,
     canvasInstance,
@@ -33,10 +39,12 @@ export default function CanvasBox() {
     generateBox,
     GetProjexts,
     SaveProjexts,
+    project,
+    canvasRef
   } = useAppState();
   const [canvasZoom, setCanvasZoom] = useState(1);
   const [canvasPosition, setCanvasPosition] = useState({ x: 0, y: 0 });
-  const canvasRef = useRef(null);
+  // const canvasRef = useRef(null);
 
   /* eslint-disable */
   useEffect(() => {
@@ -48,9 +56,9 @@ export default function CanvasBox() {
         originX: "center",
         originY: "center",
       });
-      canvasHistory.current.push(canvasInstance.current.toDatalessJSON());
-      currentCanvasIndex.current++;
     }
+    canvasHistory.current.push(canvasInstance.current.toDatalessJSON());
+    currentCanvasIndex.current++;
     const canvasInstanceRef = canvasInstance.current;
     fabric.Object.prototype.transparentCorners = false;
     // fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
@@ -69,9 +77,10 @@ export default function CanvasBox() {
     const genBox = generateBox.current;
 
     // Load saved canvas data from local storage
-    const savedCanvasData = localStorage.getItem("canvasData");
-    if (savedCanvasData) {
-      canvasInstanceRef.loadFromJSON(savedCanvasData, () => {
+    // const savedCanvasData = localStorage.getItem("canvasData");
+    const savedCanvas = project?.canvas
+    if (savedCanvas) {
+      canvasInstanceRef.loadFromJSON(savedCanvas, () => {
         canvasInstanceRef.renderAll();
       });
     }
@@ -289,9 +298,17 @@ export default function CanvasBox() {
   useEffect(() => {}, []);
 
   const saveCanvasDataToLocal = () => {
-    // Serialize canvas data to JSON and save it to local storage
-    const canvasData = JSON.stringify(canvasInstance.current.toJSON());
-    localStorage.setItem("canvasData", canvasData);
+    // if(isReady){
+
+ // Serialize canvas data to JSON and save it to local storage
+ const canvasData = JSON.stringify(canvasInstance.current.toJSON());
+ localStorage.setItem("canvasData", canvasData);
+ SaveProjexts(project,canvasData)
+      
+      
+    // }
+
+   
   };
 
   const generationBoxStyle = {

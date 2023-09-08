@@ -24,8 +24,8 @@ const fadeIn = {
 
 export default function Home() {
   const { userId } = useAuth();
-  const router = useRouter();
-  const { id } = router.query;
+  const  { query, isReady } = useRouter();
+  const { id } = query;
 
   const {
     outerDivRef,
@@ -55,8 +55,10 @@ export default function Home() {
     if (!getUser) {
       if (userId) localStorage.setItem("userId", userId);
     }
-
-    console.log(id,"sds")
+if(isReady){
+  
+  console.log(id,"sds")
+}
 
    const data =  GetProjextById(id);
     console.log(data, "dsfdsfs");
@@ -82,9 +84,11 @@ export default function Home() {
 
   useEffect(() => {
     // Filter the array of objects based on the arrayOfIds
+if(isReady){
+
     let filteredResult;
 
-    filteredResult = generatedImgList.filter((obj) =>
+    filteredResult = generatedImgList?.filter((obj) =>
       jobId.includes(obj?.task_id)
     );
 
@@ -92,9 +96,9 @@ export default function Home() {
     setFilteredArray(filteredResult);
     const canvas1 = canvasInstance.current;
 
-    const objects = canvas1.getObjects();
+    const objects = canvas1?.getObjects();
     const subjectObjects = [];
-    objects.forEach((object) => {
+    objects?.forEach((object) => {
       // If the object is a subject, add it to the subject objects array
       if (object.category === "generated") {
         subjectObjects.push(object);
@@ -105,6 +109,7 @@ export default function Home() {
     if (filteredResult?.length <= 4 && subjectObjects?.length <= 1) {
       addimgToCanvasGen(filteredResult[0]?.modified_image_url);
     }
+  }
   }, [jobId, setGeneratedImgList, generatedImgList, regeneratePopup]);
 
   // useEffect(() => {

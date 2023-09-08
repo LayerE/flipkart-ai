@@ -139,6 +139,20 @@ export const outlineStrength = [
 
 export const templets = [
   {
+    title:"luxurious House ",
+    image:
+      "https://chromaticlens.com/_next/image?url=%2Fplaces%2Fabstract.jpeg&w=256&q=75",
+    promt: "in front of luxurious house",
+    product: "",
+    placementType: "",
+    surroundingType: "",
+    backgroundType: "",
+    placement: " ",
+    surrounding: "",
+    background: "in front of luxurious house",
+  },
+  {
+    title:"Abstract ",
     image:
       "https://chromaticlens.com/_next/image?url=%2Fplaces%2Fabstract.jpeg&w=256&q=75",
     promt: "in an abstract background",
@@ -151,6 +165,8 @@ export const templets = [
     background: "",
   },
   {
+    title:" Fabric",
+
     image:
       "https://chromaticlens.com/_next/image?url=%2Fplaces%2Ffabric.jpeg&w=256&q=75",
     promt: "against a fabric background",
@@ -163,6 +179,8 @@ export const templets = [
     background: "",
   },
   {
+    title:"Minimal ",
+
     image:
       "https://chromaticlens.com/_next/image?url=%2Fplaces%2Fminimal.jpeg&w=256&q=75",
     promt: " in a minimalistic background",
@@ -176,6 +194,8 @@ export const templets = [
   },
  
   {
+    title:" Road",
+
     image:
       "https://chromaticlens.com/_next/image?url=%2Fplaces%2Froad.jpeg&w=256&q=75",
     promt: "on",
@@ -189,6 +209,8 @@ export const templets = [
       "",
   },
   {
+    title:" Stand",
+
     image:
       "https://chromaticlens.com/_next/image?url=%2Fplaces%2Fstand.jpeg&w=256&q=75",
     promt: "on a stand",
@@ -202,6 +224,8 @@ export const templets = [
       "",
   },
   {
+    title:" Stones",
+
     image:
       "https://chromaticlens.com/_next/image?url=%2Fplaces%2Fstones.jpeg&w=256&q=75",
     promt: "in a background of stones",
@@ -215,6 +239,8 @@ export const templets = [
       "",
   },
   {
+    title:"Table ",
+
     image:
       "https://chromaticlens.com/_next/image?url=%2Fplaces%2Ftable.jpeg&w=256&q=75",
     promt: "on a table",
@@ -228,6 +254,8 @@ export const templets = [
       "",
   },
   {
+    title:"Texture ",
+
     image:
       "https://chromaticlens.com/_next/image?url=%2Fplaces%2Ftexture.jpeg&w=256&q=75",
     promt: "against a textured background",
@@ -241,6 +269,8 @@ export const templets = [
       "",
   },
   {
+    title:"Wood ",
+
     image:
       "https://chromaticlens.com/_next/image?url=%2Fplaces%2Fwood.jpeg&w=256&q=75",
     promt: "against a wooden background",
@@ -254,6 +284,8 @@ export const templets = [
       "",
   },
   {
+    title:"Colorful ",
+
     image:
       "https://chromaticlens.com/_next/image?url=%2Fplaces%2Fcolorful.jpeg&w=256&q=75",
     promt: "against a colorful background",
@@ -267,6 +299,8 @@ export const templets = [
       "",
   },
   {
+    title:"Wall ",
+
     image:
       "https://chromaticlens.com/_next/image?url=%2Fplaces%2Fwall.jpeg&w=256&q=75",
     promt: "against a wall",
@@ -280,6 +314,8 @@ export const templets = [
       "",
   },
   {
+    title:"Beach ",
+
     image:
       "https://chromaticlens.com/_next/image?url=%2Fplaces%2Fbeach.jpeg&w=256&q=75",
     promt: "on a beach",

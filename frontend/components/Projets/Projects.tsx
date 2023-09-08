@@ -94,14 +94,14 @@ const Projects = ({ onDelet }) => {
 
         {/* <Link href={"/"}> */}
         {projectlist?.map((item: any, i: number) => (
-          <a href={`/generate/${item._id}`}>
+          <Link href={`/generate/${item._id}`}>
           <ProjectCard
             key={i}
             data={item}
             setProjects={setProjects}
             handleDelet={handleDelet}
           />
-          </a>
+          </Link>
         ))}
         {/* </Link> */}
       </ProjectWrapper>

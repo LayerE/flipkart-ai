@@ -208,6 +208,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
   const canvasHistory = useRef([]);
   const currentCanvasIndex = useRef(-1);
+  const canvasRef = useRef(null);
 
   const [btnVisible, setBtnVisible] = useState(false);
   const handileDownload = (url: string) => {
@@ -228,12 +229,42 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   };
 
   const addEditorBoxToCanvas = () => {
-    if (canvasInstance.current && editorBox) {
-      canvasInstance.current.add(editorBox);
-      canvasInstance.current.renderAll();
+    if (canvasInstance?.current && editorBox) {
+      canvasInstance?.current.add(editorBox);
+      canvasInstance?.current.renderAll();
     }
   };
 
+
+  useEffect(() => {
+    if (!canvasInstance.current) {
+      canvasInstance.current = new fabric.Canvas(canvasRef.current, {
+        width: window.innerWidth,
+        height: window.innerHeight,
+        // transparentCorners: false,
+        originX: "center",
+        originY: "center",
+      });
+      
+    }
+
+    
+    // Resize canvas when the window is resized
+    window.addEventListener("resize", () => {
+      canvasInstance.current.setDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    });
+    return () => {
+      window.removeEventListener("resize", null);
+      // Clean up resources (if needed) when the component unmounts
+      //  canvasInstanceRef.dispose();
+     
+    };
+   
+  }, [])
+  
   const addimgToCanvas = async (url: string) => {
     fabric.Image.fromURL(await getBase64FromUrl(url), function (img: any) {
       // Set the image's dimensions
@@ -245,10 +276,10 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       // Position the image to be in the center of the rectangle
       const getRandomPosition = (max) => Math.floor(Math.random() * max);
       const randomLeft = getRandomPosition(
-        canvasInstance.current.width / 2 - img.width
+        canvasInstance?.current.width / 2 - img.width
       );
       const randomTop = getRandomPosition(
-        canvasInstance.current.height - img.height
+        canvasInstance?.current.height - img.height
       );
       img.set({
         left: randomLeft,
@@ -264,8 +295,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       });
       img.set("category", "mask");
 
-      canvasInstance.current.add(img);
-      canvasInstance.current.renderAll();
+      canvasInstance?.current.add(img);
+      canvasInstance?.current.renderAll();
       saveCanvasState();
     });
   };
@@ -283,7 +314,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       const getRandomPosition = (max) => Math.floor(Math.random() * max);
 
       const randomLeft = getRandomPosition(
-        canvasInstance.current.width / 2 - img.width
+        canvasInstance?.current?.width / 2 - img.width
       );
       const randomTop = getRandomPosition(300);
       img.set({
@@ -350,24 +381,24 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       // });
       img.set("category", "subject");
       // canvasInstance.current.clear();
-      canvasInstance.current.add(img);
-      canvasInstance.current.setActiveObject(img);
-      canvasInstance.current.renderAll();
+      canvasInstance?.current?.add(img);
+      canvasInstance?.current?.setActiveObject(img);
+      canvasInstance?.current?.renderAll();
       saveCanvasState();
     });
   };
 
   // Implement a function to save the current canvas state
   const saveCanvasState = () => {
-    const canvasData = canvasInstance.current.toDatalessJSON();
-    canvasHistory.current.splice(currentCanvasIndex.current + 1);
-    canvasHistory.current.push(canvasData);
+    const canvasData = canvasInstance?.current?.toDatalessJSON();
+    canvasHistory?.current?.splice(currentCanvasIndex?.current + 1);
+    canvasHistory?.current?.push(canvasData);
     currentCanvasIndex.current++;
   };
 
   function positionBtn(obj) {
     const btn = PosisionbtnRef.current;
-    const absCoords = canvasInstance.current.getAbsoluteCoords(obj);
+    const absCoords = canvasInstance?.current.getAbsoluteCoords(obj);
     btn.style.left = absCoords.left - 370 - 80 / 2 + "px";
     btn.style.top = absCoords.top - 50 / 2 + "px";
   }
@@ -398,10 +429,11 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         return error;
       });
   };
-  const SaveProjexts = (getUser: string, projectId, canvas) => {
+  const SaveProjexts = (project, canvas) => {
+    
     const json = JSON.stringify({
-      id: getUser,
-      projectId: projectId,
+      id: project?.userId,
+      projectId: project?.projectId,
       canvas: canvas,
     });
 
@@ -419,7 +451,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
   function RegeneratepositionBtn(obj) {
     const btns = regenerateRef.current;
-    const absCoords = canvasInstance.current.getAbsoluteCoords(obj);
+    const absCoords = canvasInstance?.current.getAbsoluteCoords(obj);
     btns.style.left = absCoords.left - 280 - 80 / 2 + "px";
     btns.style.top = absCoords.top + 650 / 2 + "px";
   }
@@ -488,9 +520,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
       img.set("category", "generated");
       // canvasInstance.current.clear();
-      canvasInstance.current.add(img);
-      canvasInstance.current.setActiveObject(img);
-      canvasInstance.current.renderAll();
+      canvasInstance?.current.add(img);
+      canvasInstance?.current.setActiveObject(img);
+      canvasInstance?.current.renderAll();
       saveCanvasState();
     });
   };
@@ -536,7 +568,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   };
 
   const bringImageToFront = () => {
-    const activeObject = canvasInstance.current.getActiveObject();
+    const activeObject = canvasInstance?.current.getActiveObject();
     if (activeObject) {
       activeObject.sendBackwards();
 
@@ -740,6 +772,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       value={{
         previewBox,
         GetProjexts,
+        canvasRef,
         SaveProjexts,
         GetProjextById,
         project,

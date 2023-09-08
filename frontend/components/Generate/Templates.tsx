@@ -73,6 +73,7 @@ const Tamplates = () => {
                     <picture>
                       <img src={test?.image} alt="" />
                     </picture>
+                   
                   </div>
                 ))}
               </div>
@@ -102,6 +103,9 @@ const Tamplates = () => {
             <picture>
               <img src={test.image} alt="" />
             </picture>
+            <div className="head">
+                      {test?.title}
+                    </div>
           </div>
         ))}
       </ResponsiveRowWraptwo>
@@ -178,15 +182,23 @@ margin-bottom: 50px;
     /* height: 120px; */
 
     min-width: 150px !important;
-    height: 150px;
+    height: 180px;
     overflow: hidden;
     /* display: flex;
     align-items: center;
     justify-content: center; */
     picture{
       width: 100%;
-      height: 100%;
+      height: 80%;
     /* object-fit: cover; */
+
+    }
+    .head{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 10px;
+      font-weight: 500;
 
     }
 
