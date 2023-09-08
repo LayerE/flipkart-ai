@@ -40,7 +40,7 @@ const Projects = ({ onDelet }) => {
       // Handle error
     }
 
-    // window.open("/generate", "_self");
+    window.open("/generate", "_self");
   };
 
   const handleDelet = async (id:string) => {
@@ -94,14 +94,14 @@ const Projects = ({ onDelet }) => {
 
         {/* <Link href={"/"}> */}
         {projectlist?.map((item: any, i: number) => (
-          <Link href={`/generate/${item._id}`}>
+          <a href={`/generate/${item._id}`}>
           <ProjectCard
             key={i}
             data={item}
             setProjects={setProjects}
             handleDelet={handleDelet}
           />
-          </Link>
+          </a>
         ))}
         {/* </Link> */}
       </ProjectWrapper>
