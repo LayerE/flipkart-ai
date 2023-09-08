@@ -40,7 +40,7 @@ const HomeSidebar = () => {
   return (
     <HomSideWrapper className="sidebar">
       {TabData?.map((tab) => (
-        <div className={ activeTabHome === tab.id ? "tab active-tab" :"tab" } onClick={()=> setActiveTabHome(tab.id)}>
+        <div key={tab.id} className={ activeTabHome === tab.id ? "tab active-tab" :"tab" } onClick={()=> setActiveTabHome(tab.id)}>
           <Image src={tab.image} alt="" />
           {tab.tittle}
         </div>

@@ -1,13 +1,13 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Row } from "../common/Row";
 import Label from "../common/Label";
-import { FileUpload, FileUpload1 } from "../common/Input";
+import { FileUpload } from "../common/Input";
 import DropdownInput from "../common/Dropdown";
 import { styled } from "styled-components";
-import { category, test } from "@/store/dropdown";
+// import { category, test } from "@/store/dropdown";
 import { useAppState } from "@/context/app.context";
 import { productList } from "@/store/listOfElement";
-import { fabric } from "fabric";
+// import { fabric } from "fabric";
 
 const Assets: React.FC = () => {
   const {

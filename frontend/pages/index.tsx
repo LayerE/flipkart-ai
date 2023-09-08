@@ -21,45 +21,63 @@ import { useEffect } from "react";
 import PopupCard from "@/components/Popup/PopupCard";
 import axios from "axios";
 
-
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   const { userId } = useAuth();
 
-  const { activeTabHome, setActiveTabHome,activeTab, popupImage } = useAppState();
-  const fetchTask = async (getUser) => {
-    try {
-      // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
-
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API}/user?id=${getUser}`,
-        {
-          method: "GET",
-        }
-      );
-      console.log(response,"dfdsd");
-
-    } catch (error) {
-      // Handle error
-    }
-  };
-
+  const { activeTabHome, setActiveTabHome, activeTab, popupImage , projectlist, setprojectlist} =
+    useAppState();
 
 
 
   useEffect(() => {
     const getUser = localStorage.getItem("userId");
     if (!getUser) {
+      setTimeout(() => {}, 3000);
       if (userId) localStorage.setItem("userId", userId);
     }
-   
-    fetchTask(getUser)
-    setTimeout(() => {
-      
-    }, 3000);
+    axios.get(  `${process.env.NEXT_PUBLIC_API}/user?id=${getUser}`)
+      .then((response) => {
+     
+        console.log(response)
+      })
+      .catch((error) => {
+        console.error(error);
+      });
 
-  }, [activeTab]);
+ 
+
+  }, []);
+  useEffect(() => {
+    const getUser = localStorage.getItem("userId");
+    if (!getUser) {
+      if (userId) localStorage.setItem("userId", userId);
+    }
+  
+
+    fetchData(getUser)
+
+  }, []);
+
+  const fetchData = (getUser:string) => {
+    axios.get(  `${process.env.NEXT_PUBLIC_API}/getprojects?id=${getUser}`)
+    .then((response) => {
+      setprojectlist(response.data)
+      console.log(response.data)
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  };
+
+  const handleDelete = () => {
+  
+
+    // Update the list of items by fetching data again
+    fetchData(userId);
+    console.log("dsfs", userId)
+  }
 
 
   return (
@@ -76,7 +94,7 @@ export default function Home() {
 
         <div className="dashbaord">
           {activeTabHome === 1 ? (
-            <Projects />
+            <Projects onDelet={handleDelete}/>
           ) : activeTabHome === 2 ? (
             <AssetsDir />
           ) : activeTabHome === 3 ? (

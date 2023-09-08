@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useRef, useEffect } from "react";
 import { fabric } from "fabric";
 import { useAuth } from "@clerk/nextjs";
 import { saveAs } from "file-saver";
+import axios from "axios";
 
 type ContextProviderProps = {
   children: React.ReactNode;
@@ -194,6 +195,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [popup, setPopup] = useState<object>({});
   const [popupImage, setPopupImage] = useState<object>({});
   const [regeneratePopup, setRegeneratePopup] = useState<object>({});
+  const [projectlist, setprojectlist] = useState<object[]>([]);
+  const [project, setproject] = useState<object[]>([]);
 
   const [generatedImgList, setGeneratedImgList] = useState<string[]>([]);
   const [jobId, setJobId] = useState<string[]>([]);
@@ -230,6 +233,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       canvasInstance.current.renderAll();
     }
   };
+
   const addimgToCanvas = async (url: string) => {
     fabric.Image.fromURL(await getBase64FromUrl(url), function (img: any) {
       // Set the image's dimensions
@@ -241,7 +245,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       // Position the image to be in the center of the rectangle
       const getRandomPosition = (max) => Math.floor(Math.random() * max);
       const randomLeft = getRandomPosition(
-        canvasInstance.current.width/2 - img.width
+        canvasInstance.current.width / 2 - img.width
       );
       const randomTop = getRandomPosition(
         canvasInstance.current.height - img.height
@@ -263,7 +267,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       canvasInstance.current.add(img);
       canvasInstance.current.renderAll();
       saveCanvasState();
-
     });
   };
   const addimgToCanvasSubject = async (url: string) => {
@@ -369,6 +372,51 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     btn.style.top = absCoords.top - 50 / 2 + "px";
   }
 
+  const GetProjexts = (getUser: string) => {
+    axios
+      .get(`${process.env.NEXT_PUBLIC_API}/getprojects?id=${getUser}`)
+      .then((response) => {
+        setprojectlist(response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        console.error(error);
+        return error;
+      });
+  };
+  const GetProjextById = (getUser: string) => {
+    axios
+      .get(`${process.env.NEXT_PUBLIC_API}/project?id=${getUser}`)
+      .then((response) => {
+        setproject(response.data);
+        console.log(response.data);
+
+        return response.data;
+      })
+      .catch((error) => {
+        console.error(error);
+        return error;
+      });
+  };
+  const SaveProjexts = (getUser: string, projectId, canvas) => {
+    const json = JSON.stringify({
+      id: getUser,
+      projectId: projectId,
+      canvas: canvas,
+    });
+
+    axios
+      .post(`${process.env.NEXT_PUBLIC_API}/save/project`, json)
+      .then((response) => {
+        // setprojectlist(response.data)
+        return response.data;
+      })
+      .catch((error) => {
+        console.error(error);
+        return error;
+      });
+  };
+
   function RegeneratepositionBtn(obj) {
     const btns = regenerateRef.current;
     const absCoords = canvasInstance.current.getAbsoluteCoords(obj);
@@ -406,7 +454,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       img.on("moving", () => {
         positionBtn(img);
         RegeneratepositionBtn(img);
-
       });
 
       img.on("scaling", function () {
@@ -445,7 +492,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       canvasInstance.current.setActiveObject(img);
       canvasInstance.current.renderAll();
       saveCanvasState();
-
     });
   };
   const canvasHistoryRef = useRef([]);
@@ -693,6 +739,11 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     <AppContext.Provider
       value={{
         previewBox,
+        GetProjexts,
+        SaveProjexts,
+        GetProjextById,
+        project,
+        setproject,
         generateBox,
         canvasHistory,
         currentCanvasIndex,
@@ -704,6 +755,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         PosisionbtnRef,
         regenerateRef,
         bringImageToFront,
+        projectlist,
+        setprojectlist,
         sendImageToBack,
         fetchGeneratedImages,
         handileDownload,

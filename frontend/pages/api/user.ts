@@ -1,10 +1,10 @@
 // pages/api/create.js
 
-import connectDB from "@/lib/db";
+// import connectDB from "@/lib/db";
 import Users from "@/models/Users";
 // import type { NextResponse, NextRequest } from 'next'
 
-connectDB();
+// connectDB();
 
 
 

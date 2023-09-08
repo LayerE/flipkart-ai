@@ -1,129 +1,99 @@
-import React,{useState, useRef, useEffect} from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { styled } from "styled-components";
 import assets from "@/public/assets";
 
+const ProjectCard = ({ data, setProjects, handleDelet }) => {
+  const [open, setopen] = useState(false);
+  const [rename, setRename] = useState(false);
+  const inputRef = useRef(null);
 
-const ProjectCard = ({data, setProjects, deletF}) => {
+  const [projectName, setProjectName] = useState(data.title);
 
-    const [open, setopen] = useState(false)
-    const [rename, setRename] = useState(false)
-    const inputRef = useRef(null);
+  const handleRename = () => {
+    setTimeout(() => {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }, 100);
 
+    setopen(false);
+  };
 
-    const [projectName, setProjectName] = useState("Unttitled Project")
+  const handleDeletFun = async (id) => {
+    // deleteDataByObjectIdFromLocalArray('Projects', data.id)
+    await handleDelet(id);
+    setopen(false);
+  };
 
-    const handleRename = ()=>{
-        setTimeout(() => {
-            inputRef.current.focus();
-            inputRef.current.select();
-            
-        }, 100);
-
-      
-        setopen(false)
-    }
-
-
-const handleDelet = async (id)=>{
-  // deleteDataByObjectIdFromLocalArray('Projects', data.id)
-  await deletF(id); 
-  setopen(false)
-
- 
-
-}
-
-const fetchTask = async (getUser) => {
-  try {
-    // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
-
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API}/getprojects?id=${getUser}`,
-      {
-        method: "DELETE",
-
-      }
-    );
-    setProjects(await response.json())
-
-   
-  } catch (error) {
-    // Handle error
-  }
-};
-
-useEffect(() => {
-  const getUser = localStorage.getItem("userId");
-
-  setTimeout(() => {
-    fetchTask(getUser);
-
-  }, 300);
-}, []);
   return (
     <CardWrapper className="projectfile">
       <div className="testcreat">
         <div className="pro-name">
-            <input ref={inputRef}  type="text" value={projectName} onChange={(e)=> setProjectName(e.target.value)}  disabled={rename !== true? true : false}/>
+          <input
+            ref={inputRef}
+            type="text"
+            value={projectName}
+            onChange={(e) => setProjectName(e.target.value)}
+            disabled={rename !== true ? true : false}
+          />
         </div>
-        <div className="edit" >
-          <div onClick={()=> setopen(!open)}>
-          <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M19 16a3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3zm0 13a3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3zm0-26a3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3z"
-              fill="#747474"
-            />
-          </svg>
+        <div className="edit">
+          <div onClick={() => setopen(!open)}>
+            <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M19 16a3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3zm0 13a3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3zm0-26a3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3z"
+                fill="#747474"
+              />
+            </svg>
           </div>
-          {
-            open &&
+          {open && (
             <div className="openbox">
-            <div className="items" onClick={()=>{
-        setRename(true);
-        handleRename()}}>
-              <div className="icon">
-                <svg
-                  width="15"
-                  height="15"
-                  viewBox="0 0 15 15"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M11.8536 1.14645C11.6583 0.951184 11.3417 0.951184 11.1465 1.14645L3.71455 8.57836C3.62459 8.66832 3.55263 8.77461 3.50251 8.89155L2.04044 12.303C1.9599 12.491 2.00189 12.709 2.14646 12.8536C2.29103 12.9981 2.50905 13.0401 2.69697 12.9596L6.10847 11.4975C6.2254 11.4474 6.3317 11.3754 6.42166 11.2855L13.8536 3.85355C14.0488 3.65829 14.0488 3.34171 13.8536 3.14645L11.8536 1.14645ZM4.42166 9.28547L11.5 2.20711L12.7929 3.5L5.71455 10.5784L4.21924 11.2192L3.78081 10.7808L4.42166 9.28547Z"
-                    fill="currentColor"
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                  ></path>
-                </svg>
+              <div
+                className="items"
+                onClick={() => {
+                  setRename(true);
+                  handleRename();
+                }}
+              >
+                <div className="icon">
+                  <svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 15 15"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M11.8536 1.14645C11.6583 0.951184 11.3417 0.951184 11.1465 1.14645L3.71455 8.57836C3.62459 8.66832 3.55263 8.77461 3.50251 8.89155L2.04044 12.303C1.9599 12.491 2.00189 12.709 2.14646 12.8536C2.29103 12.9981 2.50905 13.0401 2.69697 12.9596L6.10847 11.4975C6.2254 11.4474 6.3317 11.3754 6.42166 11.2855L13.8536 3.85355C14.0488 3.65829 14.0488 3.34171 13.8536 3.14645L11.8536 1.14645ZM4.42166 9.28547L11.5 2.20711L12.7929 3.5L5.71455 10.5784L4.21924 11.2192L3.78081 10.7808L4.42166 9.28547Z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                </div>
+                <div className="text">Rename</div>
               </div>
-              <div className="text">Rename</div>
-            </div>
-            <div className="items"
-            onClick={()=> handleDelet(data._id)}
-            >
-              <div className="icon">
-                <svg
-                  width="15"
-                  height="15"
-                  viewBox="0 0 15 15"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="text-zinc-300"
-                >
-                  <path
-                    d="M5.5 1C5.22386 1 5 1.22386 5 1.5C5 1.77614 5.22386 2 5.5 2H9.5C9.77614 2 10 1.77614 10 1.5C10 1.22386 9.77614 1 9.5 1H5.5ZM3 3.5C3 3.22386 3.22386 3 3.5 3H5H10H11.5C11.7761 3 12 3.22386 12 3.5C12 3.77614 11.7761 4 11.5 4H11V12C11 12.5523 10.5523 13 10 13H5C4.44772 13 4 12.5523 4 12V4L3.5 4C3.22386 4 3 3.77614 3 3.5ZM5 4H10V12H5V4Z"
-                    fill="currentColor"
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                  ></path>
-                </svg>
+              <div className="items" onClick={() => handleDeletFun(data._id)}>
+                <div className="icon">
+                  <svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 15 15"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="text-zinc-300"
+                  >
+                    <path
+                      d="M5.5 1C5.22386 1 5 1.22386 5 1.5C5 1.77614 5.22386 2 5.5 2H9.5C9.77614 2 10 1.77614 10 1.5C10 1.22386 9.77614 1 9.5 1H5.5ZM3 3.5C3 3.22386 3.22386 3 3.5 3H5H10H11.5C11.7761 3 12 3.22386 12 3.5C12 3.77614 11.7761 4 11.5 4H11V12C11 12.5523 10.5523 13 10 13H5C4.44772 13 4 12.5523 4 12V4L3.5 4C3.22386 4 3 3.77614 3 3.5ZM5 4H10V12H5V4Z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                </div>
+                <div className="text">Delete</div>
               </div>
-              <div className="text">Delete</div>
             </div>
-          </div>
-          }
-        
+          )}
         </div>
       </div>
     </CardWrapper>
@@ -144,23 +114,18 @@ const CardWrapper = styled.div`
     border: 1px solid #f9d00d;
   }
 
-  input{
+  input {
     /* border: ; */
     background-color: transparent;
     width: 120px;
     border: none;
-    &:hover{
-    border: none;
-    background-color: transparent;
-    outline: none;
-
-
-
+    &:hover {
+      border: none;
+      background-color: transparent;
+      outline: none;
     }
-    &:focus-visible{
-    border: none !important;
-
-
+    &:focus-visible {
+      border: none !important;
     }
   }
   .testcreat {
@@ -201,16 +166,14 @@ const CardWrapper = styled.div`
       bottom: 30px;
       background: #ffffff;
 
-
-      .items{
+      .items {
         display: flex;
-      border-radius: 7px;
-transition: all 0.3s ease; 
+        border-radius: 7px;
+        transition: all 0.3s ease;
         gap: 10px;
         padding: 10px 10px;
-        &:hover{
-            background: #e3e3e3;
-
+        &:hover {
+          background: #e3e3e3;
         }
       }
     }

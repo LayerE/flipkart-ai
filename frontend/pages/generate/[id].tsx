@@ -16,6 +16,7 @@ import { useAuth } from "@clerk/nextjs";
 import assert from "assert";
 import assets from "@/public/assets";
 import Regeneret from "@/components/Popup/Regeneret";
+import { useRouter } from "next/router";
 
 const fadeIn = {
   hidden: { opacity: 0 },
@@ -24,6 +25,8 @@ const fadeIn = {
 
 export default function Home() {
   const { userId } = useAuth();
+  const router = useRouter();
+  const { id } = router.query;
 
   const {
     outerDivRef,
@@ -40,6 +43,10 @@ export default function Home() {
     fetchGeneratedImages,
     regeneratePopup,
     generateImageHandeler,
+    SaveProjexts,
+    project,
+    GetProjextById,
+    setproject,
 
     jobId,
 
@@ -50,6 +57,9 @@ export default function Home() {
     if (!getUser) {
       if (userId) localStorage.setItem("userId", userId);
     }
+
+    const data =  GetProjextById(id);
+    console.log(data, "dsfdsfs");
   }, []);
 
   useEffect(() => {

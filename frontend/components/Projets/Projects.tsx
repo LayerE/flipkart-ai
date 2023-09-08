@@ -5,21 +5,16 @@ import Link from "next/link";
 import assets from "@/public/assets";
 import ProjectCard from "./ProjectCard";
 import { useAppState } from "@/context/app.context";
+import { useAuth } from "@clerk/nextjs";
 const fadeIn = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 0.5 } },
 };
 
-const Projects = () => {
+const Projects = ({ onDelet }) => {
   const [projects, setProjects] = useState([]);
-  // const [projects, setProjects] = useState([]);
-
-  const {
-    activeTab,
-  
-  } = useAppState();
-
-
+  const { userId } = useAuth();
+  const { activeTab,setprojectlist, projectlist, GetProjexts } = useAppState();
 
   const handleCreate = async () => {
     try {
@@ -39,71 +34,36 @@ const Projects = () => {
           }),
         }
       );
-
       console.log(await response.json(), "dfvcvdfvdvcdsd");
-      fetchTask(getUser)
+      GetProjexts(getUser)
     } catch (error) {
       // Handle error
     }
 
-    window.open("/generate", "_self");
+    // window.open("/generate", "_self");
   };
 
-  const fetchTask = async (getUser) => {
+  const handleDelet = async (id:string) => {
     try {
       // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
 
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API}/getprojects?id=${getUser}`,
-        {
-          method: "GET",
-
-        }
-      );
-      setProjects(await response.json());
-
- 
-    } catch (error) {
-      // Handle error
-    }
-  };
-  const deletF =async (id)=>{
-    try {
-      // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
-  
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API}/project?id=${id}`,
         {
           method: "DELETE",
-  
         }
       );
-     
+
       const getUser = localStorage.getItem("userId");
-  
-      console.log(await response.json(), "dfvcvdfvdvcdsd");
-      fetchTask(getUser);
-  
+
+      GetProjexts(getUser)
+
     } catch (error) {
       // Handle error
     }
-  }
+  };
 
-  useEffect(() => {
-    const getUser = localStorage.getItem("userId");
 
-    setTimeout(() => {
-      fetchTask(getUser);
-
-    }, 300);
-  }, [setProjects,projects,activeTab]);
- 
-  // useEffect(() => {
-  // const projectdata = getLocalStorageArray('Projects')
-  // if(projectdata)
-  //   setProjects(projectdata)
-
-  // }, [setProjects])
 
   return (
     <motion.div
@@ -133,8 +93,15 @@ const Projects = () => {
         </div>
 
         {/* <Link href={"/"}> */}
-        {projects?.map((item, i) => (
-          <ProjectCard key={i} data={item} setProjects={setProjects} deletF={deletF} />
+        {projectlist?.map((item: any, i: number) => (
+          <a href={`/generate/${item._id}`}>
+          <ProjectCard
+            key={i}
+            data={item}
+            setProjects={setProjects}
+            handleDelet={handleDelet}
+          />
+          </a>
         ))}
         {/* </Link> */}
       </ProjectWrapper>
@@ -145,8 +112,8 @@ const Projects = () => {
 export default Projects;
 
 const ProjectWrapper = styled.div`
-width: 100%;
-height: 100%;
+  width: 100%;
+  height: 100%;
   display: grid;
   /* grid-template-columns: 1fr 1fr 1fr 1fr; */
   grid-template-rows: 1fr 1fr 1fr 1fr;

@@ -66,14 +66,7 @@ router.get("/project", async function (req, res, next) {
       });
     }
 
-    // const user = await Users.findOne({ userId: id });
-    // if (!user) {
-    //   return res.json({
-    //     error: "user not found",
-    //   });
-    // }
-
-    const project = await Users.findOne({ _id: id });
+    const project = await Projects.findOne({ _id: id });
 
     return res.json(project);
   } catch (error) {
@@ -90,7 +83,7 @@ router.delete("/project", async function (req, res, next) {
         error: "Missing _id query parameter",
       });
     }
-console.log(id)
+    console.log(id)
     const deletedProject = await Projects.findOneAndDelete({ _id: id });
 
     if (!deletedProject) {
@@ -109,16 +102,7 @@ console.log(id)
 
 router.post("/project", async function (req, res, next) {
   try {
-    // const { id } = req.query;
     const { id, title } = req.body;
-
-    // if (!id) {
-    //   return res.json({
-    //     error: "Missing data query parameter",
-    //   });
-    // }
-    console.log(title, id)
-
     const user = await Users.findOne({ userId: id });
     if (!user) {
       return res.json({
@@ -141,6 +125,43 @@ router.post("/project", async function (req, res, next) {
     return res.json({ error: "Server error" });
   }
 });
+
+
+router.post("/save/project", async function (req, res, next) {
+  try {
+    // const { id } = req.query;
+    const { id, projectId, canvas } = req.body;
+
+    const user = await Users.findOne({ userId: id });
+    if (!user) {
+      return res.json({
+        error: "user not found",
+      });
+    }
+
+
+    const updateDB = await Projects.findOneAndUpdate(
+      { userId: id, _id: projectId },
+      {
+        $set: {
+          canvas: canvas,
+        },
+      }
+    );
+    if (!updateDB) {
+      console.log("Product Update Failed", updateDB);
+      return res.status(400).json({
+        error: "User Update Failed",
+      });
+    }
+
+    return res.json(updateDB);
+  } catch (error) {
+    return res.json({ error: "Server error" });
+  }
+});
+
+
 router.get("/user", async function (req, res, next) {
   try {
   } catch (error) {

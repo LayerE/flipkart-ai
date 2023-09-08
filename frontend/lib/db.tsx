@@ -1,29 +1,19 @@
-// mongodb.js
+// utils/db.js
 
-import { MongoClient } from 'mongodb';
+import mongoose from 'mongoose';
 
-let client;
-// const uri = 'mongodb://localhost:27017'; // Your MongoDB URI
-const uri = process.env.DB
-
-async function connectToDatabase() {
-  if (!client) {
-    client = new MongoClient(uri, {
+const connectDB = async () => {
+    const url = process.env.DB
+  try {
+    await mongoose.connect("mongodb://mongo:0ETKIT9O2UYwmLjWCzna@containers-us-west-78.railway.app:5542", {
+      dbName: 'flipkart',
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-
-    try {
-      await client.connect();
-      console.log('Connected to MongoDB');
-    } catch (error) {
-      console.error('Error connecting to MongoDB:', error);
-    }
+    console.log('MongoDB Connected');
+  } catch (error) {
+    console.error('MongoDB Connection Failed:', error);
   }
-  return client;
-}
+};
 
-export async function getDatabase() {
-  return connectToDatabase();
-}
-
+export default connectDB;

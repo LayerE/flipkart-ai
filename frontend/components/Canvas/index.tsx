@@ -31,6 +31,8 @@ export default function CanvasBox() {
     canvasHistory,
     currentCanvasIndex,
     generateBox,
+    GetProjexts,
+    SaveProjexts,
   } = useAppState();
   const [canvasZoom, setCanvasZoom] = useState(1);
   const [canvasPosition, setCanvasPosition] = useState({ x: 0, y: 0 });
