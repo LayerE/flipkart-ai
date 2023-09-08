@@ -97,8 +97,8 @@ export default function CanvasBox() {
     const newEditorBox = new fabric.Rect({
       left: 30,
       top: 120,
-      width: 380,
-      height: 400,
+      width: 340,
+      height: 380,
       selectable: false,
       fill: "transparent",
       // stroke: "rgba(249, 208, 13, 1)",
@@ -119,16 +119,16 @@ export default function CanvasBox() {
     });
     canvasInstanceRef.add(EditorBoxText);
     const imageGenRect = new fabric.Rect({
-      left: 450,
+      left: 400,
       top: 120,
-      width: 380,
-      height: 400,
+      width: 340,
+      height: 380,
       selectable: false,
       // fill: "rgba(249, 208, 13, 0.23)",
       fill: "transparent",
     });
 
-    canvasInstanceRef.add(imageGenRect);
+    // canvasInstanceRef.add(imageGenRect);
 
     const imageGenText = new fabric.Text("Generated image will appear here", {
       left: 450 + 20,
@@ -280,7 +280,7 @@ export default function CanvasBox() {
       window.removeEventListener("resize", null);
       // Clean up resources (if needed) when the component unmounts
       //  canvasInstanceRef.dispose();
-      // saveCanvasDataToLocal()
+      saveCanvasDataToLocal()
     };
   }, []);
 
@@ -295,14 +295,14 @@ export default function CanvasBox() {
   const generationBoxStyle = {
     left: `${30 + canvasPosition.x}px`,
     top: `${120 + canvasPosition.y}px`,
-    width: `${380 * canvasZoom}px`, // Adjust the width based on canvas zoom
-    height: `${400 * canvasZoom}px`, // Adjust the height based on canvas zoom
+    width: `${340 * canvasZoom}px`, // Adjust the width based on canvas zoom
+    height: `${380 * canvasZoom}px`, // Adjust the height based on canvas zoom
   };
   const PreviewBoxStyle = {
-    left: `${450 + canvasPosition.x}px`,
+    left: `${400 + canvasPosition.x}px`,
     top: `${120 + canvasPosition.y}px`,
-    width: `${380 * canvasZoom}px`, // Adjust the width based on canvas zoom
-    height: `${400 * canvasZoom}px`, // Adjust the height based on canvas zoom
+    width: `${340 * canvasZoom}px`, // Adjust the width based on canvas zoom
+    height: `${380 * canvasZoom}px`, // Adjust the height based on canvas zoom
     backgroundColor: "rgba(249, 208, 13, 0.23)",
   };
 

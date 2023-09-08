@@ -17,26 +17,51 @@ import Tools from "@/components/Tools/Tools";
 import Gellery from "@/components/Gellery/Gellery";
 import AssetsDir from "@/components/AssetsDirectory";
 import { useAuth } from "@clerk/nextjs";
-import {useEffect} from "react"
+import { useEffect } from "react";
 import PopupCard from "@/components/Popup/PopupCard";
+import axios from "axios";
+
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   const { userId } = useAuth();
 
-  const { activeTabHome, setActiveTabHome,popupImage } = useAppState();
-  useEffect(() => {
+  const { activeTabHome, setActiveTabHome,activeTab, popupImage } = useAppState();
+  const fetchTask = async (getUser) => {
+    try {
+      // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
 
-    const getUser = localStorage.getItem("userId");
-    if(!getUser){
-      if(userId)
-      localStorage.setItem("userId", userId)
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API}/user?id=${getUser}`,
+        {
+          method: "GET",
+        }
+      );
+      console.log(response,"dfdsd");
 
+    } catch (error) {
+      // Handle error
     }
-  
-  }, [])
-  
+  };
+
+
+
+
+  useEffect(() => {
+    const getUser = localStorage.getItem("userId");
+    if (!getUser) {
+      if (userId) localStorage.setItem("userId", userId);
+    }
+   
+    fetchTask(getUser)
+    setTimeout(() => {
+      
+    }, 3000);
+
+  }, [activeTab]);
+
+
   return (
     <MainPage>
       <motion.div
@@ -45,12 +70,7 @@ export default function Home() {
         variants={fadeIn}
         className="new"
       >
-        {
-          popupImage.status ? 
-          <PopupCard/>
-
-          :null
-        }
+        {popupImage.status ? <PopupCard /> : null}
 
         <HomeSidebar />
 

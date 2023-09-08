@@ -1,9 +1,9 @@
-import React,{useState, useRef} from "react";
+import React,{useState, useRef, useEffect} from "react";
 import { styled } from "styled-components";
 import assets from "@/public/assets";
 
 
-const ProjectCard = () => {
+const ProjectCard = ({data, setProjects, deletF}) => {
 
     const [open, setopen] = useState(false)
     const [rename, setRename] = useState(false)
@@ -24,6 +24,42 @@ const ProjectCard = () => {
     }
 
 
+const handleDelet = async (id)=>{
+  // deleteDataByObjectIdFromLocalArray('Projects', data.id)
+  await deletF(id); 
+  setopen(false)
+
+ 
+
+}
+
+const fetchTask = async (getUser) => {
+  try {
+    // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
+
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API}/getprojects?id=${getUser}`,
+      {
+        method: "DELETE",
+
+      }
+    );
+    setProjects(await response.json())
+
+   
+  } catch (error) {
+    // Handle error
+  }
+};
+
+useEffect(() => {
+  const getUser = localStorage.getItem("userId");
+
+  setTimeout(() => {
+    fetchTask(getUser);
+
+  }, 300);
+}, []);
   return (
     <CardWrapper className="projectfile">
       <div className="testcreat">
@@ -63,7 +99,9 @@ const ProjectCard = () => {
               </div>
               <div className="text">Rename</div>
             </div>
-            <div className="items">
+            <div className="items"
+            onClick={()=> handleDelet(data._id)}
+            >
               <div className="icon">
                 <svg
                   width="15"

@@ -233,7 +233,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const addimgToCanvas = async (url: string) => {
     fabric.Image.fromURL(await getBase64FromUrl(url), function (img: any) {
       // Set the image's dimensions
-      img.scaleToWidth(200);
+      img.scaleToWidth(150);
       // img.scaleToHeight(150);
       // Scale the image to have the same width and height as the rectangle
       // const scaleX = downloadRect.width / img.width;
@@ -241,7 +241,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       // Position the image to be in the center of the rectangle
       const getRandomPosition = (max) => Math.floor(Math.random() * max);
       const randomLeft = getRandomPosition(
-        canvasInstance.current.width - img.width
+        canvasInstance.current.width/2 - img.width
       );
       const randomTop = getRandomPosition(
         canvasInstance.current.height - img.height
@@ -262,6 +262,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
       canvasInstance.current.add(img);
       canvasInstance.current.renderAll();
+      saveCanvasState();
+
     });
   };
   const addimgToCanvasSubject = async (url: string) => {
@@ -298,8 +300,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         scaledWidth = scaledHeight * imageAspectRatio;
       }
 
-      img.scaleToWidth(scaledWidth);
-      img.scaleToHeight(scaledHeight);
+      img.scaleToWidth(200);
+      img.scaleToHeight(250);
       // img.scaleToHeight(150);
       // Scale the image to have the same width and height as the rectangle
       // const scaleX = downloadRect.width / img.width;
@@ -363,23 +365,23 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   function positionBtn(obj) {
     const btn = PosisionbtnRef.current;
     const absCoords = canvasInstance.current.getAbsoluteCoords(obj);
-    btn.style.left = absCoords.left - 310 - 80 / 2 + "px";
-    btn.style.top = absCoords.top - 20 / 2 + "px";
+    btn.style.left = absCoords.left - 370 - 80 / 2 + "px";
+    btn.style.top = absCoords.top - 50 / 2 + "px";
   }
 
   function RegeneratepositionBtn(obj) {
     const btns = regenerateRef.current;
     const absCoords = canvasInstance.current.getAbsoluteCoords(obj);
-    btns.style.left = absCoords.left - 310 - 80 / 2 + "px";
-    btns.style.top = absCoords.top + 600 / 2 + "px";
+    btns.style.left = absCoords.left - 280 - 80 / 2 + "px";
+    btns.style.top = absCoords.top + 650 / 2 + "px";
   }
 
   const addimgToCanvasGen = async (url: string) => {
     fabric.Image.fromURL(await getBase64FromUrl(url), function (img: any) {
       // Set the image's dimensions
       img.scaleToWidth(200);
-      const canvasWidth = 360;
-      const canvasHeight = 400;
+      const canvasWidth = 340;
+      const canvasHeight = 380;
       const imageAspectRatio = img.width / img.height;
 
       // Calculate the maximum width and height based on the canvas size
@@ -435,13 +437,15 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       img.scaleToWidth(scaledWidth);
       img.scaleToHeight(scaledHeight);
       // Set the position of the image
-      img.set({ left: 450, top: 120 });
+      img.set({ left: 400, top: 120 });
 
       img.set("category", "generated");
       // canvasInstance.current.clear();
       canvasInstance.current.add(img);
       canvasInstance.current.setActiveObject(img);
       canvasInstance.current.renderAll();
+      saveCanvasState();
+
     });
   };
   const canvasHistoryRef = useRef([]);

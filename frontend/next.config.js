@@ -6,6 +6,10 @@ const nextConfig = {
   compiler: {
     styledComponents: true,
   },
+  // experimental: {
+  //   esmExternals: "loose", // <-- add this
+  //   serverComponentsExternalPackages: ["mongoose"] // <-- and this
+  // },
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -18,6 +22,7 @@ const nextConfig = {
       "node_modules",
       "styled-components"
     );
+    
     return config;
   },
 }

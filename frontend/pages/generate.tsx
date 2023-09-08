@@ -80,6 +80,23 @@ export default function Home() {
 
     // Set the filtered array in the state
     setFilteredArray(filteredResult);
+    const canvas1 = canvasInstance.current;
+
+    const objects = canvas1.getObjects();
+    const subjectObjects = [];
+    objects.forEach((object) => {
+      // If the object is a subject, add it to the subject objects array
+      if (object.category === "generated") {
+        subjectObjects.push(object);
+      }
+    });
+    console.log(subjectObjects?.length )
+    
+    if(filteredResult?.length <= 4 && subjectObjects?.length <=1){
+
+      addimgToCanvasGen(filteredResult[0]?.modified_image_url)
+
+    }
   }, [jobId, setGeneratedImgList, generatedImgList, regeneratePopup]);
 
   // useEffect(() => {

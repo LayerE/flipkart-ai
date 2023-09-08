@@ -1,15 +1,110 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { styled } from "styled-components";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import assets from "@/public/assets";
 import ProjectCard from "./ProjectCard";
+import { useAppState } from "@/context/app.context";
 const fadeIn = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 0.5 } },
 };
 
 const Projects = () => {
+  const [projects, setProjects] = useState([]);
+  // const [projects, setProjects] = useState([]);
+
+  const {
+    activeTab,
+  
+  } = useAppState();
+
+
+
+  const handleCreate = async () => {
+    try {
+      // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
+      const getUser = localStorage.getItem("userId");
+      console.log(getUser);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API}/project?id=${getUser}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title: "Untitle",
+            id: getUser,
+          }),
+        }
+      );
+
+      console.log(await response.json(), "dfvcvdfvdvcdsd");
+      fetchTask(getUser)
+    } catch (error) {
+      // Handle error
+    }
+
+    window.open("/generate")
+  };
+
+  const fetchTask = async (getUser) => {
+    try {
+      // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API}/getprojects?id=${getUser}`,
+        {
+          method: "GET",
+
+        }
+      );
+      setProjects(await response.json());
+
+ 
+    } catch (error) {
+      // Handle error
+    }
+  };
+  const deletF =async (id)=>{
+    try {
+      // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
+  
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API}/project?id=${id}`,
+        {
+          method: "DELETE",
+  
+        }
+      );
+     
+      const getUser = localStorage.getItem("userId");
+  
+      console.log(await response.json(), "dfvcvdfvdvcdsd");
+      fetchTask(getUser);
+  
+    } catch (error) {
+      // Handle error
+    }
+  }
+
+  useEffect(() => {
+    const getUser = localStorage.getItem("userId");
+
+    setTimeout(() => {
+      fetchTask(getUser);
+
+    }, 300);
+  }, [setProjects,projects,activeTab]);
+ 
+  // useEffect(() => {
+  // const projectdata = getLocalStorageArray('Projects')
+  // if(projectdata)
+  //   setProjects(projectdata)
+
+  // }, [setProjects])
+
   return (
     <motion.div
       initial="hidden"
@@ -18,29 +113,30 @@ const Projects = () => {
       className="new"
     >
       <ProjectWrapper className="gridebox">
-        <a href={"/generate"}>
-          <div className="createbox">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="14"
-              height="14"
-              viewBox="0 0 14 14"
-              fill="none"
-            >
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M7 0C7.26522 0 7.51957 0.105357 7.70711 0.292893C7.89464 0.48043 8 0.734784 8 1V6H13C13.2652 6 13.5196 6.10536 13.7071 6.29289C13.8946 6.48043 14 6.73478 14 7C14 7.26522 13.8946 7.51957 13.7071 7.70711C13.5196 7.89464 13.2652 8 13 8H8V13C8 13.2652 7.89464 13.5196 7.70711 13.7071C7.51957 13.8946 7.26522 14 7 14C6.73478 14 6.48043 13.8946 6.29289 13.7071C6.10536 13.5196 6 13.2652 6 13V8H1C0.734784 8 0.48043 7.89464 0.292893 7.70711C0.105357 7.51957 0 7.26522 0 7C0 6.73478 0.105357 6.48043 0.292893 6.29289C0.48043 6.10536 0.734784 6 1 6H6V1C6 0.734784 6.10536 0.48043 6.29289 0.292893C6.48043 0.105357 6.73478 0 7 0Z"
-                fill="#585858"
-              />
-            </svg>
+        <div className="createbox" onClick={handleCreate}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 14 14"
+            fill="none"
+          >
+            <path
+              fillRule="evenodd"
+              clipRule="evenodd"
+              d="M7 0C7.26522 0 7.51957 0.105357 7.70711 0.292893C7.89464 0.48043 8 0.734784 8 1V6H13C13.2652 6 13.5196 6.10536 13.7071 6.29289C13.8946 6.48043 14 6.73478 14 7C14 7.26522 13.8946 7.51957 13.7071 7.70711C13.5196 7.89464 13.2652 8 13 8H8V13C8 13.2652 7.89464 13.5196 7.70711 13.7071C7.51957 13.8946 7.26522 14 7 14C6.73478 14 6.48043 13.8946 6.29289 13.7071C6.10536 13.5196 6 13.2652 6 13V8H1C0.734784 8 0.48043 7.89464 0.292893 7.70711C0.105357 7.51957 0 7.26522 0 7C0 6.73478 0.105357 6.48043 0.292893 6.29289C0.48043 6.10536 0.734784 6 1 6H6V1C6 0.734784 6.10536 0.48043 6.29289 0.292893C6.48043 0.105357 6.73478 0 7 0Z"
+              fill="#585858"
+            />
+          </svg>
 
-            <div className="testcreat">Create new project</div>
-          </div>
-        </a>
+          <div className="testcreat">Create new project</div>
+        </div>
+
         {/* <Link href={"/"}> */}
-              <ProjectCard />
-            {/* </Link> */}
+        {projects?.map((item, i) => (
+          <ProjectCard key={i} data={item} setProjects={setProjects} deletF={deletF} />
+        ))}
+        {/* </Link> */}
       </ProjectWrapper>
     </motion.div>
   );
@@ -49,11 +145,14 @@ const Projects = () => {
 export default Projects;
 
 const ProjectWrapper = styled.div`
+width: 100%;
+height: 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  gap: 12px;
- 
+  /* grid-template-columns: 1fr 1fr 1fr 1fr; */
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+  /* grid-template-rows: repeat(auto-fill, minmax(100px, 1fr)); */
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
 
   .createbox {
     cursor: pointer;
