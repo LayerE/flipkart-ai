@@ -46,7 +46,7 @@ const Projects = () => {
       // Handle error
     }
 
-    window.open("/generate")
+    window.open("/generate", "_self");
   };
 
   const fetchTask = async (getUser) => {
