@@ -3,7 +3,7 @@ const path = require("path");
 
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
+
   compiler: {
     styledComponents: true,
   },
@@ -11,10 +11,10 @@ const nextConfig = {
   //   esmExternals: "loose", // <-- add this
   //   serverComponentsExternalPackages: ["mongoose"] // <-- and this
   // },
-  experimental: {
-    serverComponentsExternalPackages: ['fabric'],
-    appDir: true,
-  },
+  // experimental: {
+  //   serverComponentsExternalPackages: ['fabric'],
+  //   appDir: true,
+  // },
   typescript: {
     ignoreBuildErrors: true,
   },

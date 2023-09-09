@@ -64,7 +64,7 @@ export default function Home() {
       GetProjextById(id);
     }
     
-  }, [id,project]);
+  }, [id]);
 
 
   const upateImage = (url) => {
@@ -80,7 +80,7 @@ export default function Home() {
     // addimgToCanvasGen(url);
   };
   const [filteredArray, setFilteredArray] = useState([]);
-  const [canva, setcanva] = useState(1);
+  
 
 
 
@@ -94,8 +94,7 @@ export default function Home() {
       filteredResult = generatedImgList.filter((obj) =>
         jobId?.includes(obj?.task_id)
       );
-console.log(canva)
-setcanva(canva+1)
+
       // Set the filtered array in the state
       setFilteredArray(filteredResult);
       const canvas1 = canvasInstance.current;
@@ -118,7 +117,7 @@ setcanva(canva+1)
       setprojectId(null)
 
     }
-  }, [jobId, setGeneratedImgList, generatedImgList, regeneratePopup,project]);
+  }, [jobId, setGeneratedImgList, generatedImgList, regeneratePopup]);
 
   return (
     <MainPages>

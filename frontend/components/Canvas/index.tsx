@@ -8,6 +8,7 @@ import { styled } from "styled-components";
 import { useRouter } from "next/router";
 import { useAuth } from "@clerk/nextjs";
 import axios from "axios";
+import Loader from "../Loader";
 
 export default function CanvasBox({ proid, userId }) {
   // const { userId } = useAuth();
@@ -48,6 +49,8 @@ export default function CanvasBox({ proid, userId }) {
 
     // canvasRef
   } = useAppState();
+
+  const [loadercarna, setloadercarna] = useState(false);
   const [canvasZoom, setCanvasZoom] = useState(1);
   const [canvasPosition, setCanvasPosition] = useState({ x: 0, y: 0 });
   const canvasRef = useRef(null);
@@ -110,20 +113,14 @@ export default function CanvasBox({ proid, userId }) {
       });
     });
 
-    return () => {
   
-      // canvasInstance?.current?.dispose()
-      // window.removeEventListener("resize", null);
-      // saveCanvasDataToLocal();
-      // Clean up resources (if needed) when the component unmounts
-      // canvasInstance?.current.dispose();
-    };
   }, [isReady,canvasInstance]);
 
   // Load canvas data from the database when the component mounts
   useEffect(() => {
     // Fetch canvas data from your API and load it into the canvas
     const canvasInstanceRef = canvasInstance.current;
+    setloadercarna(true)
     if (isReady) {
       axios
         .get(`${process.env.NEXT_PUBLIC_API}/project?id=${proid}`)
@@ -134,6 +131,7 @@ export default function CanvasBox({ proid, userId }) {
               JSON.stringify(response.data.canvas),
               canvasInstanceRef.requestRenderAll.bind(canvasInstanceRef)
             );
+            setloadercarna(false)
             // canvasInstanceRef.loadFromJSON(savedCanvasDataLocal, () => {
             //   canvasInstanceRef.renderAll();
             // });
@@ -142,15 +140,14 @@ export default function CanvasBox({ proid, userId }) {
 
         .catch((error) => {
           console.error(error);
+          setloadercarna(false)
+
           return error;
         });
 
-        return () => {
-          // canvasInstance.current.dispose();
-          // saveCanvasToDatabase()
-        };
+       
     }
-  }, [canvas,isReady]);
+  }, [isReady]);
 
   useEffect(() => {
     const canvasInstanceRef = canvasInstance.current;
@@ -327,7 +324,7 @@ export default function CanvasBox({ proid, userId }) {
       // canvasInstance.current.dispose();
       // saveCanvasToDatabase()
     };
-  }, [project,isReady,canvasInstance]);
+  }, [project, isReady,canvasInstance]);
 
   const saveCanvasToDatabase = () => {
     const canvasData = canvasInstance.current.toJSON();
@@ -381,6 +378,10 @@ export default function CanvasBox({ proid, userId }) {
 
   return (
     <Wrapper>
+      {
+        loadercarna ? 
+        <Loader/>:
+null}
       <div className="convas-continer">
         <div className="generationBox">
           <div
@@ -417,12 +418,13 @@ export default function CanvasBox({ proid, userId }) {
           <button className="selectone">Regenrate Product</button>
         </div>
 
-        <div className="ss" onClick={() => saveCanvasToDatabase()}>
-  <picture><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAYFBMVEX///8AAAD4+Pjv7+8aGhoTExOYmJiTk5P09PQICAiQkJD6+vp/f39WVlbGxsaurq5ubm6FhYUnJye8vLwfHx9oaGjR0dHq6urg4OB1dXWkpKS2trY0NDQpKSlNTU1fX19H7sBTAAADJUlEQVR4nO3d224iMRBFUbo7QLhDrkwyM/n/vxwhTR5AUDbUsV1Ee78iFSw5pIliN6MRERERERERERERERERxWvRn29xy7CTGVc9WqR+vVu9dOeb3jLwZMYx4vHk0YnEYNVPni7o6gi7uYRxuWeDpxHOEsLbniO7pQ2sIixK3CaAdYQFiakVrCUsRky8BysKC/266dPAasIyqziNJCyxir11HawvLLCK6wxgTaF+FXfRhPJVXIUTildxcenDdkOhdhVzrhXVhdJVjClUEoMKhcSoQh0xrFBGjCtUEQMLRReNyELNKoYWSoixhQpicKGAGF3oJ4YXuonxhd6Lxh0Inat4D0LfKt6FsPP88w0hQoQIf5Aw9V/uexTOp0cd7+f4EUIzhAjzQ4jw1hDWFur3D0QT/pLJvnsPJny4aYOp1UcwYfcpo/0vZ49LVaHrOc40vwpYRfh7kOlG1/6M1hF240/Ze3Gf3O3ZRNh1f17nE0HLv9f6qgkbhhBh/BAijB9ChPFDiDB+CBHGDyHC+CFEGD+ECOOHEGH8ECKMH0KE8UOIMH5VhF+bN+mWmtHwtvmKIxxPtbrvhsk4hnBbxndoyNo9VFq4kXnOtWkvfJZhzpdxv7iywrIreCi9ikWFWxnkcsn3YlFhjbvDFn0RqeHl7w17aNJQ+ChTWKV27hcUvsoQdq/NhB8yg11iW3RB4V5msNs3E77LDHaJAyblhLNyH0iPG1oJx9WE9t8YCK0Qygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxPC/VCnfSth91Ar+2V4hHnf6dy4F9ctjLO+l7txKw8w77vVG7dzCdetX35Ga5ewv+7+7y16cp7bmbYGJPOe2wl/EnjmXMKs839NE5x/XLY2mC39wIzzfw0TnX+Me1GUrOCh51lryvmEZ5D7Sbzr4tNUe4C1X+9WcT6Gv6x26xIHdBd9lORfTkRERERERERERERERESC/gF2IVePB+evpwAAAABJRU5ErkJggg==" alt="" /></picture>
+        <div className="ss" >
+  <picture><img onClick={() => saveCanvasToDatabase()} src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAYFBMVEX///8AAAD4+Pjv7+8aGhoTExOYmJiTk5P09PQICAiQkJD6+vp/f39WVlbGxsaurq5ubm6FhYUnJye8vLwfHx9oaGjR0dHq6urg4OB1dXWkpKS2trY0NDQpKSlNTU1fX19H7sBTAAADJUlEQVR4nO3d224iMRBFUbo7QLhDrkwyM/n/vxwhTR5AUDbUsV1Ee78iFSw5pIliN6MRERERERERERERERERxWvRn29xy7CTGVc9WqR+vVu9dOeb3jLwZMYx4vHk0YnEYNVPni7o6gi7uYRxuWeDpxHOEsLbniO7pQ2sIixK3CaAdYQFiakVrCUsRky8BysKC/266dPAasIyqziNJCyxir11HawvLLCK6wxgTaF+FXfRhPJVXIUTildxcenDdkOhdhVzrhXVhdJVjClUEoMKhcSoQh0xrFBGjCtUEQMLRReNyELNKoYWSoixhQpicKGAGF3oJ4YXuonxhd6Lxh0Inat4D0LfKt6FsPP88w0hQoQIf5Aw9V/uexTOp0cd7+f4EUIzhAjzQ4jw1hDWFur3D0QT/pLJvnsPJny4aYOp1UcwYfcpo/0vZ49LVaHrOc40vwpYRfh7kOlG1/6M1hF240/Ze3Gf3O3ZRNh1f17nE0HLv9f6qgkbhhBh/BAijB9ChPFDiDB+CBHGDyHC+CFEGD+ECOOHEGH8ECKMH0KE8UOIMH5VhF+bN+mWmtHwtvmKIxxPtbrvhsk4hnBbxndoyNo9VFq4kXnOtWkvfJZhzpdxv7iywrIreCi9ikWFWxnkcsn3YlFhjbvDFn0RqeHl7w17aNJQ+ChTWKV27hcUvsoQdq/NhB8yg11iW3RB4V5msNs3E77LDHaJAyblhLNyH0iPG1oJx9WE9t8YCK0Qygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxPC/VCnfSth91Ar+2V4hHnf6dy4F9ctjLO+l7txKw8w77vVG7dzCdetX35Ga5ewv+7+7y16cp7bmbYGJPOe2wl/EnjmXMKs839NE5x/XLY2mC39wIzzfw0TnX+Me1GUrOCh51lryvmEZ5D7Sbzr4tNUe4C1X+9WcT6Gv6x26xIHdBd9lORfTkRERERERERERERERESC/gF2IVePB+evpwAAAABJRU5ErkJggg==" alt="" /></picture>
         </div>
 
         <canvas ref={canvasRef} />
       </div>
+            }
     </Wrapper>
   );
 }
@@ -432,8 +434,12 @@ const Wrapper = styled.div`
     position: absolute;
     bottom: 10px;
     left: 20px;
-    z-index: 1000;
+    z-index: 400;
     cursor: pointer;
+    width: 25px;
+    height: 25px;
+
+
     transition: all 0.2s ease-in-out;
     &:hover{
       transform: scale(1.1);

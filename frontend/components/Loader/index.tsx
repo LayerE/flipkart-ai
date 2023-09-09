@@ -18,9 +18,9 @@ export default Loader;
 const DaoderWarpper = styled.div`
 width: 100%;
 height: 100vh;
-position: fixed;
-z-index: 10000;
-background-color: #e4d8d83b;
+position: absolute;
+z-index: 1000;
+background-color: #ffffff;
 display: flex;
 justify-content: center;
 align-items: center;
