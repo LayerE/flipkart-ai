@@ -85,7 +85,7 @@ export default function Home() {
       let filteredResult;
 
       filteredResult = generatedImgList.filter((obj) =>
-        jobId.includes(obj?.task_id)
+        jobId?.includes(obj?.task_id)
       );
 
       // Set the filtered array in the state
@@ -149,7 +149,7 @@ export default function Home() {
                 {loader ? null : (
                   <div
                     className="itemsadd"
-                    onClick={() => generateImageHandeler()}
+                    onClick={() => generateImageHandeler(userId, id)}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -187,7 +187,7 @@ export default function Home() {
             </div>
             
           </div> */}
-          <CanvasBox />
+          <CanvasBox proid={id} userId={userId} />
         </div>
       </motion.div>
     </MainPages>

@@ -1,16 +1,17 @@
 import React, { useRef, useState } from "react";
 import { useAppState } from "@/context/app.context";
-import { useEffect ,useLayoutEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import { fabric } from "fabric";
 import { styled } from "styled-components";
 import { useRouter } from "next/router";
 import { useAuth } from "@clerk/nextjs";
+import axios from "axios";
 
-export default function CanvasBox() {
-  const { userId } = useAuth();
-  const {query,isReady} = useRouter();
+export default function CanvasBox({ proid, userId }) {
+  // const { userId } = useAuth();
+  const { query, isReady } = useRouter();
   // const { id } = query;
-  const id = (query.id as string[]) || []
+  const id = (query.id as string[]) || [];
   const {
     setSelectedImg,
     canvasInstance,
@@ -26,6 +27,7 @@ export default function CanvasBox() {
     canvasHistoryRef,
     currentStep,
     setCurrentStep,
+    GetProjextById,
     setEditorBox,
     bringImageToFront,
     sendImageToBack,
@@ -45,7 +47,7 @@ export default function CanvasBox() {
   const [canvasZoom, setCanvasZoom] = useState(1);
   const [canvasPosition, setCanvasPosition] = useState({ x: 0, y: 0 });
   const canvasRef = useRef(null);
-
+  const [canvas, setCanvas] = useState(null);
   /* eslint-disable */
   useEffect(() => {
     if (!canvasInstance.current) {
@@ -55,20 +57,13 @@ export default function CanvasBox() {
         // transparentCorners: false,
         originX: "center",
         originY: "center",
-        renderOnAddRemove: false 
+        renderOnAddRemove: false,
       });
 
-      fabric.util.enlivenObjects([{}, {}, {}], (objs) => {
-        objs.forEach((item) => {
-          canvasInstance.current.add(item);
-        });
-        canvasInstance.current.renderAll(); // Make sure to call this once you're ready!
-    });
-      canvasHistory.current.push(canvasInstance.current.toDatalessJSON());
-      currentCanvasIndex.current++;
+      // canvasHistory.current.push(canvasInstance.current.toDatalessJSON());
+      // currentCanvasIndex.current++;
     }
-
-
+    setCanvas( canvasInstance.current)
     const canvasInstanceRef = canvasInstance.current;
     fabric.Object.prototype.transparentCorners = false;
     // fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
@@ -81,21 +76,78 @@ export default function CanvasBox() {
       };
     };
 
-    // Get references to the button element and set its initial position
-    const btn = PosisionbtnRef.current;
-    const rebtn = regenerateRef.current
-    const genBox = generateBox.current;
+    // getCanvs(project);
 
-    // Load saved canvas data from local storage
-    // const savedCanvasData = localStorage.getItem("canvasData");
-    const savedCanvas = project?.canvas
-    if (savedCanvas) {
-      canvasInstanceRef.loadFromJSON(savedCanvas, () => {
-        canvasInstanceRef.renderAll();
+    // Zoom and Pan event handlers
+    // canvasInstanceRef.on("mouse:wheel", (opt) => {
+    //   const delta = opt.e.deltaY;
+    //   let zoom = canvasInstanceRef.getZoom();
+    //   zoom *= 0.999 ** delta;
+    //   if (zoom > 20) zoom = 20;
+    //   if (zoom < 0.01) zoom = 0.01;
+    //   setCanvasZoom(zoom);
+    //   canvasInstanceRef.zoomToPoint(
+    //     { x: canvasInstanceRef.width / 2, y: canvasInstanceRef.height / 2 },
+    //     zoom
+    //   );
+    //   // setCanvasPosition({
+    //   //   x: canvasInstanceRef.viewportTransform[4],
+    //   //   y: canvasInstanceRef.viewportTransform[5],
+    //   // });
+    //   opt.e.preventDefault();
+    //   opt.e.stopPropagation();
+    // });
+
+    // Resize canvas when the window is resized
+    window.addEventListener("resize", () => {
+      canvasInstanceRef.setDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight,
       });
-    }
+    });
 
-    // Load and add an image to the canvas
+    return () => {
+      window.removeEventListener("resize", null);
+      // saveCanvasDataToLocal();
+      // Clean up resources (if needed) when the component unmounts
+      // canvasInstance?.current.dispose();
+    };
+  }, [project]);
+
+   // Load canvas data from the database when the component mounts
+   useEffect(() => {
+    // Fetch canvas data from your API and load it into the canvas
+    const canvasInstanceRef = canvasInstance.current;
+if(isReady){
+    axios
+    .get(`${process.env.NEXT_PUBLIC_API}/project?id=${proid}`)
+    .then((response) => {
+      
+      
+      if (canvasInstanceRef) {
+        console.log(proid,id,response,id,"sd",canvasInstanceRef)
+        canvasInstanceRef.loadFromJSON(JSON.stringify(response.data.canvas), canvasInstanceRef.requestRenderAll.bind(canvasInstanceRef));
+        // canvasInstanceRef.loadFromJSON(savedCanvasDataLocal, () => {
+        //   canvasInstanceRef.renderAll();
+        // });
+      }
+    })
+  
+    .catch((error) => {
+      console.error(error);
+      return error;
+    });
+  }
+  }, [canvas, project]);
+
+
+
+  useEffect(() => {
+    const canvasInstanceRef = canvasInstance.current;
+
+    const btn = PosisionbtnRef.current;
+    const rebtn = regenerateRef.current;
+    const genBox = generateBox.current;
 
     // When a user clicks on an image on the canvas
     canvasInstanceRef.on("mouse:down", function (options) {
@@ -113,7 +165,7 @@ export default function CanvasBox() {
         }
       }
     });
-    // const canvasInstanceRef = canvasInstance.current;
+
     // Create the newEditorBox when the component mounts
     const newEditorBox = new fabric.Rect({
       left: 30,
@@ -125,9 +177,6 @@ export default function CanvasBox() {
       // stroke: "rgba(249, 208, 13, 1)",
       strokeWidth: 1,
     });
-
-    // canvasInstanceRef.add(newEditorBox);
-    // canvasInstanceRef.renderAll();
 
     const EditorBoxText = new fabric.Text("Place Your Product Here", {
       left: newEditorBox.left + 20, // center of the rectangle
@@ -148,8 +197,6 @@ export default function CanvasBox() {
       // fill: "rgba(249, 208, 13, 0.23)",
       fill: "transparent",
     });
-
-    // canvasInstanceRef.add(imageGenRect);
 
     const imageGenText = new fabric.Text("Generated image will appear here", {
       left: 450 + 20,
@@ -176,7 +223,6 @@ export default function CanvasBox() {
       // setDownloadImg(dataURL);
       setDownloadImg(dataURL);
     });
-
     newEditorBox.on("mousedown", function () {
       const originalStrokeColor = newEditorBox.stroke;
       const originalStrokeWidth = newEditorBox.strokeWidth;
@@ -204,7 +250,6 @@ export default function CanvasBox() {
       canvasInstanceRef.renderAll();
     });
 
-    // imageGenRect.on("mousedown", function () {
     //   // Add your logic for generating/adding the image inside this box.
     // });
     canvasInstanceRef.on("object:moving", function (event) {
@@ -237,26 +282,6 @@ export default function CanvasBox() {
       }
     });
 
-    // Zoom and Pan event handlers
-    // canvasInstanceRef.on("mouse:wheel", (opt) => {
-    //   const delta = opt.e.deltaY;
-    //   let zoom = canvasInstanceRef.getZoom();
-    //   zoom *= 0.999 ** delta;
-    //   if (zoom > 20) zoom = 20;
-    //   if (zoom < 0.01) zoom = 0.01;
-    //   setCanvasZoom(zoom);
-    //   canvasInstanceRef.zoomToPoint(
-    //     { x: canvasInstanceRef.width / 2, y: canvasInstanceRef.height / 2 },
-    //     zoom
-    //   );
-    //   // setCanvasPosition({
-    //   //   x: canvasInstanceRef.viewportTransform[4],
-    //   //   y: canvasInstanceRef.viewportTransform[5],
-    //   // });
-    //   opt.e.preventDefault();
-    //   opt.e.stopPropagation();
-    // });
-
     document.addEventListener("keydown", (e) => {
       // Check if the pressed key is 'Delete' (code: 46) or 'Backspace' (code: 8) for wider compatibility
       if (e.keyCode === 46 || e.keyCode === 8) {
@@ -276,7 +301,6 @@ export default function CanvasBox() {
     canvasInstanceRef.on("selection:created", () => {
       btn.style.display = "block";
       rebtn.style.display = "block";
-
     });
     canvasInstanceRef.on("selection:cleared", function () {
       setDownloadImg(null);
@@ -289,37 +313,46 @@ export default function CanvasBox() {
       }
     });
 
-    // Resize canvas when the window is resized
-    window.addEventListener("resize", () => {
-      canvasInstanceRef.setDimensions({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-    });
-
     return () => {
-      saveCanvasDataToLocal()
-      window.removeEventListener("resize", null);
-      // Clean up resources (if needed) when the component unmounts
-      // canvasInstance?.current.dispose();
-    };
-  }, [canvasInstance.current]);
+      // canvasInstance.current.dispose();
+    }
 
-  useEffect(() => {}, []);
+  }, []);
+
+  const saveCanvasToDatabase = () => {
+    const canvasData = canvasInstance.current.toJSON()
+    console.log(userId,proid,canvasData,"dsffff");
+    SaveProjexts(userId, proid, canvasData);
+  };
 
   const saveCanvasDataToLocal = () => {
     // if(isReady){
 
- // Serialize canvas data to JSON and save it to local storage
- const canvasData = JSON.stringify(canvasInstance.current.toJSON());
- localStorage.setItem("canvasData", canvasData);
- if(isReady)
- SaveProjexts(userId, id,canvasData)
-      
-      
-    // }
+    // Serialize canvas data to JSON and save it to local storage
+    if (!proid === undefined || !proid === " " || !proid === null) {
+      const canvasData = JSON.stringify(canvasInstance.current.toJSON());
+      SaveProjexts(userId, proid, canvasData);
+      localStorage.setItem(proid, canvasData);
+    }
+  };
 
-   
+  const getCanvs = async (pro) => {
+    // Load saved canvas data from local storage
+    if (!proid === undefined || !proid === " " || !proid === null) {
+      const canvasInstanceRef = canvasInstance.current;
+      const savedCanvasDataLocal = localStorage.getItem(proid);
+      const savedCanvasDB = project?.canvas;
+      console.log(savedCanvasDataLocal, "dfdsf");
+      if (savedCanvasDB && !savedCanvasDataLocal) {
+        localStorage.setItem(proid, savedCanvasDB);
+      }
+      if (savedCanvasDataLocal) {
+        // console.log(savedCanvas,"dfdfsdgfdgfd")
+        canvasInstanceRef.loadFromJSON(savedCanvasDataLocal, () => {
+          canvasInstanceRef.renderAll();
+        });
+      }
+    }
   };
 
   const generationBoxStyle = {
@@ -366,16 +399,17 @@ export default function CanvasBox() {
           // style={{ display: btnVisible ? "block" : "none" }}
           onClick={() => {
             setRegeneratePopup({ status: true, url: "" });
-            setActiveTab(6)
+            setActiveTab(6);
             console.log("sdsfs");
           }}
         >
-          <button className="selectone">
-          Regenrate Product
-
-          </button>
+          <button className="selectone">Regenrate Product</button>
         </div>
-        
+
+        <button className="ss" onClick={() => saveCanvasToDatabase()}>
+          fdsfsd
+        </button>
+
         <canvas ref={canvasRef} />
       </div>
     </Wrapper>
@@ -383,6 +417,11 @@ export default function CanvasBox() {
 }
 
 const Wrapper = styled.div`
+  .ss {
+    position: absolute;
+    top: 100px;
+    z-index: 1000;
+  }
   .rightbox {
   }
   .leftbox,

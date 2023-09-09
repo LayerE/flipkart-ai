@@ -84,53 +84,53 @@ interface ContextITFC {
 }
 export const AppContext = createContext<ContextITFC>({
   activeTab: 1,
-  setActiveTab: () => {},
+  setActiveTab: () => { },
   activeTabHome: 1,
-  setActiveTabHome: () => {},
+  setActiveTabHome: () => { },
   selectedImg: null,
-  setSelectedImg: () => {},
+  setSelectedImg: () => { },
 
   downloadImg: null,
-  setDownloadImg: () => {},
+  setDownloadImg: () => { },
   isMagic: null,
-  setIsMagic: () => {},
+  setIsMagic: () => { },
   EditorBox: null,
   editorBox: null,
-  setEditorBox: () => {},
+  setEditorBox: () => { },
 
   canvasInstance: null,
   outerDivRef: null,
-  addimgToCanvas: () => {},
-  addimgToCanvasSubject: () => {},
-  addimgToCanvasGen: () => {},
+  addimgToCanvas: () => { },
+  addimgToCanvasSubject: () => { },
+  addimgToCanvasGen: () => { },
   modifidImageArray: [],
-  setModifidImageArray: (modifidImageArray: string[]) => {},
+  setModifidImageArray: (modifidImageArray: string[]) => { },
   undoArray: [],
-  setUndoArray: (undoArray: string[]) => {},
+  setUndoArray: (undoArray: string[]) => { },
 
-  getBase64FromUrl: () => {},
+  getBase64FromUrl: () => { },
   file: null,
-  setFile: () => {},
+  setFile: () => { },
   viewMore: {},
-  setViewMore: (viewMore: Object) => {},
+  setViewMore: (viewMore: Object) => { },
   selectPlacement: "",
-  setSelectedPlacement: (selectPlacement: string) => {},
+  setSelectedPlacement: (selectPlacement: string) => { },
   surroundingtype: "",
-  setSurroundingtype: (surroundingtype: string) => {},
+  setSurroundingtype: (surroundingtype: string) => { },
   selectSurrounding: "",
-  setSelectedSurrounding: (selectSurrounding: string) => {},
+  setSelectedSurrounding: (selectSurrounding: string) => { },
   selectBackground: "",
-  setSelectedBackground: (selectBackground: string) => {},
+  setSelectedBackground: (selectBackground: string) => { },
   selectColoreMode: "",
-  setSelectedColoreMode: (selectColoreMode: string) => {},
+  setSelectedColoreMode: (selectColoreMode: string) => { },
   selectResult: 1,
-  setSelectedresult: (selectResult: number) => {},
+  setSelectedresult: (selectResult: number) => { },
   selectRender: 1,
-  setSelectedRender: (selectRender: number) => {},
+  setSelectedRender: (selectRender: number) => { },
   selectColoreStrength: 1,
-  setSelectedColoreStrength: (selectColoreStrength: number) => {},
+  setSelectedColoreStrength: (selectColoreStrength: number) => { },
   selectOutLline: 1,
-  setSelectedOutline: (selectOutLline: number) => {},
+  setSelectedOutline: (selectOutLline: number) => { },
   product: "",
   setProduct: (product: string) => "",
   placementTest: "",
@@ -138,23 +138,23 @@ export const AppContext = createContext<ContextITFC>({
   backgroundTest: "",
   setBackgrundTest: (backgrundTest: string) => "",
   surroundingTest: "",
-  setSurroundingTest: (surroundingTest: string) => {},
+  setSurroundingTest: (surroundingTest: string) => { },
   colore: "",
-  setColore: () => {},
+  setColore: () => { },
   uploadedProductlist: [],
-  setUploadedProductlist: (uploadedProductlist: string[]) => {},
+  setUploadedProductlist: (uploadedProductlist: string[]) => { },
   generatedImgList: [],
-  setGeneratedImgList: (generatedImgList: string[]) => {},
+  setGeneratedImgList: (generatedImgList: string[]) => { },
 
   previewLoader: false,
-  setPriviewLoader: () => {},
+  setPriviewLoader: () => { },
   generationLoader: false,
-  setGenerationLoader: () => {},
+  setGenerationLoader: () => { },
   loader: false,
-  setLoader: () => {},
+  setLoader: () => { },
 
   popup: {},
-  setPopup: () => {},
+  setPopup: () => { },
 });
 
 export const AppContextProvider = ({ children }: ContextProviderProps) => {
@@ -235,8 +235,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     }
   };
 
-  
-
   useEffect(() => {
     if (!canvasInstance.current) {
       canvasInstance.current = new fabric.Canvas(canvasRef.current, {
@@ -246,10 +244,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         // originX: "center",
         // originY: "center",
       });
-      
     }
 
-    
     // Resize canvas when the window is resized
     window.addEventListener("resize", () => {
       canvasInstance.current.setDimensions({
@@ -261,11 +257,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       window.removeEventListener("resize", null);
       // Clean up resources (if needed) when the component unmounts
       //  canvasInstanceRef.dispose();
-     
     };
-   
-  }, [])
-  
+  }, []);
+
   const addimgToCanvas = async (url: string) => {
     fabric.Image.fromURL(await getBase64FromUrl(url), function (img: any) {
       // Set the image's dimensions
@@ -422,6 +416,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       .then((response) => {
         setproject(response.data);
         console.log(response.data);
+        setJobId(response.data.jobIds);
 
         return response.data;
       })
@@ -431,16 +426,15 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       });
   };
   const SaveProjexts = async (userId, projectId, canvas) => {
-    
     const json = JSON.stringify({
       id: userId,
       projectId: projectId,
       canvas: canvas,
     });
+    console.log(json);
     try {
       // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
-      const getUser = localStorage.getItem("userId");
-      console.log(getUser);
+
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API}/save/project`,
         {
@@ -448,17 +442,19 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           headers: {
             "Content-Type": "application/json",
           },
-          body:json,
+          body: json,
         }
       );
-      return response.json();
+      const data = await response.json();
+      console.log(response, "dvffv");
+
+      console.log(data, "dvffv");
+      return data;
 
       // console.log(await response.json(), "dfvcvdfvdvcdsd");
-
     } catch (error) {
       // Handle error
     }
-
   };
 
   function RegeneratepositionBtn(obj) {
@@ -603,7 +599,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     canvasInstance.current.renderAll();
   };
 
-  const generateImageHandeler = async () => {
+  const generateImageHandeler = async (ueserId, proid) => {
     // console.log(promt);
     setLoader(true);
     setGenerationLoader(true);
@@ -739,9 +735,34 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
         return false;
       } else {
-        setJobId((pre) => [...pre, generate_response?.job_id]);
-        setRegenratedImgsJobid(generate_response?.job_id);
-        localStorage.setItem("jobId", jobId);
+        try {
+          // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
+
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API}/jobId`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userId: ueserId,
+              projectId: proid,
+              jobId: generate_response?.job_id,
+            }),
+          });
+          // console.log(await response.json(), "dfvcvdfvdvcdsd");
+          const datares = await response;
+
+          if (datares.ok) {
+            setJobId((pre) => [...pre, generate_response?.job_id]);
+            setRegenratedImgsJobid(generate_response?.job_id);
+            // localStorage.setItem("jobId", jobId);
+
+            GetProjextById(proid);
+          }
+          // window.open(`/generate/${datares?._id}`, "_self");
+        } catch (error) {
+          // Handle error
+        }
       }
 
       setTimeout(async function () {

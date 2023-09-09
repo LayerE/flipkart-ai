@@ -4,19 +4,54 @@ import Label from "../common/Label";
 import { Input } from "../common/Input";
 import Button from "../common/Button";
 import { useAppState } from "@/context/app.context";
+import { useAuth } from "@clerk/nextjs";
+import { useRouter } from "next/router";
 
 const PopupUpload = () => {
   const { setPopup, popup, setUploadedProductlist, setProduct } = useAppState();
   const [productnew, setProductnew] = useState("");
+  const { userId } = useAuth();
+  const { query, isReady } = useRouter();
+  const { id } = query;
 
-  const HandileUpload = () => {
+  const HandileUpload = async () => {
     if (productnew !== "") {
-      setUploadedProductlist((prev) => [
-        ...prev,
-        { url: popup?.data, tittle: productnew },
-      ]);
-      setProduct(productnew);
-      setPopup({ status: false, data: null });
+      try {
+        // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
+        const getUser = localStorage.getItem("userId");
+        console.log(
+          `${process.env.NEXT_PUBLIC_API}/upload/asset`,
+          popup?.data,
+          id,
+          userId
+        );
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API}/upload/asset`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userId: userId,
+              projectId: id,
+              url: popup?.data,
+            }),
+          }
+        );
+        // console.log(await response.json(), "dfvcvdfvdvcdsd");
+        const datares = await response.json();
+        console.log(datares);
+
+        setUploadedProductlist((prev) => [
+          ...prev,
+          { url: popup?.data, tittle: productnew },
+        ]);
+        setProduct(productnew);
+        setPopup({ status: false, data: null });
+      } catch (error) {
+        // Handle error
+      }
     }
   };
 

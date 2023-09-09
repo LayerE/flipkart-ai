@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { styled } from "styled-components";
 import assets from "@/public/assets";
+import Link from "next/link";
 
 const ProjectCard = ({ data, setProjects, handleDelet }) => {
   const [open, setopen] = useState(false);

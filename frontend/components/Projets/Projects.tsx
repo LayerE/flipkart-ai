@@ -14,7 +14,7 @@ const fadeIn = {
 const Projects = ({ onDelet }) => {
   const [projects, setProjects] = useState([]);
   const { userId } = useAuth();
-  const { activeTab,setprojectlist, projectlist, GetProjexts } = useAppState();
+  const { activeTab, setprojectlist, projectlist, GetProjexts } = useAppState();
 
   const handleCreate = async () => {
     try {
@@ -35,16 +35,15 @@ const Projects = ({ onDelet }) => {
         }
       );
       // console.log(await response.json(), "dfvcvdfvdvcdsd");
-      const datares = await response.json()
-      GetProjexts(getUser)
+      const datares = await response.json();
+      GetProjexts(getUser);
       window.open(`/generate/${datares?._id}`, "_self");
     } catch (error) {
       // Handle error
     }
-
   };
 
-  const handleDelet = async (id:string) => {
+  const handleDelet = async (id: string) => {
     try {
       // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
 
@@ -57,14 +56,11 @@ const Projects = ({ onDelet }) => {
 
       const getUser = localStorage.getItem("userId");
 
-      GetProjexts(getUser)
-
+      GetProjexts(getUser);
     } catch (error) {
       // Handle error
     }
   };
-
-
 
   return (
     <motion.div
@@ -101,7 +97,6 @@ const Projects = ({ onDelet }) => {
             setProjects={setProjects}
             handleDelet={handleDelet}
           />
-        
         ))}
         {/* </Link> */}
       </ProjectWrapper>

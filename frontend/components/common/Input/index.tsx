@@ -21,12 +21,9 @@ export const Input = styled.input`
     }
   }
 
-  &:hover{
-  /* border: 2px solid #d9d9d9; */
-  border: 2px solid ${(props) => props.theme.btnPrimary};
-
-
-
+  &:hover {
+    /* border: 2px solid #d9d9d9; */
+    border: 2px solid ${(props) => props.theme.btnPrimary};
   }
 `;
 export const Suggestion1 = styled.div`
@@ -41,11 +38,10 @@ export const Suggestion1 = styled.div`
   max-height: 150px;
   overflow: scroll;
   border-radius: 8px;
-  width:200px;
+  width: 200px;
   margin-bottom: 20px;
   /* overflow: hidden; */
   /* white-space: nowrap; */
-  
 
   &::-webkit-scrollbar {
     display: none;
@@ -58,8 +54,7 @@ export const Suggestion1 = styled.div`
     margin-bottom: 5px;
     border-radius: 8px;
     transition: all 0.3s ease-out;
-  font-size: 12px;
-
+    font-size: 12px;
 
     &:hover {
       background-color: #e4e2e2;
@@ -194,8 +189,7 @@ export const FileUpload: React.FC = ({ type, title }) => {
           addimgToCanvas(reader.result);
         } else {
           const filename = `img${Date.now()}`;
-    setLoader(true);
-
+          setLoader(true);
 
           const response = await fetch(
             "https://dhanushreddy29-remove-background.hf.space/run/predict",
@@ -208,17 +202,15 @@ export const FileUpload: React.FC = ({ type, title }) => {
             }
           );
           const data = await response.json();
-          console.log(data);
+          console.log(data,"sfdfds");
 
           // BgRemover(reader.result, filename);
           if (data) {
-            setPopup({ status: true, data: data?.data[0] });
-    setLoader(false);
-
+            setPopup({ status: true, data: data?.data[0], dataArray:data.data });
+            setLoader(false);
           } else {
             console.log("bg not removed");
-    setLoader(false);
-
+            setLoader(false);
           }
 
           // setUploadedProductlist((prev) => [

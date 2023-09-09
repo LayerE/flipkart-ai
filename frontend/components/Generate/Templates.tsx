@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Row } from "../common/Row";
-
 
 import { useAppState } from "@/context/app.context";
 import { styled } from "styled-components";
@@ -13,7 +12,8 @@ const fadeIn = {
 import { motion } from "framer-motion";
 import { Label } from "react-konva";
 import { templets } from "@/store/dropdown";
-
+import { useAuth } from "@clerk/nextjs";
+import { useRouter } from "next/router";
 
 const Tamplates = () => {
   const {
@@ -24,9 +24,63 @@ const Tamplates = () => {
     setSelectedPlacement,
     setSelectedSurrounding,
     setSelectedBackground,
-    setViewMore
+    placementTest,
+    surroundingTest,
+    project,
+    setViewMore,
+    backgroundTest,
+    GetProjextById,
   } = useAppState();
+  const { userId } = useAuth();
+  const { query, isReady } = useRouter();
+  // const { id } = query;
+  const id = (query.id as string[]) || [];
+  const addtoRecntly = async (obj) => {
+    if (isReady) {
+      try {
+        // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
+        const getUser = localStorage.getItem("userId");
+        console.log(getUser);
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API}/recently`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userId: userId,
+              projectId: id,
+              recently: obj,
+            }),
+          }
+        );
+        // console.log(await response.json(), "dfvcvdfvdvcdsd");
+        const datares = await response;
 
+        if(datares.ok){
+      
+
+
+          GetProjextById(id);
+    // setfilterRecently(project?.recently.reverse())
+
+        }
+        // window.open(`/generate/${datares?._id}`, "_self");
+      } catch (error) {
+        // Handle error
+      }
+    }
+  };
+  const [filterRecently, setfilterRecently] = useState()
+ 
+  useEffect(() => {
+  GetProjextById(id);
+    // console.log(data, "dfvcvdf")
+
+    setfilterRecently(project?.recently?.reverse())
+
+  }, [ ]);
 
   return (
     <motion.div
@@ -35,82 +89,88 @@ const Tamplates = () => {
       variants={fadeIn}
       className="accest"
     >
-      <RecentWrapper >
-              <div className=" rows">
-                <div className="left">
-                  <Label>Recently Used</Label>
-                </div>
-                <div className="right">
-                  <div
-                    className="viewBtn"
-                    onClick={() =>
-                      setViewMore({
-                        status: true,
-                        title: "Recently Used",
-                        index: 1,
-                        list: templets,
-                      })
-                    }
-                  >
-                    View all
-                  </div>
-                </div>
-              </div>
-              <div className="horizontaScrollBox">
-                {templets.slice(0, 5).map((test, i) => (
-                  <div
-                    key={i}
-                    className={"imageBoxs"}
-                    onClick={() => {
-                      setPlacementTest(test.placement);
-                  setSurroundingTest(test.surrounding);
-                  setBackgrundTest(test.background);
-                  setSelectedPlacement(test.placementType);
-                  setSelectedSurrounding(test.surroundingType);
-                  setSelectedBackground(test.backgroundType);
-                    }}
-                  >
-                    <picture>
-                      <img src={test?.image} alt="" />
-                    </picture>
-                   
-                  </div>
-                ))}
-              </div>
-               <div className=" rowsnew">
-                <div className="left">
-                  <Label>Select a template below.</Label>
-                </div>
-               
-           
-              </div>
-      <ResponsiveRowWraptwo>
-        
-        {templets.map((test, i) => (
-          <div
-            key={i}
-            className={"imageBoxs"}
-            onClick={() => {
-              // setProduct(test.product);
-              setPlacementTest(test.placement);
-              setSurroundingTest(test.surrounding);
-              setBackgrundTest(test.background);
-              setSelectedPlacement(test.placementType);
-              setSelectedSurrounding(test.surroundingType);
-              setSelectedBackground(test.backgroundType);
-            }}
-          >
-            <picture>
-              <img src={test.image} alt="" />
-            </picture>
-            <div className="head">
-                      {test?.title}
-                    </div>
+      <RecentWrapper>
+      {filterRecently?.length ? 
+        <>
+        <div className=" rows">
+          <div className="left">
+            <Label>Recently Used</Label>
           </div>
-        ))}
-      </ResponsiveRowWraptwo>
-      </RecentWrapper>
+          <div className="right">
+            <div
+              className="viewBtn"
+              onClick={() =>
+                setViewMore({
+                  status: true,
+                  title: "Recently Used",
+                  index: 1,
+                  list: project?.recently,
+                })
+              }
+            >
+              View all
+            </div>
+          </div>
+        </div>
+        <div className="horizontaScrollBox">
+          {filterRecently?.slice(0, 5).map((test, i) => (
+            <div
+              key={i}
+              className={"imageBoxs"}
+              onClick={() => {
+                setPlacementTest(test.placement);
+                setSurroundingTest(test.surrounding);
+                setBackgrundTest(test.background);
+                setSelectedPlacement(test.placementType);
+                setSelectedSurrounding(test.surroundingType);
+                setSelectedBackground(test.backgroundType);
+              }}
+            >
+              <picture>
+                <img src={test?.image} alt="" />
+              </picture>
+              <div className="head">{test?.title}</div>
 
+            </div>
+          ))}
+        </div>
+        </>
+      
+      
+      
+      : null}
+      
+
+
+        <div className=" rowsnew">
+          <div className="left">
+            <Label>Select a template below.</Label>
+          </div>
+        </div>
+        <ResponsiveRowWraptwo>
+          {templets.map((test, i) => (
+            <div
+              key={i}
+              className={"imageBoxs"}
+              onClick={() => {
+                addtoRecntly(test);
+                // setProduct(test.product);
+                setPlacementTest(test.placement);
+                setSurroundingTest(test.surrounding);
+                setBackgrundTest(test.background);
+                setSelectedPlacement(test.placementType);
+                setSelectedSurrounding(test.surroundingType);
+                setSelectedBackground(test.backgroundType);
+              }}
+            >
+              <picture>
+                <img src={test.image} alt="" />
+              </picture>
+              <div className="head">{test?.title}</div>
+            </div>
+          ))}
+        </ResponsiveRowWraptwo>
+      </RecentWrapper>
     </motion.div>
   );
 };
@@ -128,15 +188,13 @@ export const ResponsiveRowWraptwo = styled(Row)`
 `;
 
 export const RecentWrapper = styled(Row)`
-margin-bottom: 50px;
-.rowsnew{
-  margin-top: 30px !important;
-  margin-bottom: 10px !important;
+  margin-bottom: 50px;
+  .rowsnew {
+    margin-top: 30px !important;
+    margin-bottom: 10px !important;
 
-  width: 100%;
-
-
-}
+    width: 100%;
+  }
   overflow: hidden;
   width: 100%;
   display: flex;
@@ -187,42 +245,38 @@ margin-bottom: 50px;
     /* display: flex;
     align-items: center;
     justify-content: center; */
-    picture{
+    picture {
       width: 100%;
       height: 80%;
-    /* object-fit: cover; */
-
+      /* object-fit: cover; */
     }
-    .head{
+    .head {
       display: flex;
       justify-content: center;
       align-items: center;
       margin-top: 10px;
       font-weight: 500;
-
     }
 
     img {
       width: 100%;
       height: 100%;
-    border-radius: 5px;
+      border-radius: 5px;
 
-    /* height: 130px; */
+      /* height: 130px; */
 
       object-fit: cover;
-    transition: all 0.3s ease-in-out;
+      transition: all 0.3s ease-in-out;
 
       /* object-fit: contain; */
-      &:hover{
-    transform: scale(1.1);
-
-    }
+      &:hover {
+        transform: scale(1.1);
+      }
     }
     transition: all 0.3s ease-in-out;
 
-    &:hover{
-    border: 2px solid rgba(249, 208, 13, 1);
-
+    &:hover {
+      border: 2px solid rgba(249, 208, 13, 1);
     }
   }
 `;

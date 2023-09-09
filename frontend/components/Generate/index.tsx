@@ -17,6 +17,7 @@ import Label, { DisabledLabel } from "../common/Label";
 import SuggetionInput from "./SuggetionInput";
 import { PlacementSuggestions, productSuggestions } from "@/store/dropdown";
 import TextLoader from "../Loader/text";
+import { useRouter } from "next/router";
 
 const Generate = () => {
   const { userId } = useAuth();
@@ -49,19 +50,22 @@ const Generate = () => {
     generateImageHandeler
   } = useAppState();
 
+  const { query, isReady } = useRouter();
+  const id = (query.id as string[]) || [];
+
   const [changeTab, setChangeTab] = useState(false);
 
   const promt =
     product +
-    ", " +
+    " " +
     selectPlacement +
     " " +
     placementTest +
-    ", " +
+    " " +
     selectSurrounding +
     " " +
     surroundingTest +
-    ", " +
+    " " +
     selectBackground +
     " " +
     backgroundTest;
@@ -145,7 +149,7 @@ const Generate = () => {
         :
 
           <Button
-            onClick={() => generateImageHandeler()}
+            onClick={() => generateImageHandeler(userId, id)}
             disabled={product === "" ? true : false}
           >
             {generationLoader ? "Loading..." : "Generate"}
