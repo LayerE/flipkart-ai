@@ -28,6 +28,9 @@ const Tamplates = () => {
     surroundingTest,
     project,
     setViewMore,
+    loara,
+    setLoara,
+
     backgroundTest,
     GetProjextById,
   } = useAppState();
@@ -58,13 +61,9 @@ const Tamplates = () => {
         // console.log(await response.json(), "dfvcvdfvdvcdsd");
         const datares = await response;
 
-        if(datares.ok){
-      
-
-
+        if (datares.ok) {
           GetProjextById(id);
-    // setfilterRecently(project?.recently.reverse())
-
+          // setfilterRecently(project?.recently.reverse())
         }
         // window.open(`/generate/${datares?._id}`, "_self");
       } catch (error) {
@@ -72,15 +71,14 @@ const Tamplates = () => {
       }
     }
   };
-  const [filterRecently, setfilterRecently] = useState()
- 
+  const [filterRecently, setfilterRecently] = useState();
+
   useEffect(() => {
-  GetProjextById(id);
+    GetProjextById(id);
     // console.log(data, "dfvcvdf")
 
-    setfilterRecently(project?.recently?.reverse())
-
-  }, [ ]);
+    setfilterRecently(project?.recently?.reverse());
+  }, []);
 
   return (
     <motion.div
@@ -90,57 +88,52 @@ const Tamplates = () => {
       className="accest"
     >
       <RecentWrapper>
-      {filterRecently?.length ? 
-        <>
-        <div className=" rows">
-          <div className="left">
-            <Label>Recently Used</Label>
-          </div>
-          <div className="right">
-            <div
-              className="viewBtn"
-              onClick={() =>
-                setViewMore({
-                  status: true,
-                  title: "Recently Used",
-                  index: 1,
-                  list: project?.recently,
-                })
-              }
-            >
-              View all
+        {filterRecently?.length ? (
+          <>
+            <div className=" rows">
+              <div className="left">
+                <Label>Recently Used</Label>
+              </div>
+              <div className="right">
+                <div
+                  className="viewBtn"
+                  onClick={() =>
+                    setViewMore({
+                      status: true,
+                      title: "Recently Used",
+                      index: 1,
+                      list: project?.recently,
+                    })
+                  }
+                >
+                  View all
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <div className="horizontaScrollBox">
-          {filterRecently?.slice(0, 5).map((test, i) => (
-            <div
-              key={i}
-              className={"imageBoxs"}
-              onClick={() => {
-                setPlacementTest(test.placement);
-                setSurroundingTest(test.surrounding);
-                setBackgrundTest(test.background);
-                setSelectedPlacement(test.placementType);
-                setSelectedSurrounding(test.surroundingType);
-                setSelectedBackground(test.backgroundType);
-              }}
-            >
-              <picture>
-                <img src={test?.image} alt="" />
-              </picture>
-              <div className="head">{test?.title}</div>
-
+            <div className="horizontaScrollBox">
+              {filterRecently?.slice(0, 5).map((test, i) => (
+                <div
+                  key={i}
+                  className={"imageBoxs"}
+                  onClick={() => {
+                    setPlacementTest(test.placement);
+                    setSurroundingTest(test.surrounding);
+                    setBackgrundTest(test.background);
+                    setSelectedPlacement(test.placementType);
+                    setSelectedSurrounding(test.surroundingType);
+                    setSelectedBackground(test.backgroundType);
+                    setLoara(test.lora);
+                  }}
+                >
+                  <picture>
+                    <img src={test?.image} alt="" />
+                  </picture>
+                  <div className="head">{test?.title}</div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-        </>
-      
-      
-      
-      : null}
-      
-
+          </>
+        ) : null}
 
         <div className=" rowsnew">
           <div className="left">
@@ -161,6 +154,7 @@ const Tamplates = () => {
                 setSelectedPlacement(test.placementType);
                 setSelectedSurrounding(test.surroundingType);
                 setSelectedBackground(test.backgroundType);
+                setLoara(test.lora);
               }}
             >
               <picture>

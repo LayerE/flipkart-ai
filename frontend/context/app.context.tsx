@@ -176,6 +176,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [selectColoreMode, setSelectedColoreMode] = useState<string>("");
   const [selectResult, setSelectedresult] = useState<number>(4);
   const [selectRender, setSelectedRender] = useState<number>(4);
+  const [loara, setLoara] = useState<string>("");
+
   const [selectColoreStrength, setSelectedColoreStrength] = useState<number>(0);
   const [selectOutLline, setSelectedOutline] = useState<number>(0);
   const [product, setProduct] = useState<string>("");
@@ -724,6 +726,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           maskDataUrl: maskDataUrl,
           prompt: promtText.trim(),
           user_id: userId,
+          lora_type: loara
         }),
       });
 
@@ -804,6 +807,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     <AppContext.Provider
       value={{
         previewBox,
+        loara, setLoara,
         GetProjexts,
         canvasRef,
         SaveProjexts,

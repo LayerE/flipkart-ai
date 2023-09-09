@@ -17,6 +17,14 @@ import profile from './image/profile.png'
 import dotbox from './image/dotbox.svg'
 
 
+import Beach from './image/Beach.png'
+import Kitchen from './image/Kitchen.png'
+import Livingroom from './image/Living Room.png'
+import LivingRoom from './image/LivingRoom.png'
+import Minimal from './image/Minimal.png'
+import   Rocks from './image/Rocks.png'
+import  Room from './image/Room.png'
+import  Waterfalls from './image/Waterfalls.png'
 
 
 
@@ -34,7 +42,15 @@ const icons = {
 }
 const images = {
     fa_logo,
-    profile,dotbox
+    profile,dotbox,
+    Beach,
+    Kitchen,
+    Livingroom,
+    Minimal,
+    Waterfalls,
+    Room,
+    Rocks,
+    LivingRoom
 
 }
 

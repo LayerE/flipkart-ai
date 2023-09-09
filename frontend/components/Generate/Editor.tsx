@@ -16,9 +16,11 @@ import {
   placementList,
   productSuggestions,
   productSuggestionsPrash,
+  Loara,
   renderStrength,
   resultList,
   surroundingList,
+
   test,
 } from "@/store/dropdown";
 import { useAppState } from "@/context/app.context";
@@ -49,6 +51,8 @@ const EditorSection = () => {
     setSelectedColoreStrength,
     selectOutLline,
     setSelectedOutline,
+  loara, setLoara,
+
     product,
     setProduct,
     placementTest,
@@ -107,6 +111,20 @@ const EditorSection = () => {
           setValue={setProduct}
           suggetion={ProductSuggestionsFilter}
         />
+      </div>
+      <div className="gap">
+        <DisabledLabel>Lora</DisabledLabel>
+        <DropdownInput
+            data={{
+              list: Loara,
+              action: setLoara,
+              label: "placement",
+
+              activeTab: loara,
+            }}
+            style={{width: "100%"}}
+          ></DropdownInput>
+        
       </div>
       <div className="gap">
         <DisabledLabel>Placement</DisabledLabel>
