@@ -406,9 +406,9 @@ if(isReady){
           <button className="selectone">Regenrate Product</button>
         </div>
 
-        <button className="ss" onClick={() => saveCanvasToDatabase()}>
+        {/* <button className="ss" onClick={() => saveCanvasToDatabase()}>
           fdsfsd
-        </button>
+        </button> */}
 
         <canvas ref={canvasRef} />
       </div>
