@@ -16,21 +16,22 @@ export default async (req: NextRequest) => {
     if (!user_id) {
       return NextResponse.json({ error: "Missing user_id" });
     }
-console.log(user_id, project_id);
-    const response = await fetch(
-      project_id
-        ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/v1/{process.env.NEXT_PUBLIC_BACKGROUND_REMOVED_IMAGES_TABLE}/?select=image_url,project_id&user_id=eq.${user_id}&project_id=eq.${project_id}`
-        : `${process.env.NEXT_PUBLIC_SUPABASE_URL}/v1/{process.env.NEXT_PUBLIC_BACKGROUND_REMOVED_IMAGES_TABLE}/?select=image_url,project_id&user_id=eq.${user_id}`,
-      {
-        headers: {
-          apikey: process.env.SUPABASE_SERVICE_KEY as string,
-          Authorization: `Bearer ${process.env.SUPABASE_SERVICE_KEY}` as string,
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        method: "GET",
-      }
-    );
+
+    const postURL =
+      project_id != null
+        ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/${process.env.NEXT_PUBLIC_BACKGROUND_REMOVED_IMAGES_TABLE}/?select=image_url,project_id&user_id=eq.${user_id}&project_id=eq.${project_id}`
+        : `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/${process.env.NEXT_PUBLIC_BACKGROUND_REMOVED_IMAGES_TABLE}/?select=image_url,project_id&user_id=eq.${user_id}`;
+
+    const response = await fetch(postURL, {
+      headers: {
+        apikey: process.env.SUPABASE_SERVICE_KEY as string,
+        Authorization: `Bearer ${process.env.SUPABASE_SERVICE_KEY}` as string,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      method: "GET",
+    });
+
 
     const json = await response.json();
 

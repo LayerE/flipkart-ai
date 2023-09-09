@@ -57,7 +57,7 @@ export default async (req: NextRequest) => {
 
     // Add the image to the database
     await fetch(
-      `${process.env.NEXT_PUBLIC_SUPABASE_URL}/v1/${process.env.NEXT_PUBLIC_BACKGROUND_REMOVED_IMAGES_TABLE}`,
+      `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/${process.env.NEXT_PUBLIC_BACKGROUND_REMOVED_IMAGES_TABLE}`,
       {
         headers: {
           apikey: process.env.SUPABASE_SERVICE_KEY as string,
