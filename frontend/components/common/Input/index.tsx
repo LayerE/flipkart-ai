@@ -202,11 +202,15 @@ export const FileUpload: React.FC = ({ type, title }) => {
             }
           );
           const data = await response.json();
-          console.log(data,"sfdfds");
+          console.log(data, "sfdfds");
 
           // BgRemover(reader.result, filename);
           if (data) {
-            setPopup({ status: true, data: data?.data[0], dataArray:data.data });
+            setPopup({
+              status: true,
+              data: data?.data[0],
+              dataArray: data.data,
+            });
             setLoader(false);
           } else {
             console.log("bg not removed");

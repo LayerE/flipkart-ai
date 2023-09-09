@@ -32,9 +32,15 @@ const Regeneret = () => {
     if(filteredResult?.length){
         setLoader(false)
         
+    }else{
+      setLoader(true)
+
+
     }
+
+    console.log(filteredResult,"sdfds",regenratedImgsJobId)
   
-  }, [generatedImgList])
+  }, [generatedImgList,regenratedImgsJobId])
   
 
   const imge = [
@@ -116,6 +122,8 @@ const Regeneret = () => {
 
   const addImges = () => {
     addimgToCanvasGen(selectedCards);
+    setRegeneratePopup({ statu: false });
+    setActiveTab(1)
   };
 
   return (
@@ -137,7 +145,7 @@ const Regeneret = () => {
           </svg>
         </div>
 
-        {loder ? (
+        {!filteredArray.length  ? (
           <div className="gride">
             <div className={` griteitem`} onClick={() => ""}>
               <DaoderWarpperL>

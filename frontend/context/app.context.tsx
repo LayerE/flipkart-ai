@@ -84,53 +84,53 @@ interface ContextITFC {
 }
 export const AppContext = createContext<ContextITFC>({
   activeTab: 1,
-  setActiveTab: () => { },
+  setActiveTab: () => {},
   activeTabHome: 1,
-  setActiveTabHome: () => { },
+  setActiveTabHome: () => {},
   selectedImg: null,
-  setSelectedImg: () => { },
+  setSelectedImg: () => {},
 
   downloadImg: null,
-  setDownloadImg: () => { },
+  setDownloadImg: () => {},
   isMagic: null,
-  setIsMagic: () => { },
+  setIsMagic: () => {},
   EditorBox: null,
   editorBox: null,
-  setEditorBox: () => { },
+  setEditorBox: () => {},
 
   canvasInstance: null,
   outerDivRef: null,
-  addimgToCanvas: () => { },
-  addimgToCanvasSubject: () => { },
-  addimgToCanvasGen: () => { },
+  addimgToCanvas: () => {},
+  addimgToCanvasSubject: () => {},
+  addimgToCanvasGen: () => {},
   modifidImageArray: [],
-  setModifidImageArray: (modifidImageArray: string[]) => { },
+  setModifidImageArray: (modifidImageArray: string[]) => {},
   undoArray: [],
-  setUndoArray: (undoArray: string[]) => { },
+  setUndoArray: (undoArray: string[]) => {},
 
-  getBase64FromUrl: () => { },
+  getBase64FromUrl: () => {},
   file: null,
-  setFile: () => { },
+  setFile: () => {},
   viewMore: {},
-  setViewMore: (viewMore: Object) => { },
+  setViewMore: (viewMore: Object) => {},
   selectPlacement: "",
-  setSelectedPlacement: (selectPlacement: string) => { },
+  setSelectedPlacement: (selectPlacement: string) => {},
   surroundingtype: "",
-  setSurroundingtype: (surroundingtype: string) => { },
+  setSurroundingtype: (surroundingtype: string) => {},
   selectSurrounding: "",
-  setSelectedSurrounding: (selectSurrounding: string) => { },
+  setSelectedSurrounding: (selectSurrounding: string) => {},
   selectBackground: "",
-  setSelectedBackground: (selectBackground: string) => { },
+  setSelectedBackground: (selectBackground: string) => {},
   selectColoreMode: "",
-  setSelectedColoreMode: (selectColoreMode: string) => { },
+  setSelectedColoreMode: (selectColoreMode: string) => {},
   selectResult: 1,
-  setSelectedresult: (selectResult: number) => { },
+  setSelectedresult: (selectResult: number) => {},
   selectRender: 1,
-  setSelectedRender: (selectRender: number) => { },
+  setSelectedRender: (selectRender: number) => {},
   selectColoreStrength: 1,
-  setSelectedColoreStrength: (selectColoreStrength: number) => { },
+  setSelectedColoreStrength: (selectColoreStrength: number) => {},
   selectOutLline: 1,
-  setSelectedOutline: (selectOutLline: number) => { },
+  setSelectedOutline: (selectOutLline: number) => {},
   product: "",
   setProduct: (product: string) => "",
   placementTest: "",
@@ -138,28 +138,29 @@ export const AppContext = createContext<ContextITFC>({
   backgroundTest: "",
   setBackgrundTest: (backgrundTest: string) => "",
   surroundingTest: "",
-  setSurroundingTest: (surroundingTest: string) => { },
+  setSurroundingTest: (surroundingTest: string) => {},
   colore: "",
-  setColore: () => { },
+  setColore: () => {},
   uploadedProductlist: [],
-  setUploadedProductlist: (uploadedProductlist: string[]) => { },
+  setUploadedProductlist: (uploadedProductlist: string[]) => {},
   generatedImgList: [],
-  setGeneratedImgList: (generatedImgList: string[]) => { },
+  setGeneratedImgList: (generatedImgList: string[]) => {},
 
   previewLoader: false,
-  setPriviewLoader: () => { },
+  setPriviewLoader: () => {},
   generationLoader: false,
-  setGenerationLoader: () => { },
+  setGenerationLoader: () => {},
   loader: false,
-  setLoader: () => { },
+  setLoader: () => {},
 
   popup: {},
-  setPopup: () => { },
+  setPopup: () => {},
 });
 
 export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const canvasInstance = useRef(null);
   const outerDivRef = useRef(null);
+
   const [selectedImg, setSelectedImg] = useState<object | null>(null);
   const [downloadImg, setDownloadImg] = useState<string | null>(null);
   const [isMagic, setIsMagic] = useState<boolean | null>(false);
@@ -346,12 +347,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       // });
       img.on("mouse:down", () => {
         positionBtn(img);
-        // RegeneratepositionBtn(img);
+        RegeneratepositionBtn(img);
       });
 
       img.on("moving", () => {
         positionBtn(img);
-        // RegeneratepositionBtn(img);
+        RegeneratepositionBtn(img);
       });
       img.on("scaling", function () {
         positionBtn(img);
@@ -726,7 +727,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           maskDataUrl: maskDataUrl,
           prompt: promtText.trim(),
           user_id: userId,
-          lora_type: loara
+          lora_type: loara,
         }),
       });
 
@@ -807,7 +808,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     <AppContext.Provider
       value={{
         previewBox,
-        loara, setLoara,
+        loara,
+        setLoara,
         GetProjexts,
         canvasRef,
         SaveProjexts,
@@ -845,6 +847,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         editorBox,
         setEditorBox,
         addEditorBoxToCanvas,
+        regenratedImgsJobId,
+        setRegenratedImgsJobid,
         jobId,
         setJobId,
         canvasHistoryRef,
