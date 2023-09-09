@@ -162,7 +162,7 @@ const InputFile1 = styled.div`
   }
 `;
 
-export const FileUpload: React.FC = ({ type, title }) => {
+export const FileUpload: React.FC = ({ type, title}) => {
   const {
     file,
     setFile,
@@ -173,6 +173,9 @@ export const FileUpload: React.FC = ({ type, title }) => {
     setLoader,
     addimgToCanvas,
     setPopup,
+    projectId,
+    uerId
+
   } = useAppState();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -192,23 +195,28 @@ export const FileUpload: React.FC = ({ type, title }) => {
           setLoader(true);
 
           const response = await fetch(
-            "https://dhanushreddy29-remove-background.hf.space/run/predict",
+            "/api/removebg",
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
-                data: [reader.result],
+                dataUrl: [reader.result],
+                user_id: uerId,
+                project_id : projectId
+                
+                
+            
               }),
             }
           );
           const data = await response.json();
-          console.log(data, "sfdfds");
+          console.log(data.data, "sfdfds");
 
           // BgRemover(reader.result, filename);
-          if (data) {
+          if (data?.data) {
             setPopup({
               status: true,
-              data: data?.data[0],
+              data: data?.data.data[0],
               dataArray: data.data,
             });
             setLoader(false);

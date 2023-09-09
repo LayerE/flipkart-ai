@@ -209,6 +209,13 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const previewBox = useRef(null);
   const [regenratedImgsJobId, setRegenratedImgsJobid] = useState(null);
 
+  const [projectId, setprojectId] = useState(null);
+  const [uerId, setUserId] = useState(null);
+  const [listofassets, setListOfAssets] = useState(null);
+
+
+
+
   const canvasHistory = useRef([]);
   const currentCanvasIndex = useRef(-1);
   const canvasRef = useRef(null);
@@ -347,12 +354,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       // });
       img.on("mouse:down", () => {
         positionBtn(img);
-        RegeneratepositionBtn(img);
+        // RegeneratepositionBtn(img);
       });
 
       img.on("moving", () => {
         positionBtn(img);
-        RegeneratepositionBtn(img);
+        // RegeneratepositionBtn(img);
       });
       img.on("scaling", function () {
         positionBtn(img);
@@ -577,6 +584,42 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       console.error("Error fetching images:", error);
     }
   };
+
+  const fetchAssetsImages = async (userId, pro) => {
+    try {
+      const response = await fetch(
+        '/api/images',
+        {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user_id: userId,
+            project_id: pro
+          }),
+          
+        }
+      );
+      const data = await response.json();
+
+      console.log(data,"fsgfsdgfdg")
+      if (data?.length) {
+        setListOfAssets(await data);
+      }
+
+      // setImages(data); // Update the state with the fetched images
+      // setGeneratedImgList(data)
+
+      // if(data[0]?.prompt === prompt){
+
+      // }
+      return data;
+    } catch (error) {
+      console.error("Error fetching images:", error);
+    }
+  };
+
 
   const bringImageToFront = () => {
     const activeObject = canvasInstance?.current.getActiveObject();
@@ -804,6 +847,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     }
   };
 
+  
   return (
     <AppContext.Provider
       value={{
@@ -812,6 +856,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setLoara,
         GetProjexts,
         canvasRef,
+        projectId, setprojectId,
+        uerId, setUserId,
         SaveProjexts,
         GetProjextById,
         project,
@@ -882,6 +928,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         placementTest,
         setPlacementTest,
         backgroundTest,
+        listofassets, setListOfAssets,
         setBackgrundTest,
         surroundingTest,
         setSurroundingTest,
@@ -894,6 +941,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         generationLoader,
         setGenerationLoader,
         viewMore,
+        fetchAssetsImages,
         setViewMore,
         isMagic,
         setIsMagic,

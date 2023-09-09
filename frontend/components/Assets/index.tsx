@@ -29,7 +29,7 @@ const Assets: React.FC = () => {
         </Row>
 
         <Row>
-          <FileUpload  type={"product"}  title={"Upload Product Photo"}/>
+          <FileUpload  type={"product"}  title={"Upload Product Photo"} />
         </Row>
         <ResponsiveRowWraptwo>
           {productList.map((test, i) => (

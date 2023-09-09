@@ -1,9 +1,11 @@
 import { images } from "@/next.config";
-import React from "react";
+import React, { useEffect } from "react";
 import { styled } from "styled-components";
 
 
   import { motion } from "framer-motion";
+import { useAuth } from "@clerk/nextjs";
+import { useAppState } from "@/context/app.context";
 
   const fadeIn = {
     hidden: { opacity: 0 },
@@ -12,6 +14,21 @@ import { styled } from "styled-components";
   
 
 const AssetsDir = () => {
+  const { userId } = useAuth();
+
+  const { fetchGeneratedImages, generatedImgList,setPopupImage, setGeneratedImgList,
+  
+    listofassets, setListOfAssets,fetchAssetsImages
+  } =
+  useAppState();
+
+  useEffect(() => {
+    if (userId) {
+      fetchAssetsImages(userId, null);
+    }
+  }, []);
+
+
   const image = [
     {
       img: "",
@@ -74,8 +91,9 @@ const AssetsDir = () => {
 
 export default AssetsDir;
 
+
 const GelleryWrapper = styled.div`
-height: 100%;
+  height: 100%;
   .headerText {
     font-size: 32px;
     font-weight: 700;
@@ -103,22 +121,33 @@ height: 100%;
     margin-top: 20px;
     border-radius: 7px;
     border: 1px solid #d9d9d9;
-    /* min-height: 90%; */
     min-height: 75vh;
-
 
     .grid-img {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
       gap: 20px;
       padding: 20px;
+      min-height: 100%;
     }
     .img {
       width: 100%;
-      height: 150px;
+      height: 180px;
       background-color: #d9d9d9;
       border-radius: 7px;
-
+      overflow: hidden;
+      border: 1px solid #d9d9d9;
+      transition: all 0.3s ease-in-out;
+      &:hover {
+        border: 3px solid rgba(249, 208, 13, 1);
+        transform: scale(1.1);
+      }
+    }
+    img {
+      width: 100%;
+      height: 180px;
+      /* object-fit: cover; */
     }
   }
 `;
+
