@@ -6,6 +6,7 @@ import assets from "@/public/assets";
 import ProjectCard from "./ProjectCard";
 import { useAppState } from "@/context/app.context";
 import { useAuth } from "@clerk/nextjs";
+import { setTimeout } from "timers";
 const fadeIn = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 0.5 } },
@@ -21,8 +22,9 @@ const Projects = ({ onDelet }) => {
       // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
       const getUser = localStorage.getItem("userId");
       console.log(getUser);
+      if(userId){
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API}/project?id=${getUser}`,
+        `${process.env.NEXT_PUBLIC_API}/project?id=${userId}`,
         {
           method: "POST",
           headers: {
@@ -36,8 +38,18 @@ const Projects = ({ onDelet }) => {
       );
       // console.log(await response.json(), "dfvcvdfvdvcdsd");
       const datares = await response.json();
-      GetProjexts(getUser);
-      window.open(`/generate/${datares?._id}`, "_self");
+      if(datares){
+        console.log(datares,"sdcdrfc")
+        GetProjexts(getUser);
+        // setTimeout(() => {
+          
+          window.open(`/generate/${datares?._id}`, "_self");
+        // }, 1000);
+  
+
+      }
+     
+      }
     } catch (error) {
       // Handle error
     }
