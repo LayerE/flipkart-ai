@@ -200,7 +200,7 @@ export const FileUpload: React.FC = ({ type, title}) => {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
-                dataUrl: [reader.result],
+                dataUrl: reader.result,
                 user_id: uerId,
                 project_id : projectId
                 
@@ -210,7 +210,7 @@ export const FileUpload: React.FC = ({ type, title}) => {
             }
           );
           const data = await response.json();
-          console.log(data.data, "sfdfds");
+          console.log(data, "sfdfds");
 
           // BgRemover(reader.result, filename);
           if (data?.data) {

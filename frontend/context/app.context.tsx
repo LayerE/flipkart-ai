@@ -4,6 +4,11 @@ import { useAuth } from "@clerk/nextjs";
 import { saveAs } from "file-saver";
 import axios from "axios";
 
+
+
+ 
+
+
 type ContextProviderProps = {
   children: React.ReactNode;
 };
@@ -425,7 +430,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       .get(`${process.env.NEXT_PUBLIC_API}/project?id=${getUser}`)
       .then((response) => {
         setproject(response.data);
-        console.log(response.data);
+     
         setJobId(response.data.jobIds);
 
         return response.data;
@@ -456,9 +461,39 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         }
       );
       const data = await response.json();
-      console.log(response, "dvffv");
+     
 
-      console.log(data, "dvffv");
+  
+      return data;
+
+      // console.log(await response.json(), "dfvcvdfvdvcdsd");
+    } catch (error) {
+      // Handle error
+    }
+  };
+
+  const renameProject = async (userId, projectId, name) => {
+    const json = JSON.stringify({
+      id: userId,
+      projectId: projectId,
+      name: name,
+    });
+    // console.log(json);
+    try {
+      // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API}/rename`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: json,
+        }
+      );
+      const data = await response.json();
+   
       return data;
 
       // console.log(await response.json(), "dfvcvdfvdvcdsd");
@@ -603,9 +638,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       );
       const data = await response.json();
 
-      console.log(data,"fsgfsdgfdg")
-      if (data?.length) {
-        setListOfAssets(await data);
+  
+      if (data?.data?.length) {
+        setListOfAssets(await data.data);
       }
 
       // setImages(data); // Update the state with the fetched images
@@ -652,7 +687,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     const canvas1 = canvasInstance.current;
     try {
       const genBox = generateBox.current;
-      console.log(canvas1, "ssssssssssssss");
+
 
       // canvas1.set({
       //   left: 30,
@@ -665,7 +700,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
       const objects = canvas1.getObjects();
 
-      console.log(objects);
+   
       const maskObjects = [];
       const subjectObjects = [];
       objects.forEach((object) => {
@@ -678,8 +713,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           subjectObjects.push(object);
         }
       });
-      console.log(genBox.style.left, "dgfdg");
-      console.log(parseInt(genBox.style.top), "dgfdg");
+
 
       // Make image with only the mask objects
       const maskCanvas = new fabric.Canvas(null, {
@@ -692,7 +726,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         width: parseInt(genBox.style.width),
         height: parseInt(genBox.style.height),
       });
-      console.log(maskCanvas, "dgfdg");
+
 
       maskObjects.forEach((object) => {
         // You can adjust the object's position relative to the canvas as needed
@@ -742,8 +776,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         });
       });
 
-      console.log(subjectDataUrl, "sub");
-      console.log(maskDataUrl, "mas");
+  
 
       const promtText =
         product +
@@ -874,6 +907,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         regenerateRef,
         bringImageToFront,
         projectlist,
+        renameProject,
         setprojectlist,
         sendImageToBack,
         fetchGeneratedImages,

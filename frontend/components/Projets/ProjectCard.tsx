@@ -3,7 +3,7 @@ import { styled } from "styled-components";
 import assets from "@/public/assets";
 import Link from "next/link";
 
-const ProjectCard = ({ data, setProjects, handleDelet }) => {
+const ProjectCard = ({ data, setProjects, handleDelet ,handleEdite}) => {
   const [open, setopen] = useState(false);
   const [rename, setRename] = useState(false);
   const inputRef = useRef(null);
@@ -14,10 +14,20 @@ const ProjectCard = ({ data, setProjects, handleDelet }) => {
     setTimeout(() => {
       inputRef.current.focus();
       inputRef.current.select();
+
+
     }, 100);
 
     setopen(false);
   };
+  const onChangeHandle = (e, id)=>{
+
+    setProjectName(e.target.value)
+
+    handleEdite(id , e.target.value)
+
+  }
+  
 
   const handleDeletFun = async (id) => {
     // deleteDataByObjectIdFromLocalArray('Projects', data.id)
@@ -41,7 +51,7 @@ const ProjectCard = ({ data, setProjects, handleDelet }) => {
             ref={inputRef}
             type="text"
             value={projectName}
-            onChange={(e) => setProjectName(e.target.value)}
+            onChange={(e) => onChangeHandle(e,data._id) }
             disabled={rename !== true ? true : false}
           />
         </div>

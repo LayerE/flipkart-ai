@@ -1,96 +1,66 @@
 import { images } from "@/next.config";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 
-
-  import { motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { useAuth } from "@clerk/nextjs";
 import { useAppState } from "@/context/app.context";
 
-  const fadeIn = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 1 } },
-  };
-  
+const fadeIn = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 1 } },
+};
 
 const AssetsDir = () => {
   const { userId } = useAuth();
 
-  const { fetchGeneratedImages, generatedImgList,setPopupImage, setGeneratedImgList,
-  
-    listofassets, setListOfAssets,fetchAssetsImages
-  } =
-  useAppState();
+  const {
+    fetchGeneratedImages,
+    generatedImgList,
+    setPopupImage,
+    setGeneratedImgList,
+    listofassets,
+    setListOfAssets,
+    fetchAssetsImages,
+  } = useAppState();
+  const [assers, setAssets] = useState();
 
   useEffect(() => {
     if (userId) {
       fetchAssetsImages(userId, null);
+      // setAssets(listofassets)
+
     }
-  }, []);
+  }, [listofassets]);
 
-
-  const image = [
-    {
-      img: "",
-    },
-    {
-      img: "",
-    },
-    {
-      img: "",
-    },
-    {
-      img: "",
-    },
-    {
-      img: "",
-    },
-    {
-      img: "",
-    },
-    {
-      img: "",
-    },
-    {
-      img: "",
-    },
-    {
-      img: "",
-    },
-    {
-      img: "",
-    },
-  ];
   return (
-    <motion.div
-        initial="hidden"
-        animate="visible"
-        variants={fadeIn}
-       
-      >
-    <GelleryWrapper>
-      <div className="hederbox">
-        <div className="headerText">Assets</div>
-        {/* <div className="small-tabs">
+    <motion.div initial="hidden" animate="visible" variants={fadeIn}>
+      <GelleryWrapper>
+        <div className="hederbox">
+          <div className="headerText">Assets</div>
+          {/* <div className="small-tabs">
           <div className="tab">Product Images </div>
           <div className="tab">Al Model Images </div>
         </div> */}
-      </div>
-
-      <div className="imageBox">
-        <div className="grid-img">
-          {image?.map((image, i) => (
-            <div key={i} className="img"></div>
-          ))}
         </div>
-      </div>
-    </GelleryWrapper>
+
+        <div className="imageBox">
+          <div className="grid-img">
+            {listofassets?.map((image, i) => (
+              <div key={i} className="img" onClick={()=> setPopupImage({url:image?.image_url, status: true})}>
+                <picture>
+                  <img src={image?.image_url} alt="" />
+                </picture>
+              </div>
+            ))}
+          </div>
+        </div>
+      </GelleryWrapper>
     </motion.div>
   );
 };
 
 export default AssetsDir;
-
 
 const GelleryWrapper = styled.div`
   height: 100%;
@@ -150,4 +120,3 @@ const GelleryWrapper = styled.div`
     }
   }
 `;
-

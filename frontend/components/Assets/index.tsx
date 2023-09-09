@@ -7,17 +7,36 @@ import { styled } from "styled-components";
 // import { category, test } from "@/store/dropdown";
 import { useAppState } from "@/context/app.context";
 import { productList } from "@/store/listOfElement";
+import { useAuth } from "@clerk/nextjs";
+import { useRouter } from "next/router";
 // import { fabric } from "fabric";
 
 const Assets: React.FC = () => {
+  const { userId } = useAuth();
   const {
     setProduct,
     uploadedProductlist,
 
     setUploadedProductlist,
     // addimgToCanvas,
+    listofassets,
+    setListOfAssets,
+    fetchAssetsImages,
     addimgToCanvasSubject
   } = useAppState();
+  const { query, isReady } = useRouter();
+  // const { id } = query;
+  const id = (query.id as string[]) || [];
+
+  const [filter, setFilter] = useState()
+  useEffect(() => {
+    if (userId && isReady) {
+      fetchAssetsImages(userId);
+    
+      const filer = listofassets?.filter((item)=> item.project_id === id )
+      setFilter(filer)
+    }
+  }, [listofassets,isReady,userId]);
 
 
 
@@ -32,7 +51,7 @@ const Assets: React.FC = () => {
           <FileUpload  type={"product"}  title={"Upload Product Photo"} />
         </Row>
         <ResponsiveRowWraptwo>
-          {productList.map((test, i) => (
+          {productList?.map((test, i) => (
             <div
               key={i}
               className={"imageBox"}
@@ -51,27 +70,27 @@ const Assets: React.FC = () => {
         </ResponsiveRowWraptwo>
       </div>
       <div className="gap">
-        {uploadedProductlist.length ? (
+        {filter?.length ? (
           <Row>
             <Label>Uploaded Assets</Label>
           </Row>
         ) : null}
 
         <ResponsiveRowWraptwo>
-          {uploadedProductlist.map((test, i) => (
+          {filter?.map((test, i) => (
             <div
               key={i}
               className={
                 "imageBox"
               }
               onClick={() => {
-                addimgToCanvasSubject(test.url);
+                addimgToCanvasSubject(test?.image_url);
 
                
               }}
             >
               <picture>
-                <img src={test.url} alt="" />
+                <img src={test.image_url} alt="" />
               </picture>
             </div>
           ))}

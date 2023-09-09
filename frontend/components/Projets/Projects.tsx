@@ -15,7 +15,7 @@ const fadeIn = {
 const Projects = ({ onDelet }) => {
   const [projects, setProjects] = useState([]);
   const { userId } = useAuth();
-  const { activeTab, setprojectlist, projectlist, GetProjexts } = useAppState();
+  const { activeTab, setprojectlist, projectlist, GetProjexts,renameProject } = useAppState();
 
   const handleCreate = async () => {
     try {
@@ -50,6 +50,16 @@ const Projects = ({ onDelet }) => {
       }
      
       }
+    } catch (error) {
+      // Handle error
+    }
+  };
+  const handleEdite= async (id: string,name:string) => {
+    try {
+      // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
+      renameProject(userId, id, name)
+
+      GetProjexts(userId);
     } catch (error) {
       // Handle error
     }
@@ -108,6 +118,7 @@ const Projects = ({ onDelet }) => {
             data={item}
             setProjects={setProjects}
             handleDelet={handleDelet}
+            handleEdite={handleEdite}
           />
         ))}
         {/* </Link> */}

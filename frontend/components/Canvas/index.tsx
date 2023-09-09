@@ -1,6 +1,8 @@
+// use client
+
 import React, { useRef, useState } from "react";
 import { useAppState } from "@/context/app.context";
-import { useEffect, useLayoutEffect } from "react";
+import { useEffect, useLayoutEffect, useCallback } from "react";
 import { fabric } from "fabric";
 import { styled } from "styled-components";
 import { useRouter } from "next/router";
@@ -43,7 +45,7 @@ export default function CanvasBox({ proid, userId }) {
     generateImageHandeler,
     SaveProjexts,
     project,
-    
+
     // canvasRef
   } = useAppState();
   const [canvasZoom, setCanvasZoom] = useState(1);
@@ -65,7 +67,7 @@ export default function CanvasBox({ proid, userId }) {
       // canvasHistory.current.push(canvasInstance.current.toDatalessJSON());
       // currentCanvasIndex.current++;
     }
-    setCanvas( canvasInstance.current)
+    setCanvas(canvasInstance.current);
     const canvasInstanceRef = canvasInstance.current;
     fabric.Object.prototype.transparentCorners = false;
     // fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
@@ -109,40 +111,46 @@ export default function CanvasBox({ proid, userId }) {
     });
 
     return () => {
-      window.removeEventListener("resize", null);
+  
+      // canvasInstance?.current?.dispose()
+      // window.removeEventListener("resize", null);
       // saveCanvasDataToLocal();
       // Clean up resources (if needed) when the component unmounts
       // canvasInstance?.current.dispose();
     };
-  }, [project]);
+  }, [isReady,canvasInstance]);
 
-   // Load canvas data from the database when the component mounts
-   useEffect(() => {
+  // Load canvas data from the database when the component mounts
+  useEffect(() => {
     // Fetch canvas data from your API and load it into the canvas
     const canvasInstanceRef = canvasInstance.current;
-if(isReady){
-    axios
-    .get(`${process.env.NEXT_PUBLIC_API}/project?id=${proid}`)
-    .then((response) => {
-      
-      
-      if (canvasInstanceRef) {
-        console.log(proid,id,response,id,"sd",canvasInstanceRef)
-        canvasInstanceRef.loadFromJSON(JSON.stringify(response.data.canvas), canvasInstanceRef.requestRenderAll.bind(canvasInstanceRef));
-        // canvasInstanceRef.loadFromJSON(savedCanvasDataLocal, () => {
-        //   canvasInstanceRef.renderAll();
-        // });
-      }
-    })
-  
-    .catch((error) => {
-      console.error(error);
-      return error;
-    });
-  }
-  }, [canvas, project]);
+    if (isReady) {
+      axios
+        .get(`${process.env.NEXT_PUBLIC_API}/project?id=${proid}`)
+        .then((response) => {
+          if (canvasInstanceRef) {
+            console.log(proid, id, response, id, "sd", canvasInstanceRef);
+            canvasInstanceRef.loadFromJSON(
+              JSON.stringify(response.data.canvas),
+              canvasInstanceRef.requestRenderAll.bind(canvasInstanceRef)
+            );
+            // canvasInstanceRef.loadFromJSON(savedCanvasDataLocal, () => {
+            //   canvasInstanceRef.renderAll();
+            // });
+          }
+        })
 
+        .catch((error) => {
+          console.error(error);
+          return error;
+        });
 
+        return () => {
+          // canvasInstance.current.dispose();
+          // saveCanvasToDatabase()
+        };
+    }
+  }, [canvas,isReady]);
 
   useEffect(() => {
     const canvasInstanceRef = canvasInstance.current;
@@ -317,13 +325,13 @@ if(isReady){
 
     return () => {
       // canvasInstance.current.dispose();
-    }
-
-  }, []);
+      // saveCanvasToDatabase()
+    };
+  }, [project,isReady,canvasInstance]);
 
   const saveCanvasToDatabase = () => {
-    const canvasData = canvasInstance.current.toJSON()
-    console.log(userId,proid,canvasData,"dsffff");
+    const canvasData = canvasInstance.current.toJSON();
+    console.log(userId, proid, canvasData, "dsffff");
     SaveProjexts(userId, proid, canvasData);
   };
 
@@ -409,9 +417,9 @@ if(isReady){
           <button className="selectone">Regenrate Product</button>
         </div>
 
-        {/* <button className="ss" onClick={() => saveCanvasToDatabase()}>
-          fdsfsd
-        </button> */}
+        <div className="ss" onClick={() => saveCanvasToDatabase()}>
+  <picture><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAYFBMVEX///8AAAD4+Pjv7+8aGhoTExOYmJiTk5P09PQICAiQkJD6+vp/f39WVlbGxsaurq5ubm6FhYUnJye8vLwfHx9oaGjR0dHq6urg4OB1dXWkpKS2trY0NDQpKSlNTU1fX19H7sBTAAADJUlEQVR4nO3d224iMRBFUbo7QLhDrkwyM/n/vxwhTR5AUDbUsV1Ee78iFSw5pIliN6MRERERERERERERERERxWvRn29xy7CTGVc9WqR+vVu9dOeb3jLwZMYx4vHk0YnEYNVPni7o6gi7uYRxuWeDpxHOEsLbniO7pQ2sIixK3CaAdYQFiakVrCUsRky8BysKC/266dPAasIyqziNJCyxir11HawvLLCK6wxgTaF+FXfRhPJVXIUTildxcenDdkOhdhVzrhXVhdJVjClUEoMKhcSoQh0xrFBGjCtUEQMLRReNyELNKoYWSoixhQpicKGAGF3oJ4YXuonxhd6Lxh0Inat4D0LfKt6FsPP88w0hQoQIf5Aw9V/uexTOp0cd7+f4EUIzhAjzQ4jw1hDWFur3D0QT/pLJvnsPJny4aYOp1UcwYfcpo/0vZ49LVaHrOc40vwpYRfh7kOlG1/6M1hF240/Ze3Gf3O3ZRNh1f17nE0HLv9f6qgkbhhBh/BAijB9ChPFDiDB+CBHGDyHC+CFEGD+ECOOHEGH8ECKMH0KE8UOIMH5VhF+bN+mWmtHwtvmKIxxPtbrvhsk4hnBbxndoyNo9VFq4kXnOtWkvfJZhzpdxv7iywrIreCi9ikWFWxnkcsn3YlFhjbvDFn0RqeHl7w17aNJQ+ChTWKV27hcUvsoQdq/NhB8yg11iW3RB4V5msNs3E77LDHaJAyblhLNyH0iPG1oJx9WE9t8YCK0Qygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxPC/VCnfSth91Ar+2V4hHnf6dy4F9ctjLO+l7txKw8w77vVG7dzCdetX35Ga5ewv+7+7y16cp7bmbYGJPOe2wl/EnjmXMKs839NE5x/XLY2mC39wIzzfw0TnX+Me1GUrOCh51lryvmEZ5D7Sbzr4tNUe4C1X+9WcT6Gv6x26xIHdBd9lORfTkRERERERERERERERESC/gF2IVePB+evpwAAAABJRU5ErkJggg==" alt="" /></picture>
+        </div>
 
         <canvas ref={canvasRef} />
       </div>
@@ -422,8 +430,17 @@ if(isReady){
 const Wrapper = styled.div`
   .ss {
     position: absolute;
-    top: 100px;
+    bottom: 10px;
+    left: 20px;
     z-index: 1000;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    &:hover{
+      transform: scale(1.1);
+    }
+    img{
+      width: 25px;
+    }
   }
   .rightbox {
   }

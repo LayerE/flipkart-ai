@@ -45,10 +45,10 @@ export default function Home() {
     regeneratePopup,
     generateImageHandeler,
     SaveProjexts,
-    project,
+    
     GetProjextById,
     setproject,
-
+    project,
     jobId,
     projectId, setprojectId,
     uerId, setUserId,
@@ -63,7 +63,8 @@ export default function Home() {
     if (isReady) {
       GetProjextById(id);
     }
-  }, [id]);
+    
+  }, [id,project]);
 
 
   const upateImage = (url) => {
@@ -79,6 +80,9 @@ export default function Home() {
     // addimgToCanvasGen(url);
   };
   const [filteredArray, setFilteredArray] = useState([]);
+  const [canva, setcanva] = useState(1);
+
+
 
   useEffect(() => {
     if (isReady) {
@@ -90,7 +94,8 @@ export default function Home() {
       filteredResult = generatedImgList.filter((obj) =>
         jobId?.includes(obj?.task_id)
       );
-
+console.log(canva)
+setcanva(canva+1)
       // Set the filtered array in the state
       setFilteredArray(filteredResult);
       const canvas1 = canvasInstance.current;
@@ -113,16 +118,13 @@ export default function Home() {
       setprojectId(null)
 
     }
-  }, [jobId, setGeneratedImgList, generatedImgList, regeneratePopup]);
+  }, [jobId, setGeneratedImgList, generatedImgList, regeneratePopup,project]);
 
   return (
     <MainPages>
       {/* {loader ? <Loader /> : null} */}
 
-      <motion.div
-        initial="hidden"
-        animate="visible"
-        variants={fadeIn}
+      <div
         className="news"
       >
         {popup?.status ? <PopupUpload /> : null}
@@ -195,9 +197,12 @@ export default function Home() {
             </div>
             
           </div> */}
-          <CanvasBox proid={id} userId={userId} />
+       
+            <CanvasBox proid={id} userId={userId} />
+
+         
         </div>
-      </motion.div>
+      </div>
     </MainPages>
   );
 }

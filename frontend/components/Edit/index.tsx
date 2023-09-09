@@ -211,13 +211,13 @@ const Edit = () => {
     // console.log(await data, "upscale ");
 
     const data = await upSacle(
-      modifidImageArray[modifidImageArray.length - 1]?.url,
+      downloadImg,
       "imger"
     );
     console.log(data, "upscale ");
 
     if (data) {
-      // addimgToCanvasGen(data);
+      addimgToCanvasGen(data);
       setSelectedImg({ status: true, image: data });
 
       setModifidImageArray((pre) => [...pre, { url: data, tool: "upscale" }]);
@@ -288,7 +288,7 @@ const Edit = () => {
       <div className="gap">
         <Label>Tools</Label>
         <div className="gap">
-          <div
+          {/* <div
             className={"selectTool"}
             onClick={() => {
               HandelBG();
@@ -298,7 +298,7 @@ const Edit = () => {
             <div>
               <p>Remove the background of your image in one click</p>
             </div>
-          </div>
+          </div> */}
 
           <div
             className={
