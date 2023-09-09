@@ -40,8 +40,10 @@ export default function CanvasBox({ proid, userId }) {
     currentCanvasIndex,
     generateBox,
     GetProjexts,
+    generateImageHandeler,
     SaveProjexts,
     project,
+    
     // canvasRef
   } = useAppState();
   const [canvasZoom, setCanvasZoom] = useState(1);
@@ -398,6 +400,7 @@ if(isReady){
           ref={regenerateRef}
           // style={{ display: btnVisible ? "block" : "none" }}
           onClick={() => {
+            generateImageHandeler(userId, proid);
             setRegeneratePopup({ status: true, url: "" });
             setActiveTab(6);
             console.log("sdsfs");

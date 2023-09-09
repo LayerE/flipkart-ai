@@ -28,11 +28,12 @@ const ProjectCard = ({ data, setProjects, handleDelet }) => {
   return (
     <CardWrapper className="projectfile">
       <a href={`/generate/${data._id}`}>
-
-      <div className="img">
-<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhLgCi7ipEef9UMQo_zSkniRuDX4Nehm8Oag&usqp=CAU" alt="" />
-
-      </div>
+        <div className="img">
+          <img
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhLgCi7ipEef9UMQo_zSkniRuDX4Nehm8Oag&usqp=CAU"
+            alt=""
+          />
+        </div>
       </a>
       <div className="testcreat">
         <div className="pro-name">
@@ -111,21 +112,19 @@ const ProjectCard = ({ data, setProjects, handleDelet }) => {
 export default ProjectCard;
 
 const CardWrapper = styled.div`
+  .img {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-.img{
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  
-  img{
-    width: 99.9%;
-    object-fit: cover;
-  height: 99.9%;
-
+    img {
+      width: 99.9%;
+      object-fit: cover;
+      height: 99.9%;
+    }
   }
-}
   width: 100%;
   height: 100%;
   border-radius: 16px;

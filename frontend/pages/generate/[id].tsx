@@ -50,7 +50,8 @@ export default function Home() {
     setproject,
 
     jobId,
-
+    projectId, setprojectId,
+    uerId, setUserId,
     setGeneratedImgList,
   } = useAppState();
 
@@ -81,6 +82,8 @@ export default function Home() {
 
   useEffect(() => {
     if (isReady) {
+      setprojectId(id)
+      setUserId(userId);
       // Filter the array of objects based on the arrayOfIds
       let filteredResult;
 
@@ -104,6 +107,11 @@ export default function Home() {
       if (filteredResult?.length <= 4 && subjectObjects?.length <= 1) {
         addimgToCanvasGen(filteredResult[0]?.modified_image_url);
       }
+    }
+
+    return () => {
+      setprojectId(null)
+
     }
   }, [jobId, setGeneratedImgList, generatedImgList, regeneratePopup]);
 

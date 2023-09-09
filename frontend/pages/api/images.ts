@@ -32,6 +32,7 @@ export default async (req: NextRequest) => {
       method: "GET",
     });
 
+
     const json = await response.json();
 
     return NextResponse.json({ data: json });
