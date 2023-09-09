@@ -35,6 +35,8 @@ export default async (req: NextRequest) => {
     const body = await req.json();
     const { user_id, dataUrl, project_id } = body;
 
+    console.log(dataUrl);
+
     if (!user_id) {
       return NextResponse.json({ error: "Missing user_id" });
     }
@@ -45,12 +47,14 @@ export default async (req: NextRequest) => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          data: dataUrl,
+          data: [dataUrl],
         }),
       }
     );
 
     const data = await response.json();
+
+    console.log(data);
 
     // Upload image to ImageKit
     const { url: imageUrl, height, width } = await uploadImage(data?.data[0]);
