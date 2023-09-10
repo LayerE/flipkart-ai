@@ -8,7 +8,8 @@ const projectSchema = new Schema({
   canvas: Object,
   canvasHistory: Object,
   asserts: Array,
-  project:Array
+  project:Array,
+  recently:Array
   
 },
 {

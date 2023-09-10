@@ -442,16 +442,16 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   };
   const SaveProjexts = async (userId, projectId, canvas) => {
     const json = JSON.stringify({
-      id: userId,
-      projectId: projectId,
-      canvas: canvas,
+      user_id: userId,
+      project_id: projectId,
+      canvasdata: canvas,
     });
     console.log(json);
     try {
       // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API}/save/project`,
+        `/api/canvasdata`,
         {
           method: "POST",
           headers: {

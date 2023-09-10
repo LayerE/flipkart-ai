@@ -13,6 +13,8 @@ export default async (req: NextRequest) => {
     const body = await req.json();
     const { user_id, project_id, canvasdata } = body;
 
+    console.log(user_id, project_id, canvasdata)
+
     if (!user_id) {
       return NextResponse.json({ error: "Missing user_id" });
     }
@@ -38,6 +40,8 @@ export default async (req: NextRequest) => {
       );
 
       const data = await response.json();
+   
+
       return NextResponse.json({ data });
     } else if (!project_id) {
       return NextResponse.json({ error: "Missing project_id" });
@@ -60,6 +64,7 @@ export default async (req: NextRequest) => {
           }),
         }
       );
+
 
       return NextResponse.json({ data: "success" });
     }

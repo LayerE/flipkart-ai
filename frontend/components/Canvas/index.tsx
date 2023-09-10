@@ -121,16 +121,20 @@ export default function CanvasBox({ proid, userId }) {
     // Fetch canvas data from your API and load it into the canvas
     const canvasInstanceRef = canvasInstance.current;
     setloadercarna(true)
-    if (isReady) {
+    if (isReady && userId) {
       axios
-        .get(`${process.env.NEXT_PUBLIC_API}/project?id=${proid}`)
-        .then((response) => {
+        .post(`/api/canvasdata`,
+        {
+          user_id: userId,
+          project_id: proid,
+       })
+       .then((response) => {
+          console.log(response?.data?.data[response.data.data.length]?.canvasdata, "adsfnbdhjskgvyuifdsgh");
           if (canvasInstanceRef) {
-            console.log(proid, id, response, id, "sd", canvasInstanceRef);
             canvasInstanceRef.loadFromJSON(
-              JSON.stringify(response.data.canvas),
+              JSON.stringify(response?.data?.data[response.data.data.length-1].canvasdata),
               canvasInstanceRef.requestRenderAll.bind(canvasInstanceRef)
-            );
+              );
             setloadercarna(false)
             // canvasInstanceRef.loadFromJSON(savedCanvasDataLocal, () => {
             //   canvasInstanceRef.renderAll();
@@ -147,7 +151,7 @@ export default function CanvasBox({ proid, userId }) {
 
        
     }
-  }, [isReady]);
+  }, [isReady,userId]);
 
   useEffect(() => {
     const canvasInstanceRef = canvasInstance.current;
