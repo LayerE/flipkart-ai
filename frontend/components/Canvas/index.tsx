@@ -129,10 +129,10 @@ export default function CanvasBox({ proid, userId }) {
           project_id: proid,
        })
        .then((response) => {
-          console.log(response?.data?.data[response.data.data.length]?.canvasdata, "adsfnbdhjskgvyuifdsgh");
+          console.log(response?.data?.data[response?.data?.data?.length-1]?.canvasdata, "adsfnbdhjskgvyuifdsgh");
           if (canvasInstanceRef) {
             canvasInstanceRef.loadFromJSON(
-              JSON.stringify(response?.data?.data[response.data.data.length-1].canvasdata),
+              JSON.stringify(response?.data?.data[response?.data?.data?.length-1].canvasdata),
               canvasInstanceRef.requestRenderAll.bind(canvasInstanceRef)
               );
             setloadercarna(false)

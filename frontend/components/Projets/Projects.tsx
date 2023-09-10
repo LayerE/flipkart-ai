@@ -38,13 +38,13 @@ const Projects = ({ onDelet }) => {
       );
       // console.log(await response.json(), "dfvcvdfvdvcdsd");
       const datares = await response.json();
-      if(datares){
+      if(datares?._id){
         console.log(datares,"sdcdrfc")
         GetProjexts(getUser);
-        // setTimeout(() => {
+        setTimeout(() => {
           
           window.open(`/generate/${datares?._id}`, "_self");
-        // }, 1000);
+        }, 1000);
   
 
       }
