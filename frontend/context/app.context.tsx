@@ -605,6 +605,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       );
       const data = await response.json();
       if (data?.length) {
+     
         setGeneratedImgList(await data);
       }
 

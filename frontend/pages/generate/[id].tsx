@@ -45,13 +45,15 @@ export default function Home() {
     regeneratePopup,
     generateImageHandeler,
     SaveProjexts,
-    
+
     GetProjextById,
     setproject,
     project,
     jobId,
-    projectId, setprojectId,
-    uerId, setUserId,
+    projectId,
+    setprojectId,
+    uerId,
+    setUserId,
     setGeneratedImgList,
   } = useAppState();
 
@@ -63,9 +65,7 @@ export default function Home() {
     if (isReady) {
       GetProjextById(id);
     }
-    
-  }, [id,isReady]);
-
+  }, [id, isReady]);
 
   const upateImage = (url) => {
     addimgToCanvasGen(url);
@@ -80,13 +80,10 @@ export default function Home() {
     // addimgToCanvasGen(url);
   };
   const [filteredArray, setFilteredArray] = useState([]);
-  
-
-
 
   useEffect(() => {
-    if (isReady) {
-      setprojectId(id)
+    // if (isReady) {
+      setprojectId(id);
       setUserId(userId);
       // Filter the array of objects based on the arrayOfIds
       let filteredResult;
@@ -111,21 +108,18 @@ export default function Home() {
       if (filteredResult?.length <= 4 && subjectObjects?.length <= 1) {
         addimgToCanvasGen(filteredResult[0]?.modified_image_url);
       }
-    }
+    // }
 
     return () => {
-      setprojectId(null)
-
-    }
-  }, [jobId, setGeneratedImgList, generatedImgList, regeneratePopup,isReady]);
+      setprojectId(null);
+    };
+  }, [jobId, setGeneratedImgList, generatedImgList, regeneratePopup]);
 
   return (
     <MainPages>
       {/* {loader ? <Loader /> : null} */}
 
-      <div
-        className="news"
-      >
+      <div className="news">
         {popup?.status ? <PopupUpload /> : null}
         <Sidebar />
         <div
@@ -196,10 +190,8 @@ export default function Home() {
             </div>
             
           </div> */}
-       
-            <CanvasBox proid={id} userId={userId} />
 
-         
+          <CanvasBox proid={id} userId={userId} />
         </div>
       </div>
     </MainPages>
