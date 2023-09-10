@@ -987,7 +987,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setGeneratedImgList,
         loader,
         setLoader,
-
+        positionBtn,
         undoArray,
         setUndoArray,
         modifidImageArray,

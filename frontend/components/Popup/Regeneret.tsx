@@ -76,8 +76,8 @@ const Regeneret = () => {
         function (img: any) {
           // Set the image's dimensions
           img.scaleToWidth(200);
-          const canvasWidth = 360;
-          const canvasHeight = 400;
+          const canvasWidth = 340;
+          const canvasHeight = 38;
           const imageAspectRatio = img.width / img.height;
 
           // Calculate the maximum width and height based on the canvas size
@@ -91,14 +91,20 @@ const Regeneret = () => {
           img.on("scaling", function () {
             positionBtn(img);
           });
+      const getRandomPosition = (max) => Math.floor(Math.random() * max);
+
+          const randomLeft = getRandomPosition(
+            canvasInstance?.current?.width / 2 - img.width
+          );
+      const randomTop = getRandomPosition(300);
 
           // Set the position of the image
           img.set("category", "generated");
           img.set({
-            left: col * cellWidth,
-            top: row * cellHeight,
-            width: cellWidth,
-            height: cellHeight,
+            left: randomLeft,
+            top: randomTop,
+            width: 340,
+            height: 360,
           });
 
           console.log(img);
