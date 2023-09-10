@@ -41,8 +41,17 @@ export default function Home() {
   } = useAppState();
 
   const [loadercarna, setloadercarna] = useState(false);
+  const [rerenter, setre] = useState(false);
+
+
+  
 
   useEffect(() => {
+
+    if(rerenter<=6){
+      setre(rerenter+1)
+
+    }
     if (isReady) {
       const getUser = localStorage.getItem("userId");
       if (!getUser) {
@@ -50,18 +59,19 @@ export default function Home() {
         if (userId) localStorage.setItem("userId", userId);
       }
       axios
-        .get(`${process.env.NEXT_PUBLIC_API}/user?id=${getUser||userId}`)
+        .get(`${process.env.NEXT_PUBLIC_API}/user?id=${userId}`)
         .then((response) => {
           fetchData(userId);
           setUserId(response.data.userId);
 
-          console.log("dfd",response.data.userId,response);
+          // console.log("dfd",response.data.userId,response);
         })
         .catch((error) => {
           console.error(error);
         });
     }
-  }, [isReady, userId, loadercarna, uerId]);
+  }, [isReady, userId, projectlist]);
+
   useEffect(() => {
     if (isReady) {
       // const getUser = localStorage.getItem("userId");
@@ -69,9 +79,9 @@ export default function Home() {
       //   if (userId) localStorage.setItem("userId", userId);
       // }
 
-      if (userId) fetchData(userId);
+      // if (userId) fetchData(userId);
     }
-  }, [userId, isReady, loadercarna]);
+  }, [userId, isReady,rerenter,projectlist]);
 
   const fetchData = (getUser: string) => {
     setloadercarna(true);
@@ -79,7 +89,7 @@ export default function Home() {
       .get(`${process.env.NEXT_PUBLIC_API}/getprojects?id=${getUser}`)
       .then((response) => {
         setprojectlist(response.data);
-        console.log(response.data);
+        // console.log(response.data);
         setloadercarna(false);
       })
       .catch((error) => {
