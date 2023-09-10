@@ -64,7 +64,7 @@ export default function Home() {
       GetProjextById(id);
     }
     
-  }, [id]);
+  }, [id,isReady]);
 
 
   const upateImage = (url) => {
@@ -117,7 +117,7 @@ export default function Home() {
       setprojectId(null)
 
     }
-  }, [jobId, setGeneratedImgList, generatedImgList, regeneratePopup]);
+  }, [jobId, setGeneratedImgList, generatedImgList, regeneratePopup,isReady]);
 
   return (
     <MainPages>

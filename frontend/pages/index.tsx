@@ -17,68 +17,82 @@ import Tools from "@/components/Tools/Tools";
 import Gellery from "@/components/Gellery/Gellery";
 import AssetsDir from "@/components/AssetsDirectory";
 import { useAuth } from "@clerk/nextjs";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PopupCard from "@/components/Popup/PopupCard";
 import axios from "axios";
+import { useRouter } from "next/router";
+import Loader from "@/components/Loader";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   const { userId } = useAuth();
+  const { query, isReady } = useRouter();
+  // const { id } = query;
+  const id = (query.id as string[]) || [];
+  const {
+    activeTabHome,
+    setActiveTabHome,
+    activeTab,
+    popupImage,
+    projectlist,
+    setprojectlist,
+    uerId, setUserId
+  } = useAppState();
 
-  const { activeTabHome, setActiveTabHome, activeTab, popupImage , projectlist, setprojectlist} =
-    useAppState();
-
-
+  const [loadercarna, setloadercarna] = useState(false);
 
   useEffect(() => {
-    const getUser = localStorage.getItem("userId");
-    if (!getUser) {
-      setTimeout(() => {}, 3000);
-      if (userId) localStorage.setItem("userId", userId);
+    if (isReady) {
+      const getUser = localStorage.getItem("userId");
+      if (!getUser) {
+        setTimeout(() => {}, 3000);
+        if (userId) localStorage.setItem("userId", userId);
+      }
+      axios
+        .get(`${process.env.NEXT_PUBLIC_API}/user?id=${getUser||userId}`)
+        .then((response) => {
+          fetchData(userId);
+          setUserId(response.data.userId);
+
+          console.log("dfd",response.data.userId,response);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
-    axios.get(  `${process.env.NEXT_PUBLIC_API}/user?id=${getUser}`)
+  }, [isReady, userId, loadercarna, uerId]);
+  useEffect(() => {
+    if (isReady) {
+      // const getUser = localStorage.getItem("userId");
+      // if (!getUser) {
+      //   if (userId) localStorage.setItem("userId", userId);
+      // }
+
+      if (userId) fetchData(userId);
+    }
+  }, [userId, isReady, loadercarna]);
+
+  const fetchData = (getUser: string) => {
+    setloadercarna(true);
+    axios
+      .get(`${process.env.NEXT_PUBLIC_API}/getprojects?id=${getUser}`)
       .then((response) => {
-     
-        console.log(response)
+        setprojectlist(response.data);
+        console.log(response.data);
+        setloadercarna(false);
       })
       .catch((error) => {
         console.error(error);
+        setloadercarna(false);
       });
-
- 
-
-  }, []);
-  useEffect(() => {
-    const getUser = localStorage.getItem("userId");
-    if (!getUser) {
-      if (userId) localStorage.setItem("userId", userId);
-    }
-  
-
-    fetchData(getUser)
-
-  }, []);
-
-  const fetchData = (getUser:string) => {
-    axios.get(  `${process.env.NEXT_PUBLIC_API}/getprojects?id=${getUser}`)
-    .then((response) => {
-      setprojectlist(response.data)
-      console.log(response.data)
-    })
-    .catch((error) => {
-      console.error(error);
-    });
   };
 
   const handleDelete = () => {
-  
-
     // Update the list of items by fetching data again
     fetchData(userId);
-    console.log("dsfs", userId)
-  }
-
+    console.log("dsfs", userId);
+  };
 
   return (
     <MainPage>
@@ -93,8 +107,12 @@ export default function Home() {
         <HomeSidebar />
 
         <div className="dashbaord">
+          {/* {
+        loadercarna ? 
+        <Loader/>:
+null} */}
           {activeTabHome === 1 ? (
-            <Projects onDelet={handleDelete}/>
+            <Projects onDelet={handleDelete} />
           ) : activeTabHome === 2 ? (
             <AssetsDir />
           ) : activeTabHome === 3 ? (
@@ -120,6 +138,7 @@ const MainPage = styled.div`
 `}
 
   .dashbaord {
+    position: relative;
     background: #f8f8f8;
     width: 100%;
     max-height: 100vh;

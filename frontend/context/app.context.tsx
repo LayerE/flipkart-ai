@@ -804,6 +804,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           prompt: promtText.trim(),
           user_id: userId,
           lora_type: loara,
+          num_images: 1,
+
         }),
       });
 
