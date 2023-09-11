@@ -513,8 +513,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     fabric.Image.fromURL(await getBase64FromUrl(url), function (img: any) {
       // Set the image's dimensions
       img.scaleToWidth(200);
-      const canvasWidth = 340;
-      const canvasHeight = 380;
+      const canvasWidth = 512;
+      const canvasHeight = 512;
       const imageAspectRatio = img.width / img.height;
 
       // Calculate the maximum width and height based on the canvas size
