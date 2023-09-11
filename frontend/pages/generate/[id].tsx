@@ -101,12 +101,12 @@ export default function Home() {
     });
 
     if (filteredResult?.length < jobId?.length ) {
-      addimgToCanvasGen(filteredResult[0]?.modified_image_url);
+      // addimgToCanvasGen(filteredResult[0]?.modified_image_url);
     }
     // }
 
     return () => {
-      setprojectId(null);
+      // setprojectId(null);
     };
   }, [jobId, setGeneratedImgList, generatedImgList, regeneratePopup]);
 

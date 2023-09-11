@@ -3,7 +3,7 @@ import { styled } from "styled-components";
 import assets from "@/public/assets";
 import Link from "next/link";
 
-const ProjectCard = ({ data, setProjects, handleDelet ,handleEdite}) => {
+const ProjectCard = ({ data, setProjects, handleDelet, handleEdite }) => {
   const [open, setopen] = useState(false);
   const [rename, setRename] = useState(false);
   const inputRef = useRef(null);
@@ -14,20 +14,15 @@ const ProjectCard = ({ data, setProjects, handleDelet ,handleEdite}) => {
     setTimeout(() => {
       inputRef.current.focus();
       inputRef.current.select();
-
-
     }, 100);
 
     setopen(false);
   };
-  const onChangeHandle = (e, id)=>{
+  const onChangeHandle = (e, id) => {
+    setProjectName(e.target.value);
 
-    setProjectName(e.target.value)
-
-    handleEdite(id , e.target.value)
-
-  }
-  
+    handleEdite(id, e.target.value);
+  };
 
   const handleDeletFun = async (id) => {
     // deleteDataByObjectIdFromLocalArray('Projects', data.id)
@@ -39,10 +34,9 @@ const ProjectCard = ({ data, setProjects, handleDelet ,handleEdite}) => {
     <CardWrapper className="projectfile">
       <Link href={`/generate/${data._id}`}>
         <div className="img">
-          {/* <img
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhLgCi7ipEef9UMQo_zSkniRuDX4Nehm8Oag&usqp=CAU"
-            alt=""
-          /> */}
+          {data?.previewImage !== "" ? (
+            <img src={data?.previewImage} alt="" />
+          ) : null}
         </div>
       </Link>
       <div className="testcreat">
@@ -51,7 +45,7 @@ const ProjectCard = ({ data, setProjects, handleDelet ,handleEdite}) => {
             ref={inputRef}
             type="text"
             value={projectName}
-            onChange={(e) => onChangeHandle(e,data._id) }
+            onChange={(e) => onChangeHandle(e, data._id)}
             disabled={rename !== true ? true : false}
           />
         </div>
@@ -153,9 +147,8 @@ const CardWrapper = styled.div`
     width: 120px;
     border: none;
     color: #000;
-    &:focus{
-    color: #000;
-
+    &:focus {
+      color: #000;
     }
     &:hover {
       border: none;

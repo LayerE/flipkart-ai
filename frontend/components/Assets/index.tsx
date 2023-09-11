@@ -36,9 +36,9 @@ const Assets: React.FC = () => {
       const filer = listofassets?.filter((item)=> item.project_id === id )
       setFilter(filer)
     }
-  }, [listofassets,isReady,userId]);
+  }, [isReady,userId]);
 
-
+  // listofassets
 
   return (
     <div className="accest">

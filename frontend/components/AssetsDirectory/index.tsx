@@ -31,7 +31,8 @@ const AssetsDir = () => {
       // setAssets(listofassets)
 
     }
-  }, [listofassets]);
+  }, []);
+  // listofassets
 
   return (
     <motion.div initial="hidden" animate="visible" variants={fadeIn}>

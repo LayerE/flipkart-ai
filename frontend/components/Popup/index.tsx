@@ -16,42 +16,47 @@ const PopupUpload = () => {
 
   const HandileUpload = async () => {
     if (productnew !== "") {
-      try {
-        // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
-        // const getUser = localStorage.getItem("userId");
-        // console.log(
-        //   `${process.env.NEXT_PUBLIC_API}/upload/asset`,
-        //   popup?.data,
-        //   id,
-        //   userId
-        // );
-        // const response = await fetch(
-        //   `${process.env.NEXT_PUBLIC_API}/upload/asset`,
-        //   {
-        //     method: "POST",
-        //     headers: {
-        //       "Content-Type": "application/json",
-        //     },
-        //     body: JSON.stringify({
-        //       userId: userId,
-        //       projectId: id,
-        //       url: popup?.data,
-        //     }),
-        //   }
-        // );
-        // // console.log(await response.json(), "dfvcvdfvdvcdsd");
-        // const datares = await response.json();
-        // console.log(datares);
+      console.log(popup.dataArray)
 
-        addimgToCanvasSubject(popup?.data)
-        setUploadedProductlist((prev) => [
-          ...prev,
-          { url: popup?.data, tittle: productnew },
-        ]);
-        setProduct(productnew);
-        setPopup({ status: false, data: null });
+      try {
+        
+          // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
+       
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_API}/assets`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                userId: userId,
+                projectId: id,
+                asset: {url:popup.dataArray.imageUrl, product:productnew },
+              }),
+            }
+          );
+       
+          const datares = await response;
+          console.log(datares)
+  
+    if(datares){
+      
+      addimgToCanvasSubject(popup?.data)
+      setUploadedProductlist((prev) => [
+        ...prev,
+        { url: popup?.data, tittle: productnew },
+      ]);
+      setProduct(productnew);
+      setPopup({ status: false, data: null });
+
+    }
+      
+
       } catch (error) {
         // Handle error
+      setPopup({ status: false, data: null });
+
       }
     }
   };

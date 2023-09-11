@@ -252,35 +252,36 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     }
   };
 
-  useEffect(() => {
-    if (!canvasInstance.current) {
-      canvasInstance.current = new fabric.Canvas(canvasRef.current, {
-        width: window.innerWidth,
-        height: window.innerHeight,
-        // transparentCorners: false,
-        // originX: "center",
-        // originY: "center",
-      });
-    }
+  // useEffect(() => {
+  //   if (!canvasInstance.current) {
+  //     canvasInstance.current = new fabric.Canvas(canvasRef.current, {
+  //       width: window.innerWidth,
+  //       height: window.innerHeight,
+  //       // transparentCorners: false,
+  //       // originX: "center",
+  //       // originY: "center",
+  //     });
+  //   }
 
-    // Resize canvas when the window is resized
-    window.addEventListener("resize", () => {
-      canvasInstance.current.setDimensions({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-    });
-    return () => {
-      window.removeEventListener("resize", null);
-      // Clean up resources (if needed) when the component unmounts
-      //  canvasInstanceRef.dispose();
-    };
-  }, []);
+  //   // Resize canvas when the window is resized
+  //   window.addEventListener("resize", () => {
+  //     canvasInstance.current.setDimensions({
+  //       width: window.innerWidth,
+  //       height: window.innerHeight,
+  //     });
+  //   });
+  //   return () => {
+  //     window.removeEventListener("resize", null);
+  //     // Clean up resources (if needed) when the component unmounts
+  //     //  canvasInstanceRef.dispose();
+  //   };
+  // }, []);
 
   const addimgToCanvas = async (url: string) => {
     fabric.Image.fromURL(await getBase64FromUrl(url), function (img: any) {
       // Set the image's dimensions
       img.scaleToWidth(150);
+      // saveCanvasToDatabase()
       // img.scaleToHeight(150);
       // Scale the image to have the same width and height as the rectangle
       // const scaleX = downloadRect.width / img.width;
@@ -315,6 +316,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const addimgToCanvasSubject = async (url: string) => {
     fabric.Image.fromURL(await getBase64FromUrl(url), function (img: any) {
       // Set the image's dimensions
+      // saveCanvasToDatabase()
+
       img.scaleToWidth(200);
       const canvasWidth = 360;
       const canvasHeight = 400;
@@ -427,6 +430,44 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         return error;
       });
   };
+
+  const saveCanvasToDatabase = async() => {
+    const canvasData = canvasInstance.current.toJSON();
+    if(canvasData.objects.length > 1) {
+    
+    // console.log("sdsdfs,",userId, projectId, canvasData, "dsffff");
+    SaveProjexts(userId, projectId, canvasData);
+    const filteredResult = generatedImgList.filter((obj) =>
+    jobId?.includes(obj?.task_id)
+  );
+
+    try {
+      // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
+   
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API}/addPreview`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: userId,
+            projectId: projectId,
+            img: filteredResult[0].modified_image_url,
+          }),
+        }
+      );
+      // console.log(await response.json(), "dfvcvdfvdvcdsd");
+      const datares = await response;
+
+     
+      // window.open(`/generate/${datares?._id}`, "_self");
+    } catch (error) {
+      // Handle error
+    }
+    }
+  };
   const GetProjextById = (getUser: string) => {
     axios
       .get(`${process.env.NEXT_PUBLIC_API}/project?id=${getUser}`)
@@ -514,6 +555,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const addimgToCanvasGen = async (url: string) => {
     fabric.Image.fromURL(await getBase64FromUrl(url), function (img: any) {
       // Set the image's dimensions
+      // saveCanvasToDatabase()
+
       img.scaleToWidth(200);
       const canvasWidth = 380;
       const canvasHeight = 380;
@@ -939,6 +982,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         GetProjextById,
         project,
         setproject,
+        saveCanvasToDatabase,
         generateBox,
         canvasHistory,
         currentCanvasIndex,

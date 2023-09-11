@@ -221,7 +221,7 @@ export const FileUpload: React.FC = ({ type, title}) => {
             setPopup({
               status: true,
               data: data?.data.data[0],
-              dataArray: data.data,
+              dataArray: data,
             });
             setLoader(false);
     setloadercarna(false)

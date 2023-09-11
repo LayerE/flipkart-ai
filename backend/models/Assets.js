@@ -2,7 +2,7 @@ const {  Model, model, Schema } = require("mongoose");
 
 const assetsSchema = new Schema({
   userId: String,
-  url: String,
+  url: Object,
   projectId: String,
   
 },

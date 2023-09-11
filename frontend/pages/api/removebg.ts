@@ -77,7 +77,7 @@ export default async (req: NextRequest) => {
       }
     );
 
-    return NextResponse.json({ data });
+    return NextResponse.json({ data,imageUrl });
   } catch (error) {
     console.log(error);
     return NextResponse.json({ error: "Error removing background" });

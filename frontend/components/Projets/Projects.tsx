@@ -7,12 +7,14 @@ import ProjectCard from "./ProjectCard";
 import { useAppState } from "@/context/app.context";
 import { useAuth } from "@clerk/nextjs";
 import { setTimeout } from "timers";
+import { useRouter } from 'next/router'
 const fadeIn = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 0.5 } },
 };
 
 const Projects = ({ onDelet }) => {
+  const router = useRouter()
   const [projects, setProjects] = useState([]);
   const { userId } = useAuth();
   const { activeTab, setprojectlist, projectlist, GetProjexts,renameProject } = useAppState();
@@ -41,7 +43,8 @@ const Projects = ({ onDelet }) => {
       if(datares?._id){
         console.log(datares,"sdcdrfc")
         GetProjexts(getUser);
-        window.open(`/generate/${datares?._id}`, "_self");
+        router.push(`/generate/${datares?._id}`)
+        // window.open(`/generate/${datares?._id}`, "_self");
         setTimeout(() => {
           
         }, 1000);

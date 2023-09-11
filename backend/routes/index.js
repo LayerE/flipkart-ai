@@ -114,8 +114,8 @@ router.post("/project", async function (req, res, next) {
       userId: id,
       title: title,
       jobIds: [],
+      previewImage:"",
       canvasHistory: {},
-
     });
 
     await creatdUserr.save();
@@ -169,6 +169,49 @@ router.post("/recently", async function (req, res, next) {
     return res.json({ error: "Server error" });
   }
 });
+
+router.post("/assets", async function (req, res, next) {
+  try {
+    const { userId, projectId, asset } = req.body;
+    console.log(userId, projectId, asset);
+
+    const user = await Users.findOne({ userId: userId });
+    if (!user) {
+      return res.json({
+        error: "user not found",
+      });
+    }
+    // const product = await Projects.findOne({ _id: projectId });
+    // if (!product) {
+    //   return res.json({
+    //     error: "product not found",
+    //   });
+    // }
+    // recently.date = new Date
+    // const updateDB = await Projects.findOneAndUpdate(
+    //   { userId: userId, _id: projectId },
+    //   {
+    //     $push: {
+    //       recently: asset,
+    //     },
+    //   }
+    //   )
+    console.log(userId, projectId, asset);
+    
+    const creatdUserrAssets = new Assets({
+      userId: userId,
+      projectId: projectId,
+      url:asset,
+    });
+
+    await creatdUserrAssets.save();
+      console.log(creatdUserrAssets)
+    return res.json(creatdUserrAssets);
+  } catch (error) {
+    return res.json({ error: "Server error" });
+  }
+});
+
 router.post("/jobId", async function (req, res, next) {
   try {
     const { userId, projectId, jobId } = req.body;
@@ -309,6 +352,39 @@ router.post("/rename", async function (req, res, next) {
       }
       
       console.log(id, projectId, name, "dfdf");
+    return res.json({status: "success",});
+  } catch (error) {
+    return res.json({ error: "Server error" });
+  }
+});
+router.post("/addPreview", async function (req, res, next) {
+  try {
+    const { userId, projectId, img } = req.body;
+    console.log(userId, projectId, img, "cvcxbvc");
+
+    const user = await Users.findOne({ userId: userId });
+    if (!user) {
+      return res.json({
+        error: "user not found",
+      });
+    }
+    
+    const updateDB = await Projects.findOneAndUpdate(
+      { userId: userId, _id: projectId },
+      {
+        $set: {
+          previewImage: img,
+        },
+      }
+      );
+      if (!updateDB) {
+        console.log("Product Update Failed", updateDB);
+        return res.status(400).json({
+          error: "User Update Failed",
+        });
+      }
+      
+      console.log(userId, projectId, img, "dfdf");
     return res.json({status: "success",});
   } catch (error) {
     return res.json({ error: "Server error" });

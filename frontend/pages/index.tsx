@@ -71,7 +71,7 @@ export default function Home() {
           console.error(error);
         });
     }
-  }, [isReady, userId, projectlist]);
+  }, [isReady, userId]);
 
   useEffect(() => {
     if (isReady) {
@@ -102,7 +102,7 @@ export default function Home() {
   const handleDelete = () => {
     // Update the list of items by fetching data again
     fetchData(userId);
-    console.log("dsfs", userId);
+
   };
 
   return (
