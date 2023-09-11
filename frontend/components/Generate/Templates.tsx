@@ -10,10 +10,11 @@ const fadeIn = {
 };
 
 import { motion } from "framer-motion";
-import { Label } from "react-konva";
+// import { Label } from "react-konva";
 import { templets } from "@/store/dropdown";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/router";
+import Label from "../common/Label";
 
 const Tamplates = () => {
   const {
@@ -27,6 +28,7 @@ const Tamplates = () => {
     placementTest,
     surroundingTest,
     project,
+    setTemplet,
     setViewMore,
     loara,
     setLoara,
@@ -42,8 +44,7 @@ const Tamplates = () => {
     if (isReady) {
       try {
         // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
-        const getUser = localStorage.getItem("userId");
-        console.log(getUser);
+     
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API}/recently`,
           {
@@ -78,7 +79,7 @@ const Tamplates = () => {
     // console.log(data, "dfvcvdf")
 
     setfilterRecently(project?.recently?.reverse());
-  }, [isReady,project]);
+  }, [isReady, project]);
 
   return (
     <motion.div
@@ -146,7 +147,8 @@ const Tamplates = () => {
               key={i}
               className={"imageBoxs"}
               onClick={() => {
-                addtoRecntly(test);
+                // addtoRecntly(test);
+                setTemplet(test)
                 // setProduct(test.product);
                 setPlacementTest(test.placement);
                 setSurroundingTest(test.surrounding);

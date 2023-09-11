@@ -182,8 +182,8 @@ export default function CanvasBox({ proid, userId }) {
     const newEditorBox = new fabric.Rect({
       left: 30,
       top: 120,
-      width: 512,
-      height: 512,
+      width: 380,
+      height: 380,
       selectable: false,
       fill: "transparent",
       // stroke: "rgba(249, 208, 13, 1)",
@@ -203,8 +203,8 @@ export default function CanvasBox({ proid, userId }) {
     const imageGenRect = new fabric.Rect({
       left: 400,
       top: 120,
-      width: 512,
-      height: 512,
+      width: 380,
+      height: 380,
       selectable: false,
       // fill: "rgba(249, 208, 13, 0.23)",
       fill: "transparent",
@@ -370,14 +370,14 @@ export default function CanvasBox({ proid, userId }) {
   const generationBoxStyle = {
     left: `${30 + canvasPosition.x}px`,
     top: `${120 + canvasPosition.y}px`,
-    width: `${512 * canvasZoom}px`, // Adjust the width based on canvas zoom
-    height: `${512 * canvasZoom}px`, // Adjust the height based on canvas zoom
+    width: `${380 * canvasZoom}px`, // Adjust the width based on canvas zoom
+    height: `${380 * canvasZoom}px`, // Adjust the height based on canvas zoom
   };
   const PreviewBoxStyle = {
-    left: `${570 + canvasPosition.x}px`,
+    left: `${430 + canvasPosition.x}px`,
     top: `${120 + canvasPosition.y}px`,
-    width: `${512 * canvasZoom}px`, // Adjust the width based on canvas zoom
-    height: `${512 * canvasZoom}px`, // Adjust the height based on canvas zoom
+    width: `${380 * canvasZoom}px`, // Adjust the width based on canvas zoom
+    height: `${380 * canvasZoom}px`, // Adjust the height based on canvas zoom
     backgroundColor: "rgba(249, 208, 13, 0.23)",
   };
 

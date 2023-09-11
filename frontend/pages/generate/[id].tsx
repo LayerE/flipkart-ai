@@ -77,37 +77,30 @@ export default function Home() {
       { url: url, tool: "generated-selected" },
     ]);
 
-    // canvasInstance.current.clear();
-
-    // addimgToCanvasGen(url);
   };
   const [filteredArray, setFilteredArray] = useState([]);
 
   useEffect(() => {
-    // if (isReady) {
     setprojectId(id);
     setUserId(userId);
-    // Filter the array of objects based on the arrayOfIds
     let filteredResult;
 
     filteredResult = generatedImgList.filter((obj) =>
       jobId?.includes(obj?.task_id)
     );
 
-    // Set the filtered array in the state
     setFilteredArray(filteredResult);
     const canvas1 = canvasInstance.current;
 
     const objects = canvas1?.getObjects();
     const subjectObjects = [];
     objects?.forEach((object) => {
-      // If the object is a subject, add it to the subject objects array
       if (object.category === "generated") {
         subjectObjects.push(object);
       }
     });
 
-    if (filteredResult?.length <= 4 && subjectObjects?.length <= 1) {
+    if (filteredResult?.length < jobId?.length ) {
       addimgToCanvasGen(filteredResult[0]?.modified_image_url);
     }
     // }
@@ -137,7 +130,7 @@ export default function Home() {
 
           <BottomTab />
 
-          {filteredArray?.length > 1 ? (
+          {filteredArray?.length > 0 ? (
             <div className="generatedBox">
               <div className="itemsWrapper">
                 {filteredArray?.map((item, i) => (
@@ -151,7 +144,7 @@ export default function Home() {
                     </picture>
                   </div>
                 ))}
-                {loader ? null : (
+                {/* {loader ? null : (
                   <div
                     className="itemsadd"
                     onClick={() => generateImageHandeler(userId, id)}
@@ -171,7 +164,7 @@ export default function Home() {
                       />
                     </svg>
                   </div>
-                )}
+                )} */}
               </div>
             </div>
           ) : null}
@@ -249,6 +242,7 @@ const MainPages = styled.div`
     /* right: 20px; */
     justify-content: right;
     z-index: 10;
+    z-index: 100;
 
     .itemsWrapper {
       display: flex;
@@ -259,6 +253,24 @@ const MainPages = styled.div`
       padding: 10px 20px;
       border-radius: 8px;
       overflow: auto;
+
+      &::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+/* Track */
+&::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+  height: 7px;
+
+}
+
+/* Handle */
+&::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+}
     }
     .items {
       cursor: pointer;

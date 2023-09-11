@@ -37,14 +37,14 @@ const ProjectCard = ({ data, setProjects, handleDelet ,handleEdite}) => {
 
   return (
     <CardWrapper className="projectfile">
-      <a href={`/generate/${data._id}`}>
+      <Link href={`/generate/${data._id}`}>
         <div className="img">
           {/* <img
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhLgCi7ipEef9UMQo_zSkniRuDX4Nehm8Oag&usqp=CAU"
             alt=""
           /> */}
         </div>
-      </a>
+      </Link>
       <div className="testcreat">
         <div className="pro-name">
           <input
@@ -152,6 +152,11 @@ const CardWrapper = styled.div`
     background-color: transparent;
     width: 120px;
     border: none;
+    color: #000;
+    &:focus{
+    color: #000;
+
+    }
     &:hover {
       border: none;
       background-color: transparent;

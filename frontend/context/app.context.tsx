@@ -183,6 +183,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [selectResult, setSelectedresult] = useState<number>(4);
   const [selectRender, setSelectedRender] = useState<number>(4);
   const [loara, setLoara] = useState<string>("");
+  const [templet, setTemplet] = useState();
+
 
   const [selectColoreStrength, setSelectedColoreStrength] = useState<number>(0);
   const [selectOutLline, setSelectedOutline] = useState<number>(0);
@@ -513,8 +515,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     fabric.Image.fromURL(await getBase64FromUrl(url), function (img: any) {
       // Set the image's dimensions
       img.scaleToWidth(200);
-      const canvasWidth = 512;
-      const canvasHeight = 512;
+      const canvasWidth = 380;
+      const canvasHeight = 380;
       const imageAspectRatio = img.width / img.height;
 
       // Calculate the maximum width and height based on the canvas size
@@ -569,7 +571,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       img.scaleToWidth(scaledWidth);
       img.scaleToHeight(scaledHeight);
       // Set the position of the image
-      img.set({ left: 400, top: 120 });
+      img.set({ left: 430, top: 120 });
 
       img.set("category", "generated");
       // canvasInstance.current.clear();
@@ -658,6 +660,39 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   };
 
 
+  const addtoRecntly = async (ueserId, proid, obj) => {
+
+      try {
+        // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
+     
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API}/recently`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userId: ueserId,
+              projectId: proid,
+              recently: templet,
+            }),
+          }
+        );
+        // console.log(await response.json(), "dfvcvdfvdvcdsd");
+        const datares = await response;
+
+        if (datares.ok) {
+          GetProjextById(id);
+          // setfilterRecently(project?.recently.reverse())
+        }
+        // window.open(`/generate/${datares?._id}`, "_self");
+      } catch (error) {
+        // Handle error
+      }
+    
+  };
+
   const bringImageToFront = () => {
     const activeObject = canvasInstance?.current.getActiveObject();
     if (activeObject) {
@@ -690,7 +725,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     try {
       const genBox = generateBox.current;
 
-
+      addtoRecntly(ueserId, proid)
       // canvas1.set({
       //   left: 30,
       //   top:200
@@ -909,6 +944,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         currentCanvasIndex,
         regeneratePopup,
         setRegeneratePopup,
+        addtoRecntly,
         btnVisible,
         generateImageHandeler,
         setBtnVisible,
@@ -979,6 +1015,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setColore,
         uploadedProductlist,
         setUploadedProductlist,
+        templet, setTemplet,
         previewLoader,
         setPriviewLoader,
         generationLoader,

@@ -16,7 +16,7 @@ const HomeSidebar = () => {
     {
       id: 1,
       image: assets.icons.project_icon,
-      tittle: "Projets",
+      tittle: "Projects",
     },
     {
       id: 2,

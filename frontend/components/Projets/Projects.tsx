@@ -41,9 +41,9 @@ const Projects = ({ onDelet }) => {
       if(datares?._id){
         console.log(datares,"sdcdrfc")
         GetProjexts(getUser);
+        window.open(`/generate/${datares?._id}`, "_self");
         setTimeout(() => {
           
-          window.open(`/generate/${datares?._id}`, "_self");
         }, 1000);
   
 

@@ -33,7 +33,7 @@ const PopupCard = () => {
           />
         </picture>
         <div className="btns">
-          <Button onClick={()=> handileDownload(popupImage?.url)}>Dowenload</Button>
+          <Button onClick={()=> handileDownload(popupImage?.url)}>Download </Button>
         </div>
       </div>
     </PopupWrapper2>

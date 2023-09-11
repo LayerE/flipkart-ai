@@ -50,7 +50,9 @@ router.get("/getprojects", async function (req, res, next) {
     }
     const projects = await Projects.find({ userId: id });
 
-    return res.json(projects);
+
+
+    return res.json(projects.reverse());
   } catch (error) {
     return res.json({ error: "Server error" });
   }
@@ -65,6 +67,7 @@ router.get("/project", async function (req, res, next) {
       });
     }
     const project = await Projects.findOne({ _id: id });
+
     return res.json(project);
   } catch (error) {
     return res.json({ error: "Server error" });
