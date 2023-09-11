@@ -112,7 +112,7 @@ const EditorSection = () => {
           suggetion={ProductSuggestionsFilter}
         />
       </div>
-      <div className="gap">
+      {/* <div className="gap">
         <DisabledLabel>Lora</DisabledLabel>
         <DropdownInput
             data={{
@@ -125,7 +125,7 @@ const EditorSection = () => {
             style={{width: "100%"}}
           ></DropdownInput>
         
-      </div>
+      </div> */}
       <div className="gap">
         <DisabledLabel>Placement</DisabledLabel>
         <div className="two-side">

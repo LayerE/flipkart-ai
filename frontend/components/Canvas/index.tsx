@@ -46,11 +46,12 @@ export default function CanvasBox({ proid, userId }) {
     generateImageHandeler,
     SaveProjexts,
     project,
+    loadercarna, setloadercarna
 
     // canvasRef
   } = useAppState();
 
-  const [loadercarna, setloadercarna] = useState(false);
+  // const [loadercarna, setloadercarna] = useState(false);
   const [canvasZoom, setCanvasZoom] = useState(1);
   const [canvasPosition, setCanvasPosition] = useState({ x: 0, y: 0 });
   const canvasRef = useRef(null);
@@ -113,8 +114,8 @@ export default function CanvasBox({ proid, userId }) {
       });
     });
 
-  
-  }, [isReady,canvasInstance]);
+
+  }, [isReady, canvasInstance]);
 
   // Load canvas data from the database when the component mounts
   useEffect(() => {
@@ -124,17 +125,17 @@ export default function CanvasBox({ proid, userId }) {
     if (isReady && userId) {
       axios
         .post(`/api/canvasdata`,
-        {
-          user_id: userId,
-          project_id: proid,
-       })
-       .then((response) => {
-          console.log(response?.data?.data[response?.data?.data?.length-1]?.canvasdata, "adsfnbdhjskgvyuifdsgh");
+          {
+            user_id: userId,
+            project_id: proid,
+          })
+        .then((response) => {
+          console.log(response?.data?.data[response?.data?.data?.length - 1]?.canvasdata, "adsfnbdhjskgvyuifdsgh");
           if (canvasInstanceRef) {
             canvasInstanceRef.loadFromJSON(
-              JSON.stringify(response?.data?.data[response?.data?.data?.length-1].canvasdata),
+              JSON.stringify(response?.data?.data[response?.data?.data?.length - 1].canvasdata),
               canvasInstanceRef.requestRenderAll.bind(canvasInstanceRef)
-              );
+            );
             setloadercarna(false)
             // canvasInstanceRef.loadFromJSON(savedCanvasDataLocal, () => {
             //   canvasInstanceRef.renderAll();
@@ -149,9 +150,9 @@ export default function CanvasBox({ proid, userId }) {
           return error;
         });
 
-       
+
     }
-  }, [isReady,userId]);
+  }, [isReady, userId]);
 
   useEffect(() => {
     const canvasInstanceRef = canvasInstance.current;
@@ -328,7 +329,7 @@ export default function CanvasBox({ proid, userId }) {
       // canvasInstance.current.dispose();
       // saveCanvasToDatabase()
     };
-  }, [project, isReady,canvasInstance]);
+  }, [project, isReady, canvasInstance]);
 
   const saveCanvasToDatabase = () => {
     const canvasData = canvasInstance.current.toJSON();
@@ -383,9 +384,9 @@ export default function CanvasBox({ proid, userId }) {
   return (
     <Wrapper>
       {
-        loadercarna ? 
-        <Loader/>:
-null}
+        loadercarna ?
+          <Loader /> :
+          null}
       <div className="convas-continer">
         <div className="generationBox">
           <div
@@ -423,7 +424,7 @@ null}
         </div>
 
         <div className="ss" >
-  <picture><img onClick={() => saveCanvasToDatabase()} src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAYFBMVEX///8AAAD4+Pjv7+8aGhoTExOYmJiTk5P09PQICAiQkJD6+vp/f39WVlbGxsaurq5ubm6FhYUnJye8vLwfHx9oaGjR0dHq6urg4OB1dXWkpKS2trY0NDQpKSlNTU1fX19H7sBTAAADJUlEQVR4nO3d224iMRBFUbo7QLhDrkwyM/n/vxwhTR5AUDbUsV1Ee78iFSw5pIliN6MRERERERERERERERERxWvRn29xy7CTGVc9WqR+vVu9dOeb3jLwZMYx4vHk0YnEYNVPni7o6gi7uYRxuWeDpxHOEsLbniO7pQ2sIixK3CaAdYQFiakVrCUsRky8BysKC/266dPAasIyqziNJCyxir11HawvLLCK6wxgTaF+FXfRhPJVXIUTildxcenDdkOhdhVzrhXVhdJVjClUEoMKhcSoQh0xrFBGjCtUEQMLRReNyELNKoYWSoixhQpicKGAGF3oJ4YXuonxhd6Lxh0Inat4D0LfKt6FsPP88w0hQoQIf5Aw9V/uexTOp0cd7+f4EUIzhAjzQ4jw1hDWFur3D0QT/pLJvnsPJny4aYOp1UcwYfcpo/0vZ49LVaHrOc40vwpYRfh7kOlG1/6M1hF240/Ze3Gf3O3ZRNh1f17nE0HLv9f6qgkbhhBh/BAijB9ChPFDiDB+CBHGDyHC+CFEGD+ECOOHEGH8ECKMH0KE8UOIMH5VhF+bN+mWmtHwtvmKIxxPtbrvhsk4hnBbxndoyNo9VFq4kXnOtWkvfJZhzpdxv7iywrIreCi9ikWFWxnkcsn3YlFhjbvDFn0RqeHl7w17aNJQ+ChTWKV27hcUvsoQdq/NhB8yg11iW3RB4V5msNs3E77LDHaJAyblhLNyH0iPG1oJx9WE9t8YCK0Qygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxPC/VCnfSth91Ar+2V4hHnf6dy4F9ctjLO+l7txKw8w77vVG7dzCdetX35Ga5ewv+7+7y16cp7bmbYGJPOe2wl/EnjmXMKs839NE5x/XLY2mC39wIzzfw0TnX+Me1GUrOCh51lryvmEZ5D7Sbzr4tNUe4C1X+9WcT6Gv6x26xIHdBd9lORfTkRERERERERERERERESC/gF2IVePB+evpwAAAABJRU5ErkJggg==" alt="" /></picture>
+          <picture><img onClick={() => saveCanvasToDatabase()} src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAYFBMVEX///8AAAD4+Pjv7+8aGhoTExOYmJiTk5P09PQICAiQkJD6+vp/f39WVlbGxsaurq5ubm6FhYUnJye8vLwfHx9oaGjR0dHq6urg4OB1dXWkpKS2trY0NDQpKSlNTU1fX19H7sBTAAADJUlEQVR4nO3d224iMRBFUbo7QLhDrkwyM/n/vxwhTR5AUDbUsV1Ee78iFSw5pIliN6MRERERERERERERERERxWvRn29xy7CTGVc9WqR+vVu9dOeb3jLwZMYx4vHk0YnEYNVPni7o6gi7uYRxuWeDpxHOEsLbniO7pQ2sIixK3CaAdYQFiakVrCUsRky8BysKC/266dPAasIyqziNJCyxir11HawvLLCK6wxgTaF+FXfRhPJVXIUTildxcenDdkOhdhVzrhXVhdJVjClUEoMKhcSoQh0xrFBGjCtUEQMLRReNyELNKoYWSoixhQpicKGAGF3oJ4YXuonxhd6Lxh0Inat4D0LfKt6FsPP88w0hQoQIf5Aw9V/uexTOp0cd7+f4EUIzhAjzQ4jw1hDWFur3D0QT/pLJvnsPJny4aYOp1UcwYfcpo/0vZ49LVaHrOc40vwpYRfh7kOlG1/6M1hF240/Ze3Gf3O3ZRNh1f17nE0HLv9f6qgkbhhBh/BAijB9ChPFDiDB+CBHGDyHC+CFEGD+ECOOHEGH8ECKMH0KE8UOIMH5VhF+bN+mWmtHwtvmKIxxPtbrvhsk4hnBbxndoyNo9VFq4kXnOtWkvfJZhzpdxv7iywrIreCi9ikWFWxnkcsn3YlFhjbvDFn0RqeHl7w17aNJQ+ChTWKV27hcUvsoQdq/NhB8yg11iW3RB4V5msNs3E77LDHaJAyblhLNyH0iPG1oJx9WE9t8YCK0Qygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxPC/VCnfSth91Ar+2V4hHnf6dy4F9ctjLO+l7txKw8w77vVG7dzCdetX35Ga5ewv+7+7y16cp7bmbYGJPOe2wl/EnjmXMKs839NE5x/XLY2mC39wIzzfw0TnX+Me1GUrOCh51lryvmEZ5D7Sbzr4tNUe4C1X+9WcT6Gv6x26xIHdBd9lORfTkRERERERERERERERESC/gF2IVePB+evpwAAAABJRU5ErkJggg==" alt="" /></picture>
         </div>
 
         <canvas ref={canvasRef} />

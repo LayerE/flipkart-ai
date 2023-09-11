@@ -174,7 +174,9 @@ export const FileUpload: React.FC = ({ type, title}) => {
     addimgToCanvas,
     setPopup,
     projectId,
-    uerId
+    uerId,
+    setloadercarna
+
 
   } = useAppState();
 
@@ -183,6 +185,8 @@ export const FileUpload: React.FC = ({ type, title}) => {
     setFile(selectedFile);
     const blobUrl = URL.createObjectURL(selectedFile);
     const idG = uploadedProductlist.length;
+
+    setloadercarna(true)
     console.log(event.target.result, "fdsfsdg");
     if (selectedFile) {
       const reader = new FileReader();
@@ -220,9 +224,13 @@ export const FileUpload: React.FC = ({ type, title}) => {
               dataArray: data.data,
             });
             setLoader(false);
+    setloadercarna(false)
+
           } else {
             console.log("bg not removed");
             setLoader(false);
+    setloadercarna(false)
+
           }
 
           // setUploadedProductlist((prev) => [
@@ -237,6 +245,8 @@ export const FileUpload: React.FC = ({ type, title}) => {
       };
       reader.readAsDataURL(selectedFile);
     }
+ 
+
   };
 
   const handleRemoveFile = () => {

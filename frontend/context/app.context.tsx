@@ -884,10 +884,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     }
   };
 
+  const [loadercarna, setloadercarna] = useState(false);
   
   return (
     <AppContext.Provider
       value={{
+        loadercarna, setloadercarna,
         previewBox,
         loara,
         setLoara,

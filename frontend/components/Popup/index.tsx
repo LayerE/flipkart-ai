@@ -8,7 +8,7 @@ import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/router";
 
 const PopupUpload = () => {
-  const { setPopup, popup, setUploadedProductlist, setProduct } = useAppState();
+  const { setPopup, popup, setUploadedProductlist, setProduct, addimgToCanvasSubject } = useAppState();
   const [productnew, setProductnew] = useState("");
   const { userId } = useAuth();
   const { query, isReady } = useRouter();
@@ -43,6 +43,7 @@ const PopupUpload = () => {
         // const datares = await response.json();
         // console.log(datares);
 
+        addimgToCanvasSubject(popup?.data)
         setUploadedProductlist((prev) => [
           ...prev,
           { url: popup?.data, tittle: productnew },
