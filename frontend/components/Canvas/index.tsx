@@ -9,9 +9,8 @@ import { useRouter } from "next/router";
 import { useAuth } from "@clerk/nextjs";
 import axios from "axios";
 import Loader from "../Loader";
-import dynamic from 'next/dynamic' 
 
- function CanvasBox({ proid, userId }) {
+export default function CanvasBox({ proid, userId }) {
   // const { userId } = useAuth();
   const { query, isReady } = useRouter();
   // const { id } = query;
@@ -491,4 +490,3 @@ const Wrapper = styled.div`
     }
   }
 `;
-export default dynamic(() => Promise.resolve(CanvasBox), { ssr: false });
