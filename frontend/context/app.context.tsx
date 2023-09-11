@@ -740,6 +740,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       });
       const maskDataUrl = maskCanvas.toDataURL("image/png");
 
+      console.log("mask",maskDataUrl)
+
       // Make image with only the subject objects
       const subjectCanvas = new fabric.Canvas(null, {
         // width: canvas1.getWidth(),
@@ -763,6 +765,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       });
 
       const subjectDataUrl = subjectCanvas.toDataURL("image/png");
+      console.log("subect",subjectDataUrl)
 
       maskObjects.forEach((object) => {
         // You can adjust the object's position relative to the canvas as needed

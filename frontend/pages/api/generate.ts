@@ -53,7 +53,7 @@ export default async (req: NextRequest) => {
       });
     }
 
-    console.log(imageUrl);
+    console.log(dataUrl);
 
     const response = await fetch(process.env.CELERY_WORKER_URL as string, {
       method: "POST",
