@@ -39,10 +39,10 @@ const ProjectCard = ({ data, setProjects, handleDelet ,handleEdite}) => {
     <CardWrapper className="projectfile">
       <a href={`/generate/${data._id}`}>
         <div className="img">
-          <img
+          {/* <img
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhLgCi7ipEef9UMQo_zSkniRuDX4Nehm8Oag&usqp=CAU"
             alt=""
-          />
+          /> */}
         </div>
       </a>
       <div className="testcreat">
