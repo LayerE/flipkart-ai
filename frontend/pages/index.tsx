@@ -25,6 +25,7 @@ import Loader from "@/components/Loader";
 
 const inter = Inter({ subsets: ["latin"] });
 
+
 export default function Home() {
   const { userId } = useAuth();
   const { query, isReady } = useRouter();
@@ -56,7 +57,7 @@ export default function Home() {
       const getUser = localStorage.getItem("userId");
       if (!getUser) {
         setTimeout(() => {}, 3000);
-        if (userId) localStorage.setItem("userId", userId);
+        if (userId)  localStorage.setItem("userId", userId);
       }
       axios
         .get(`${process.env.NEXT_PUBLIC_API}/user?id=${userId}`)

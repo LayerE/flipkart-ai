@@ -4,11 +4,11 @@ import { styled } from "styled-components";
 const Loader = () => {
   return (
     <DaoderWarpper>
-      <div class="jumping-dots-loader">
+      <div className="jumping-dots-loader">
         {" "}
         <span></span> <span></span> <span></span>{" "}
       </div>
-      <div class="moving-gradient"></div>
+      <div className="moving-gradient"></div>
     </DaoderWarpper>
   );
 };

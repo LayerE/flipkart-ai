@@ -10,8 +10,8 @@ import PopupUpload from "@/components/Popup";
 import Canvas from "@/components/Canvas/Canvas";
 import Loader from "@/components/Loader";
 import BottomTab from "@/components/BottomTab";
-// import CanvasBox from "@/components/Canvas";
-const CanvasBox = lazy(() => import("@/components/Canvas"));
+import CanvasBox from "@/components/Canvas";
+// const CanvasBox = lazy(() => import("@/components/Canvas"));
 import { useAuth } from "@clerk/nextjs";
 import assert from "assert";
 import assets from "@/public/assets";
@@ -22,6 +22,8 @@ const fadeIn = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 1 } },
 };
+
+
 
 export default function Home() {
   const { userId } = useAuth();
@@ -58,10 +60,10 @@ export default function Home() {
   } = useAppState();
 
   useEffect(() => {
-    const getUser = localStorage.getItem("userId");
-    if (!getUser) {
-      if (userId) localStorage.setItem("userId", userId);
-    }
+    // const getUser = localStorage.getItem("userId");
+    // if (!getUser) {
+    //   if (userId) localStorage.setItem("userId", userId);
+    // }
     if (isReady) {
       GetProjextById(id);
     }
@@ -83,31 +85,31 @@ export default function Home() {
 
   useEffect(() => {
     // if (isReady) {
-      setprojectId(id);
-      setUserId(userId);
-      // Filter the array of objects based on the arrayOfIds
-      let filteredResult;
+    setprojectId(id);
+    setUserId(userId);
+    // Filter the array of objects based on the arrayOfIds
+    let filteredResult;
 
-      filteredResult = generatedImgList.filter((obj) =>
-        jobId?.includes(obj?.task_id)
-      );
+    filteredResult = generatedImgList.filter((obj) =>
+      jobId?.includes(obj?.task_id)
+    );
 
-      // Set the filtered array in the state
-      setFilteredArray(filteredResult);
-      const canvas1 = canvasInstance.current;
+    // Set the filtered array in the state
+    setFilteredArray(filteredResult);
+    const canvas1 = canvasInstance.current;
 
-      const objects = canvas1?.getObjects();
-      const subjectObjects = [];
-      objects?.forEach((object) => {
-        // If the object is a subject, add it to the subject objects array
-        if (object.category === "generated") {
-          subjectObjects.push(object);
-        }
-      });
-
-      if (filteredResult?.length <= 4 && subjectObjects?.length <= 1) {
-        addimgToCanvasGen(filteredResult[0]?.modified_image_url);
+    const objects = canvas1?.getObjects();
+    const subjectObjects = [];
+    objects?.forEach((object) => {
+      // If the object is a subject, add it to the subject objects array
+      if (object.category === "generated") {
+        subjectObjects.push(object);
       }
+    });
+
+    if (filteredResult?.length <= 4 && subjectObjects?.length <= 1) {
+      addimgToCanvasGen(filteredResult[0]?.modified_image_url);
+    }
     // }
 
     return () => {

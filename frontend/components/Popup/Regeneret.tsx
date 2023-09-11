@@ -155,11 +155,11 @@ const Regeneret = () => {
           <div className="gride">
             <div className={` griteitem`} onClick={() => ""}>
               <DaoderWarpperL>
-                <div class="jumping-dots-loader">
+                <div className="jumping-dots-loader">
                   {" "}
                   <span></span> <span></span> <span></span>{" "}
                 </div>
-                <div class="moving-gradient"></div>
+                <div className="moving-gradient"></div>
               </DaoderWarpperL>
               <picture className="griteitemLoading">
                 <img
@@ -174,11 +174,11 @@ const Regeneret = () => {
             </div>
             <div className={` griteitem`} onClick={() => ""}>
               <DaoderWarpperL>
-                <div class="jumping-dots-loader">
+                <div className="jumping-dots-loader">
                   {" "}
                   <span></span> <span></span> <span></span>{" "}
                 </div>
-                <div class="moving-gradient"></div>
+                <div className="moving-gradient"></div>
               </DaoderWarpperL>
               <picture className="griteitemLoading">
                 <img
@@ -193,11 +193,11 @@ const Regeneret = () => {
             </div>
             <div className={` griteitem`} onClick={() => ""}>
               <DaoderWarpperL>
-                <div class="jumping-dots-loader">
+                <div className="jumping-dots-loader">
                   {" "}
                   <span></span> <span></span> <span></span>{" "}
                 </div>
-                <div class="moving-gradient"></div>
+                <div className="moving-gradient"></div>
               </DaoderWarpperL>
               <picture className="griteitemLoading">
                 <img
@@ -212,11 +212,11 @@ const Regeneret = () => {
             </div>
             <div className={` griteitem`} onClick={() => ""}>
               <DaoderWarpperL>
-                <div class="jumping-dots-loader">
+                <div className="jumping-dots-loader">
                   {" "}
                   <span></span> <span></span> <span></span>{" "}
                 </div>
-                <div class="moving-gradient"></div>
+                <div className="moving-gradient"></div>
               </DaoderWarpperL>
               <picture className="griteitemLoading">
                 <img

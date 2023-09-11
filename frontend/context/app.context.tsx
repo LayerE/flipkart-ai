@@ -584,7 +584,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const { userId } = useAuth();
 
   useEffect(() => {
-    const getUser = localStorage.getItem("userId");
+    const getUser =  typeof window === "undefined"
+    ? false : localStorage.getItem("userId");
 
     setInterval(() => {
       fetchGeneratedImages(getUser);
