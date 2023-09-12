@@ -180,7 +180,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [surroundingtype, setSurroundingtype] = useState<string>("");
   const [selectBackground, setSelectedBackground] = useState<string>("");
   const [selectColoreMode, setSelectedColoreMode] = useState<string>("");
-  const [selectResult, setSelectedresult] = useState<number>(4);
+  const [selectResult, setSelectedresult] = useState<number>(1);
   const [selectRender, setSelectedRender] = useState<number>(4);
   const [loara, setLoara] = useState<string>("");
   const [templet, setTemplet] = useState();
@@ -219,6 +219,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [projectId, setprojectId] = useState(null);
   const [uerId, setUserId] = useState(null);
   const [listofassets, setListOfAssets] = useState(null);
+  const [newassetonCanvas, setNewassetonCanvas] = useState(null);
+
 
 
 
@@ -670,24 +672,46 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const fetchAssetsImages = async (userId, pro) => {
     try {
       const response = await fetch(
-        '/api/images',
+        `${process.env.NEXT_PUBLIC_API}/assets?userId=${userId}`,
         {
-          method: "post",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            user_id: userId,
-            project_id: pro
-          }),
+          method: "GET"
           
         }
       );
       const data = await response.json();
+      console.log(await data);
 
   
-      if (data?.data?.length) {
-        setListOfAssets(await data.data);
+      if (data?.length) {
+        setListOfAssets(await data);
+      }
+
+      // setImages(data); // Update the state with the fetched images
+      // setGeneratedImgList(data)
+
+      // if(data[0]?.prompt === prompt){
+
+      // }
+      return data;
+    } catch (error) {
+      console.error("Error fetching images:", error);
+    }
+  };
+  const fetchAssetsImagesWithProjectId = async (userId, pro) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API}/assets?userId=${userId}&projectId=${pro}`,
+        {
+          method: "GET"
+          
+        }
+      );
+      const data = await response.json();
+      console.log("cdcdcvdcvc",await data);
+
+  
+      if (data?.length) {
+        setListOfAssets(await data);
       }
 
       // setImages(data); // Update the state with the fetched images
@@ -887,7 +911,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           prompt: promtText.trim(),
           user_id: userId,
           lora_type: loara,
-          num_images: 1,
+          num_images: selectResult,
 
         }),
       });
@@ -901,6 +925,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         return false;
       } else {
         try {
+      setSelectedresult(1)
+
           // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
 
           const response = await fetch(`${process.env.NEXT_PUBLIC_API}/jobId`, {
@@ -965,6 +991,138 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     }
   };
 
+
+  const [reloder, setreLoader] = useState(true);
+
+  // regenrate
+  const RegenerateImageHandeler = async (ueserId, proid, img) => {
+    // console.log(promt);
+    setLoader(true);
+    setGenerationLoader(true);
+    try {
+     
+
+      setreLoader(true)
+
+  
+
+      const promtText =
+        product +
+        ", " +
+        selectPlacement +
+        " " +
+        placementTest +
+        ", " +
+        selectSurrounding +
+        " " +
+        surroundingTest +
+        ", " +
+        selectBackground +
+        " " +
+        backgroundTest;
+
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          dataUrl: img,
+          maskDataUrl: null,
+          prompt: promtText.trim()+ "make minor changes on his image",
+          user_id: userId,
+          lora_type: loara,
+          num_images: 3,
+
+        }),
+      });
+
+      const generate_response = await response.json();
+
+      if (generate_response?.error) {
+        alert(generate_response?.error);
+        setLoader(false);
+        setreLoader(false)
+
+        return false;
+      } else {
+        try {
+      setSelectedresult(1)
+      setreLoader(false)
+
+          // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
+
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API}/jobId`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userId: ueserId,
+              projectId: proid,
+              jobId: generate_response?.job_id,
+            }),
+          });
+          // console.log(await response.json(), "dfvcvdfvdvcdsd");
+          const datares = await response;
+          setreLoader(false)
+
+          if (datares.ok) {
+            // setJobId((pre) => [...pre, generate_response?.job_id]);
+            setRegenratedImgsJobid(generate_response?.job_id);
+            // localStorage.setItem("jobId", jobId);
+
+            GetProjextById(proid);
+          }
+          // window.open(`/generate/${datares?._id}`, "_self");
+        } catch (error) {
+          // Handle error
+          
+          setreLoader(false)
+
+        }
+      }
+
+      setTimeout(async function () {
+        const loadeImge = await fetchGeneratedImages();
+
+        setSelectedImg({
+          status: true,
+          image: loadeImge[0]?.modified_image_url,
+          modifiedImage: loadeImge[0]?.modified_image_url,
+        });
+
+        setModifidImageArray((pre) => [
+          ...pre,
+          { url: loadeImge[0]?.modified_image_url, tool: "generated" },
+        ]);
+
+        addimgToCanvasGen(loadeImge[0]?.modified_image_url);
+        // canvas1.remove(editorBox).renderAll();
+
+        setGeneratedImgList(loadeImge.slice(0, 20));
+
+        setSelectedresult(1);
+
+        setLoader(false);
+      }, 30000);
+    } catch (error) {
+      console.error("Error generating image:", error);
+    } finally {
+      setGenerationLoader(false);
+      // canvas1.set({
+      //   top: 0,
+      //   left: 0
+      // });
+      // canvas1.renderAll();
+    }
+  };
+
+
+
+
+  // regenrtate
+
   const [loadercarna, setloadercarna] = useState(false);
   
   return (
@@ -1009,6 +1167,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         selectedImg,
         setSelectedImg,
         getBase64FromUrl,
+        RegenerateImageHandeler,
         activeTab,
         setActiveTab,
         activeTabHome,
@@ -1025,7 +1184,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setCurrentStep,
         popupImage,
         setPopupImage,
-
+        newassetonCanvas, setNewassetonCanvas,
         file,
         setFile,
         selectPlacement,
@@ -1082,6 +1241,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setUndoArray,
         modifidImageArray,
         setModifidImageArray,
+        fetchAssetsImagesWithProjectId
       }}
     >
       {children}

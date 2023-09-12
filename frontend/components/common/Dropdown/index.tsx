@@ -163,12 +163,13 @@ const DropdownInput: React.FC = ({ data }) => {
 export default DropdownInput;
 const DropdownWrapper = styled.div`
   position: relative;
-  min-width: 100px;
+  min-width: 80px;
   width: 100%;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
   line-height: 14px;
+  text-align: center;
 
   .dropdown-input {
     
@@ -190,25 +191,37 @@ const DropdownWrapper = styled.div`
   }
   .dropdown-content {
     
-    top: 23px;
+    bottom: 23px;
+
     position: absolute;
     z-index: 10;
     border-radius: 6px;
-    border: 1px solid #040404;
-    max-height: 250px;
+    border: 1px solid #d9d9d9;
+    max-height: 200px;
 
-    background: #fff;
+    background-color: #ffffff;
+    padding: 5px;
     width: 100%;
     overflow-y: auto;
+    white-space: nowrap;
+    min-width: 50px;
     p {
       margin: 10px 0;
-      width: 100%;
-      text-align: center;
       cursor: pointer;
-    white-space: nowrap;
+      padding: 8px 15px;
 
+      background-color: #f3f3f3;
+      margin-block-start: 0em;
+      margin-block-end: 0em;
+      margin-bottom: 5px;
+      border-radius: 4px;
+
+      &:hover {
+        background-color: #e4e2e2;
+      }
     }
   }
+  
   
 `;
 
@@ -271,8 +284,8 @@ export const DropdownNOBorder: React.FC = ({ data }) => {
           <div className="dropdown-content">
             {/* Place your dropdown options here */}
             {data.list.map((items, i) => (
-              <p key={i} onClick={() => handleOptionSelect(items.tittle)}>
-                {items.tittle}
+              <p key={i} onClick={() => handleOptionSelect(items)}>
+                {items}
               </p>
             ))}
           </div>

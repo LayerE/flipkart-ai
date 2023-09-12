@@ -8,7 +8,13 @@ import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/router";
 
 const PopupUpload = () => {
-  const { setPopup, popup, setUploadedProductlist, setProduct, addimgToCanvasSubject } = useAppState();
+  const {
+    setPopup,
+    popup,
+    setUploadedProductlist,
+    setProduct,
+    addimgToCanvasSubject,
+  } = useAppState();
   const [productnew, setProductnew] = useState("");
   const { userId } = useAuth();
   const { query, isReady } = useRouter();
@@ -16,47 +22,38 @@ const PopupUpload = () => {
 
   const HandileUpload = async () => {
     if (productnew !== "") {
-      console.log(popup.dataArray)
+      console.log(popup.dataArray);
 
       try {
-        
-          // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
-       
-          const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API}/assets`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                userId: userId,
-                projectId: id,
-                asset: {url:popup.dataArray.imageUrl, product:productnew },
-              }),
-            }
-          );
-       
-          const datares = await response;
-          console.log(datares)
-  
-    if(datares){
-      
-      addimgToCanvasSubject(popup?.data)
-      setUploadedProductlist((prev) => [
-        ...prev,
-        { url: popup?.data, tittle: productnew },
-      ]);
-      setProduct(productnew);
-      setPopup({ status: false, data: null });
+        // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
 
-    }
-      
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API}/assets`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: userId,
+            projectId: id,
+            asset: { url: popup.dataArray.imageUrl, product: productnew },
+          }),
+        });
 
+        const datares = await response;
+        console.log(datares);
+
+        if (datares) {
+          addimgToCanvasSubject(popup?.data);
+          setUploadedProductlist((prev) => [
+            ...prev,
+            { url: popup?.data, tittle: productnew },
+          ]);
+          setProduct(productnew);
+          setPopup({ status: false, data: null });
+        }
       } catch (error) {
         // Handle error
-      setPopup({ status: false, data: null });
-
+        setPopup({ status: false, data: null });
       }
     }
   };

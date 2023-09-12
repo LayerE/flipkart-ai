@@ -270,6 +270,7 @@ router.post("/upload/asset", async function (req, res, next) {
 router.get("/assets", async function (req, res, next) {
   try {
     const { userId, projectId } = req.query;
+    console.log(userId, projectId);
 
     // const { id, projectId, url } = req.body;
     const user = await Users.findOne({ userId: userId });
@@ -278,14 +279,22 @@ router.get("/assets", async function (req, res, next) {
         error: "user not found",
       });
     }
-    let assetsList;
-    if (userId && projectId !== undefined) {
-      assetsList = await Assets.find({ userId: userId, projectId: projectId });
-    } else if (userId) {
-      assetsList = await Assets.find({ userId: userId });
-    }
+    // console.log(userId, projectId);
 
-    return res.json(assetsList);
+    let assetsList;
+    if ( !projectId ) {
+      assetsList = await Assets.find({ userId: userId });
+      console.log(userId, assetsList);
+
+      return res.json(assetsList);
+    } else  {
+      assetsList = await Assets.find({ userId: userId, projectId: projectId });
+      console.log(userId, assetsList);
+      return res.json(assetsList);
+
+    }
+  
+
   } catch (error) {
     return res.json({ error: "Server error" });
   }

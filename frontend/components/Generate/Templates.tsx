@@ -79,7 +79,7 @@ const Tamplates = () => {
     // console.log(data, "dfvcvdf")
 
     setfilterRecently(project?.recently?.reverse());
-  }, [isReady, project]);
+  }, [isReady]);
 
   return (
     <motion.div

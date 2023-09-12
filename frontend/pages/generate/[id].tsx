@@ -47,11 +47,13 @@ export default function Home() {
     regeneratePopup,
     generateImageHandeler,
     SaveProjexts,
+    newassetonCanvas, setNewassetonCanvas,
 
     GetProjextById,
     setproject,
     project,
     jobId,
+    addimgToCanvasSubject,
     projectId,
     setprojectId,
     uerId,
@@ -95,7 +97,7 @@ export default function Home() {
     const objects = canvas1?.getObjects();
     const subjectObjects = [];
     objects?.forEach((object) => {
-      if (object.category === "generated") {
+      if (object.category === "subject") {
         subjectObjects.push(object);
       }
     });
@@ -103,6 +105,7 @@ export default function Home() {
     if (filteredResult?.length < jobId?.length ) {
       // addimgToCanvasGen(filteredResult[0]?.modified_image_url);
     }
+   
     // }
 
     return () => {
@@ -110,6 +113,33 @@ export default function Home() {
     };
   }, [jobId, setGeneratedImgList, generatedImgList, regeneratePopup]);
 
+
+  useEffect(() => {
+    const canvas1 = canvasInstance.current;
+    
+    const objects = canvas1?.getObjects();
+    const subjectObjects = [];
+    objects?.forEach((object) => {
+      if (object.category === "subject") {
+        subjectObjects.push(object);
+      }
+    }); 
+  const state = false
+    setTimeout(() => {
+      if(subjectObjects.length <= 0 && newassetonCanvas !== null ){
+        console.log(newassetonCanvas , subjectObjects.length ,newassetonCanvas !== null )
+        let state = true
+        if( newassetonCanvas !== null && state){
+          state = false
+  
+          addimgToCanvasSubject(newassetonCanvas)
+        }
+        
+        setNewassetonCanvas(null)
+      }
+    }, 1000);
+  }, [])
+  
   return (
     <MainPages>
       {/* {loader ? <Loader /> : null} */}

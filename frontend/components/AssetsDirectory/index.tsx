@@ -34,6 +34,8 @@ const AssetsDir = () => {
   }, []);
   // listofassets
 
+  
+
   return (
     <motion.div initial="hidden" animate="visible" variants={fadeIn}>
       <GelleryWrapper>
@@ -48,9 +50,9 @@ const AssetsDir = () => {
         <div className="imageBox">
           <div className="grid-img">
             {listofassets?.map((image, i) => (
-              <div key={i} className="img" onClick={()=> setPopupImage({url:image?.image_url, status: true})}>
+              <div key={i} className="img" onClick={()=> setPopupImage({url:image?.url.url, status: true, userId:userId, btn:"Use to generate",generat:true })}>
                 <picture>
-                  <img src={image?.image_url} alt="" />
+                  <img src={image?.url?.url} alt="" />
                 </picture>
               </div>
             ))}

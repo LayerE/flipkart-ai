@@ -12,6 +12,8 @@ const Regeneret = () => {
     positionBtn,
     canvasInstance,
     generatedImgList,
+    reloder, setreLoader,
+
     regenratedImgsJobId, setRegenratedImgsJobid,
     setActiveTab
   } = useAppState();
@@ -28,6 +30,7 @@ const Regeneret = () => {
        obj?.task_id === regenratedImgsJobId 
     );
     setFilteredArray(filteredResult);
+    console.log(filteredResult?.length)
 
     if(filteredResult?.length){
         setLoader(false)
@@ -42,21 +45,6 @@ const Regeneret = () => {
   
   }, [generatedImgList,regenratedImgsJobId])
   
-
-  const imge = [
-    {
-      url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTjTg7qF7Haj4Wi2_8cZxD8Uake4V07FTSrQ&usqp=CAU?1",
-    },
-    {
-      url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTjTg7qF7Haj4Wi2_8cZxD8Uake4V07FTSrQ&usqp=CAU?6",
-    },
-    {
-      url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTjTg7qF7Haj4Wi2_8cZxD8Uake4V07FTSrQ&usqp=CAU?9",
-    },
-    {
-      url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTjTg7qF7Haj4Wi2_8cZxD8Uake4V07FTSrQ&usqp=CAU?4",
-    },
-  ];
   const addimgToCanvasGen = async (url: string[]) => {
     const gridSize = 2;
 
@@ -103,7 +91,7 @@ const Regeneret = () => {
           img.set({
             left: randomLeft,
             top: randomTop,
-            width: 340,
+            width: 360,
             height: 360,
           });
 
@@ -151,101 +139,115 @@ const Regeneret = () => {
           </svg>
         </div>
 
-        {!filteredArray.length  ? (
-          <div className="gride">
+        {filteredArray.length && !reloder ? (
+            <div className="gride">
             <div className={` griteitem`} onClick={() => ""}>
-              <DaoderWarpperL>
-                <div className="jumping-dots-loader">
-                  {" "}
-                  <span></span> <span></span> <span></span>{" "}
-                </div>
-                <div className="moving-gradient"></div>
-              </DaoderWarpperL>
-              <picture className="griteitemLoading">
-                <img
-                  src={
-                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTjTg7qF7Haj4Wi2_8cZxD8Uake4V07FTSrQ&usqp=CAU?6"
-                  }
-                  alt="image"
-                />
+             <DaoderWarpperL>
+              
+             </DaoderWarpperL>
+             <picture className="">
+               <img
+                 src={regeneratePopup.url
+                 }
+                 alt="image"
+               />
 
-                {/* <img src={regeneratePopup?.url} alt="image" /> */}
-              </picture>
-            </div>
-            <div className={` griteitem`} onClick={() => ""}>
-              <DaoderWarpperL>
-                <div className="jumping-dots-loader">
-                  {" "}
-                  <span></span> <span></span> <span></span>{" "}
-                </div>
-                <div className="moving-gradient"></div>
-              </DaoderWarpperL>
-              <picture className="griteitemLoading">
-                <img
-                  src={
-                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTjTg7qF7Haj4Wi2_8cZxD8Uake4V07FTSrQ&usqp=CAU?6"
-                  }
-                  alt="image"
-                />
-
-                {/* <img src={regeneratePopup?.url} alt="image" /> */}
-              </picture>
-            </div>
-            <div className={` griteitem`} onClick={() => ""}>
-              <DaoderWarpperL>
-                <div className="jumping-dots-loader">
-                  {" "}
-                  <span></span> <span></span> <span></span>{" "}
-                </div>
-                <div className="moving-gradient"></div>
-              </DaoderWarpperL>
-              <picture className="griteitemLoading">
-                <img
-                  src={
-                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTjTg7qF7Haj4Wi2_8cZxD8Uake4V07FTSrQ&usqp=CAU?6"
-                  }
-                  alt="image"
-                />
-
-                {/* <img src={regeneratePopup?.url} alt="image" /> */}
-              </picture>
-            </div>
-            <div className={` griteitem`} onClick={() => ""}>
-              <DaoderWarpperL>
-                <div className="jumping-dots-loader">
-                  {" "}
-                  <span></span> <span></span> <span></span>{" "}
-                </div>
-                <div className="moving-gradient"></div>
-              </DaoderWarpperL>
-              <picture className="griteitemLoading">
-                <img
-                  src={
-                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTjTg7qF7Haj4Wi2_8cZxD8Uake4V07FTSrQ&usqp=CAU?6"
-                  }
-                  alt="image"
-                />
-
-                {/* <img src={regeneratePopup?.url} alt="image" /> */}
-              </picture>
-            </div>
-          </div>
+               {/* <img src={regeneratePopup?.url} alt="image" /> */}
+             </picture>
+           </div>
+           
+           {filteredArray.map((item, i) => (
+             <div
+               key={i}
+               className={`griteitem ${
+                 selectedCards.includes(item?.modified_image_url) ? "active" : ""
+               }`}
+               onClick={() => handleCardChange(item?.modified_image_url)}
+             >
+               <picture>
+                 <img src={item?.modified_image_url} alt="image" />
+               </picture>
+             </div>
+           ))}
+         </div>
+         
         ) : (
+
           <div className="gride">
-            {filteredArray.map((item, i) => (
-              <div
-                key={i}
-                className={`griteitem ${
-                  selectedCards.includes(item?.modified_image_url) ? "active" : ""
-                }`}
-                onClick={() => handleCardChange(item?.modified_image_url)}
-              >
-                <picture>
-                  <img src={item?.modified_image_url} alt="image" />
-                </picture>
-              </div>
-            ))}
+          <div className={` griteitem`} onClick={() => ""}>
+            <DaoderWarpperL>
+             
+              <div className="moving-gradient"></div>
+            </DaoderWarpperL>
+            <picture className="">
+              <img
+                src={regeneratePopup.url
+                }
+                alt="image"
+              />
+
+              {/* <img src={regeneratePopup?.url} alt="image" /> */}
+            </picture>
           </div>
+          <div className={` griteitem`} onClick={() => ""}>
+            <DaoderWarpperL>
+              <div className="jumping-dots-loader">
+                {" "}
+                <span></span> <span></span> <span></span>{" "}
+              </div>
+              <div className="moving-gradient"></div>
+            </DaoderWarpperL>
+            <picture className="griteitemLoading">
+              <img
+                src={
+                  regeneratePopup.url
+                }
+                alt="image"
+              />
+
+              {/* <img src={regeneratePopup?.url} alt="image" /> */}
+            </picture>
+          </div>
+          <div className={` griteitem`} onClick={() => ""}>
+            <DaoderWarpperL>
+              <div className="jumping-dots-loader">
+                {" "}
+                <span></span> <span></span> <span></span>{" "}
+              </div>
+              <div className="moving-gradient"></div>
+            </DaoderWarpperL>
+            <picture className="griteitemLoading">
+              <img
+                src={
+                  regeneratePopup.url
+                }
+                alt="image"
+              />
+
+              {/* <img src={regeneratePopup?.url} alt="image" /> */}
+            </picture>
+          </div>
+          <div className={` griteitem`} onClick={() => ""}>
+            <DaoderWarpperL>
+              <div className="jumping-dots-loader">
+                {" "}
+                <span></span> <span></span> <span></span>{" "}
+              </div>
+              <div className="moving-gradient"></div>
+            </DaoderWarpperL>
+            <picture className="griteitemLoading">
+              <img
+                src={
+                  regeneratePopup.url
+                }
+                alt="image"
+              />
+
+              {/* <img src={regeneratePopup?.url} alt="image" /> */}
+            </picture>
+          </div>
+        </div>
+        
         )}
         {}
         <div className="btns">
@@ -289,7 +291,7 @@ const WrapperRegenerat = styled.div`
   }
   .wrapper {
     position: relative;
-    max-width: 700px !important;
+    max-width: 550px !important;
     border: 2px solid #d9d9d9;
     border-radius: 8px !important;
     padding: 30px;
@@ -306,19 +308,33 @@ const WrapperRegenerat = styled.div`
       border: 2px solid #d9d9d9;
       border-radius: 8px !important;
       position: relative;
+      display: flex;
+      padding: 20px;
+      align-items: center;
+      justify-content: center;
       &:hover {
       }
+    }
+    picture{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      object-fit: cover;
+
     }
     .active {
       border: 2px solid rgba(249, 208, 13, 1);
     }
 
     img {
-      /* width: 450px; */
-      height: 150px;
-      margin: auto;
-      margin-bottom: 30px;
+      /* width: 200px; */
+      height: 120px;
+      width: 100%;
+      /* margin: auto; */
+      /* margin-bottom: 30px; */
       border-radius: 8px !important;
+      object-fit: cover;
     }
     .test {
       display: flex;

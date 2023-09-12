@@ -38,7 +38,7 @@ const Gellery = () => {
         <div className="imageBox">
           <div className="grid-img">
             {generatedImgList?.map((image, i) => (
-              <div key={i} className="img" onClick={()=> setPopupImage({url:image?.modified_image_url, status: true})}>
+              <div key={i} className="img" onClick={()=> setPopupImage({url:image?.modified_image_url, status: true,userId:userId, btn:"Download ",generat:false })}>
                 <picture>
                   <img src={image?.modified_image_url} alt="" />
                 </picture>

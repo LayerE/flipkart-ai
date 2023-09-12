@@ -79,18 +79,7 @@ export const BackgrowundSuggestionsPrash = [
   "with",
 ];
 export const resultList = [
-  {
-    tittle: 1,
-  },
-  {
-    tittle: 2,
-  },
-  {
-    tittle: 3,
-  },
-  {
-    tittle: 4,
-  },
+ 1,2,3,4
 ];
 
 export const renderStrength = [

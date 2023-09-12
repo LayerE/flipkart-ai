@@ -183,9 +183,19 @@ const EditorSection = () => {
           />
         </div>
       </div>
-      {/* <div className="rowwothtwo">
-        <Label>Number of results</Label>
-        <div className="dropdown-smaill">
+      <div className="rowwothtwo" style={{marginBottom: "30px"}}>
+        <DisabledLabel>Number of results</DisabledLabel>
+        <div className="two-side">
+        {/* <DropdownInput
+        style ={{minWidth: "500px"}}
+            data={{
+              list: resultList,
+              // label: "background",
+
+              action: setSelectedresult,
+              activeTab: selectResult,
+            }}
+          ></DropdownInput> */}
           <DropdownNOBorder
             data={{
               list: resultList,
@@ -194,7 +204,7 @@ const EditorSection = () => {
             }}
           ></DropdownNOBorder>
         </div>
-      </div> */}
+      </div>
       {/* <div className="rowwothtwo">
         <Label>Render strength</Label>
         <div className="dropdown-smaill">

@@ -22,6 +22,7 @@ const Assets: React.FC = () => {
     listofassets,
     setListOfAssets,
     fetchAssetsImages,
+    fetchAssetsImagesWithProjectId,
     addimgToCanvasSubject
   } = useAppState();
   const { query, isReady } = useRouter();
@@ -29,14 +30,19 @@ const Assets: React.FC = () => {
   const id = (query.id as string[]) || [];
 
   const [filter, setFilter] = useState()
+  const [re, setRe] = useState(1)
   useEffect(() => {
+    // if(re <=3){
+    //   setRe(re+1)
+    // }
     if (userId && isReady) {
-      fetchAssetsImages(userId);
+      fetchAssetsImagesWithProjectId(userId, id);
     
       const filer = listofassets?.filter((item)=> item.project_id === id )
       setFilter(filer)
+      console.log(listofassets,"dfdf")
     }
-  }, [isReady,userId]);
+  }, [isReady,userId,re]);
 
   // listofassets
 
@@ -70,27 +76,29 @@ const Assets: React.FC = () => {
         </ResponsiveRowWraptwo>
       </div>
       <div className="gap">
-        {filter?.length ? (
+        {listofassets?.length ? (
           <Row>
             <Label>Uploaded Assets</Label>
           </Row>
         ) : null}
 
         <ResponsiveRowWraptwo>
-          {filter?.map((test, i) => (
+          {listofassets?.map((test, i) => (
             <div
               key={i}
               className={
                 "imageBox"
               }
               onClick={() => {
-                addimgToCanvasSubject(test?.image_url);
+                addimgToCanvasSubject(test?.url.url);
+                setProduct(test.url.product)
+
 
                
               }}
             >
               <picture>
-                <img src={test.image_url} alt="" />
+                <img src={test.url.url} alt="" />
               </picture>
             </div>
           ))}

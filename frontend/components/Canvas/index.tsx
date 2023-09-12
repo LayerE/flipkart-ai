@@ -30,6 +30,7 @@ export default function CanvasBox({ proid, userId }) {
     canvasHistoryRef,
     currentStep,
     setCurrentStep,
+    RegenerateImageHandeler,
     GetProjextById,
     setEditorBox,
     bringImageToFront,
@@ -48,7 +49,8 @@ export default function CanvasBox({ proid, userId }) {
     project,
     loadercarna,
     setloadercarna,
-    saveCanvasToDatabase
+    saveCanvasToDatabase,
+    setRegenratedImgsJobid
 
     // canvasRef
   } = useAppState();
@@ -417,6 +419,24 @@ export default function CanvasBox({ proid, userId }) {
     backgroundColor: "rgba(249, 208, 13, 0.23)",
   };
 
+  const handelRegenrate =()=>{
+    if(downloadImg !== null) {
+    RegenerateImageHandeler(userId, proid,downloadImg);
+    setRegenratedImgsJobid([])
+    setTimeout(() => {
+      setRegeneratePopup({ status: true, url: downloadImg });
+      console.log("Success",downloadImg)
+      setActiveTab(6);
+      console.log("sdsfs");
+      
+    }, 500);
+
+  }
+            
+           
+
+  }
+
   return (
     <Wrapper>
       {loadercarna ? <Loader /> : null}
@@ -447,10 +467,8 @@ export default function CanvasBox({ proid, userId }) {
           ref={regenerateRef}
           // style={{ display: btnVisible ? "block" : "none" }}
           onClick={() => {
-            generateImageHandeler(userId, proid);
-            setRegeneratePopup({ status: true, url: "" });
-            setActiveTab(6);
-            console.log("sdsfs");
+            handelRegenrate()
+            
           }}
         >
           <button className="selectone">Regenrate Product</button>

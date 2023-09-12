@@ -3,70 +3,20 @@ import { styled } from "styled-components";
 import Button from "../common/Button";
 import { useAppState } from "@/context/app.context";
 import { motion } from "framer-motion";
-import { useRouter } from "next/router";
 
 const fadeIn = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.2 } },
-};
-const PopupCard = () => {
-  const { popupImage, setPopupImage, handileDownload, GetProjexts ,
-    newassetonCanvas, setNewassetonCanvas
-  } =
-    useAppState();
- 
-
-  const router = useRouter();
-
-  const handletBtn = async () => {
-    if (popupImage.generat) {
-      try {
-        // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
-        const getUser = localStorage.getItem("userId");
-        console.log(getUser);
-        if (popupImage?.userId) {
-          const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API}/project?id=${popupImage.userId}`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                title: "Untitle",
-                id: popupImage.userId,
-              }),
-            }
-          );
-          // console.log(await response.json(), "dfvcvdfvdvcdsd");
-          const datares = await response.json();
-          if (datares?._id) {
-            setNewassetonCanvas(popupImage?.url);
-
-            console.log(datares, "sdcdrfc");
-            GetProjexts(popupImage.userId);
-            setPopupImage({ statu: false })
-
-
-            router.push(`/generate/${datares?._id}`);
-            // window.open(`/generate/${datares?._id}`, "_self");
-            setTimeout(() => {}, 1000);
-          }
-        }
-      } catch (error) {
-        // Handle error
-      }
-    } else {
-      handileDownload(popupImage?.url);
-    }
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { duration: 0.2 } },
   };
+const PopupCardGenerate = () => {
+  const { popupImage, setPopupImage ,handileDownload} = useAppState();
 
   return (
     // <motion.div initial="hidden" animate="visible" variants={fadeIn}>
 
     <PopupWrapper2>
       <div className="wrapper">
-        <div className="close" onClick={() => setPopupImage({ statu: false })}>
+        <div className="close" onClick={()=> setPopupImage({statu: false})}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             x="0px"
@@ -77,18 +27,22 @@ const PopupCard = () => {
           </svg>
         </div>
         <picture>
-          <img src={popupImage?.url} alt="image" />
+          <img
+            src={popupImage?.url}
+            alt="image"
+          />
         </picture>
         <div className="btns">
-          <Button onClick={() => handletBtn()}> {popupImage.btn} </Button>
+          <Button onClick={()=> handileDownload(popupImage?.url)}>{popupImage.btn} </Button>
         </div>
       </div>
     </PopupWrapper2>
     // </motion.div>
+
   );
 };
 
-export default PopupCard;
+export default PopupCardGenerate;
 
 const PopupWrapper2 = styled.div`
   position: fixed;
