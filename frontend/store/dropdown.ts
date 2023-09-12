@@ -246,9 +246,9 @@ export const templets = [
     image:
     "https://www.linkpicture.com/q/Forest_1.png",
 
-    promt: " surroubded byForest background",
+    promt: " surrounded by Forest",
     placementType: "",
-    surroundingType: "surroubded by",
+    surroundingType: "surrounded by",
     backgroundType: "",
     product: "",
     placement: "",
