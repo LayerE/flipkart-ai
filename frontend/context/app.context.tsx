@@ -164,6 +164,7 @@ export const AppContext = createContext<ContextITFC>({
 
 export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const canvasInstance = useRef(null);
+  
   const outerDivRef = useRef(null);
 
   const [selectedImg, setSelectedImg] = useState<object | null>(null);
@@ -222,6 +223,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [newassetonCanvas, setNewassetonCanvas] = useState(null);
 
 
+  const [genRect, setgenRect] = useState();
 
 
 
@@ -233,6 +235,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const handileDownload = (url: string) => {
     saveAs(url, `image${Date.now()}.png`);
   };
+
+  
 
   const getBase64FromUrl = async (url: string) => {
     const data = await fetch(url);
@@ -416,8 +420,11 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   function positionBtn(obj) {
     const btn = PosisionbtnRef.current;
     const absCoords = canvasInstance?.current.getAbsoluteCoords(obj);
-    btn.style.left = absCoords.left - 370 - 80 / 2 + "px";
+    btn.style.left = absCoords.left - 180 / 2 + "px";
     btn.style.top = absCoords.top - 50 / 2 + "px";
+
+  
+
   }
 
   const GetProjexts = (getUser: string) => {
@@ -1161,6 +1168,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         handileDownload,
         canvasInstance,
         addimgToCanvasGen,
+        genRect, setgenRect,
         outerDivRef,
         addimgToCanvas,
         addimgToCanvasSubject,

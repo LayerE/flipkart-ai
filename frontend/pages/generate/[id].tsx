@@ -23,8 +23,6 @@ const fadeIn = {
   visible: { opacity: 1, transition: { duration: 1 } },
 };
 
-
-
 export default function Home() {
   const { userId } = useAuth();
   const { query, isReady } = useRouter();
@@ -47,8 +45,8 @@ export default function Home() {
     regeneratePopup,
     generateImageHandeler,
     SaveProjexts,
-    newassetonCanvas, setNewassetonCanvas,
-
+    newassetonCanvas,
+    setNewassetonCanvas,
     GetProjextById,
     setproject,
     project,
@@ -78,7 +76,6 @@ export default function Home() {
       ...pre,
       { url: url, tool: "generated-selected" },
     ]);
-
   };
   const [filteredArray, setFilteredArray] = useState([]);
 
@@ -102,44 +99,46 @@ export default function Home() {
       }
     });
 
-    if (filteredResult?.length < jobId?.length ) {
+    if (filteredResult?.length < jobId?.length) {
       // addimgToCanvasGen(filteredResult[0]?.modified_image_url);
     }
-   
-    // }
+
 
     return () => {
       // setprojectId(null);
     };
   }, [jobId, setGeneratedImgList, generatedImgList, regeneratePopup]);
 
-
   useEffect(() => {
     const canvas1 = canvasInstance.current;
-    
+
     const objects = canvas1?.getObjects();
     const subjectObjects = [];
     objects?.forEach((object) => {
       if (object.category === "subject") {
         subjectObjects.push(object);
       }
-    }); 
-  const state = false
+    });
+    const state = false;
     setTimeout(() => {
-      if(subjectObjects.length <= 0 && newassetonCanvas !== null ){
-        console.log(newassetonCanvas , subjectObjects.length ,newassetonCanvas !== null )
-        let state = true
-        if( newassetonCanvas !== null && state){
-          state = false
-  
-          addimgToCanvasSubject(newassetonCanvas)
+      if (subjectObjects.length <= 0 && newassetonCanvas !== null) {
+        console.log(
+          newassetonCanvas,
+          subjectObjects.length,
+          newassetonCanvas !== null
+        );
+        let state = true;
+        if (newassetonCanvas !== null && state) {
+          state = false;
+
+          addimgToCanvasSubject(newassetonCanvas);
         }
-        
-        setNewassetonCanvas(null)
+
+        setNewassetonCanvas(null);
       }
     }, 1000);
-  }, [])
-  
+  }, []);
+
   return (
     <MainPages>
       {/* {loader ? <Loader /> : null} */}
@@ -285,22 +284,21 @@ const MainPages = styled.div`
       overflow: auto;
 
       &::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
+        width: 10px;
+        height: 10px;
+      }
 
-/* Track */
-&::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 5px grey;
-  border-radius: 10px;
-  height: 7px;
+      /* Track */
+      &::-webkit-scrollbar-track {
+        box-shadow: inset 0 0 5px grey;
+        border-radius: 10px;
+        height: 7px;
+      }
 
-}
-
-/* Handle */
-&::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-}
+      /* Handle */
+      &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+      }
     }
     .items {
       cursor: pointer;

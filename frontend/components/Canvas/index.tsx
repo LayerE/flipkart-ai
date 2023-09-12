@@ -11,9 +11,7 @@ import axios from "axios";
 import Loader from "../Loader";
 
 export default function CanvasBox({ proid, userId }) {
-  // const { userId } = useAuth();
   const { query, isReady } = useRouter();
-  // const { id } = query;
   const id = (query.id as string[]) || [];
   const {
     setSelectedImg,
@@ -50,17 +48,19 @@ export default function CanvasBox({ proid, userId }) {
     loadercarna,
     setloadercarna,
     saveCanvasToDatabase,
-    setRegenratedImgsJobid
+    setRegenratedImgsJobid,
+    genRect, setgenRect
 
     // canvasRef
   } = useAppState();
-
+  let newEditorBox 
   // const [loadercarna, setloadercarna] = useState(false);
   const [canvasZoom, setCanvasZoom] = useState(1);
   const [canvasPosition, setCanvasPosition] = useState({ x: 0, y: 0 });
   const canvasRef = useRef(null);
   const [canvas, setCanvas] = useState(null);
   /* eslint-disable */
+
   useEffect(() => {
     // if (!canvasInstance.current) {
     // console.log("canvas",canvasInstance.current)
@@ -70,8 +70,11 @@ export default function CanvasBox({ proid, userId }) {
       // transparentCorners: false,
       originX: "center",
       originY: "center",
-      renderOnAddRemove: false,
+      // renderOnAddRemove: false,
     });
+
+  
+
 
     // setCanvas( new fabric.Canvas(canvasRef?.current, {
     //   width: window.innerWidth,
@@ -86,38 +89,39 @@ export default function CanvasBox({ proid, userId }) {
     // }
 
     const canvasInstanceRef = canvasInstance.current;
+
+     newEditorBox = new fabric.Rect({
+      left: 30,
+      top: 120,
+      width: 380,
+      height: 380,
+      selectable: false,
+      fill: "transparent",
+      stroke: "#0df977",
+      strokeWidth: 2,
+    });
+
+    setgenRect(newEditorBox)
+
+    // genBox.style.width =newEditorBox.width + "px";
+    // genBox.style.height =newEditorBox.height + "px";
+    // genBox.style.top =newEditorBox.y + "px";
+
+    // genBox.style.left =newEditorBox.x + "px";
+
+    canvasInstanceRef.add(newEditorBox).renderAll();
     fabric.Object.prototype.transparentCorners = false;
     // fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
     // Add a custom method to the Fabric canvas prototype
 
     fabric.Canvas.prototype.getAbsoluteCoords = function (object) {
       return {
-        left: object.left + this._offset.left,
-        top: object.top + this._offset.top,
+        left: object.left ,
+        top: object.top 
       };
     };
 
     // getCanvs(project);
-
-    // Zoom and Pan event handlers
-    // canvasInstanceRef.on("mouse:wheel", (opt) => {
-    //   const delta = opt.e.deltaY;
-    //   let zoom = canvasInstanceRef.getZoom();
-    //   zoom *= 0.999 ** delta;
-    //   if (zoom > 20) zoom = 20;
-    //   if (zoom < 0.01) zoom = 0.01;
-    //   setCanvasZoom(zoom);
-    //   canvasInstanceRef.zoomToPoint(
-    //     { x: canvasInstanceRef.width / 2, y: canvasInstanceRef.height / 2 },
-    //     zoom
-    //   );
-    //   // setCanvasPosition({
-    //   //   x: canvasInstanceRef.viewportTransform[4],
-    //   //   y: canvasInstanceRef.viewportTransform[5],
-    //   // });
-    //   opt.e.preventDefault();
-    //   opt.e.stopPropagation();
-    // });
 
     // Resize canvas when the window is resized
     // window.addEventListener("resize", () => {
@@ -128,7 +132,7 @@ export default function CanvasBox({ proid, userId }) {
     // });
 
     return () => {
-      saveCanvasToDatabase()
+      // saveCanvasToDatabase()
       canvasInstanceRef?.dispose();
       // setTimeout(() => {
 
@@ -136,70 +140,60 @@ export default function CanvasBox({ proid, userId }) {
     };
   }, [isReady, canvasInstance]);
 
-  // useEffect(() => {
-  //   return () => {
-  //     saveCanvasToDatabase()
-  //     setTimeout(() => {
-  //     canvasInstanceRef.dispose();
-
-  //     }, 300);
-  //   };
-
-  // }, []);
-
   // Load canvas data from the database when the component mounts
+  // useEffect(() => {
+  //   // Fetch canvas data from your API and load it into the canvas
+  //   const canvasInstanceRef = canvasInstance.current;
+  //   setloadercarna(true);
+  //   if (isReady && userId) {
+  //     axios
+  //       .post(`/api/canvasdata`, {
+  //         user_id: userId,
+  //         project_id: proid,
+  //       })
+  //       .then((response) => {
+  //         console.log(response);
+  //         console.log(
+  //           response?.data?.data[response?.data?.data?.length - 1]?.canvasdata,
+  //           "adsfnbdhjskgvyuifdsgh"
+  //         );
+  //         if (canvasInstanceRef) {
+  //           canvasInstanceRef.loadFromJSON(
+  //             JSON.stringify(
+  //               response?.data?.data[response?.data?.data?.length - 1]
+  //                 .canvasdata
+  //             ),
+  //             canvasInstanceRef.requestRenderAll.bind(canvasInstanceRef)
+  //           );
+  //           setloadercarna(false);
+  //           // canvasInstanceRef.loadFromJSON(savedCanvasDataLocal, () => {
+  //           //   canvasInstanceRef.renderAll();
+  //           // });
+  //         }
+  //       })
+
+  //       .catch((error) => {
+  //         console.error(error);
+  //         setloadercarna(false);
+
+  //         return error;
+  //       });
+
+  //     // return () => {
+
+  //     //   saveCanvasToDatabase()
+  //     // };
+  //   }
+  // }, [isReady, userId]);
+
   useEffect(() => {
-    // Fetch canvas data from your API and load it into the canvas
-    const canvasInstanceRef = canvasInstance.current;
-    setloadercarna(true);
-    if (isReady && userId) {
-      axios
-        .post(`/api/canvasdata`, {
-          user_id: userId,
-          project_id: proid,
-        })
-        .then((response) => {
-          console.log(response);
-          console.log(
-            response?.data?.data[response?.data?.data?.length - 1]?.canvasdata,
-            "adsfnbdhjskgvyuifdsgh"
-          );
-          if (canvasInstanceRef) {
-            canvasInstanceRef.loadFromJSON(
-              JSON.stringify(
-                response?.data?.data[response?.data?.data?.length - 1]
-                  .canvasdata
-              ),
-              canvasInstanceRef.requestRenderAll.bind(canvasInstanceRef)
-            );
-            setloadercarna(false);
-            // canvasInstanceRef.loadFromJSON(savedCanvasDataLocal, () => {
-            //   canvasInstanceRef.renderAll();
-            // });
-          }
-        })
-
-        .catch((error) => {
-          console.error(error);
-          setloadercarna(false);
-
-          return error;
-        });
-
-      // return () => {
-
-      //   saveCanvasToDatabase()
-      // };
-    }
-  }, [isReady, userId]);
-
-  useEffect(() => {
-    if (canvasInstance?.current && isReady) {
+    if (canvasInstance?.current) {
       const canvasInstanceRef = canvasInstance?.current;
 
       const btn = PosisionbtnRef.current;
       const rebtn = regenerateRef.current;
       const genBox = generateBox.current;
+      const preBox = previewBox.current;
 
       // When a user clicks on an image on the canvas
       canvasInstanceRef.on("mouse:down", function (options) {
@@ -219,17 +213,7 @@ export default function CanvasBox({ proid, userId }) {
       });
 
       // Create the newEditorBox when the component mounts
-      const newEditorBox = new fabric.Rect({
-        left: 30,
-        top: 120,
-        width: 380,
-        height: 380,
-        selectable: false,
-        fill: "transparent",
-        // stroke: "rgba(249, 208, 13, 1)",
-        strokeWidth: 1,
-      });
-
+  
       const EditorBoxText = new fabric.Text("Place Your Product Here", {
         left: newEditorBox.left + 20, // center of the rectangle
         top: newEditorBox.top + 20, // center of the rectangle
@@ -247,7 +231,7 @@ export default function CanvasBox({ proid, userId }) {
         height: 380,
         selectable: false,
         // fill: "rgba(249, 208, 13, 0.23)",
-        fill: "transparent",
+        // fill: "transparent",
       });
 
       const imageGenText = new fabric.Text("Generated image will appear here", {
@@ -295,7 +279,6 @@ export default function CanvasBox({ proid, userId }) {
         // setDownloadImg(dataURL);
         setDownloadImg(dataURL);
         setSelectedImg(dataURL);
-
         // Reset the rectangle's stroke properties
         newEditorBox.set("stroke", originalStrokeColor);
         newEditorBox.set("strokeWidth", originalStrokeWidth);
@@ -364,8 +347,100 @@ export default function CanvasBox({ proid, userId }) {
           setActiveTab(1);
         }
       });
+      // Zoom and Pan event handlers
+
+      // canvasInstanceRef.on("mouse:wheel", (opt) => {
+      //   const delta = opt.e.deltaY;
+      //   let zoom = canvasInstanceRef.getZoom();
+      //   zoom *= 0.999 ** delta;
+      //   if (zoom > 20) zoom = 20;
+      //   if (zoom < 0.01) zoom = 0.01;
+      //   setCanvasZoom(zoom);
+      //   canvasInstanceRef.zoomToPoint(
+      //     { x: canvasInstanceRef.width / 2, y: canvasInstanceRef.height / 2 },
+      //     zoom
+      //   );
+      //   // setCanvasPosition({
+      //   //   x: canvasInstanceRef.viewportTransform[4],
+      //   //   y: canvasInstanceRef.viewportTransform[5],
+      //   // });
+      //   opt.e.preventDefault();
+      //   opt.e.stopPropagation();
+      // });
+      canvasInstanceRef.on("mouse:wheel", function (opt) {
+        var delta = opt.e.deltaY;
+        var zoom = canvasInstanceRef.getZoom();
+        zoom *= 0.999 ** delta;
+        if (zoom > 20) zoom = 20;
+        if (zoom < 0.01) zoom = 0.01;
+        canvasInstanceRef.zoomToPoint(
+          { x: opt.e.offsetX, y: opt.e.offsetY },
+          zoom
+        );
+
+        // genBox.style.transform = `scale(${zoom})`;
+        // genBox.style.transform = `scale(${zoom}) translate(${newEditorBox.x}px, ${newEditorBox.y}px)`;
+
+        // Get the coordinates of the inner rectangle
+        var innerRectCoords = newEditorBox.getBoundingRect();
+
+        // Update the position and zoom of the outer div
+
+        // genBox.style.transform = `scale(${zoom})`;
+        // genBox.style.left = `${innerRectCoords.left * zoom}px`;
+        // genBox.style.top = `${innerRectCoords.top * zoom}px`;
+
+        // Calculate the adjusted position for the outer div
+        // var canvasContainer = document.getElementById('canvas-container');
+        var canvasScrollLeft = genBox.scrollLeft;
+        var canvasScrollTop = genBox.scrollTop;
+        var adjustedLeft = (innerRectCoords.left - canvasScrollLeft) * zoom;
+        var adjustedLeftPr =
+          (innerRectCoords.left + 400 - canvasScrollLeft) * zoom;
+
+        var adjustedTop = (innerRectCoords.top - canvasScrollTop) * zoom;
+
+        // Update the position and zoom of the outer div
+        preBox.style.transform = `scale(${zoom})`;
+        genBox.style.transform = `scale(${zoom})`;
+        genBox.style.left = `${adjustedLeft}px`;
+        genBox.style.top = `${adjustedTop}px`;
+        preBox.style.top = `${adjustedTop}px`;
+        preBox.style.left = `${adjustedLeftPr}px`;
+
+        opt.e.preventDefault();
+        opt.e.stopPropagation();
+      });
+
+       // Handle mouse wheel scrolling
+       canvasInstanceRef.on('mouse:wheel', (event) => {
+      const delta = event.e.deltaY;
+      const zoom = canvasInstanceRef.getZoom();
+      const zoomFactor = 1.1; // Adjust the zoom factor as needed
+
+      if (delta > 0) {
+        canvasInstanceRef.zoomToPoint(
+          {
+            x: event.e.offsetX,
+            y: event.e.offsetY,
+          },
+          zoom / zoomFactor
+        );
+      } else {
+        canvasInstanceRef.zoomToPoint(
+          {
+            x: event.e.offsetX,
+            y: event.e.offsetY,
+          },
+          zoom * zoomFactor
+        );
+      }
+
+      event.e.preventDefault();
+      canvasInstanceRef.renderAll();
+    });
     }
-  }, [project, isReady, canvasInstance]);
+  }, [canvasInstance]);
 
   // const saveCanvasToDatabase = () => {
   //   const canvasData = canvasInstance.current.toJSON();
@@ -406,36 +481,31 @@ export default function CanvasBox({ proid, userId }) {
   };
 
   const generationBoxStyle = {
-    left: `${30 + canvasPosition.x}px`,
-    top: `${120 + canvasPosition.y}px`,
-    width: `${380 * canvasZoom}px`, // Adjust the width based on canvas zoom
-    height: `${380 * canvasZoom}px`, // Adjust the height based on canvas zoom
+    left: `${30}px`,
+    top: `${120}px`,
+    width: `${380}px`, // Adjust the width based on canvas zoom
+    height: `${380}px`, // Adjust the height based on canvas zoom
   };
   const PreviewBoxStyle = {
-    left: `${430 + canvasPosition.x}px`,
-    top: `${120 + canvasPosition.y}px`,
-    width: `${380 * canvasZoom}px`, // Adjust the width based on canvas zoom
-    height: `${380 * canvasZoom}px`, // Adjust the height based on canvas zoom
+    left: `${430}px`,
+    top: `${120}px`,
+    width: `${380}px`, // Adjust the width based on canvas zoom
+    height: `${380}px`, // Adjust the height based on canvas zoom
     backgroundColor: "rgba(249, 208, 13, 0.23)",
   };
 
-  const handelRegenrate =()=>{
-    if(downloadImg !== null) {
-    RegenerateImageHandeler(userId, proid,downloadImg);
-    setRegenratedImgsJobid([])
-    setTimeout(() => {
-      setRegeneratePopup({ status: true, url: downloadImg });
-      console.log("Success",downloadImg)
-      setActiveTab(6);
-      console.log("sdsfs");
-      
-    }, 500);
-
-  }
-            
-           
-
-  }
+  const handelRegenrate = () => {
+    if (downloadImg !== null) {
+      RegenerateImageHandeler(userId, proid, downloadImg);
+      setRegenratedImgsJobid([]);
+      setTimeout(() => {
+        setRegeneratePopup({ status: true, url: downloadImg });
+        console.log("Success", downloadImg);
+        setActiveTab(6);
+        console.log("sdsfs");
+      }, 500);
+    }
+  };
 
   return (
     <Wrapper>
@@ -467,15 +537,20 @@ export default function CanvasBox({ proid, userId }) {
           ref={regenerateRef}
           // style={{ display: btnVisible ? "block" : "none" }}
           onClick={() => {
-            handelRegenrate()
-            
+            handelRegenrate();
           }}
         >
           <button className="selectone">Regenrate Product</button>
         </div>
-        
-         <div className="ss" >
-          <picture><img onClick={() => saveCanvasToDatabase()} src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAYFBMVEX///8AAAD4+Pjv7+8aGhoTExOYmJiTk5P09PQICAiQkJD6+vp/f39WVlbGxsaurq5ubm6FhYUnJye8vLwfHx9oaGjR0dHq6urg4OB1dXWkpKS2trY0NDQpKSlNTU1fX19H7sBTAAADJUlEQVR4nO3d224iMRBFUbo7QLhDrkwyM/n/vxwhTR5AUDbUsV1Ee78iFSw5pIliN6MRERERERERERERERERxWvRn29xy7CTGVc9WqR+vVu9dOeb3jLwZMYx4vHk0YnEYNVPni7o6gi7uYRxuWeDpxHOEsLbniO7pQ2sIixK3CaAdYQFiakVrCUsRky8BysKC/266dPAasIyqziNJCyxir11HawvLLCK6wxgTaF+FXfRhPJVXIUTildxcenDdkOhdhVzrhXVhdJVjClUEoMKhcSoQh0xrFBGjCtUEQMLRReNyELNKoYWSoixhQpicKGAGF3oJ4YXuonxhd6Lxh0Inat4D0LfKt6FsPP88w0hQoQIf5Aw9V/uexTOp0cd7+f4EUIzhAjzQ4jw1hDWFur3D0QT/pLJvnsPJny4aYOp1UcwYfcpo/0vZ49LVaHrOc40vwpYRfh7kOlG1/6M1hF240/Ze3Gf3O3ZRNh1f17nE0HLv9f6qgkbhhBh/BAijB9ChPFDiDB+CBHGDyHC+CFEGD+ECOOHEGH8ECKMH0KE8UOIMH5VhF+bN+mWmtHwtvmKIxxPtbrvhsk4hnBbxndoyNo9VFq4kXnOtWkvfJZhzpdxv7iywrIreCi9ikWFWxnkcsn3YlFhjbvDFn0RqeHl7w17aNJQ+ChTWKV27hcUvsoQdq/NhB8yg11iW3RB4V5msNs3E77LDHaJAyblhLNyH0iPG1oJx9WE9t8YCK0Qygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxPC/VCnfSth91Ar+2V4hHnf6dy4F9ctjLO+l7txKw8w77vVG7dzCdetX35Ga5ewv+7+7y16cp7bmbYGJPOe2wl/EnjmXMKs839NE5x/XLY2mC39wIzzfw0TnX+Me1GUrOCh51lryvmEZ5D7Sbzr4tNUe4C1X+9WcT6Gv6x26xIHdBd9lORfTkRERERERERERERERESC/gF2IVePB+evpwAAAABJRU5ErkJggg==" alt="" /></picture>
+
+        <div className="ss">
+          <picture>
+            <img
+              onClick={() => saveCanvasToDatabase()}
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAYFBMVEX///8AAAD4+Pjv7+8aGhoTExOYmJiTk5P09PQICAiQkJD6+vp/f39WVlbGxsaurq5ubm6FhYUnJye8vLwfHx9oaGjR0dHq6urg4OB1dXWkpKS2trY0NDQpKSlNTU1fX19H7sBTAAADJUlEQVR4nO3d224iMRBFUbo7QLhDrkwyM/n/vxwhTR5AUDbUsV1Ee78iFSw5pIliN6MRERERERERERERERERxWvRn29xy7CTGVc9WqR+vVu9dOeb3jLwZMYx4vHk0YnEYNVPni7o6gi7uYRxuWeDpxHOEsLbniO7pQ2sIixK3CaAdYQFiakVrCUsRky8BysKC/266dPAasIyqziNJCyxir11HawvLLCK6wxgTaF+FXfRhPJVXIUTildxcenDdkOhdhVzrhXVhdJVjClUEoMKhcSoQh0xrFBGjCtUEQMLRReNyELNKoYWSoixhQpicKGAGF3oJ4YXuonxhd6Lxh0Inat4D0LfKt6FsPP88w0hQoQIf5Aw9V/uexTOp0cd7+f4EUIzhAjzQ4jw1hDWFur3D0QT/pLJvnsPJny4aYOp1UcwYfcpo/0vZ49LVaHrOc40vwpYRfh7kOlG1/6M1hF240/Ze3Gf3O3ZRNh1f17nE0HLv9f6qgkbhhBh/BAijB9ChPFDiDB+CBHGDyHC+CFEGD+ECOOHEGH8ECKMH0KE8UOIMH5VhF+bN+mWmtHwtvmKIxxPtbrvhsk4hnBbxndoyNo9VFq4kXnOtWkvfJZhzpdxv7iywrIreCi9ikWFWxnkcsn3YlFhjbvDFn0RqeHl7w17aNJQ+ChTWKV27hcUvsoQdq/NhB8yg11iW3RB4V5msNs3E77LDHaJAyblhLNyH0iPG1oJx9WE9t8YCK0Qygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxPC/VCnfSth91Ar+2V4hHnf6dy4F9ctjLO+l7txKw8w77vVG7dzCdetX35Ga5ewv+7+7y16cp7bmbYGJPOe2wl/EnjmXMKs839NE5x/XLY2mC39wIzzfw0TnX+Me1GUrOCh51lryvmEZ5D7Sbzr4tNUe4C1X+9WcT6Gv6x26xIHdBd9lORfTkRERERERERERERERESC/gF2IVePB+evpwAAAABJRU5ErkJggg=="
+              alt=""
+            />
+          </picture>
         </div>
 
         <canvas ref={canvasRef} />
@@ -485,6 +560,11 @@ export default function CanvasBox({ proid, userId }) {
 }
 
 const Wrapper = styled.div`
+.convas-continer{
+  /* width: 1800px;
+  height: 1800px;
+  overflow: auto; */
+}
   .ss {
     position: absolute;
     bottom: 10px;

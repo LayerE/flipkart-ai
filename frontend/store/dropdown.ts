@@ -248,7 +248,7 @@ export const templets = [
 
     promt: " surroubded byForest background",
     placementType: "",
-    surroundingType: "surroubded by",
+    surroundingType: "surrounded  by",
     backgroundType: "",
     product: "",
     placement: "",
