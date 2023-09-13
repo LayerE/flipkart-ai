@@ -176,10 +176,11 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [surroundingtype, setSurroundingtype] = useState<string>("");
   const [selectBackground, setSelectedBackground] = useState<string>("");
   const [selectColoreMode, setSelectedColoreMode] = useState<string>("");
-  const [selectResult, setSelectedresult] = useState<number>(1);
+  const [selectResult, setSelectedresult] = useState<number>(4);
   const [selectRender, setSelectedRender] = useState<number>(4);
   const [loara, setLoara] = useState<string>("");
   const [templet, setTemplet] = useState();
+  const [promt, setpromt] = useState();
 
   const [selectColoreStrength, setSelectedColoreStrength] = useState<number>(0);
   const [selectOutLline, setSelectedOutline] = useState<number>(0);
@@ -389,7 +390,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       //     setBtnVisible(true);
       //   }
       // });
-      img.set("category", "subject");
+      img.set({category: "subject"});
       // canvasInstance.current.clear();
       canvasInstance?.current?.add(img);
       canvasInstance?.current?.setActiveObject(img);
@@ -434,11 +435,10 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   };
 
   const saveCanvasToDatabase = async () => {
-    const canvasData = canvasInstance.current.toJSON();
+    const canvasData = canvasInstance.current.toJSON(["category"]);
     if (canvasData.objects.length > 0) {
       console.log("sdsdfs,",userId, projectId, canvasData, "dsffff");
 
-      console.log("sdsds",projectId,userId)
       SaveProjexts(userId, projectId, canvasData);
       const filteredResult = generatedImgList.filter((obj) =>
         jobId?.includes(obj?.task_id)
@@ -600,7 +600,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       img.scaleToWidth(scaledWidth);
       img.scaleToHeight(scaledHeight);
       // Set the position of the image
-      img.set({ left: 430, top: 120 });
 
       img.set("category", "generated");
       // canvasInstance.current.clear();
@@ -1013,28 +1012,28 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
           // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
 
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API}/jobId`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              userId: ueserId,
-              projectId: proid,
-              jobId: generate_response?.job_id,
-            }),
-          });
-          // console.log(await response.json(), "dfvcvdfvdvcdsd");
-          const datares = await response;
+          // const response = await fetch(`${process.env.NEXT_PUBLIC_API}/jobId`, {
+          //   method: "POST",
+          //   headers: {
+          //     "Content-Type": "application/json",
+          //   },
+          //   body: JSON.stringify({
+          //     userId: ueserId,
+          //     projectId: proid,
+          //     jobId: generate_response?.job_id,
+          //   }),
+          // });
+          // // console.log(await response.json(), "dfvcvdfvdvcdsd");
+          // const datares = await response;
           setreLoader(false);
 
-          if (datares.ok) {
+          // if (datares.ok) {
             // setJobId((pre) => [...pre, generate_response?.job_id]);
             setRegenratedImgsJobid(generate_response?.job_id);
             // localStorage.setItem("jobId", jobId);
 
             GetProjextById(proid);
-          }
+          // }
           // window.open(`/generate/${datares?._id}`, "_self");
         } catch (error) {
           // Handle error
@@ -1202,6 +1201,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         loader,
         setLoader,
         positionBtn,
+        promt, setpromt,
         undoArray,
         setUndoArray,
         modifidImageArray,

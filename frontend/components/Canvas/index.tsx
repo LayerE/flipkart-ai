@@ -270,10 +270,34 @@ export default function CanvasBox({ proid, userId }) {
         // setDownloadImg(dataURL);
         setDownloadImg(dataURL);
         setSelectedImg(dataURL);
+
+
+        // 
+     
+
+
+
         // Reset the rectangle's stroke properties
         newEditorBox.set("stroke", originalStrokeColor);
         newEditorBox.set("strokeWidth", originalStrokeWidth);
         canvasInstanceRef.renderAll();
+      });
+
+      const objects = canvasInstanceRef.getObjects();
+
+
+      objects.forEach((object) => {
+        // If the object is a mask, add it to the mask objects array
+        if (object.category === "mask") {
+          positionBtn(object)
+          // maskObjects.push(object);
+        }
+        // If the object is a subject, add it to the subject objects array
+        if (object.category === "subject") {
+          // subjectObjects.push(object);
+          positionBtn(object)
+
+        }
       });
 
       //   // Add your logic for generating/adding the image inside this box.

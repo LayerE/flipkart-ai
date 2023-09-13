@@ -33,7 +33,7 @@ const Projects = ({ onDelet }) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            title: "Untitle",
+            title: "Untitled ",
             id: getUser,
           }),
         }

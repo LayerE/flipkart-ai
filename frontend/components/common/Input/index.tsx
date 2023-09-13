@@ -12,7 +12,7 @@ export const Input = styled.input`
   background-color: transparent;
   width: 100%;
 
-  font-size: 12px;
+  font-size: 14px;
 
   &:disabled {
     color: #fff7f7 !important;
@@ -67,16 +67,28 @@ export const TestArea = styled.textarea`
   outline: none;
   color: #000;
   border-radius: 0.5rem;
-  height: 100px;
+  min-height: 80px;
   background-color: transparent;
   width: 100%;
-  font-size: 12px;
+  font-size: 14px;
+  transition: all 0.3s ease;
 
   &:disabled {
     color: #fff7f7 !important;
     &::placeholder {
       color: #fff7f7 !important;
     }
+  }
+  /* &:disabled {
+    color: #fff7f7 !important;
+    &::placeholder {
+      color: #fff7f7 !important;
+    }
+  } */
+
+  &:hover {
+    /* border: 2px solid #d9d9d9; */
+    border: 2px solid ${(props) => props.theme.btnPrimary};
   }
 `;
 

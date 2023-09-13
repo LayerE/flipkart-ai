@@ -12,10 +12,12 @@ const Regeneret = () => {
     positionBtn,
     canvasInstance,
     generatedImgList,
-    reloder, setreLoader,
+    reloder,
+    setreLoader,
 
-    regenratedImgsJobId, setRegenratedImgsJobid,
-    setActiveTab
+    regenratedImgsJobId,
+    setRegenratedImgsJobid,
+    setActiveTab,
   } = useAppState();
 
   const [loder, setLoader] = useState(true);
@@ -24,27 +26,22 @@ const Regeneret = () => {
   const [cards] = useState(["Card 1", "Card 2", "Card 3", "Card 4"]);
   const [filteredArray, setFilteredArray] = useState([]);
 
-
   useEffect(() => {
-    const  filteredResult = generatedImgList.filter((obj) =>
-       obj?.task_id === regenratedImgsJobId 
+    const filteredResult = generatedImgList.filter(
+      (obj) => obj?.task_id === regenratedImgsJobId
     );
     setFilteredArray(filteredResult);
-    console.log(filteredResult?.length)
+    console.log(filteredResult?.length);
 
-    if(filteredResult?.length){
-        setLoader(false)
-        
-    }else{
-      setLoader(true)
-
-
+    if (filteredResult?.length) {
+      setLoader(false);
+    } else {
+      setLoader(true);
     }
 
-    console.log(filteredResult,"sdfds",regenratedImgsJobId)
-  
-  }, [generatedImgList,regenratedImgsJobId])
-  
+    console.log(filteredResult, "sdfds", regenratedImgsJobId);
+  }, [generatedImgList, regenratedImgsJobId]);
+
   const addimgToCanvasGen = async (url: string[]) => {
     const gridSize = 2;
 
@@ -79,12 +76,12 @@ const Regeneret = () => {
           img.on("scaling", function () {
             positionBtn(img);
           });
-      const getRandomPosition = (max) => Math.floor(Math.random() * max);
+          const getRandomPosition = (max) => Math.floor(Math.random() * max);
 
           const randomLeft = getRandomPosition(
             canvasInstance?.current?.width / 2 - img.width
           );
-      const randomTop = getRandomPosition(300);
+          const randomTop = getRandomPosition(300);
 
           // Set the position of the image
           img.set("category", "generated");
@@ -117,7 +114,7 @@ const Regeneret = () => {
   const addImges = () => {
     addimgToCanvasGen(selectedCards);
     setRegeneratePopup({ statu: false });
-    setActiveTab(1)
+    setActiveTab(1);
   };
 
   return (
@@ -125,9 +122,10 @@ const Regeneret = () => {
       <div className="wrapper">
         <div
           className="close"
-          onClick={() =>{ setRegeneratePopup({ statu: false });
-          setActiveTab(1)
-        }}
+          onClick={() => {
+            setRegeneratePopup({ statu: false });
+            setActiveTab(1);
+          }}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -140,125 +138,98 @@ const Regeneret = () => {
         </div>
 
         {filteredArray.length && !reloder ? (
-            <div className="gride">
-            <div className={` griteitem`} onClick={() => ""}>
-             <DaoderWarpperL>
-              
-             </DaoderWarpperL>
-             <picture className="">
-               <img
-                 src={regeneratePopup.url
-                 }
-                 alt="image"
-               />
-
-               {/* <img src={regeneratePopup?.url} alt="image" /> */}
-             </picture>
-           </div>
-           
-           {filteredArray.map((item, i) => (
-             <div
-               key={i}
-               className={`griteitem ${
-                 selectedCards.includes(item?.modified_image_url) ? "active" : ""
-               }`}
-               onClick={() => handleCardChange(item?.modified_image_url)}
-             >
-               <picture>
-                 <img src={item?.modified_image_url} alt="image" />
-               </picture>
-             </div>
-           ))}
-         </div>
-         
-        ) : (
-
           <div className="gride">
-          <div className={` griteitem`} onClick={() => ""}>
-            <DaoderWarpperL>
-             
-              <div className="moving-gradient"></div>
-            </DaoderWarpperL>
-            <picture className="">
-              <img
-                src={regeneratePopup.url
-                }
-                alt="image"
-              />
+            <div className={` griteitem`} onClick={() => ""}>
+              <DaoderWarpperL></DaoderWarpperL>
+              <picture className="">
+                <img src={regeneratePopup.url} alt="image" />
 
-              {/* <img src={regeneratePopup?.url} alt="image" /> */}
-            </picture>
-          </div>
-          <div className={` griteitem`} onClick={() => ""}>
-            <DaoderWarpperL>
-              <div className="jumping-dots-loader">
-                {" "}
-                <span></span> <span></span> <span></span>{" "}
+                {/* <img src={regeneratePopup?.url} alt="image" /> */}
+              </picture>
+            </div>
+
+            {filteredArray.map((item, i) => (
+              <div
+                key={i}
+                className={`griteitem ${
+                  selectedCards.includes(item?.modified_image_url)
+                    ? "active"
+                    : ""
+                }`}
+                onClick={() => handleCardChange(item?.modified_image_url)}
+              >
+                <picture>
+                  <img src={item?.modified_image_url} alt="image" />
+                </picture>
               </div>
-              <div className="moving-gradient"></div>
-            </DaoderWarpperL>
-            <picture className="griteitemLoading">
-              <img
-                src={
-                  regeneratePopup.url
-                }
-                alt="image"
-              />
-
-              {/* <img src={regeneratePopup?.url} alt="image" /> */}
-            </picture>
+            ))}
           </div>
-          <div className={` griteitem`} onClick={() => ""}>
-            <DaoderWarpperL>
-              <div className="jumping-dots-loader">
-                {" "}
-                <span></span> <span></span> <span></span>{" "}
-              </div>
-              <div className="moving-gradient"></div>
-            </DaoderWarpperL>
-            <picture className="griteitemLoading">
-              <img
-                src={
-                  regeneratePopup.url
-                }
-                alt="image"
-              />
+        ) : (
+          <div className="gride">
+            <div className={` griteitem`} onClick={() => ""}>
+              <DaoderWarpperL>
+                <div className="moving-gradient"></div>
+              </DaoderWarpperL>
+              <picture className="">
+                <img src={regeneratePopup.url} alt="image" />
 
-              {/* <img src={regeneratePopup?.url} alt="image" /> */}
-            </picture>
-          </div>
-          <div className={` griteitem`} onClick={() => ""}>
-            <DaoderWarpperL>
-              <div className="jumping-dots-loader">
-                {" "}
-                <span></span> <span></span> <span></span>{" "}
-              </div>
-              <div className="moving-gradient"></div>
-            </DaoderWarpperL>
-            <picture className="griteitemLoading">
-              <img
-                src={
-                  regeneratePopup.url
-                }
-                alt="image"
-              />
+                {/* <img src={regeneratePopup?.url} alt="image" /> */}
+              </picture>
+            </div>
+            <div className={` griteitem`} onClick={() => ""}>
+              <DaoderWarpperL>
+                <div className="jumping-dots-loader">
+                  {" "}
+                  <span></span> <span></span> <span></span>{" "}
+                </div>
+                <div className="moving-gradient"></div>
+              </DaoderWarpperL>
+              <picture className="griteitemLoading">
+                <img src={regeneratePopup.url} alt="image" />
 
-              {/* <img src={regeneratePopup?.url} alt="image" /> */}
-            </picture>
+                {/* <img src={regeneratePopup?.url} alt="image" /> */}
+              </picture>
+            </div>
+            <div className={` griteitem`} onClick={() => ""}>
+              <DaoderWarpperL>
+                <div className="jumping-dots-loader">
+                  {" "}
+                  <span></span> <span></span> <span></span>{" "}
+                </div>
+                <div className="moving-gradient"></div>
+              </DaoderWarpperL>
+              <picture className="griteitemLoading">
+                <img src={regeneratePopup.url} alt="image" />
+
+                {/* <img src={regeneratePopup?.url} alt="image" /> */}
+              </picture>
+            </div>
+            <div className={` griteitem`} onClick={() => ""}>
+              <DaoderWarpperL>
+                <div className="jumping-dots-loader">
+                  {" "}
+                  <span></span> <span></span> <span></span>{" "}
+                </div>
+                <div className="moving-gradient"></div>
+              </DaoderWarpperL>
+              <picture className="griteitemLoading">
+                <img src={regeneratePopup.url} alt="image" />
+
+                {/* <img src={regeneratePopup?.url} alt="image" /> */}
+              </picture>
+            </div>
           </div>
-        </div>
-        
         )}
         {}
         <div className="btns">
           <div>
-            {selectedCards?.length  > 0 ? (
+            {selectedCards?.length > 0 ? (
               <Button onClick={() => addImges()}>
-                Add {selectedCards?.length } imges
+                Add {selectedCards?.length} imges
               </Button>
             ) : (
               <Button disabled={true} onClick={() => ""}>
-                No image to add 
+                No image to add
               </Button>
             )}
           </div>
@@ -276,7 +247,10 @@ const WrapperRegenerat = styled.div`
   }
   position: absolute;
   padding: 100px;
-  z-index: 500;
+  z-index: 5000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   height: 100vh;
   background-color: #f5f5f55a;
@@ -291,7 +265,7 @@ const WrapperRegenerat = styled.div`
   }
   .wrapper {
     position: relative;
-    max-width: 550px !important;
+    width: 40vw !important;
     border: 2px solid #d9d9d9;
     border-radius: 8px !important;
     padding: 30px;
@@ -315,13 +289,12 @@ const WrapperRegenerat = styled.div`
       &:hover {
       }
     }
-    picture{
+    picture {
       display: flex;
       align-items: center;
       justify-content: center;
       width: 100%;
       object-fit: cover;
-
     }
     .active {
       border: 2px solid rgba(249, 208, 13, 1);
@@ -329,7 +302,7 @@ const WrapperRegenerat = styled.div`
 
     img {
       /* width: 200px; */
-      height: 120px;
+      height: 18vh;
       width: 100%;
       /* margin: auto; */
       /* margin-bottom: 30px; */

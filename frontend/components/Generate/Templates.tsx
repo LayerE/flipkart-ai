@@ -32,6 +32,7 @@ const Tamplates = () => {
     setViewMore,
     loara,
     setLoara,
+    promt, setpromt,
 
     backgroundTest,
     GetProjextById,
@@ -124,6 +125,7 @@ const Tamplates = () => {
                     setSelectedSurrounding(test.surroundingType);
                     setSelectedBackground(test.backgroundType);
                     setLoara(test.lora);
+                    setpromt(test.promt);
                   }}
                 >
                   <picture>
@@ -157,6 +159,8 @@ const Tamplates = () => {
                 setSelectedSurrounding(test.surroundingType);
                 setSelectedBackground(test.backgroundType);
                 setLoara(test.lora);
+                setpromt(test.promt);
+
               }}
             >
               <picture>

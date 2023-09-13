@@ -25,7 +25,6 @@ import Loader from "@/components/Loader";
 
 const inter = Inter({ subsets: ["latin"] });
 
-
 export default function Home() {
   const { userId } = useAuth();
   const { query, isReady } = useRouter();
@@ -38,26 +37,22 @@ export default function Home() {
     popupImage,
     projectlist,
     setprojectlist,
-    uerId, setUserId
+    uerId,
+    setUserId,
   } = useAppState();
 
   const [loadercarna, setloadercarna] = useState(false);
   const [rerenter, setre] = useState(false);
 
-
-  
-
   useEffect(() => {
-
-    if(rerenter<=6){
-      setre(rerenter+1)
-
+    if (rerenter <= 6) {
+      setre(rerenter + 1);
     }
     if (isReady) {
       const getUser = localStorage.getItem("userId");
       if (!getUser) {
         setTimeout(() => {}, 3000);
-        if (userId)  localStorage.setItem("userId", userId);
+        if (userId) localStorage.setItem("userId", userId);
       }
       axios
         .get(`${process.env.NEXT_PUBLIC_API}/user?id=${userId}`)
@@ -79,10 +74,9 @@ export default function Home() {
       // if (!getUser) {
       //   if (userId) localStorage.setItem("userId", userId);
       // }
-
       // if (userId) fetchData(userId);
     }
-  }, [userId, isReady,rerenter,projectlist]);
+  }, [userId, isReady, rerenter, projectlist]);
 
   const fetchData = (getUser: string) => {
     setloadercarna(true);
@@ -102,7 +96,6 @@ export default function Home() {
   const handleDelete = () => {
     // Update the list of items by fetching data again
     fetchData(userId);
-
   };
 
   return (
@@ -121,7 +114,7 @@ export default function Home() {
           {/* {
         loadercarna ? 
         <Loader/>:
-null} */}
+        null} */}
           {activeTabHome === 1 ? (
             <Projects onDelet={handleDelete} />
           ) : activeTabHome === 2 ? (

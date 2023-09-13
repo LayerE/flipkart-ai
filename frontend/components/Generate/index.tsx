@@ -15,9 +15,15 @@ import Tamplates from "./Templates";
 import { fabric } from "fabric";
 import Label, { DisabledLabel } from "../common/Label";
 import SuggetionInput from "./SuggetionInput";
-import { PlacementSuggestions, productSuggestions } from "@/store/dropdown";
+import {
+  PlacementSuggestions,
+  productSuggestions,
+  resultList,
+} from "@/store/dropdown";
 import TextLoader from "../Loader/text";
 import { useRouter } from "next/router";
+import { DropdownNOBorder } from "../common/Dropdown";
+import { Input, TestArea } from "../common/Input";
 
 const Generate = () => {
   const { userId } = useAuth();
@@ -47,7 +53,9 @@ const Generate = () => {
     jobId,
     setJobId,
     setSelectedresult,
-    generateImageHandeler
+    setPlacementTest,
+    generateImageHandeler,
+    promt, setpromt
   } = useAppState();
 
   const { query, isReady } = useRouter();
@@ -55,23 +63,43 @@ const Generate = () => {
 
   const [changeTab, setChangeTab] = useState(false);
 
-  const promt =
-    product +
-    " " +
-    selectPlacement +
-    " " +
-    placementTest +
-    " " +
-    selectSurrounding +
-    " " +
-    surroundingTest +
-    " " +
-    selectBackground +
-    " " +
-    backgroundTest;
+  const [promtFull, setpromtFull] = useState();
 
- 
 
+
+
+
+  // const promt =
+  //   product +
+  //   " " +
+  //   selectPlacement +
+  //   " " +
+  //   placementTest +
+  //   " " +
+  //   selectSurrounding +
+  //   " " +
+  //   surroundingTest +
+  //   " " +
+  //   selectBackground +
+  //   " " +
+  //   backgroundTest;
+
+
+   
+
+    useEffect(() => {
+      const promts =
+      product +" "+
+      promt 
+      setpromtFull(promts)
+     
+    }, [])
+    
+
+const handelPromt  = (e)=>{
+  setpromtFull(e.target.value)
+
+}
 
   return (
     <motion.div
@@ -82,7 +110,7 @@ const Generate = () => {
     >
       <div className="gap">
         <Row>
-          <PromtGeneratePreview className="generatePreview">
+          {/* <PromtGeneratePreview className="generatePreview">
             {product !== null && product !== "" ? (
               <label
                 htmlFor="prompt-editor-subject-0-input"
@@ -140,28 +168,58 @@ const Generate = () => {
                 {","} {backgroundTest}{" "}
               </label>
             ) : null}
-          </PromtGeneratePreview>
+          </PromtGeneratePreview> */}
+          <TestArea
+            value={promtFull}
+            onChange={(e)=> handelPromt(e) }
+            // value={placementTest}
+            // setValue={setPlacementTest}
+            // suggetion={PlacementSuggestionsFilter}
+          />
+          {/* <input type="text" className="generatePreview" /> */}
         </Row>
         <Row>
-          {
-            loader?
-        <TextLoader/>
-        :
-
-          <Button
-            onClick={() => generateImageHandeler(userId, id)}
-            disabled={product === "" ? true : false}
-          >
-            {generationLoader ? "Loading..." : "Generate"}
-          </Button>
-          }
+          {loader ? (
+            <TextLoader />
+          ) : (
+            <Button
+              onClick={() => generateImageHandeler(userId, id)}
+              disabled={product === "" ? true : false}
+            >
+              {generationLoader ? "Loading..." : "Generate"}
+            </Button>
+          )}
         </Row>
       </div>
+
+      <div className="rowwothtwo" style={{ marginBottom: "0px" }}>
+        <DisabledLabel>Number of results</DisabledLabel>
+        <div className="two-side">
+          {/* <DropdownInput
+        style ={{minWidth: "500px"}}
+            data={{
+              list: resultList,
+              // label: "background",
+
+              action: setSelectedresult,
+              activeTab: selectResult,
+            }}
+          ></DropdownInput> */}
+          <DropdownNOBorder
+            data={{
+              list: resultList,
+              action: setSelectedresult,
+              activeTab: selectResult,
+            }}
+          ></DropdownNOBorder>
+        </div>
+      </div>
+
       <div className="bigGap">
         {/* <Label>Edit the the prompt in the form below.</Label> */}
       </div>
-      <div className="gap"></div>
-      <SwchichBtn className="swich">
+      {/* <div className="gap"></div> */}
+      {/* <SwchichBtn className="swich">
         <div
           className={changeTab ? "btnswitch " : "btnswitch activeSwitch"}
           onClick={() => setChangeTab(false)}
@@ -172,9 +230,9 @@ const Generate = () => {
           className={changeTab ? "btnswitch activeSwitch" : "btnswitch "}
           onClick={() => setChangeTab(true)}
         >
-          Editor
+          Edit Prompt
         </div>
-      </SwchichBtn>
+      </SwchichBtn> */}
       <Wrapper className="wrappper">
         {changeTab ? <EditorSection /> : <Tamplates />}
       </Wrapper>

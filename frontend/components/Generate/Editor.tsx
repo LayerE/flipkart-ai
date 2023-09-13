@@ -183,28 +183,7 @@ const EditorSection = () => {
           />
         </div>
       </div>
-      <div className="rowwothtwo" style={{marginBottom: "30px"}}>
-        <DisabledLabel>Number of results</DisabledLabel>
-        <div className="two-side">
-        {/* <DropdownInput
-        style ={{minWidth: "500px"}}
-            data={{
-              list: resultList,
-              // label: "background",
-
-              action: setSelectedresult,
-              activeTab: selectResult,
-            }}
-          ></DropdownInput> */}
-          <DropdownNOBorder
-            data={{
-              list: resultList,
-              action: setSelectedresult,
-              activeTab: selectResult,
-            }}
-          ></DropdownNOBorder>
-        </div>
-      </div>
+    
       {/* <div className="rowwothtwo">
         <Label>Render strength</Label>
         <div className="dropdown-smaill">
