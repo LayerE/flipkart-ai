@@ -57,6 +57,7 @@ export default function Home() {
     uerId,
     setUserId,
     setGeneratedImgList,
+    saveCanvasToDatabase
   } = useAppState();
 
   useEffect(() => {
@@ -109,6 +110,10 @@ export default function Home() {
     };
   }, [jobId, setGeneratedImgList, generatedImgList, regeneratePopup]);
 
+
+  
+  const firstUpdate = useRef(true);
+
   useEffect(() => {
     const canvas1 = canvasInstance.current;
 
@@ -138,6 +143,9 @@ export default function Home() {
       }
     }, 1000);
   }, []);
+
+  
+
 
   return (
     <MainPages>

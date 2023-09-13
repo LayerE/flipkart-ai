@@ -23,7 +23,8 @@ const Assets: React.FC = () => {
     setListOfAssets,
     fetchAssetsImages,
     fetchAssetsImagesWithProjectId,
-    addimgToCanvasSubject
+    addimgToCanvasSubject,
+    getBase64FromUrl
   } = useAppState();
   const { query, isReady } = useRouter();
   // const { id } = query;
@@ -32,9 +33,9 @@ const Assets: React.FC = () => {
   const [filter, setFilter] = useState()
   const [re, setRe] = useState(1)
   useEffect(() => {
-    // if(re <=3){
-    //   setRe(re+1)
-    // }
+    if(re <=3){
+      setRe(re+1)
+    }
     if (userId && isReady) {
       fetchAssetsImagesWithProjectId(userId, id);
     

@@ -11,10 +11,9 @@ const nextConfig = {
   //   esmExternals: "loose", // <-- add this
   //   serverComponentsExternalPackages: ["mongoose"] // <-- and this
   // },
-  // experimental: {
-  //   serverComponentsExternalPackages: ['fabric'],
-  //   appDir: true,
-  // },
+  experimental: {
+    serverComponentsExternalPackages: ['fabric'],
+  },
   typescript: {
     ignoreBuildErrors: true,
   },

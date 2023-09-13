@@ -9,9 +9,14 @@ import { useRouter } from "next/router";
 import { useAuth } from "@clerk/nextjs";
 import axios from "axios";
 import Loader from "../Loader";
+import { setInterval } from "timers";
+
+// import { useBeforeUnload } from "react-router-dom";
 
 export default function CanvasBox({ proid, userId }) {
   const { query, isReady } = useRouter();
+  const router = useRouter();
+
   const id = (query.id as string[]) || [];
   const {
     setSelectedImg,
@@ -49,11 +54,13 @@ export default function CanvasBox({ proid, userId }) {
     setloadercarna,
     saveCanvasToDatabase,
     setRegenratedImgsJobid,
-    genRect, setgenRect
+    genRect,
+    setgenRect,
+    positionBtn,
 
     // canvasRef
   } = useAppState();
-  let newEditorBox 
+  let newEditorBox;
   // const [loadercarna, setloadercarna] = useState(false);
   const [canvasZoom, setCanvasZoom] = useState(1);
   const [canvasPosition, setCanvasPosition] = useState({ x: 0, y: 0 });
@@ -67,14 +74,12 @@ export default function CanvasBox({ proid, userId }) {
     canvasInstance.current = new fabric.Canvas(canvasRef?.current, {
       width: window.innerWidth,
       height: window.innerHeight,
+      // selectionLineWidth: 2,
       // transparentCorners: false,
-      originX: "center",
-      originY: "center",
+      // originX: "center",
+      // originY: "center",
       // renderOnAddRemove: false,
     });
-
-  
-
 
     // setCanvas( new fabric.Canvas(canvasRef?.current, {
     //   width: window.innerWidth,
@@ -89,35 +94,21 @@ export default function CanvasBox({ proid, userId }) {
     // }
 
     const canvasInstanceRef = canvasInstance.current;
+    if (canvasInstanceRef) {
+      // Perform operations on canvasInstanceRef
+      canvasInstanceRef.clear();
+      // Other canvas operations...
+    }
 
-     newEditorBox = new fabric.Rect({
-      left: 30,
-      top: 120,
-      width: 380,
-      height: 380,
-      selectable: false,
-      fill: "transparent",
-      stroke: "#0df977",
-      strokeWidth: 2,
-    });
-
-    setgenRect(newEditorBox)
-
-    // genBox.style.width =newEditorBox.width + "px";
-    // genBox.style.height =newEditorBox.height + "px";
-    // genBox.style.top =newEditorBox.y + "px";
-
-    // genBox.style.left =newEditorBox.x + "px";
-
-    canvasInstanceRef.add(newEditorBox).renderAll();
     fabric.Object.prototype.transparentCorners = false;
     // fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
     // Add a custom method to the Fabric canvas prototype
 
     fabric.Canvas.prototype.getAbsoluteCoords = function (object) {
       return {
-        left: object.left ,
-        top: object.top 
+        left: object.left,
+        top: object.top,
+        bottom: object.bottom,
       };
     };
 
@@ -132,68 +123,68 @@ export default function CanvasBox({ proid, userId }) {
     // });
 
     return () => {
-      // saveCanvasToDatabase()
       canvasInstanceRef?.dispose();
-      // setTimeout(() => {
+      // router.events.off("routeChangeStart", saveCanvasToDatabase);
 
+      // saveCanvasToDatabase();
+      // setTimeout(() => {
       // }, 300);
     };
   }, [isReady, canvasInstance]);
 
   // Load canvas data from the database when the component mounts
-  // useEffect(() => {
-  //   // Fetch canvas data from your API and load it into the canvas
-  //   const canvasInstanceRef = canvasInstance.current;
-  //   setloadercarna(true);
-  //   if (isReady && userId) {
-  //     axios
-  //       .post(`/api/canvasdata`, {
-  //         user_id: userId,
-  //         project_id: proid,
-  //       })
-  //       .then((response) => {
-  //         console.log(response);
-  //         console.log(
-  //           response?.data?.data[response?.data?.data?.length - 1]?.canvasdata,
-  //           "adsfnbdhjskgvyuifdsgh"
-  //         );
-  //         if (canvasInstanceRef) {
-  //           canvasInstanceRef.loadFromJSON(
-  //             JSON.stringify(
-  //               response?.data?.data[response?.data?.data?.length - 1]
-  //                 .canvasdata
-  //             ),
-  //             canvasInstanceRef.requestRenderAll.bind(canvasInstanceRef)
-  //           );
-  //           setloadercarna(false);
-  //           // canvasInstanceRef.loadFromJSON(savedCanvasDataLocal, () => {
-  //           //   canvasInstanceRef.renderAll();
-  //           // });
-  //         }
-  //       })
-
-  //       .catch((error) => {
-  //         console.error(error);
-  //         setloadercarna(false);
-
-  //         return error;
-  //       });
-
-  //     // return () => {
-
-  //     //   saveCanvasToDatabase()
-  //     // };
-  //   }
-  // }, [isReady, userId]);
 
   useEffect(() => {
-    if (canvasInstance?.current) {
+    if (canvasInstance?.current && loadercarna) {
+      // Perform operations on canvasInstanceRef
+      canvasInstance?.current.clear();
+      // Other canvas operations...
+
       const canvasInstanceRef = canvasInstance?.current;
 
+      var ctx = canvasInstanceRef.getContext("2d");
+      ctx.fillStyle = "red";
+      ctx.fillRect(0, 0, 400, 300);
+
+      ctx.clearRect(100, 100, 50, 50);
+      canvasInstanceRef.clear();
+      const newEditorBox = new fabric.Rect({
+        left: 30,
+        top: 120,
+        width: 380,
+        height: 380,
+        selectable: false,
+        fill: "transparent",
+        stroke: "rgba(249, 208, 13, 1)",
+        strokeWidth: 1,
+      });
+
+      // canvasInstanceRef.add(newEditorBox);
+      // canvasInstanceRef.renderAll();
       const btn = PosisionbtnRef.current;
       const rebtn = regenerateRef.current;
       const genBox = generateBox.current;
       const preBox = previewBox.current;
+
+      // Assuming you have a Fabric.js canvas object named 'canvas'
+
+      // // Set the zoom level (e.g., zoom in by a factor of 2)
+      // var zoomLevel = 0.8;
+      // canvasInstanceRef.setZoom(zoomLevel);
+
+      // // Set the zooming point (x, y) coordinates
+      // var zoomPointX = 100; // X-coordinate of the zooming point
+      // var zoomPointY = 100; // Y-coordinate of the zooming point
+
+      // // Calculate the zoom origin based on the zooming point
+      // var zoomOriginX = canvasInstanceRef.width / 2 - zoomPointX * zoomLevel;
+      // var zoomOriginY = canvasInstanceRef.height / 2 - zoomPointY * zoomLevel;
+
+      // // Set the zoom origin
+      // canvasInstanceRef.zoomToPoint(
+      //   new fabric.Point(zoomOriginX, zoomOriginY),
+      //   zoomLevel
+      // );
 
       // When a user clicks on an image on the canvas
       canvasInstanceRef.on("mouse:down", function (options) {
@@ -213,7 +204,7 @@ export default function CanvasBox({ proid, userId }) {
       });
 
       // Create the newEditorBox when the component mounts
-  
+
       const EditorBoxText = new fabric.Text("Place Your Product Here", {
         left: newEditorBox.left + 20, // center of the rectangle
         top: newEditorBox.top + 20, // center of the rectangle
@@ -305,7 +296,7 @@ export default function CanvasBox({ proid, userId }) {
       });
 
       // Set the newEditorBox in the global context
-      setEditorBox(newEditorBox);
+      // setEditorBox(newEditorBox);
       canvasInstanceRef.on("object:selected", function (event) {
         console.log("Object selected:", event.target);
         const selectedObject = event.target;
@@ -333,152 +324,204 @@ export default function CanvasBox({ proid, userId }) {
           }
         }
       });
+
+      // canvasInstanceRef.on("mouse:wheel", function (opt) {
+      //   var delta = opt.e.deltaY;
+      //   var zoom = canvasInstanceRef.getZoom();
+      //   zoom *= 0.999 ** delta;
+      //   if (zoom > 20) zoom = 20;
+      //   if (zoom < 0.01) zoom = 0.01;
+      //   canvasInstanceRef.zoomToPoint(
+      //     { x: opt.e.offsetX, y: opt.e.offsetY },
+      //     zoom
+      //   );
+      //   positionBtn(canvasInstanceRef._activeObject);
+      //   // genBox.style.transform = `scale(${zoom})`;
+      //   // genBox.style.transform = `scale(${zoom}) translate(${newEditorBox.x}px, ${newEditorBox.y}px)`;
+      //   // Get the coordinates of the inner rectangle
+      //   var innerRectCoords = newEditorBox.getBoundingRect();
+      //   // Update the position and zoom of the outer div
+      //   // genBox.style.transform = `scale(${zoom})`;
+      //   // genBox.style.left = `${innerRectCoords.left * zoom}px`;
+      //   // genBox.style.top = `${innerRectCoords.top * zoom}px`;
+      //   // Calculate the adjusted position for the outer div
+      //   // var canvasContainer = document.getElementById('canvas-container');
+      //   var canvasScrollLeft = genBox.scrollLeft;
+      //   var canvasScrollTop = genBox.scrollTop;
+      //   var adjustedLeft = (innerRectCoords.left - canvasScrollLeft) * zoom;
+      //   var adjustedLeftPr =
+      //     (innerRectCoords.left + 400 - canvasScrollLeft) * zoom;
+      //   var adjustedTop = (innerRectCoords.top - canvasScrollTop) * zoom;
+      //   // Update the position and zoom of the outer div
+      //   preBox.style.transform = `scale(${zoom})`;
+      //   genBox.style.transform = `scale(${zoom})`;
+      //   genBox.style.left = `${adjustedLeft}px`;
+      //   genBox.style.top = `${adjustedTop}px`;
+      //   preBox.style.top = `${adjustedTop}px`;
+      //   preBox.style.left = `${adjustedLeftPr}px`;
+      //   opt.e.preventDefault();
+      //   opt.e.stopPropagation();
+      // });
+
       canvasInstanceRef.on("selection:created", () => {
         btn.style.display = "block";
         rebtn.style.display = "block";
       });
+
       canvasInstanceRef.on("selection:cleared", function () {
-        setDownloadImg(null);
         btn.style.display = "none";
         rebtn.style.display = "none";
+        setDownloadImg(null);
 
-        console.log(activeTab);
         if (activeTab === 5) {
           setActiveTab(1);
         }
       });
-      // Zoom and Pan event handlers
-
-      // canvasInstanceRef.on("mouse:wheel", (opt) => {
-      //   const delta = opt.e.deltaY;
-      //   let zoom = canvasInstanceRef.getZoom();
-      //   zoom *= 0.999 ** delta;
-      //   if (zoom > 20) zoom = 20;
-      //   if (zoom < 0.01) zoom = 0.01;
-      //   setCanvasZoom(zoom);
-      //   canvasInstanceRef.zoomToPoint(
-      //     { x: canvasInstanceRef.width / 2, y: canvasInstanceRef.height / 2 },
-      //     zoom
-      //   );
-      //   // setCanvasPosition({
-      //   //   x: canvasInstanceRef.viewportTransform[4],
-      //   //   y: canvasInstanceRef.viewportTransform[5],
-      //   // });
-      //   opt.e.preventDefault();
-      //   opt.e.stopPropagation();
-      // });
-      canvasInstanceRef.on("mouse:wheel", function (opt) {
-        var delta = opt.e.deltaY;
-        var zoom = canvasInstanceRef.getZoom();
-        zoom *= 0.999 ** delta;
-        if (zoom > 20) zoom = 20;
-        if (zoom < 0.01) zoom = 0.01;
-        canvasInstanceRef.zoomToPoint(
-          { x: opt.e.offsetX, y: opt.e.offsetY },
-          zoom
-        );
-
-        // genBox.style.transform = `scale(${zoom})`;
-        // genBox.style.transform = `scale(${zoom}) translate(${newEditorBox.x}px, ${newEditorBox.y}px)`;
-
-        // Get the coordinates of the inner rectangle
-        var innerRectCoords = newEditorBox.getBoundingRect();
-
-        // Update the position and zoom of the outer div
-
-        // genBox.style.transform = `scale(${zoom})`;
-        // genBox.style.left = `${innerRectCoords.left * zoom}px`;
-        // genBox.style.top = `${innerRectCoords.top * zoom}px`;
-
-        // Calculate the adjusted position for the outer div
-        // var canvasContainer = document.getElementById('canvas-container');
-        var canvasScrollLeft = genBox.scrollLeft;
-        var canvasScrollTop = genBox.scrollTop;
-        var adjustedLeft = (innerRectCoords.left - canvasScrollLeft) * zoom;
-        var adjustedLeftPr =
-          (innerRectCoords.left + 400 - canvasScrollLeft) * zoom;
-
-        var adjustedTop = (innerRectCoords.top - canvasScrollTop) * zoom;
-
-        // Update the position and zoom of the outer div
-        preBox.style.transform = `scale(${zoom})`;
-        genBox.style.transform = `scale(${zoom})`;
-        genBox.style.left = `${adjustedLeft}px`;
-        genBox.style.top = `${adjustedTop}px`;
-        preBox.style.top = `${adjustedTop}px`;
-        preBox.style.left = `${adjustedLeftPr}px`;
-
-        opt.e.preventDefault();
-        opt.e.stopPropagation();
-      });
-
-       // Handle mouse wheel scrolling
-       canvasInstanceRef.on('mouse:wheel', (event) => {
-      const delta = event.e.deltaY;
-      const zoom = canvasInstanceRef.getZoom();
-      const zoomFactor = 1.1; // Adjust the zoom factor as needed
-
-      if (delta > 0) {
-        canvasInstanceRef.zoomToPoint(
-          {
-            x: event.e.offsetX,
-            y: event.e.offsetY,
-          },
-          zoom / zoomFactor
-        );
-      } else {
-        canvasInstanceRef.zoomToPoint(
-          {
-            x: event.e.offsetX,
-            y: event.e.offsetY,
-          },
-          zoom * zoomFactor
-        );
-      }
-
-      event.e.preventDefault();
-      canvasInstanceRef.renderAll();
-    });
     }
-  }, [canvasInstance]);
 
-  // const saveCanvasToDatabase = () => {
-  //   const canvasData = canvasInstance.current.toJSON();
-  //   if (canvasData.objects.length > 1) {
-  //     // console.log("sdsdfs,", userId, proid, canvasData, "dsffff");
-  //     SaveProjexts(userId, proid, canvasData);
-  //   }
-  // };
+    return () => {
+      // if(canvasInstance.current)
+      // canvasInstance.current?.dispose();
+      // saveCanvasToDatabase();
+      // setTimeout(() => {
+      // }, 300);
+    };
+  }, [canvasInstance.current]);
+
+  useEffect(() => {
+    // Fetch canvas data from your API and load it into the canvas
+    const canvasInstanceRef = canvasInstance?.current;
+
+    // console.log("canvasInstance",canvasInstanceRef)
+    setloadercarna(true);
+    if (isReady && userId) {
+      axios
+        .post(`/api/canvasdata`, {
+          user_id: userId,
+          project_id: proid,
+        })
+        .then((response) => {
+          console.log(response);
+          console.log(response?.data.newData, "adsfnbdhjskgvyuifdsgh");
+          if (canvasInstanceRef) {
+            canvasInstanceRef.loadFromJSON(
+              response?.data.newData.canvasdata,
+              canvasInstanceRef.renderAll.bind(canvasInstanceRef),
+              function (o, object) {
+                console.log(o, object);
+              }
+            );
+            setloadercarna(false);
+            // canvasInstanceRef.loadFromJSON(savedCanvasDataLocal, () => {
+            //   canvasInstanceRef.renderAll();
+            // });
+          }
+        })
+
+        .catch((error) => {
+          console.error(error);
+          setloadercarna(false);
+
+          return error;
+        });
+
+    setInterval(() => {
+        if (loadercarna === false) {
+          saveCanvasToDatabase();
+        }
+      }, 5000);
+      // try {
+
+      //   if (canvasInstanceRef) {
+      //     const canvasInstanceRef = canvasInstance.current;
+      //     canvasInstance.current.clear();
+
+      //     const savedCanvasDataLocal = localStorage.getItem(proid);
+      //     const savedCanvasDB = project?.canvas;
+      //     // console.log(savedCanvasDataLocal, "dfdsf");
+      //     if (savedCanvasDB && !savedCanvasDataLocal) {
+      //       localStorage.setItem(proid, savedCanvasDB);
+      //     }
+      //     if (savedCanvasDataLocal) {
+      //       // console.log(savedCanvas,"dfdfsdgfdgfd")
+      //       canvasInstanceRef.clear();
+      //       canvasInstanceRef.isDrawingMode = false;
+
+      //       canvasInstanceRef.loadFromJSON(
+      //         savedCanvasDataLocal,
+      //         canvasInstanceRef.renderAll.bind(canvasInstanceRef),
+      //         function (o, object) {
+      //           console.log(o, object);
+      //         }
+      //       );
+      //     }
+      //     setloadercarna(false);
+      //   }
+      // } catch (error) {
+      //   console.error("An error occurred:", error);
+      // }
+
+      // console.log("canvasInstance",canvasInstanceRef)
+      window.addEventListener("beforeunload", (ev) => {
+        saveCanvasToDatabase();
+        ev.preventDefault();
+        return (ev.returnValue = "Are you sure you want to close?");
+      });
+      return () => {
+        window.addEventListener(
+          "beforeunload",
+          function () {
+            //  this.alert("sdfsdffsf")
+          },
+          false
+        );
+      };
+    }
+  }, [isReady, userId]);
+
+  useEffect(() => {
+    return () => {
+      return () => {
+        router.events.off("routeChangeStart", saveCanvasToDatabase);
+
+        // saveCanvasToDatabase();
+        // setTimeout(() => {
+        // }, 300);
+      };
+    };
+  }, []);
+
+  const saveCanvasToDatabasea = () => {};
 
   const saveCanvasDataToLocal = () => {
     // if(isReady){
 
     // Serialize canvas data to JSON and save it to local storage
-    if (!proid === undefined || !proid === " " || !proid === null) {
-      const canvasData = JSON.stringify(canvasInstance.current.toJSON());
-      SaveProjexts(userId, proid, canvasData);
-      localStorage.setItem(proid, canvasData);
-    }
+    // if (!proid === undefined || !proid === " " || !proid === null) {
+    const canvasData = JSON.stringify(canvasInstance.current.toJSON());
+    // SaveProjexts(userId, proid, canvasData);
+    localStorage.setItem(proid, canvasData);
+    // }
   };
 
-  const getCanvs = async (pro) => {
-    // Load saved canvas data from local storage
-    if (!proid === undefined || !proid === " " || !proid === null) {
-      const canvasInstanceRef = canvasInstance.current;
-      const savedCanvasDataLocal = localStorage.getItem(proid);
-      const savedCanvasDB = project?.canvas;
-      console.log(savedCanvasDataLocal, "dfdsf");
-      if (savedCanvasDB && !savedCanvasDataLocal) {
-        localStorage.setItem(proid, savedCanvasDB);
-      }
-      if (savedCanvasDataLocal) {
-        // console.log(savedCanvas,"dfdfsdgfdgfd")
-        canvasInstanceRef.loadFromJSON(savedCanvasDataLocal, () => {
-          canvasInstanceRef.renderAll();
-        });
-      }
-    }
-  };
+  // const getCanvs = async (pro) => {
+  //   // Load saved canvas data from local storage
+  //   if (!proid === undefined || !proid === " " || !proid === null) {
+  //     const canvasInstanceRef = canvasInstance.current;
+  //     const savedCanvasDataLocal = localStorage.getItem(proid);
+  //     const savedCanvasDB = project?.canvas;
+  //     // console.log(savedCanvasDataLocal, "dfdsf");
+  //     if (savedCanvasDB && !savedCanvasDataLocal) {
+  //       localStorage.setItem(proid, savedCanvasDB);
+  //     }
+  //     if (savedCanvasDataLocal) {
+  //       // console.log(savedCanvas,"dfdfsdgfdgfd")
+  //       canvasInstanceRef.loadFromJSON(savedCanvasDataLocal, () => {
+  //         canvasInstanceRef.renderAll();
+  //       });
+  //     }
+  //   }
+  // };
 
   const generationBoxStyle = {
     left: `${30}px`,
@@ -560,11 +603,11 @@ export default function CanvasBox({ proid, userId }) {
 }
 
 const Wrapper = styled.div`
-.convas-continer{
-  /* width: 1800px;
+  .convas-continer {
+    /* width: 1800px;
   height: 1800px;
   overflow: auto; */
-}
+  }
   .ss {
     position: absolute;
     bottom: 10px;
@@ -609,11 +652,12 @@ const Wrapper = styled.div`
     border-radius: 4px;
     cursor: pointer;
     border: 2px solid #d9d9d9;
-    padding: 8px 13px;
+    padding: 4px 8px;
 
-    font-size: 12px;
+    font-size: 11px;
     font-weight: bold;
     transition: all 0.3 ease;
+    margin-right: 5px;
 
     &:hover {
       border: 2px solid rgba(249, 208, 13, 1);

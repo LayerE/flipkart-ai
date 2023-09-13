@@ -4,11 +4,6 @@ import { useAuth } from "@clerk/nextjs";
 import { saveAs } from "file-saver";
 import axios from "axios";
 
-
-
- 
-
-
 type ContextProviderProps = {
   children: React.ReactNode;
 };
@@ -164,7 +159,7 @@ export const AppContext = createContext<ContextITFC>({
 
 export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const canvasInstance = useRef(null);
-  
+
   const outerDivRef = useRef(null);
 
   const [selectedImg, setSelectedImg] = useState<object | null>(null);
@@ -185,7 +180,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [selectRender, setSelectedRender] = useState<number>(4);
   const [loara, setLoara] = useState<string>("");
   const [templet, setTemplet] = useState();
-
 
   const [selectColoreStrength, setSelectedColoreStrength] = useState<number>(0);
   const [selectOutLline, setSelectedOutline] = useState<number>(0);
@@ -222,10 +216,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [listofassets, setListOfAssets] = useState(null);
   const [newassetonCanvas, setNewassetonCanvas] = useState(null);
 
-
   const [genRect, setgenRect] = useState();
-
-
 
   const canvasHistory = useRef([]);
   const currentCanvasIndex = useRef(-1);
@@ -235,8 +226,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const handileDownload = (url: string) => {
     saveAs(url, `image${Date.now()}.png`);
   };
-
-  
 
   const getBase64FromUrl = async (url: string) => {
     const data = await fetch(url);
@@ -287,7 +276,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     fabric.Image.fromURL(await getBase64FromUrl(url), function (img: any) {
       // Set the image's dimensions
       img.scaleToWidth(150);
-      // saveCanvasToDatabase()
       // img.scaleToHeight(150);
       // Scale the image to have the same width and height as the rectangle
       // const scaleX = downloadRect.width / img.width;
@@ -317,12 +305,13 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       canvasInstance?.current.add(img);
       canvasInstance?.current.renderAll();
       saveCanvasState();
+      saveCanvasToDatabase()
+
     });
   };
   const addimgToCanvasSubject = async (url: string) => {
     fabric.Image.fromURL(await getBase64FromUrl(url), function (img: any) {
       // Set the image's dimensions
-      // saveCanvasToDatabase()
 
       img.scaleToWidth(200);
       const canvasWidth = 360;
@@ -377,9 +366,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         positionBtn(img);
         // RegeneratepositionBtn(img);
       });
-      img.on("scaling", function () {
-        positionBtn(img);
-      });
+      // img.on("scaling", function () {
+      //   positionBtn(img);
+      // });
 
       // img.on("mouseover", () => {
       //   // regenerateRef.current.style.display = 'block';
@@ -420,11 +409,15 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   function positionBtn(obj) {
     const btn = PosisionbtnRef.current;
     const absCoords = canvasInstance?.current.getAbsoluteCoords(obj);
-    btn.style.left = absCoords.left - 180 / 2 + "px";
-    btn.style.top = absCoords.top - 50 / 2 + "px";
+    btn.style.left = absCoords.left + "px";
+    btn.style.top = absCoords.top + "px";
+  }
 
-  
-
+  function RegeneratepositionBtn(obj) {
+    const btns = regenerateRef.current;
+    const absCoords = canvasInstance?.current.getAbsoluteCoords(obj);
+    btns.style.left = absCoords.left + 150 + "px";
+    btns.style.top = absCoords.top + 330 + "px";
   }
 
   const GetProjexts = (getUser: string) => {
@@ -440,41 +433,41 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       });
   };
 
-  const saveCanvasToDatabase = async() => {
+  const saveCanvasToDatabase = async () => {
     const canvasData = canvasInstance.current.toJSON();
-    if(canvasData.objects.length > 1) {
-    
-    // console.log("sdsdfs,",userId, projectId, canvasData, "dsffff");
-    SaveProjexts(userId, projectId, canvasData);
-    const filteredResult = generatedImgList.filter((obj) =>
-    jobId?.includes(obj?.task_id)
-  );
+    if (canvasData.objects.length > 0) {
+      console.log("sdsdfs,",userId, projectId, canvasData, "dsffff");
 
-    try {
-      // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
-   
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API}/addPreview`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: userId,
-            projectId: projectId,
-            img: filteredResult[0].modified_image_url,
-          }),
-        }
+      console.log("sdsds",projectId,userId)
+      SaveProjexts(userId, projectId, canvasData);
+      const filteredResult = generatedImgList.filter((obj) =>
+        jobId?.includes(obj?.task_id)
       );
-      // console.log(await response.json(), "dfvcvdfvdvcdsd");
-      const datares = await response;
 
-     
-      // window.open(`/generate/${datares?._id}`, "_self");
-    } catch (error) {
-      // Handle error
-    }
+      try {
+        // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
+
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API}/addPreview`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userId: userId,
+              projectId: projectId,
+              img: filteredResult[0].modified_image_url,
+            }),
+          }
+        );
+        // console.log(await response.json(), "dfvcvdfvdvcdsd");
+        const datares = await response;
+
+        // window.open(`/generate/${datares?._id}`, "_self");
+      } catch (error) {
+        // Handle error
+      }
     }
   };
   const GetProjextById = (getUser: string) => {
@@ -482,7 +475,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       .get(`${process.env.NEXT_PUBLIC_API}/project?id=${getUser}`)
       .then((response) => {
         setproject(response.data);
-     
+
         setJobId(response.data.jobIds);
 
         return response.data;
@@ -502,20 +495,15 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     try {
       // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
 
-      const response = await fetch(
-        `/api/canvasdata`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: json,
-        }
-      );
+      const response = await fetch(`/api/canvasdata`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: json,
+      });
       const data = await response.json();
-     
 
-  
       return data;
 
       // console.log(await response.json(), "dfvcvdfvdvcdsd");
@@ -534,18 +522,15 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     try {
       // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
 
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API}/rename`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: json,
-        }
-      );
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API}/rename`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: json,
+      });
       const data = await response.json();
-   
+
       return data;
 
       // console.log(await response.json(), "dfvcvdfvdvcdsd");
@@ -554,17 +539,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     }
   };
 
-  function RegeneratepositionBtn(obj) {
-    const btns = regenerateRef.current;
-    const absCoords = canvasInstance?.current.getAbsoluteCoords(obj);
-    btns.style.left = absCoords.left - 280 - 80 / 2 + "px";
-    btns.style.top = absCoords.top + 650 / 2 + "px";
-  }
-
   const addimgToCanvasGen = async (url: string) => {
     fabric.Image.fromURL(await getBase64FromUrl(url), function (img: any) {
       // Set the image's dimensions
-      // saveCanvasToDatabase()
 
       img.scaleToWidth(200);
       const canvasWidth = 380;
@@ -595,10 +572,10 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         RegeneratepositionBtn(img);
       });
 
-      img.on("scaling", function () {
-        positionBtn(img);
-        // RegeneratepositionBtn(img);
-      });
+      // img.on("scaling", function () {
+      //   positionBtn(img);
+      //   // RegeneratepositionBtn(img);
+      // });
 
       // img.on("mouseover", () => {
       //   RegeneratepositionBtn(img);
@@ -631,6 +608,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       canvasInstance?.current.setActiveObject(img);
       canvasInstance?.current.renderAll();
       saveCanvasState();
+      saveCanvasToDatabase()
+
     });
   };
   const canvasHistoryRef = useRef([]);
@@ -638,8 +617,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const { userId } = useAuth();
 
   useEffect(() => {
-    const getUser =  typeof window === "undefined"
-    ? false : localStorage.getItem("userId");
+    const getUser =
+      typeof window === "undefined" ? false : localStorage.getItem("userId");
 
     setInterval(() => {
       fetchGeneratedImages(getUser);
@@ -660,7 +639,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       );
       const data = await response.json();
       if (data?.length) {
-     
         setGeneratedImgList(await data);
       }
 
@@ -681,14 +659,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API}/assets?userId=${userId}`,
         {
-          method: "GET"
-          
+          method: "GET",
         }
       );
       const data = await response.json();
       console.log(await data);
 
-  
       if (data?.length) {
         setListOfAssets(await data);
       }
@@ -709,14 +685,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API}/assets?userId=${userId}&projectId=${pro}`,
         {
-          method: "GET"
-          
+          method: "GET",
         }
       );
       const data = await response.json();
-      console.log("cdcdcvdcvc",await data);
+      console.log("cdcdcvdcvc", await data);
 
-  
       if (data?.length) {
         setListOfAssets(await data);
       }
@@ -733,38 +707,32 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     }
   };
 
-
   const addtoRecntly = async (ueserId, proid, obj) => {
+    try {
+      // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
 
-      try {
-        // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
-     
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API}/recently`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              userId: ueserId,
-              projectId: proid,
-              recently: templet,
-            }),
-          }
-        );
-        // console.log(await response.json(), "dfvcvdfvdvcdsd");
-        const datares = await response;
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API}/recently`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: ueserId,
+          projectId: proid,
+          recently: templet,
+        }),
+      });
+      // console.log(await response.json(), "dfvcvdfvdvcdsd");
+      const datares = await response;
 
-        if (datares.ok) {
-          GetProjextById(id);
-          // setfilterRecently(project?.recently.reverse())
-        }
-        // window.open(`/generate/${datares?._id}`, "_self");
-      } catch (error) {
-        // Handle error
+      if (datares.ok) {
+        GetProjextById(id);
+        // setfilterRecently(project?.recently.reverse())
       }
-    
+      // window.open(`/generate/${datares?._id}`, "_self");
+    } catch (error) {
+      // Handle error
+    }
   };
 
   const bringImageToFront = () => {
@@ -799,7 +767,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     try {
       const genBox = generateBox.current;
 
-      addtoRecntly(ueserId, proid)
+      addtoRecntly(ueserId, proid);
       // canvas1.set({
       //   left: 30,
       //   top:200
@@ -811,7 +779,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
       const objects = canvas1.getObjects();
 
-   
       const maskObjects = [];
       const subjectObjects = [];
       objects.forEach((object) => {
@@ -825,19 +792,17 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         }
       });
 
-
       // Make image with only the mask objects
       const maskCanvas = new fabric.Canvas(null, {
-        // width: 410,
-        // height: 480,
-        // top: 120,
-        // left: 30,
+        // width: genRect.width,
+        // height: genRect.height,
+        // top: genRect.height,
+        // left: genRect.height,
         left: parseInt(genBox.style.left),
         top: parseInt(genBox.style.top),
         width: parseInt(genBox.style.width),
         height: parseInt(genBox.style.height),
       });
-
 
       maskObjects.forEach((object) => {
         // You can adjust the object's position relative to the canvas as needed
@@ -849,16 +814,14 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       });
       const maskDataUrl = maskCanvas.toDataURL("image/png");
 
-      console.log("mask",maskDataUrl)
+      console.log("mask", maskDataUrl);
 
       // Make image with only the subject objects
       const subjectCanvas = new fabric.Canvas(null, {
-        // width: canvas1.getWidth(),
-        // height: canvas1.getHeight(),
-        // width: 410,
-        // height: 480,
-        // top: 120,
-        // left: 30,
+        // width: genRect.width,
+        // height: genRect.height,
+        // top: genRect.height,
+        // left: genRect.height,
         left: parseInt(genBox.style.left),
         top: parseInt(genBox.style.top),
         width: parseInt(genBox.style.width),
@@ -874,7 +837,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       });
 
       const subjectDataUrl = subjectCanvas.toDataURL("image/png");
-      console.log("subect",subjectDataUrl)
+      console.log("subect", subjectDataUrl);
 
       maskObjects.forEach((object) => {
         // You can adjust the object's position relative to the canvas as needed
@@ -889,8 +852,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           top: object.top + parseInt(genBox.style.top),
         });
       });
-
-  
 
       const promtText =
         product +
@@ -919,7 +880,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           user_id: userId,
           lora_type: loara,
           num_images: selectResult,
-
         }),
       });
 
@@ -932,7 +892,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         return false;
       } else {
         try {
-      setSelectedresult(1)
+          setSelectedresult(1);
 
           // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
 
@@ -998,7 +958,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     }
   };
 
-
   const [reloder, setreLoader] = useState(true);
 
   // regenrate
@@ -1007,11 +966,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     setLoader(true);
     setGenerationLoader(true);
     try {
-     
-
-      setreLoader(true)
-
-  
+      setreLoader(true);
 
       const promtText =
         product +
@@ -1036,11 +991,10 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         body: JSON.stringify({
           dataUrl: img,
           maskDataUrl: null,
-          prompt: promtText.trim()+ "make minor changes on his image",
+          prompt: promtText.trim() + "make minor changes on his image",
           user_id: userId,
           lora_type: loara,
           num_images: 3,
-
         }),
       });
 
@@ -1049,13 +1003,13 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       if (generate_response?.error) {
         alert(generate_response?.error);
         setLoader(false);
-        setreLoader(false)
+        setreLoader(false);
 
         return false;
       } else {
         try {
-      setSelectedresult(1)
-      setreLoader(false)
+          setSelectedresult(1);
+          setreLoader(false);
 
           // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
 
@@ -1072,7 +1026,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           });
           // console.log(await response.json(), "dfvcvdfvdvcdsd");
           const datares = await response;
-          setreLoader(false)
+          setreLoader(false);
 
           if (datares.ok) {
             // setJobId((pre) => [...pre, generate_response?.job_id]);
@@ -1084,9 +1038,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           // window.open(`/generate/${datares?._id}`, "_self");
         } catch (error) {
           // Handle error
-          
-          setreLoader(false)
 
+          setreLoader(false);
         }
       }
 
@@ -1125,24 +1078,24 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     }
   };
 
-
-
-
   // regenrtate
 
   const [loadercarna, setloadercarna] = useState(false);
-  
+
   return (
     <AppContext.Provider
       value={{
-        loadercarna, setloadercarna,
+        loadercarna,
+        setloadercarna,
         previewBox,
         loara,
         setLoara,
         GetProjexts,
         canvasRef,
-        projectId, setprojectId,
-        uerId, setUserId,
+        projectId,
+        setprojectId,
+        uerId,
+        setUserId,
         SaveProjexts,
         GetProjextById,
         project,
@@ -1168,7 +1121,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         handileDownload,
         canvasInstance,
         addimgToCanvasGen,
-        genRect, setgenRect,
+        genRect,
+        setgenRect,
         outerDivRef,
         addimgToCanvas,
         addimgToCanvasSubject,
@@ -1192,7 +1146,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setCurrentStep,
         popupImage,
         setPopupImage,
-        newassetonCanvas, setNewassetonCanvas,
+        newassetonCanvas,
+        setNewassetonCanvas,
         file,
         setFile,
         selectPlacement,
@@ -1218,7 +1173,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         placementTest,
         setPlacementTest,
         backgroundTest,
-        listofassets, setListOfAssets,
+        listofassets,
+        setListOfAssets,
         setBackgrundTest,
         surroundingTest,
         setSurroundingTest,
@@ -1226,7 +1182,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setColore,
         uploadedProductlist,
         setUploadedProductlist,
-        templet, setTemplet,
+        templet,
+        setTemplet,
         previewLoader,
         setPriviewLoader,
         generationLoader,
@@ -1249,7 +1206,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setUndoArray,
         modifidImageArray,
         setModifidImageArray,
-        fetchAssetsImagesWithProjectId
+        fetchAssetsImagesWithProjectId,
       }}
     >
       {children}
