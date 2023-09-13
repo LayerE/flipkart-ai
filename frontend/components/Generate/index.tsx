@@ -93,7 +93,7 @@ const Generate = () => {
       promt 
       setpromtFull(promts)
      
-    }, [])
+    }, [product,promt ])
     
 
 const handelPromt  = (e)=>{

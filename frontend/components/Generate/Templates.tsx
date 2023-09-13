@@ -11,7 +11,7 @@ const fadeIn = {
 
 import { motion } from "framer-motion";
 // import { Label } from "react-konva";
-import { templets } from "@/store/dropdown";
+import { TempletList, templets } from "@/store/dropdown";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/router";
 import Label from "../common/Label";
@@ -143,33 +143,53 @@ const Tamplates = () => {
             <Label>Select a template below.</Label>
           </div>
         </div>
-        <ResponsiveRowWraptwo>
-          {templets.map((test, i) => (
-            <div
-              key={i}
-              className={"imageBoxs"}
-              onClick={() => {
-                // addtoRecntly(test);
-                setTemplet(test)
-                // setProduct(test.product);
-                setPlacementTest(test.placement);
-                setSurroundingTest(test.surrounding);
-                setBackgrundTest(test.background);
-                setSelectedPlacement(test.placementType);
-                setSelectedSurrounding(test.surroundingType);
-                setSelectedBackground(test.backgroundType);
-                setLoara(test.lora);
-                setpromt(test.promt);
-
-              }}
-            >
-              <picture>
-                <img src={test.image} alt="" />
-              </picture>
-              <div className="head">{test?.title}</div>
+          {TempletList.map((test, i) => (
+<>
+            <div className="sub-title">
+              <Label>{test.title}</Label>
             </div>
-          ))}
+        <ResponsiveRowWraptwo>
+
+          
+              { test.list.map((test, i) =>(
+                <div
+                key={i}
+                className={"imageBoxs"}
+                onClick={() => {
+                  // addtoRecntly(test);
+                  setTemplet(test)
+                  // setProduct(test.product);
+                  setPlacementTest(test.placement);
+                  setSurroundingTest(test.surrounding);
+                  setBackgrundTest(test.background);
+                  setSelectedPlacement(test.placementType);
+                  setSelectedSurrounding(test.surroundingType);
+                  setSelectedBackground(test.backgroundType);
+                  setLoara(test.lora);
+                  setpromt(test.promt);
+  
+                }}
+              >
+                <picture>
+                  <img src={test.image} alt="" />
+                </picture>
+                <div className="head">{test?.title}</div>
+  
+              </div>
+
+
+                ))
+              }
+        
+
+
+
+
+            
+            
         </ResponsiveRowWraptwo>
+            </>
+          ))}
       </RecentWrapper>
     </motion.div>
   );
@@ -188,6 +208,12 @@ export const ResponsiveRowWraptwo = styled(Row)`
 `;
 
 export const RecentWrapper = styled(Row)`
+
+.sub-title{
+  text-align: left;
+  width: 100%;
+  padding: 15px 0;
+}
   margin-bottom: 50px;
   .rowsnew {
     margin-top: 30px !important;

@@ -180,7 +180,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [selectRender, setSelectedRender] = useState<number>(4);
   const [loara, setLoara] = useState<string>("");
   const [templet, setTemplet] = useState();
-  const [promt, setpromt] = useState();
+  const [promt, setpromt] = useState("");
 
   const [selectColoreStrength, setSelectedColoreStrength] = useState<number>(0);
   const [selectOutLline, setSelectedOutline] = useState<number>(0);
@@ -941,7 +941,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
         setGeneratedImgList(loadeImge.slice(0, 20));
 
-        setSelectedresult(1);
+        // setSelectedresult(1);
 
         setLoader(false);
       }, 30000);
