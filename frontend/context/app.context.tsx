@@ -998,7 +998,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           maskDataUrl: null,
           prompt: promtText.trim() + "make minor changes on his image",
           user_id: userId,
-          lora_type: loara,
+          // lora_type: loara,
           num_images: 3,
         }),
       });
@@ -1013,7 +1013,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         return false;
       } else {
         try {
-          setSelectedresult(1);
+          // setSelectedresult(1);
           setreLoader(false);
 
           // const response = await axios.get(`/api/user?id=${"shdkjs"}`);

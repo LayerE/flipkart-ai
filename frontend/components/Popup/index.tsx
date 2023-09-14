@@ -73,6 +73,8 @@ const PopupUpload = () => {
             />
           </div>
           <Button onClick={HandileUpload}>Add image </Button>
+          <Button onClick={()=>  setPopup({ status: false, data: null })} style={{backgroundColor: "rgba(249, 208, 13, 0.23)"}}>Close </Button>
+
         </div>
       </div>
     </PopupWrapper>
