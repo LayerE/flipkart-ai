@@ -3,8 +3,17 @@ import { styled } from "styled-components";
 import Button from "../common/Button";
 import { useAppState } from "@/context/app.context";
 import { fabric } from "fabric";
+import { useRouter } from "next/router";
+import { useAuth } from "@clerk/nextjs";
 
 const Regeneret = () => {
+
+  const { userId } = useAuth();
+  const { query, isReady } = useRouter();
+  // const { id } = query;
+  const id = (query.id as string[]) || [];
+
+
   const {
     regeneratePopup,
     setRegeneratePopup,
@@ -14,9 +23,10 @@ const Regeneret = () => {
     generatedImgList,
     reloder,
     setreLoader,
-
+    GetProjextById,
     regenratedImgsJobId,
     setRegenratedImgsJobid,
+    setJobId,
     setActiveTab,
   } = useAppState();
 
@@ -61,8 +71,8 @@ const Regeneret = () => {
         function (img: any) {
           // Set the image's dimensions
           img.scaleToWidth(200);
-          const canvasWidth = 340;
-          const canvasHeight = 38;
+          const canvasWidth = 380;
+          const canvasHeight = 380;
           const imageAspectRatio = img.width / img.height;
 
           // Calculate the maximum width and height based on the canvas size
@@ -79,7 +89,7 @@ const Regeneret = () => {
           const getRandomPosition = (max) => Math.floor(Math.random() * max);
 
           const randomLeft = getRandomPosition(
-            canvasInstance?.current?.width / 2 - img.width
+            canvasInstance?.current?.width / img.width
           );
           const randomTop = getRandomPosition(300);
 
@@ -109,7 +119,48 @@ const Regeneret = () => {
     }
   };
 
-  const addImges = () => {
+  const addImges = async() => {
+
+    try {
+      // setSelectedresult(1);
+    
+
+      // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API}/jobId`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: userId,
+          projectId: id,
+          jobId:     regenratedImgsJobId,
+          
+        }),
+      });
+      // // console.log(await response.json(), "dfvcvdfvdvcdsd");
+      const datares = await response;
+     
+
+      if (datares.ok) {
+      setJobId((pre) => [...pre, regenratedImgsJobId]);
+      // setRegenratedImgsJobid(generate_response?.job_id);
+
+      // localStorage.setItem("jobId", jobId);
+
+      GetProjextById(id);
+      }
+      // window.open(`/generate/${datares?._id}`, "_self");
+    } catch (error) {
+      // Handle error
+
+  
+    }
+
+
+
+
     addimgToCanvasGen(selectedCards);
     setRegeneratePopup({ statu: false });
     setActiveTab(1);

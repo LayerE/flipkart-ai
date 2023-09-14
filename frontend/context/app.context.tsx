@@ -917,7 +917,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
           if (datares.ok) {
             setJobId((pre) => [...pre, generate_response?.job_id]);
-            setRegenratedImgsJobid(generate_response?.job_id);
+            // setRegenratedImgsJobid(generate_response?.job_id);
             // localStorage.setItem("jobId", jobId);
 
             GetProjextById(proid);
@@ -1029,16 +1029,16 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           //     jobId: generate_response?.job_id,
           //   }),
           // });
-          // // console.log(await response.json(), "dfvcvdfvdvcdsd");
+          // // // console.log(await response.json(), "dfvcvdfvdvcdsd");
           // const datares = await response;
-          setreLoader(false);
+          // setreLoader(false);
 
           // if (datares.ok) {
           // setJobId((pre) => [...pre, generate_response?.job_id]);
           setRegenratedImgsJobid(generate_response?.job_id);
           // localStorage.setItem("jobId", jobId);
 
-          GetProjextById(proid);
+          // GetProjextById(proid);
           // }
           // window.open(`/generate/${datares?._id}`, "_self");
         } catch (error) {
