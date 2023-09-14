@@ -644,12 +644,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setGeneratedImgList(await data);
       }
 
-      // setImages(data); // Update the state with the fetched images
-      // setGeneratedImgList(data)
-
-      // if(data[0]?.prompt === prompt){
-
-      // }
+  
       return data;
     } catch (error) {
       console.error("Error fetching images:", error);
