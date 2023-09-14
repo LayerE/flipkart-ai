@@ -191,7 +191,7 @@ export const TempletList = [
       {
         title: "Dining 1 ",
 
-        image: "https://www.linkpicture.com/q/Living-Room.png",
+        image: "https://www.linkpicture.com/q/image-1_15.png",
         promt: "in a simple, minimalistic Dining hall",
         placementType: "",
         surroundingType: "",
@@ -205,7 +205,7 @@ export const TempletList = [
       {
         title: "Dining 2 ",
 
-        image: "https://www.linkpicture.com/q/Living-Room.png",
+        image: "https://www.linkpicture.com/q/image-1_15.png",
         promt: "in a luxury, contemporary Dining hall ",
         placementType: "",
         surroundingType: "",
@@ -219,7 +219,7 @@ export const TempletList = [
       {
         title: "Office  1 ",
 
-        image: "https://www.linkpicture.com/q/Living-Room.png",
+        image: "https://www.linkpicture.com/q/image-2_89.png",
         promt: "in a simple, minimalistic Office space",
         placementType: "",
         surroundingType: "",
@@ -233,7 +233,7 @@ export const TempletList = [
       {
         title: "Office  2 ",
 
-        image: "https://www.linkpicture.com/q/Living-Room.png",
+        image: "https://www.linkpicture.com/q/image-2_89.png",
         promt: " In a modern, luxury bedroom",
         placementType: "",
         surroundingType: "",
@@ -247,7 +247,7 @@ export const TempletList = [
       {
         title: "Bedroom   1 ",
 
-        image: "https://www.linkpicture.com/q/Room.png",
+        image: "https://www.linkpicture.com/q/image-3_54.png",
         promt: "in a simple, minimalistic Office space",
         placementType: "",
         surroundingType: "",
@@ -261,7 +261,7 @@ export const TempletList = [
       {
         title: "Bedroom 2 ",
 
-        image: "https://www.linkpicture.com/q/Room.png",
+        image: "https://www.linkpicture.com/q/image-3_54.png",
         promt: " In a simple, minimalistic bedroom ",
         placementType: "",
         surroundingType: "",
@@ -274,7 +274,7 @@ export const TempletList = [
       }, {
         title: "House 1 ",
 
-        image: "https://www.linkpicture.com/q/Room.png",
+        image: "https://www.linkpicture.com/q/image-4_41.png",
         promt: " Inside a simple, traditional, aesthetic house",
         placementType: "",
         surroundingType: "",
@@ -288,7 +288,7 @@ export const TempletList = [
       {
         title: "House 2 ",
 
-        image: "https://www.linkpicture.com/q/Room.png",
+        image: "https://www.linkpicture.com/q/image-4_41.png",
         promt: " Inside a luxury, modern house",
         placementType: "",
         surroundingType: "",
@@ -301,7 +301,7 @@ export const TempletList = [
       }, {
         title: "House 3",
 
-        image: "https://www.linkpicture.com/q/Room.png",
+        image: "https://www.linkpicture.com/q/image-4_41.png",
         promt: "Inside a minimalistic, contemporary house",
         placementType: "",
         surroundingType: "",
@@ -321,7 +321,7 @@ export const TempletList = [
       {
         title: "Counter ",
 
-        image: "https://www.linkpicture.com/q/Beach_1.png",
+        image: "https://www.linkpicture.com/q/image-5_46.png",
         promt: "On a Kitchen Counter",
         placementType: "on",
         surroundingType: "",
@@ -335,7 +335,7 @@ export const TempletList = [
       {
         title: "Office ",
 
-        image: "https://www.linkpicture.com/q/Room.png",
+        image: "https://www.linkpicture.com/q/image-5_46.png",
         promt: "On an Office Table",
         placementType: "on",
         surroundingType: "",
@@ -349,7 +349,7 @@ export const TempletList = [
       {
         title: "Bench ",
 
-        image: "https://chromaticlens.com/_next/image?url=%2Fplaces%2Ftable.jpeg&w=256&q=75",
+        image: "https://www.linkpicture.com/q/Untitled-15.webp",
         promt: "On a park bench",
         placementType: "on",
         surroundingType: "",
@@ -363,7 +363,7 @@ export const TempletList = [
       {
         title: "Coffee ",
 
-        image: "https://www.linkpicture.com/q/Beach_1.png",
+        image: "https://www.linkpicture.com/q/Untitled-15.webp",
         promt: "On a Coffee Table",
         placementType: "on",
         surroundingType: "",
@@ -377,7 +377,7 @@ export const TempletList = [
       {
         title: "Photoshoot ",
 
-        image: "https://www.linkpicture.com/q/Room.png",
+        image: "https://www.linkpicture.com/q/Untitled-3_5.png",
         promt: "On a professional photoshoot pedestal ",
         placementType: "on",
         surroundingType: "",
@@ -391,7 +391,7 @@ export const TempletList = [
       {
         title: "Podium ",
 
-        image: "https://www.linkpicture.com/q/Beach_1.png",
+        image: "https://www.linkpicture.com/q/Untitled-3_5.png",
         promt: " On a marble podium",
         placementType: "on",
         surroundingType: "",
@@ -493,7 +493,7 @@ export const TempletList = [
       },
       {
         title: "Grass ",
-        image: "https://www.linkpicture.com/q/Beach_1.png",
+        image: "https://www.linkpicture.com/q/Untitled-4_4.png",
 
         promt: "On lush green grass",
         placementType: "on",
@@ -508,7 +508,7 @@ export const TempletList = [
       {
         title: "Cloudy ",
 
-        image: "https://www.linkpicture.com/q/Beach_1.png",
+        image: "https://www.linkpicture.com/q/Untitled-5_5.png",
         promt: "Under a cloudy scene",
         placementType: "on",
         surroundingType: "",
@@ -521,7 +521,7 @@ export const TempletList = [
       },
       {
         title: "Sunset ",
-        image: "https://www.linkpicture.com/q/Beach_1.png",
+        image: "https://www.linkpicture.com/q/Untitled-6_1.png",
 
         promt: " In front of a Sunset",
         placementType: "on",
@@ -542,7 +542,7 @@ export const TempletList = [
       {
         title: "Minimal ",
 
-        image: "https://www.linkpicture.com/q/Minimal.png",
+        image: "https://www.linkpicture.com/q/Untitled-7.png",
         promt: "Against a Minimalistic Background",
         placementType: "on",
         surroundingType: "",
@@ -556,7 +556,7 @@ export const TempletList = [
       {
         title: "Texture ",
 
-        image: "https://chromaticlens.com/_next/image?url=%2Fplaces%2Ftexture.jpeg&w=256&q=75",
+        image: "https://www.linkpicture.com/q/Untitled-8_10.png",
         promt: "Against a Textured Wall",
         placementType: "on",
         surroundingType: "",
@@ -570,7 +570,7 @@ export const TempletList = [
       {
         title: "Fabric ",
 
-        image: "https://chromaticlens.com/_next/image?url=%2Fplaces%2Ffabric.jpeg&w=256&q=75",
+        image: "https://www.linkpicture.com/q/Untitled-9_2.png",
         promt: "Put against a Textured Fabric",
         placementType: "on",
         surroundingType: "",
@@ -584,7 +584,7 @@ export const TempletList = [
       {
         title: "Aesthetic ",
 
-        image: "https://www.linkpicture.com/q/Beach_1.png",
+        image: "https://www.linkpicture.com/q/Untitled-10_10.png",
         promt: "Against a an Aesthetic background",
         placementType: "on",
         surroundingType: "",
@@ -597,7 +597,7 @@ export const TempletList = [
       },
       {
         title: "Colourful ",
-        image: "https://www.linkpicture.com/q/Beach_1.png",
+        image: "https://www.linkpicture.com/q/Untitled-11.webp",
 
         promt: "Against a Colourful background",
         placementType: "on",
@@ -612,7 +612,7 @@ export const TempletList = [
       {
         title: "Smooth ",
 
-        image: "https://www.linkpicture.com/q/Beach_1.png",
+        image: "https://www.linkpicture.com/q/Untitled-12_5.png",
         promt: "Put against a Smooth Fabric",
         placementType: "on",
         surroundingType: "",
@@ -625,7 +625,7 @@ export const TempletList = [
       },
       {
         title: "Abstract ",
-        image: "https://www.linkpicture.com/q/Beach_1.png",
+        image: "https://www.linkpicture.com/q/Untitled-13_2.png",
 
         promt: "Against a an Abstract Background",
         placementType: "on",
@@ -640,7 +640,7 @@ export const TempletList = [
       {
         title: "Simple ",
 
-        image: "https://www.linkpicture.com/q/Beach_1.png",
+        image: "https://www.linkpicture.com/q/Untitled-14_2.png",
         promt: " Against a Simple Color Background",
         placementType: "on",
         surroundingType: "",

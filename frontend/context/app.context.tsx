@@ -306,8 +306,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       canvasInstance?.current.add(img);
       canvasInstance?.current.renderAll();
       saveCanvasState();
-      saveCanvasToDatabase()
-
+      saveCanvasToDatabase();
     });
   };
   const addimgToCanvasSubject = async (url: string) => {
@@ -390,7 +389,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       //     setBtnVisible(true);
       //   }
       // });
-      img.set({category: "subject"});
+      img.set({ category: "subject" });
       // canvasInstance.current.clear();
       canvasInstance?.current?.add(img);
       canvasInstance?.current?.setActiveObject(img);
@@ -436,38 +435,13 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
   const saveCanvasToDatabase = async () => {
     const canvasData = canvasInstance.current.toJSON(["category"]);
-    if (canvasData.objects.length > 0) {
-      console.log("sdsdfs,",userId, projectId, canvasData, "dsffff");
+    if (canvasData.objects.length > 1 && !loadercarna) {
+      console.log("sdsdfs,", userId, projectId, canvasData, "dsffff");
 
       SaveProjexts(userId, projectId, canvasData);
       const filteredResult = generatedImgList.filter((obj) =>
         jobId?.includes(obj?.task_id)
       );
-
-      try {
-        // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
-
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API}/addPreview`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              userId: userId,
-              projectId: projectId,
-              img: filteredResult[0].modified_image_url,
-            }),
-          }
-        );
-        // console.log(await response.json(), "dfvcvdfvdvcdsd");
-        const datares = await response;
-
-        // window.open(`/generate/${datares?._id}`, "_self");
-      } catch (error) {
-        // Handle error
-      }
     }
   };
   const GetProjextById = (getUser: string) => {
@@ -491,7 +465,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       project_id: projectId,
       canvasdata: canvas,
     });
-    console.log(json);
+    // console.log(json);
     try {
       // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
 
@@ -503,6 +477,26 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         body: json,
       });
       const data = await response.json();
+
+      if (data && filteredResult[0]?.modified_image_url) {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API}/addPreview`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userId: userId,
+              projectId: projectId,
+              img: filteredResult[0].modified_image_url,
+            }),
+          }
+        );
+        // console.log(await response.json(), "dfvcvdfvdvcdsd");
+        const datares = await response;
+      }
+      // window.open(`/generate/${datares?._id}`, "_self");
 
       return data;
 
@@ -543,7 +537,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     fabric.Image.fromURL(await getBase64FromUrl(url), function (img: any) {
       // Set the image's dimensions
 
-      img.scaleToWidth(200);
+      // img.scaleToWidth(200);
       const canvasWidth = 380;
       const canvasHeight = 380;
       const imageAspectRatio = img.width / img.height;
@@ -557,10 +551,10 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       let scaledHeight = scaledWidth / imageAspectRatio;
 
       // If the scaled height exceeds the canvas height, scale it down
-      if (scaledHeight > maxHeight) {
-        scaledHeight = maxHeight;
-        scaledWidth = scaledHeight * imageAspectRatio;
-      }
+      // if (scaledHeight > maxHeight) {
+      //   scaledHeight = maxHeight;
+      //   scaledWidth = scaledHeight * imageAspectRatio;
+      // }
 
       img.on("mouse:down", () => {
         positionBtn(img);
@@ -600,15 +594,20 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       img.scaleToWidth(scaledWidth);
       img.scaleToHeight(scaledHeight);
       // Set the position of the image
+      img.set({
+        left: 430,
+        top: 120,
 
+        // scaleX: scaleX,
+        // scaleY: scaleY,
+      });
       img.set("category", "generated");
       // canvasInstance.current.clear();
       canvasInstance?.current.add(img);
       canvasInstance?.current.setActiveObject(img);
       canvasInstance?.current.renderAll();
       saveCanvasState();
-      saveCanvasToDatabase()
-
+      saveCanvasToDatabase();
     });
   };
   const canvasHistoryRef = useRef([]);
@@ -765,6 +764,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     const canvas1 = canvasInstance.current;
     try {
       const genBox = generateBox.current;
+      const preBox = previewBox.current;
 
       addtoRecntly(ueserId, proid);
       // canvas1.set({
@@ -1028,11 +1028,11 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           setreLoader(false);
 
           // if (datares.ok) {
-            // setJobId((pre) => [...pre, generate_response?.job_id]);
-            setRegenratedImgsJobid(generate_response?.job_id);
-            // localStorage.setItem("jobId", jobId);
+          // setJobId((pre) => [...pre, generate_response?.job_id]);
+          setRegenratedImgsJobid(generate_response?.job_id);
+          // localStorage.setItem("jobId", jobId);
 
-            GetProjextById(proid);
+          GetProjextById(proid);
           // }
           // window.open(`/generate/${datares?._id}`, "_self");
         } catch (error) {
@@ -1201,7 +1201,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         loader,
         setLoader,
         positionBtn,
-        promt, setpromt,
+        promt,
+        setpromt,
         undoArray,
         setUndoArray,
         modifidImageArray,

@@ -184,7 +184,7 @@ const handelPromt  = (e)=>{
           ) : (
             <Button
               onClick={() => generateImageHandeler(userId, id)}
-              disabled={product === "" ? true : false}
+              disabled={promtFull === ""  ? true : false}
             >
               {generationLoader ? "Loading..." : "Generate"}
             </Button>

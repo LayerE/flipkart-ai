@@ -88,8 +88,6 @@ const Regeneret = () => {
           img.set({
             left: randomLeft,
             top: randomTop,
-            width: 360,
-            height: 360,
           });
 
           console.log(img);

@@ -123,10 +123,13 @@ export default function CanvasBox({ proid, userId }) {
     // });
 
     return () => {
-      canvasInstanceRef?.dispose();
+      saveCanvasToDatabase();
+      setTimeout(() => {
+        
+        canvasInstanceRef?.dispose();
+      }, 500);
       // router.events.off("routeChangeStart", saveCanvasToDatabase);
 
-      // saveCanvasToDatabase();
       // setTimeout(() => {
       // }, 300);
     };
@@ -142,11 +145,8 @@ export default function CanvasBox({ proid, userId }) {
 
       const canvasInstanceRef = canvasInstance?.current;
 
-      var ctx = canvasInstanceRef.getContext("2d");
-      ctx.fillStyle = "red";
-      ctx.fillRect(0, 0, 400, 300);
+  
 
-      ctx.clearRect(100, 100, 50, 50);
       canvasInstanceRef.clear();
       const newEditorBox = new fabric.Rect({
         left: 30,
@@ -191,7 +191,22 @@ export default function CanvasBox({ proid, userId }) {
         if (options.target && options.target.type === "image") {
           let selectedObject;
           if (options.target._element instanceof Image) {
-            selectedObject = options.target._element.src;
+            // selectedObject = options.target._element.src;
+            const img = new Image();
+            img.src = options.target._element.src;
+            // Resize the image to 512x521 pixels
+      const canvas = document.createElement("canvas");
+      canvas.width = 710;
+      canvas.height = 710;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, 710, 710);
+
+      // Convert the canvas to a data URL
+      selectedObject = canvas.toDataURL("image/png");
+      
+
+          
+
           } else if (options.target._element instanceof HTMLCanvasElement) {
             selectedObject = options.target._element.toDataURL();
           }
@@ -264,18 +279,14 @@ export default function CanvasBox({ proid, userId }) {
           format: "png",
           left: parseInt(genBox.style.left),
           top: parseInt(genBox.style.top),
-          width: parseInt(genBox.style.width),
-          height: parseInt(genBox.style.height),
+          width: 512,
+          height: 512,
         });
         // setDownloadImg(dataURL);
         setDownloadImg(dataURL);
         setSelectedImg(dataURL);
 
-
-        // 
-     
-
-
+        //
 
         // Reset the rectangle's stroke properties
         newEditorBox.set("stroke", originalStrokeColor);
@@ -285,18 +296,16 @@ export default function CanvasBox({ proid, userId }) {
 
       const objects = canvasInstanceRef.getObjects();
 
-
       objects.forEach((object) => {
         // If the object is a mask, add it to the mask objects array
         if (object.category === "mask") {
-          positionBtn(object)
+          positionBtn(object);
           // maskObjects.push(object);
         }
         // If the object is a subject, add it to the subject objects array
         if (object.category === "subject") {
           // subjectObjects.push(object);
-          positionBtn(object)
-
+          positionBtn(object);
         }
       });
 
@@ -449,9 +458,9 @@ export default function CanvasBox({ proid, userId }) {
           return error;
         });
 
-    setInterval(() => {
-        if (loadercarna === false) {
-          saveCanvasToDatabase();
+      setInterval(() => {
+        if (!loadercarna) {
+          // saveCanvasToDatabase();
         }
       }, 5000);
       // try {
@@ -486,16 +495,14 @@ export default function CanvasBox({ proid, userId }) {
       // }
 
       // console.log("canvasInstance",canvasInstanceRef)
-      window.addEventListener("beforeunload", (ev) => {
-        saveCanvasToDatabase();
-        ev.preventDefault();
-        return (ev.returnValue = "Are you sure you want to close?");
-      });
+    
       return () => {
         window.addEventListener(
           "beforeunload",
           function () {
-            //  this.alert("sdfsdffsf")
+        // saveCanvasToDatabase();
+
+             alert("sdfsdffsf")
           },
           false
         );
@@ -508,7 +515,7 @@ export default function CanvasBox({ proid, userId }) {
       return () => {
         router.events.off("routeChangeStart", saveCanvasToDatabase);
 
-        // saveCanvasToDatabase();
+        saveCanvasToDatabase();
         // setTimeout(() => {
         // }, 300);
       };
