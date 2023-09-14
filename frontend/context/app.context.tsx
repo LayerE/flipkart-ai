@@ -437,6 +437,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     const canvasData = canvasInstance.current.toJSON(["category"]);
     if (canvasData.objects.length > 1 && !loadercarna) {
       console.log("sdsdfs,", userId, projectId, canvasData, "dsffff");
+      console.log(canvasData);
+
 
       SaveProjexts(userId, projectId, canvasData);
       const filteredResult = generatedImgList.filter((obj) =>
@@ -619,6 +621,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       typeof window === "undefined" ? false : localStorage.getItem("userId");
 
     setInterval(() => {
+
+    
       fetchGeneratedImages(getUser);
     }, 5000);
   }, []);
@@ -626,12 +630,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const fetchGeneratedImages = async (userId) => {
     try {
       const response = await fetch(
-        `https://tvjjvhjhvxwpkohjqxld.supabase.co/rest/v1/public_images?select=*&order=created_at.desc&user_id=eq.${userId}`,
+        `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/public_images?select=*&order=created_at.desc&user_id=eq.${userId}`,
         {
           method: "GET",
           headers: {
             apikey:
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2amp2aGpodnh3cGtvaGpxeGxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTI4Njg5NDQsImV4cCI6MjAwODQ0NDk0NH0.dwKxNDrr7Jw5OjeHgIbk8RLyvJuQVwZ_48Bv71P1n3Y", // Replace with your actual API key
+              process.env.NEXT_PUBLIC_SUPABASE_URL, // Replace with your actual API key
           },
         }
       );

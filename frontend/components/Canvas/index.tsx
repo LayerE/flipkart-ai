@@ -425,9 +425,9 @@ export default function CanvasBox({ proid, userId }) {
     // Fetch canvas data from your API and load it into the canvas
     const canvasInstanceRef = canvasInstance?.current;
 
-    // console.log("canvasInstance",canvasInstanceRef)
     setloadercarna(true);
     if (isReady && userId) {
+      console.log("canvasInstance",userId,proid)
       axios
         .post(`/api/canvasdata`, {
           user_id: userId,
@@ -435,7 +435,7 @@ export default function CanvasBox({ proid, userId }) {
         })
         .then((response) => {
           console.log(response);
-          console.log(response?.data.newData, "adsfnbdhjskgvyuifdsgh");
+          console.log(response?.data?.newData, "adsfnbdhjskgvyuifdsgh");
           if (canvasInstanceRef) {
             canvasInstanceRef.loadFromJSON(
               response?.data.newData.canvasdata,
@@ -443,8 +443,8 @@ export default function CanvasBox({ proid, userId }) {
               function (o, object) {
                 console.log(o, object);
               }
-            );
-            setloadercarna(false);
+              );
+              setloadercarna(false)
             // canvasInstanceRef.loadFromJSON(savedCanvasDataLocal, () => {
             //   canvasInstanceRef.renderAll();
             // });

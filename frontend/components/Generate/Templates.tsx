@@ -143,15 +143,15 @@ const Tamplates = () => {
             <Label>Select a template below.</Label>
           </div>
         </div>
-          {TempletList.map((test, i) => (
+          {TempletList.map((testd, i) => (
 <>
             <div className="sub-title">
-              <Label>{test.title}</Label>
+              <Label>{testd.title}</Label>
             </div>
         <ResponsiveRowWraptwo>
 
           
-              { test.list.map((test, i) =>(
+              { testd.list.map((test, i) =>(
                 <div
                 key={i}
                 className={"imageBoxs"}
