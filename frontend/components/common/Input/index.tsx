@@ -174,7 +174,7 @@ const InputFile1 = styled.div`
   }
 `;
 
-export const FileUpload: React.FC = ({ type, title}) => {
+export const FileUpload: React.FC = ({ type, title }) => {
   const {
     file,
     setFile,
@@ -187,9 +187,7 @@ export const FileUpload: React.FC = ({ type, title}) => {
     setPopup,
     projectId,
     uerId,
-    setloadercarna
-
-
+    setloadercarna,
   } = useAppState();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -197,12 +195,10 @@ export const FileUpload: React.FC = ({ type, title}) => {
     setFile(selectedFile);
     const blobUrl = URL.createObjectURL(selectedFile);
     const idG = uploadedProductlist.length;
-
-    setloadercarna(true)
+    setloadercarna(true);
     console.log(event.target.result, "fdsfsdg");
     if (selectedFile) {
       const reader = new FileReader();
-
       reader.onloadend = async () => {
         if (type === "element") {
           addimgToCanvas(reader.result);
@@ -210,21 +206,15 @@ export const FileUpload: React.FC = ({ type, title}) => {
           const filename = `img${Date.now()}`;
           setLoader(true);
 
-          const response = await fetch(
-            "/api/removebg",
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                dataUrl: reader.result,
-                user_id: uerId,
-                project_id : projectId
-                
-                
-            
-              }),
-            }
-          );
+          const response = await fetch("/api/removebg", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              dataUrl: reader.result,
+              user_id: uerId,
+              project_id: projectId,
+            }),
+          });
           const data = await response.json();
           console.log(data, "sfdfds");
 
@@ -236,13 +226,11 @@ export const FileUpload: React.FC = ({ type, title}) => {
               dataArray: data,
             });
             setLoader(false);
-    setloadercarna(false)
-
+            setloadercarna(false);
           } else {
             console.log("bg not removed");
             setLoader(false);
-    setloadercarna(false)
-
+            setloadercarna(false);
           }
 
           // setUploadedProductlist((prev) => [
@@ -257,8 +245,6 @@ export const FileUpload: React.FC = ({ type, title}) => {
       };
       reader.readAsDataURL(selectedFile);
     }
- 
-
   };
 
   const handleRemoveFile = () => {

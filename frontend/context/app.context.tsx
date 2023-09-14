@@ -181,6 +181,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [loara, setLoara] = useState<string>("");
   const [templet, setTemplet] = useState();
   const [promt, setpromt] = useState("");
+  const [promtFull, setpromtFull] = useState();
+
 
   const [selectColoreStrength, setSelectedColoreStrength] = useState<number>(0);
   const [selectOutLline, setSelectedOutline] = useState<number>(0);
@@ -630,12 +632,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const fetchGeneratedImages = async (userId) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/public_images?select=*&order=created_at.desc&user_id=eq.${userId}`,
+        `https://tvjjvhjhvxwpkohjqxld.supabase.co/rest/v1/public_images?select=*&order=created_at.desc&user_id=eq.${userId}`,
         {
           method: "GET",
           headers: {
             apikey:
-              process.env.NEXT_PUBLIC_SUPABASE_URL, // Replace with your actual API key
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2amp2aGpodnh3cGtvaGpxeGxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTI4Njg5NDQsImV4cCI6MjAwODQ0NDk0NH0.dwKxNDrr7Jw5OjeHgIbk8RLyvJuQVwZ_48Bv71P1n3Y", // Replace with your actual API key
           },
         }
       );
@@ -644,7 +646,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setGeneratedImgList(await data);
       }
 
-  
+      // setImages(data); // Update the state with the fetched images
+      // setGeneratedImgList(data)
+
+      // if(data[0]?.prompt === prompt){
+
+      // }
       return data;
     } catch (error) {
       console.error("Error fetching images:", error);
@@ -851,20 +858,20 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         });
       });
 
-      const promtText =
-        product +
-        ", " +
-        selectPlacement +
-        " " +
-        placementTest +
-        ", " +
-        selectSurrounding +
-        " " +
-        surroundingTest +
-        ", " +
-        selectBackground +
-        " " +
-        backgroundTest;
+      const promtText =promtFull
+        // product +
+        // ", " +
+        // selectPlacement +
+        // " " +
+        // placementTest +
+        // ", " +
+        // selectSurrounding +
+        // " " +
+        // surroundingTest +
+        // ", " +
+        // selectBackground +
+        // " " +
+        // backgroundTest;
 
       const response = await fetch("/api/generate", {
         method: "POST",
@@ -966,20 +973,20 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     try {
       setreLoader(true);
 
-      const promtText =
-        product +
-        ", " +
-        selectPlacement +
-        " " +
-        placementTest +
-        ", " +
-        selectSurrounding +
-        " " +
-        surroundingTest +
-        ", " +
-        selectBackground +
-        " " +
-        backgroundTest;
+      const promtText = promtFull
+        // product +
+        // ", " +
+        // selectPlacement +
+        // " " +
+        // placementTest +
+        // ", " +
+        // selectSurrounding +
+        // " " +
+        // surroundingTest +
+        // ", " +
+        // selectBackground +
+        // " " +
+        // backgroundTest;
 
       const response = await fetch("/api/generate", {
         method: "POST",
@@ -1088,6 +1095,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         previewBox,
         loara,
         setLoara,
+       promtFull, setpromtFull,
         GetProjexts,
         canvasRef,
         projectId,

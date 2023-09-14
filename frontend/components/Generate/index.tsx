@@ -55,7 +55,8 @@ const Generate = () => {
     setSelectedresult,
     setPlacementTest,
     generateImageHandeler,
-    promt, setpromt
+    promt, setpromt,
+    promtFull, setpromtFull
   } = useAppState();
 
   const { query, isReady } = useRouter();
@@ -63,7 +64,7 @@ const Generate = () => {
 
   const [changeTab, setChangeTab] = useState(false);
 
-  const [promtFull, setpromtFull] = useState();
+  // const [promtFull, setpromtFull] = useState();
 
 
 
