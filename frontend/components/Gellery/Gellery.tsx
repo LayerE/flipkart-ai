@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { useAppState } from "@/context/app.context";
 import { useAuth } from "@clerk/nextjs";
 import PopupCard from "../Popup/PopupCard";
+import axios from "axios";
 
 const fadeIn = {
   hidden: { opacity: 0 },
@@ -15,12 +16,38 @@ const fadeIn = {
 const Gellery = () => {
   const { userId } = useAuth();
 
+  const [gallery, setGallery] = useState()
+
   const { fetchGeneratedImages, generatedImgList,setPopupImage, setGeneratedImgList } =
     useAppState();
 
   useEffect(() => {
     if (userId) {
       fetchGeneratedImages(userId);
+
+
+      axios
+      .get(`${process.env.NEXT_PUBLIC_API}/user?id=${userId}`)
+      .then((response) => {
+        console.log(response.data.jobIds);
+        console.log(response, "adsfnbdhjskgvyuifdsgh");
+        
+        const  filteredResult = generatedImgList.filter((obj) =>
+        response.data.jobIds?.includes(obj?.task_id)
+        )
+        setGallery(filteredResult)
+ 
+       
+      })
+
+
+
+      .catch((error) => {
+        console.error(error);
+
+
+        return error;
+      });
     }
   }, []);
 
@@ -37,7 +64,7 @@ const Gellery = () => {
 
         <div className="imageBox">
           <div className="grid-img">
-            {generatedImgList?.map((image, i) => (
+            {gallery?.map((image, i) => (
               <div key={i} className="img" onClick={()=> setPopupImage({url:image?.modified_image_url, status: true,userId:userId, btn:"Download ",generat:false })}>
                 <picture>
                   <img src={image?.modified_image_url} alt="" />

@@ -24,7 +24,7 @@ const fadeIn = {
 
 export default function Home() {
   const { userId } = useAuth();
-  const  { query, isReady } = useRouter();
+  const { query, isReady } = useRouter();
   const { id } = query;
 
   const {
@@ -51,16 +51,17 @@ export default function Home() {
     setGeneratedImgList,
   } = useAppState();
   useEffect(() => {
-    const getUser = localStorage.getItem("userId");
-    if (!getUser) {
-      if (userId) localStorage.setItem("userId", userId);
-    }
-if(isReady){
-  
-  console.log(id,"sds")
-}
+   
+    // if (isReady) {
+    //   console.log(id, "sds");
 
-   const data =  GetProjextById(id);
+    //   const getUser = localStorage.getItem("userId");
+    //   if (!getUser) {
+    //     if (userId) localStorage.setItem("userId", userId);
+    //   }
+    // }
+
+    const data = GetProjextById(id);
     console.log(data, "dsfdsfs");
   }, []);
 
@@ -84,32 +85,31 @@ if(isReady){
 
   useEffect(() => {
     // Filter the array of objects based on the arrayOfIds
-if(isReady){
+    if (isReady) {
+      let filteredResult;
 
-    let filteredResult;
+      filteredResult = generatedImgList?.filter((obj) =>
+        jobId.includes(obj?.task_id)
+      );
 
-    filteredResult = generatedImgList?.filter((obj) =>
-      jobId.includes(obj?.task_id)
-    );
+      // Set the filtered array in the state
+      setFilteredArray(filteredResult);
+      const canvas1 = canvasInstance.current;
 
-    // Set the filtered array in the state
-    setFilteredArray(filteredResult);
-    const canvas1 = canvasInstance.current;
+      const objects = canvas1?.getObjects();
+      const subjectObjects = [];
+      objects?.forEach((object) => {
+        // If the object is a subject, add it to the subject objects array
+        if (object.category === "generated") {
+          subjectObjects.push(object);
+        }
+      });
+      console.log(subjectObjects?.length);
 
-    const objects = canvas1?.getObjects();
-    const subjectObjects = [];
-    objects?.forEach((object) => {
-      // If the object is a subject, add it to the subject objects array
-      if (object.category === "generated") {
-        subjectObjects.push(object);
+      if (filteredResult?.length <= 4 && subjectObjects?.length <= 1) {
+        addimgToCanvasGen(filteredResult[0]?.modified_image_url);
       }
-    });
-    console.log(subjectObjects?.length);
-
-    if (filteredResult?.length <= 4 && subjectObjects?.length <= 1) {
-      addimgToCanvasGen(filteredResult[0]?.modified_image_url);
     }
-  }
   }, [jobId, setGeneratedImgList, generatedImgList, regeneratePopup]);
 
   // useEffect(() => {

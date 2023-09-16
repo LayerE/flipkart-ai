@@ -229,6 +229,15 @@ router.post("/jobId", async function (req, res, next) {
         error: "product not found",
       });
     }
+
+    const updateUserDB = await Users.findOneAndUpdate(
+      { userId: userId},
+      {
+        $push: {
+          jobIds: jobId,
+        },
+      }
+      )
   
     const updateDB = await Projects.findOneAndUpdate(
       { userId: userId, _id: projectId },
