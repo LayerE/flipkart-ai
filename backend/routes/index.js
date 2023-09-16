@@ -426,6 +426,7 @@ router.get("/generatedImg", async function (req, res, next) {
         error: "user not found",
       });
     }
+    console.log("Product Update user", user);
 
  
 
@@ -434,11 +435,13 @@ router.get("/generatedImg", async function (req, res, next) {
       {
         method: "GET",
         headers: {
-          apikey: process.env.SUPERBASEAPI, // Replace with your actual API key
+          apikey: process.env.SUPERBASEAPI,
         },
       }
     );
     const data = await response.json();
+    console.log("Product Update data", data);
+
 
     if (projectId) {
       const product = await Projects.findOne({ _id: projectId });
@@ -451,6 +454,8 @@ router.get("/generatedImg", async function (req, res, next) {
     const filteredResult = data.filter((obj) =>
       user.jobIds?.includes(obj?.task_id)
     );
+    console.log("filteredResult Update filteredResult", filteredResult);
+
 
     return res.json(filteredResult);
   } catch (error) {
