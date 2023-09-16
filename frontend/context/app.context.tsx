@@ -966,7 +966,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [reloder, setreLoader] = useState(true);
 
   // regenrate
-  const RegenerateImageHandeler = async (ueserId, proid, img) => {
+  const RegenerateImageHandeler = async (ueserId, proid , img) => {
     // console.log(promt);
     setLoader(true);
     setGenerationLoader(true);
@@ -974,6 +974,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       setreLoader(true);
 
       const promtText = promtFull
+      console.log(promtText,"dfd");
         // product +
         // ", " +
         // selectPlacement +
@@ -996,15 +997,17 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         body: JSON.stringify({
           dataUrl: img,
           maskDataUrl: null,
-          prompt: promtText.trim() + "make minor changes on his image",
-          user_id: userId,
+          prompt: promtText? promtText : " " + "make minor changes on his image",
+          user_id: ueserId,
           // lora_type: loara,
           num_images: 3,
         }),
       });
-
+      
+      
       const generate_response = await response.json();
-
+      
+      console.log(generate_response);
       if (generate_response?.error) {
         alert(generate_response?.error);
         setLoader(false);
