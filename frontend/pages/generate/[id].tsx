@@ -57,7 +57,7 @@ export default function Home() {
     uerId,
     setUserId,
     setGeneratedImgList,
-    saveCanvasToDatabase
+    saveCanvasToDatabase,
   } = useAppState();
 
   useEffect(() => {
@@ -69,6 +69,18 @@ export default function Home() {
       GetProjextById(id);
     }
   }, [id, isReady]);
+
+  useEffect(() => {
+  
+    setInterval(() => {
+      if (isReady && userId ) {
+
+    
+      fetchGeneratedImages(userId);
+      }
+    }, 3000);
+  }, []);
+
 
   const upateImage = (url) => {
     addimgToCanvasGen(url);
@@ -83,13 +95,14 @@ export default function Home() {
   useEffect(() => {
     setprojectId(id);
     setUserId(userId);
-    let filteredResult;
+    // let filteredResult;
 
-    filteredResult = generatedImgList.filter((obj) =>
-      jobId?.includes(obj?.task_id)
-    );
+    // filteredResult = generatedImgList.filter((obj) =>
+    //   jobId?.includes(obj?.task_id)
+    // );
 
-    setFilteredArray(filteredResult);
+    // setFilteredArray(filteredResult);
+
     const canvas1 = canvasInstance.current;
 
     const objects = canvas1?.getObjects();
@@ -100,18 +113,48 @@ export default function Home() {
       }
     });
 
-    if (filteredResult?.length < jobId?.length) {
-      // addimgToCanvasGen(filteredResult[0]?.modified_image_url);
-    }
-
+    // if (filteredResult?.length < jobId?.length) {
+    //   // addimgToCanvasGen(filteredResult[0]?.modified_image_url);
+    // }
 
     return () => {
       // setprojectId(null);
     };
   }, [jobId, setGeneratedImgList, generatedImgList, regeneratePopup]);
 
+  useEffect(() => {
+    if (isReady && userId) {
+      fetchAssetsImages();
+    }
+  }, [isReady,userId, jobId, generatedImgList, setGeneratedImgList]);
 
-  
+  const fetchAssetsImages = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API}/generatedImg?userId=${userId}&projectId=${id}`,
+        {
+          method: "GET",
+        }
+      );
+      const data = await response.json();
+      console.log(await data, "dfdd");
+
+      if (data?.length) {
+        setFilteredArray(data);
+      }
+
+      // setImages(data); // Update the state with the fetched images
+      // setGeneratedImgList(data)
+
+      // if(data[0]?.prompt === prompt){
+
+      // }
+      return data;
+    } catch (error) {
+      console.error("Error fetching images:", error);
+    }
+  };
+
   const firstUpdate = useRef(true);
 
   useEffect(() => {
@@ -143,9 +186,6 @@ export default function Home() {
       }
     }, 1000);
   }, []);
-
-  
-
 
   return (
     <MainPages>

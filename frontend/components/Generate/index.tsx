@@ -55,8 +55,10 @@ const Generate = () => {
     setSelectedresult,
     setPlacementTest,
     generateImageHandeler,
-    promt, setpromt,
-    promtFull, setpromtFull
+    promt,
+    setpromt,
+    promtFull,
+    setpromtFull,
   } = useAppState();
 
   const { query, isReady } = useRouter();
@@ -65,10 +67,6 @@ const Generate = () => {
   const [changeTab, setChangeTab] = useState(false);
 
   // const [promtFull, setpromtFull] = useState();
-
-
-
-
 
   // const promt =
   //   product +
@@ -85,22 +83,14 @@ const Generate = () => {
   //   " " +
   //   backgroundTest;
 
+  useEffect(() => {
+    const promts = product + " " + promt;
+    setpromtFull(promts);
+  }, [product, promt]);
 
-   
-
-    useEffect(() => {
-      const promts =
-      product +" "+
-      promt 
-      setpromtFull(promts)
-     
-    }, [product,promt ])
-    
-
-const handelPromt  = (e)=>{
-  setpromtFull(e.target.value)
-
-}
+  const handelPromt = (e) => {
+    setpromtFull(e.target.value);
+  };
 
   return (
     <motion.div
@@ -172,7 +162,7 @@ const handelPromt  = (e)=>{
           </PromtGeneratePreview> */}
           <TestArea
             value={promtFull}
-            onChange={(e)=> handelPromt(e) }
+            onChange={(e) => handelPromt(e)}
             // value={placementTest}
             // setValue={setPlacementTest}
             // suggetion={PlacementSuggestionsFilter}
@@ -185,7 +175,7 @@ const handelPromt  = (e)=>{
           ) : (
             <Button
               onClick={() => generateImageHandeler(userId, id)}
-              disabled={promtFull === ""  ? true : false}
+              disabled={promtFull === "" ? true : false}
             >
               {generationLoader ? "Loading..." : "Generate"}
             </Button>

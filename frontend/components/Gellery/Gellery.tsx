@@ -7,6 +7,7 @@ import { useAppState } from "@/context/app.context";
 import { useAuth } from "@clerk/nextjs";
 import PopupCard from "../Popup/PopupCard";
 import axios from "axios";
+import Loader from "../Loader";
 
 const fadeIn = {
   hidden: { opacity: 0 },
@@ -21,39 +22,77 @@ const Gellery = () => {
   const { fetchGeneratedImages, generatedImgList,setPopupImage, setGeneratedImgList } =
     useAppState();
 
-  useEffect(() => {
-    if (userId) {
-      fetchGeneratedImages(userId);
+const [laoder, setlaoder] = useState(true)
+
+  // useEffect(() => {
+  //   if (userId) {
+  //     fetchGeneratedImages(userId);
 
 
-      axios
-      .get(`${process.env.NEXT_PUBLIC_API}/user?id=${userId}`)
-      .then((response) => {
-        console.log(response.data.jobIds);
-        console.log(response, "adsfnbdhjskgvyuifdsgh");
+  //     axios
+  //     .get(`${process.env.NEXT_PUBLIC_API}/user?id=${userId}`)
+  //     .then((response) => {
+  //       console.log(response.data.jobIds);
+  //       console.log(response, "adsfnbdhjskgvyuifdsgh");
         
-        const  filteredResult = generatedImgList.filter((obj) =>
-        response.data.jobIds?.includes(obj?.task_id)
-        )
-        setGallery(filteredResult)
+  //       const  filteredResult = generatedImgList.filter((obj) =>
+  //       response.data.jobIds?.includes(obj?.task_id)
+  //       )
+  //       // setGallery(filteredResult)
  
        
-      })
+  //     })
 
 
 
-      .catch((error) => {
-        console.error(error);
+  //     .catch((error) => {
+  //       console.error(error);
 
 
-        return error;
-      });
+  //       return error;
+  //     });
+  //   }
+  // }, []);
+
+  useEffect(() => {
+    if ( userId) {
+      fetchAssetsImages();
     }
-  }, []);
+  }, [userId]);
+
+  const fetchAssetsImages = async () => {
+    setlaoder(true)
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API}/generatedImg?userId=${userId}`,
+        {
+          method: "GET",
+        }
+      );
+      const data = await response.json();
+
+      if (data?.length) {
+        setGallery(data)
+    setlaoder(false)
+
+
+      }
+    setlaoder(false)
+
+
+    } catch (error) {
+    setlaoder(false)
+
+      console.error("Error fetching images:", error);
+    }
+  };
 
   return (
     <motion.div initial="hidden" animate="visible" variants={fadeIn}>
-      <GelleryWrapper>
+      {
+        laoder? 
+        <Loader></Loader>:
+        <GelleryWrapper>
         <div className="hederbox">
           <div className="headerText">Gallery</div>
           {/* <div className="small-tabs">
@@ -74,6 +113,11 @@ const Gellery = () => {
           </div>
         </div>
       </GelleryWrapper>
+
+
+
+      }
+      
     </motion.div>
   );
 };

@@ -22,8 +22,8 @@ const Projects = ({ onDelet }) => {
   const handleCreate = async () => {
     try {
       // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
-      const getUser = localStorage.getItem("userId");
-      console.log(getUser);
+   
+      console.log(userId);
       if(userId){
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API}/project?id=${userId}`,
@@ -34,7 +34,7 @@ const Projects = ({ onDelet }) => {
           },
           body: JSON.stringify({
             title: "Untitled ",
-            id: getUser,
+            id: userId,
           }),
         }
       );
@@ -42,7 +42,7 @@ const Projects = ({ onDelet }) => {
       const datares = await response.json();
       if(datares?._id){
         console.log(datares,"sdcdrfc")
-        GetProjexts(getUser);
+        GetProjexts(userId);
         router.push(`/generate/${datares?._id}`)
         // window.open(`/generate/${datares?._id}`, "_self");
         setTimeout(() => {
@@ -79,9 +79,9 @@ const Projects = ({ onDelet }) => {
         }
       );
 
-      const getUser = localStorage.getItem("userId");
 
-      GetProjexts(getUser);
+
+      GetProjexts(userId);
     } catch (error) {
       // Handle error
     }

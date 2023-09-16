@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { styled } from "styled-components";
-import Label from "../common/Label";
+import Label, { DisabledLabel } from "../common/Label";
 import { Input } from "../common/Input";
 import Button from "../common/Button";
 import { useAppState } from "@/context/app.context";
@@ -14,6 +14,7 @@ const PopupUpload = () => {
     setUploadedProductlist,
     setProduct,
     addimgToCanvasSubject,
+    fetchAssetsImagesWithProjectId,
   } = useAppState();
   const [productnew, setProductnew] = useState("");
   const { userId } = useAuth();
@@ -44,6 +45,7 @@ const PopupUpload = () => {
 
         if (datares) {
           addimgToCanvasSubject(popup?.data);
+          fetchAssetsImagesWithProjectId(userId, id);
           setUploadedProductlist((prev) => [
             ...prev,
             { url: popup?.data, tittle: productnew },
@@ -66,15 +68,21 @@ const PopupUpload = () => {
         </picture>
         <div className="test">
           <div>
-            <Label>{"What's your product"}</Label>
+            <Label>{"What did you just upload?"}</Label>
+
             <Input
               type="text"
               onChange={(e) => setProductnew(e.target.value)}
+              placeholder=" e.g. 'red sofa' or 'blue perfume bottle'"
             />
           </div>
           <Button onClick={HandileUpload}>Add image </Button>
-          <Button onClick={()=>  setPopup({ status: false, data: null })} style={{backgroundColor: "rgba(249, 208, 13, 0.23)"}}>Close </Button>
-
+          <Button
+            onClick={() => setPopup({ status: false, data: null })}
+            style={{ backgroundColor: "rgba(249, 208, 13, 0.23)" }}
+          >
+            Close{" "}
+          </Button>
         </div>
       </div>
     </PopupWrapper>
@@ -90,12 +98,15 @@ const PopupWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  justify-content: center;
+  align-items: center;
   z-index: 10000;
   background-color: #c9c5c59f;
 
   .wrapper {
-    max-width: 500px !important;
-    width: 500px !important;
+    max-width: 60vw !important;
+    width: 50vw !important;
+    height: 70vh;
     border: 1px solid #555;
     border-radius: 24px !important;
     padding: 40px;

@@ -161,14 +161,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const canvasInstance = useRef(null);
 
   const outerDivRef = useRef(null);
-
+  const [mainLoader, setMainLoader] = useState(true);
   const [selectedImg, setSelectedImg] = useState<object | null>(null);
   const [downloadImg, setDownloadImg] = useState<string | null>(null);
   const [isMagic, setIsMagic] = useState<boolean | null>(false);
-
   const [activeTab, setActiveTab] = useState<number | null>(1);
   const [activeTabHome, setActiveTabHome] = useState<number | null>(1);
-
   const [file, setFile] = useState<File | null>(null);
   const [viewMore, setViewMore] = useState<object>({});
   const [selectPlacement, setSelectedPlacement] = useState<string>("");
@@ -182,8 +180,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [templet, setTemplet] = useState();
   const [promt, setpromt] = useState("");
   const [promtFull, setpromtFull] = useState();
-
-
   const [selectColoreStrength, setSelectedColoreStrength] = useState<number>(0);
   const [selectOutLline, setSelectedOutline] = useState<number>(0);
   const [product, setProduct] = useState<string>("");
@@ -217,6 +213,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [projectId, setprojectId] = useState(null);
   const [uerId, setUserId] = useState(null);
   const [listofassets, setListOfAssets] = useState(null);
+  const [listofassetsById, setListOfAssetsById] = useState(null);
+
   const [newassetonCanvas, setNewassetonCanvas] = useState(null);
 
   const [genRect, setgenRect] = useState();
@@ -618,17 +616,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [currentStep, setCurrentStep] = useState(-1);
   const { userId } = useAuth();
 
-  useEffect(() => {
-    const getUser =
-      typeof window === "undefined" ? false : localStorage.getItem("userId");
-
-    setInterval(() => {
-
-    
-      fetchGeneratedImages(getUser);
-    }, 3000);
-  }, []);
-
+ 
   const fetchGeneratedImages = async (userId) => {
     try {
       const response = await fetch(
@@ -696,7 +684,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       console.log("cdcdcvdcvc", await data);
 
       if (data?.length) {
-        setListOfAssets(await data);
+        setListOfAssetsById(await data);
+        
       }
 
       // setImages(data); // Update the state with the fetched images
@@ -929,7 +918,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       }
 
       setTimeout(async function () {
-        const loadeImge = await fetchGeneratedImages();
+        const loadeImge = await fetchGeneratedImages(ueserId);
 
         setSelectedImg({
           status: true,
@@ -945,12 +934,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         addimgToCanvasGen(loadeImge[0]?.modified_image_url);
         // canvas1.remove(editorBox).renderAll();
 
-        setGeneratedImgList(loadeImge.slice(0, 20));
+        setGeneratedImgList(loadeImge.slice(0, 50));
 
         // setSelectedresult(1);
 
         setLoader(false);
-      }, 30000);
+      }, 50000);
     } catch (error) {
       console.error("Error generating image:", error);
     } finally {
@@ -973,8 +962,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     try {
       setreLoader(true);
 
-      const promtText = promtFull
-      console.log(promtText,"dfd");
+      const promtText = promtFull ? promtFull :" "
+      console.log(promtText,"dfdffffffffffffffffffd");
         // product +
         // ", " +
         // selectPlacement +
@@ -997,7 +986,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         body: JSON.stringify({
           dataUrl: img,
           maskDataUrl: null,
-          prompt: promtText? promtText : " " + "make minor changes on his image",
+          prompt: promtText? promtText : " " + " ",
           user_id: ueserId,
           // lora_type: loara,
           num_images: 3,
@@ -1007,7 +996,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       
       const generate_response = await response.json();
       
-      console.log(generate_response);
+      console.log(generate_response,"dddddddddddddddddfdfdd");
       if (generate_response?.error) {
         alert(generate_response?.error);
         setLoader(false);
@@ -1039,6 +1028,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           // if (datares.ok) {
           // setJobId((pre) => [...pre, generate_response?.job_id]);
           setRegenratedImgsJobid(generate_response?.job_id);
+
+          console.log(generate_response?.job_id)
           // localStorage.setItem("jobId", jobId);
 
           // GetProjextById(proid);
@@ -1052,7 +1043,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       }
 
       setTimeout(async function () {
-        const loadeImge = await fetchGeneratedImages();
+        const loadeImge = await fetchGeneratedImages(ueserId);
 
         setSelectedImg({
           status: true,
@@ -1095,6 +1086,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       value={{
         loadercarna,
         setloadercarna,
+        listofassetsById, setListOfAssetsById,
         previewBox,
         loara,
         setLoara,
@@ -1159,6 +1151,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setNewassetonCanvas,
         file,
         setFile,
+        mainLoader, setMainLoader,
         selectPlacement,
         setSelectedPlacement,
         selectSurrounding,

@@ -7,12 +7,10 @@ import { useRouter } from "next/router";
 import { useAuth } from "@clerk/nextjs";
 
 const Regeneret = () => {
-
   const { userId } = useAuth();
   const { query, isReady } = useRouter();
   // const { id } = query;
   const id = (query.id as string[]) || [];
-
 
   const {
     regeneratePopup,
@@ -41,7 +39,7 @@ const Regeneret = () => {
       (obj) => obj?.task_id === regenratedImgsJobId
     );
     setFilteredArray(filteredResult);
-    console.log(filteredResult?.length);
+    console.log(generatedImgList,"dfd");
 
     if (filteredResult?.length) {
       setLoader(false);
@@ -78,6 +76,9 @@ const Regeneret = () => {
           // Calculate the maximum width and height based on the canvas size
           const maxWidth = canvasWidth;
           const maxHeight = canvasHeight;
+          // Calculate the scaled width and height while maintaining the aspect ratio
+      let scaledWidth = maxWidth;
+      let scaledHeight = scaledWidth / imageAspectRatio;
 
           img.on("moving", () => {
             positionBtn(img);
@@ -99,6 +100,8 @@ const Regeneret = () => {
             left: randomLeft,
             top: randomTop,
           });
+          img.scaleToWidth(scaledWidth);
+          img.scaleToHeight(scaledHeight);
 
           console.log(img);
           // canvasInstance.current.clear();
@@ -119,11 +122,9 @@ const Regeneret = () => {
     }
   };
 
-  const addImges = async() => {
-
+  const addImges = async () => {
     try {
       // setSelectedresult(1);
-    
 
       // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
 
@@ -135,35 +136,25 @@ const Regeneret = () => {
         body: JSON.stringify({
           userId: userId,
           projectId: id,
-          jobId:     regenratedImgsJobId,
-          
+          jobId: regenratedImgsJobId,
         }),
       });
       // // console.log(await response.json(), "dfvcvdfvdvcdsd");
       const datares = await response;
-     
 
       if (datares.ok) {
-      setJobId((pre) => [...pre, regenratedImgsJobId]);
-      // setRegenratedImgsJobid(generate_response?.job_id);
-
-      // localStorage.setItem("jobId", jobId);
-
-      GetProjextById(id);
+        setJobId((pre) => [...pre, regenratedImgsJobId]);
+        // setRegenratedImgsJobid(generate_response?.job_id);
+        // localStorage.setItem("jobId", jobId);
+        GetProjextById(id);
+        addimgToCanvasGen(selectedCards);
+        setRegeneratePopup({ statu: false });
+        setActiveTab(1);
       }
       // window.open(`/generate/${datares?._id}`, "_self");
     } catch (error) {
       // Handle error
-
-  
     }
-
-
-
-
-    addimgToCanvasGen(selectedCards);
-    setRegeneratePopup({ statu: false });
-    setActiveTab(1);
   };
 
   return (

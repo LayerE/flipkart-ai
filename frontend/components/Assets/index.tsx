@@ -23,6 +23,7 @@ const Assets: React.FC = () => {
     setListOfAssets,
     fetchAssetsImages,
     fetchAssetsImagesWithProjectId,
+    listofassetsById, setListOfAssetsById,
     addimgToCanvasSubject,
     getBase64FromUrl
   } = useAppState();
@@ -33,17 +34,18 @@ const Assets: React.FC = () => {
   const [filter, setFilter] = useState()
   const [re, setRe] = useState(1)
   useEffect(() => {
-    if(re <=3){
+    if(re <=10){
       setRe(re+1)
     }
     if (userId && isReady) {
-      fetchAssetsImagesWithProjectId(userId, id);
+       fetchAssetsImagesWithProjectId(userId, id);
     
-      const filer = listofassets?.filter((item)=> item.project_id === id )
+      const filer = listofassetsById?.filter((item)=> item.project_id === id )
       setFilter(filer)
-      console.log(listofassets,"dfdf")
+      console.log(listofassetsById,"dfdf")
     }
   }, [isReady,userId,re]);
+  
 
   // listofassets
 
@@ -55,7 +57,7 @@ const Assets: React.FC = () => {
         </Row>
 
         <Row>
-          <FileUpload  type={"product"}  title={"Upload Product Photo"} />
+          <FileUpload  type={"product"}  title={"Upload Product Photo"} uerId={userId} />
         </Row>
         <ResponsiveRowWraptwo>
           {productList?.map((test, i) => (
@@ -77,14 +79,14 @@ const Assets: React.FC = () => {
         </ResponsiveRowWraptwo>
       </div>
       <div className="gap">
-        {listofassets?.length ? (
+        {listofassetsById?.length ? (
           <Row>
             <Label>Uploaded Assets</Label>
           </Row>
         ) : null}
 
         <ResponsiveRowWraptwo>
-          {listofassets?.map((test, i) => (
+          {listofassetsById?.map((test, i) => (
             <div
               key={i}
               className={

@@ -108,19 +108,26 @@ const PopupWrapper2 = styled.div`
       width: 18px;
     }
   }
+  .btns{
+    width: 50%;
+  }
   .wrapper {
     position: relative;
-    width: 700px !important;
-    width: 500px !important;
+    width: 50vw !important;
+    height: 80vh !important;
     border: 2px solid #d9d9d9;
     border-radius: 8px !important;
     padding: 40px;
     padding-top: 50px;
     background-color: #fffefe;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
 
     img {
       /* width: 450px; */
-      height: 300px;
+      height: 50vh;
       margin: auto;
       margin-bottom: 30px;
       border-radius: 8px !important;

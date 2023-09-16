@@ -1,3 +1,4 @@
+import { TextLoaderNo } from "@/components/Loader/text";
 import { useAppState } from "@/context/app.context";
 import { BgRemover } from "@/store/api";
 import React, { useState, useEffect, useRef } from "react";
@@ -174,7 +175,7 @@ const InputFile1 = styled.div`
   }
 `;
 
-export const FileUpload: React.FC = ({ type, title }) => {
+export const FileUpload: React.FC = ({ type, title, uerId }) => {
   const {
     file,
     setFile,
@@ -186,17 +187,21 @@ export const FileUpload: React.FC = ({ type, title }) => {
     addimgToCanvas,
     setPopup,
     projectId,
-    uerId,
+    // uerId,
     setloadercarna,
   } = useAppState();
+  const [assetLoader, setassetLoader] = useState(false)
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setassetLoader(true)
+
     const selectedFile = event.target.files?.[0] || null;
     setFile(selectedFile);
     const blobUrl = URL.createObjectURL(selectedFile);
     const idG = uploadedProductlist.length;
-    setloadercarna(true);
+    // setloadercarna(true);
     console.log(event.target.result, "fdsfsdg");
+
     if (selectedFile) {
       const reader = new FileReader();
       reader.onloadend = async () => {
@@ -225,12 +230,15 @@ export const FileUpload: React.FC = ({ type, title }) => {
               data: data?.data.data[0],
               dataArray: data,
             });
+            setassetLoader(false)
             setLoader(false);
-            setloadercarna(false);
+            // setloadercarna(false);
           } else {
             console.log("bg not removed");
             setLoader(false);
-            setloadercarna(false);
+            // setloadercarna(false);
+            setassetLoader(false)
+
           }
 
           // setUploadedProductlist((prev) => [
@@ -268,7 +276,21 @@ export const FileUpload: React.FC = ({ type, title }) => {
   return (
     <InputFile1>
       <div>
-        <label htmlFor="fileInput" style={{ cursor: "pointer" }}>
+        {
+          assetLoader? 
+
+          <label htmlFor="fileInput" style={{ cursor: "pointer" }}>
+            <TextLoaderNo/>
+         
+        
+        </label>
+        
+
+
+          :
+          <>
+          
+          <label htmlFor="fileInput" style={{ cursor: "pointer" }}>
           <svg
             width="14"
             height="14"
@@ -293,6 +315,9 @@ export const FileUpload: React.FC = ({ type, title }) => {
           style={{ display: "none" }}
           onChange={handleFileChange}
         />
+          </>
+        }
+       
       </div>
       {/* )} */}
     </InputFile1>

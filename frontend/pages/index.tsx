@@ -22,6 +22,7 @@ import PopupCard from "@/components/Popup/PopupCard";
 import axios from "axios";
 import { useRouter } from "next/router";
 import Loader from "@/components/Loader";
+import MainLoader from "@/components/Loader/main";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -36,31 +37,39 @@ export default function Home() {
     activeTab,
     popupImage,
     projectlist,
+    setMainLoader,
     setprojectlist,
     uerId,
     setUserId,
+    mainLoader
   } = useAppState();
 
-  const [loadercarna, setloadercarna] = useState(false);
+  // const [loadercarna, setloadercarna] = useState(true);
   const [rerenter, setre] = useState(false);
 
   useEffect(() => {
     if (rerenter <= 6) {
       setre(rerenter + 1);
     }
-    if (isReady) {
-      const getUser = localStorage.getItem("userId");
-      if (!getUser) {
-        setTimeout(() => {}, 3000);
-        if (userId) localStorage.setItem("userId", userId);
-      }
+    if (isReady && userId) {
+      // const getUser = localStorage.getItem("userId");
+      // if (!getUser) {
+      //   setTimeout(() => {}, 3000);
+      //   if (userId) localStorage.setItem("userId", userId);
+      // }
+      setMainLoader(true);
       axios
         .get(`${process.env.NEXT_PUBLIC_API}/user?id=${userId}`)
-        .then((response) => {
-          fetchData(userId);
+        .then(async (response) => {
           setUserId(response.data.userId);
+          const dataFecth = await fetchData(userId);
+          console.log("dfd", await dataFecth);
 
-          // console.log("dfd",response.data.userId,response);
+          if (dataFecth.status === 200) {
+            setprojectlist(await dataFecth.data);
+
+            setMainLoader(false);
+          }
         })
         .catch((error) => {
           console.error(error);
@@ -68,29 +77,20 @@ export default function Home() {
     }
   }, [isReady, userId]);
 
-  useEffect(() => {
-    if (isReady) {
-      // const getUser = localStorage.getItem("userId");
-      // if (!getUser) {
-      //   if (userId) localStorage.setItem("userId", userId);
-      // }
-      // if (userId) fetchData(userId);
-    }
-  }, [userId, isReady, rerenter, projectlist]);
+  const fetchData = async (getUser: string) => {
+    const data = await axios.get(
+      `${process.env.NEXT_PUBLIC_API}/getprojects?id=${getUser}`
+    );
 
-  const fetchData = (getUser: string) => {
-    setloadercarna(true);
-    axios
-      .get(`${process.env.NEXT_PUBLIC_API}/getprojects?id=${getUser}`)
-      .then((response) => {
-        setprojectlist(response.data);
-        // console.log(response.data);
-        setloadercarna(false);
-      })
-      .catch((error) => {
-        console.error(error);
-        setloadercarna(false);
-      });
+    return data;
+    // .then((response) => {
+    //   return response
+    //   // setloadercarna(false);
+    // })
+    // .catch((error) => {
+    //   console.error(error);
+    //   setloadercarna(false);
+    // });
   };
 
   const handleDelete = () => {
@@ -100,6 +100,11 @@ export default function Home() {
 
   return (
     <MainPage>
+    
+  {mainLoader ? (
+          <MainLoader />
+        ) : null}
+
       <motion.div
         initial="hidden"
         animate="visible"

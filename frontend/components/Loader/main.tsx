@@ -1,7 +1,7 @@
 import React from "react";
 import { styled } from "styled-components";
 
-const Loader = () => {
+const MainLoader = () => {
   return (
     <DaoderWarpper>
       <div className="jumping-dots-loader">
@@ -13,7 +13,7 @@ const Loader = () => {
   );
 };
 
-export default Loader;
+export default MainLoader;
 
 const DaoderWarpper = styled.div`
   position: absolute;
@@ -22,7 +22,7 @@ const DaoderWarpper = styled.div`
   width: 100%;
   height: 100vh;
   position: absolute;
-  z-index: 1000;
+  z-index: 100000;
   background-color: #ffffff;
   display: flex;
   justify-content: center;

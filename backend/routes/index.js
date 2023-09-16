@@ -50,8 +50,6 @@ router.get("/getprojects", async function (req, res, next) {
     }
     const projects = await Projects.find({ userId: id });
 
-
-
     return res.json(projects.reverse());
   } catch (error) {
     return res.json({ error: "Server error" });
@@ -114,7 +112,7 @@ router.post("/project", async function (req, res, next) {
       userId: id,
       title: title,
       jobIds: [],
-      previewImage:"",
+      previewImage: "",
       canvasHistory: {},
     });
 
@@ -154,7 +152,7 @@ router.post("/recently", async function (req, res, next) {
         error: "product not found",
       });
     }
-    recently.date = new Date
+    recently.date = new Date();
     const updateDB = await Projects.findOneAndUpdate(
       { userId: userId, _id: projectId },
       {
@@ -162,8 +160,8 @@ router.post("/recently", async function (req, res, next) {
           recently: recently,
         },
       }
-      )
-      console.log(userId, projectId, recently);
+    );
+    console.log(userId, projectId, recently);
     return res.json(updateDB);
   } catch (error) {
     return res.json({ error: "Server error" });
@@ -197,15 +195,15 @@ router.post("/assets", async function (req, res, next) {
     //   }
     //   )
     console.log(userId, projectId, asset);
-    
+
     const creatdUserrAssets = new Assets({
       userId: userId,
       projectId: projectId,
-      url:asset,
+      url: asset,
     });
 
     await creatdUserrAssets.save();
-      console.log(creatdUserrAssets)
+    console.log(creatdUserrAssets);
     return res.json(creatdUserrAssets);
   } catch (error) {
     return res.json({ error: "Server error" });
@@ -221,7 +219,6 @@ router.post("/jobId", async function (req, res, next) {
         error: "user not found",
       });
     }
-   
 
     const product = await Projects.findOne({ _id: projectId });
     if (!product) {
@@ -231,14 +228,14 @@ router.post("/jobId", async function (req, res, next) {
     }
 
     const updateUserDB = await Users.findOneAndUpdate(
-      { userId: userId},
+      { userId: userId },
       {
         $push: {
           jobIds: jobId,
         },
       }
-      )
-  
+    );
+
     const updateDB = await Projects.findOneAndUpdate(
       { userId: userId, _id: projectId },
       {
@@ -246,8 +243,8 @@ router.post("/jobId", async function (req, res, next) {
           jobIds: jobId,
         },
       }
-      )
-      console.log(userId, projectId, jobId);
+    );
+    console.log(userId, projectId, jobId);
     return res.json(updateDB);
   } catch (error) {
     return res.json({ error: "Server error" });
@@ -291,19 +288,16 @@ router.get("/assets", async function (req, res, next) {
     // console.log(userId, projectId);
 
     let assetsList;
-    if ( !projectId ) {
+    if (!projectId) {
       assetsList = await Assets.find({ userId: userId });
       console.log(userId, assetsList);
 
       return res.json(assetsList);
-    } else  {
+    } else {
       assetsList = await Assets.find({ userId: userId, projectId: projectId });
       console.log(userId, assetsList);
       return res.json(assetsList);
-
     }
-  
-
   } catch (error) {
     return res.json({ error: "Server error" });
   }
@@ -320,7 +314,7 @@ router.post("/save/project", async function (req, res, next) {
         error: "user not found",
       });
     }
-    
+
     const updateDB = await Projects.findOneAndUpdate(
       { userId: id, _id: projectId },
       {
@@ -328,16 +322,16 @@ router.post("/save/project", async function (req, res, next) {
           canvas: canvas,
         },
       }
-      );
-      if (!updateDB) {
-        console.log("Product Update Failed", updateDB);
-        return res.status(400).json({
-          error: "User Update Failed",
-        });
-      }
-      
-      console.log(id, projectId, canvas, "dfdf");
-    return res.json({status: "success",});
+    );
+    if (!updateDB) {
+      console.log("Product Update Failed", updateDB);
+      return res.status(400).json({
+        error: "User Update Failed",
+      });
+    }
+
+    console.log(id, projectId, canvas, "dfdf");
+    return res.json({ status: "success" });
   } catch (error) {
     return res.json({ error: "Server error" });
   }
@@ -353,7 +347,7 @@ router.post("/rename", async function (req, res, next) {
         error: "user not found",
       });
     }
-    
+
     const updateDB = await Projects.findOneAndUpdate(
       { userId: id, _id: projectId },
       {
@@ -361,16 +355,16 @@ router.post("/rename", async function (req, res, next) {
           title: name,
         },
       }
-      );
-      if (!updateDB) {
-        console.log("Product Update Failed", updateDB);
-        return res.status(400).json({
-          error: "User Update Failed",
-        });
-      }
-      
-      console.log(id, projectId, name, "dfdf");
-    return res.json({status: "success",});
+    );
+    if (!updateDB) {
+      console.log("Product Update Failed", updateDB);
+      return res.status(400).json({
+        error: "User Update Failed",
+      });
+    }
+
+    console.log(id, projectId, name, "dfdf");
+    return res.json({ status: "success" });
   } catch (error) {
     return res.json({ error: "Server error" });
   }
@@ -386,7 +380,7 @@ router.post("/addPreview", async function (req, res, next) {
         error: "user not found",
       });
     }
-    
+
     const updateDB = await Projects.findOneAndUpdate(
       { userId: userId, _id: projectId },
       {
@@ -394,16 +388,16 @@ router.post("/addPreview", async function (req, res, next) {
           previewImage: img,
         },
       }
-      );
-      if (!updateDB) {
-        console.log("Product Update Failed", updateDB);
-        return res.status(400).json({
-          error: "User Update Failed",
-        });
-      }
-      
-      console.log(userId, projectId, img, "dfdf");
-    return res.json({status: "success",});
+    );
+    if (!updateDB) {
+      console.log("Product Update Failed", updateDB);
+      return res.status(400).json({
+        error: "User Update Failed",
+      });
+    }
+
+    console.log(userId, projectId, img, "dfdf");
+    return res.json({ status: "success" });
   } catch (error) {
     return res.json({ error: "Server error" });
   }
@@ -411,6 +405,60 @@ router.post("/addPreview", async function (req, res, next) {
 
 router.get("/user", async function (req, res, next) {
   try {
+  } catch (error) {
+    return res.json({ error: "Server error" });
+  }
+});
+
+router.get("/generatedImg", async function (req, res, next) {
+  try {
+    const { userId, projectId } = req.query;
+    if (!userId) {
+      return res.json({
+        error: "Missing data query parameter",
+      });
+    }
+
+    const user = await Users.findOne({ userId: userId });
+
+    if (!user) {
+      return res.json({
+        error: "user not found",
+      });
+    }
+
+    // if (!product) {
+    //   return res.json({
+    //     error: "product not found",
+    //   });
+    // }
+
+    console.log(userId, process.env.SUPERBASEURL);
+
+    const response = await fetch(
+      `${process.env.SUPERBASEURL}/rest/v1/public_images?select=*&order=created_at.desc&user_id=eq.${userId}`,
+      {
+        method: "GET",
+        headers: {
+          apikey: process.env.SUPERBASEAPI, // Replace with your actual API key
+        },
+      }
+    );
+    const data = await response.json();
+
+    if (projectId) {
+      const product = await Projects.findOne({ _id: projectId });
+      const filteredResult = data.filter((obj) =>
+        product.jobIds?.includes(obj?.task_id)
+      );
+      return res.json(filteredResult);
+    }
+
+    const filteredResult = data.filter((obj) =>
+      user.jobIds?.includes(obj?.task_id)
+    );
+
+    return res.json(filteredResult);
   } catch (error) {
     return res.json({ error: "Server error" });
   }

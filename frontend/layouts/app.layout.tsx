@@ -2,19 +2,19 @@
 
 import Head from "next/head";
 import styled from "styled-components";
-import Header from "@/components/Header"
-
+import Header from "@/components/Header";
+import { useAppState } from "@/context/app.context";
+import Loader from "@/components/Loader";
 
 const LayoutContentWrapper = styled.div`
   width: 100%;
   height: 100%;
   position: relative;
-
 `;
 
-
-
 const Layout = ({ children }: { children: React.ReactNode }) => {
+  const { mainLoader } = useAppState();
+
   return (
     <>
       <Head>
@@ -25,8 +25,14 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       </Head>
 
       <LayoutContentWrapper>
-        <Header />
-        {children}
+        {/* {mainLoader ? (
+          <Loader />
+        ) : ( */}
+          <>
+            <Header />
+            {children}
+          </>
+        {/* )} */}
       </LayoutContentWrapper>
     </>
   );
