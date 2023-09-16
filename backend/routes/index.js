@@ -431,11 +431,11 @@ router.get("/generatedImg", async function (req, res, next) {
  
 
     const response = await fetch(
-      `${process.env.SUPERBASEURL}/rest/v1/public_images?select=*&order=created_at.desc&user_id=eq.${userId}`,
+      `https://tvjjvhjhvxwpkohjqxld.supabase.co/rest/v1/public_images?select=*&order=created_at.desc&user_id=eq.${userId}`,
       {
         method: "GET",
         headers: {
-          apikey: process.env.SUPERBASEAPI,
+          apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2amp2aGpodnh3cGtvaGpxeGxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTI4Njg5NDQsImV4cCI6MjAwODQ0NDk0NH0.dwKxNDrr7Jw5OjeHgIbk8RLyvJuQVwZ_48Bv71P1n3Y",
         },
       }
     );
