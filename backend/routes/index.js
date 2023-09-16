@@ -427,13 +427,7 @@ router.get("/generatedImg", async function (req, res, next) {
       });
     }
 
-    // if (!product) {
-    //   return res.json({
-    //     error: "product not found",
-    //   });
-    // }
-
-    console.log(userId, process.env.SUPERBASEURL);
+ 
 
     const response = await fetch(
       `${process.env.SUPERBASEURL}/rest/v1/public_images?select=*&order=created_at.desc&user_id=eq.${userId}`,
