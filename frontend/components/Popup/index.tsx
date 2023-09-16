@@ -105,15 +105,15 @@ const PopupWrapper = styled.div`
 
   .wrapper {
     max-width: 60vw !important;
-    width: 50vw !important;
-    height: 70vh;
+    min-width: 50vw !important;
+    min-height: 70vh;
     border: 1px solid #555;
     border-radius: 24px !important;
     padding: 40px;
     background-color: #fff;
 
     img {
-      width: 250px;
+      width: 200px;
       margin: auto;
       margin-bottom: 30px;
     }
