@@ -41,13 +41,11 @@ const Projects = ({ onDelet }) => {
       // console.log(await response.json(), "dfvcvdfvdvcdsd");
       const datares = await response.json();
       if(datares?._id){
+        router.push(`/generate/${datares?._id}`)
         console.log(datares,"sdcdrfc")
         GetProjexts(userId);
-        router.push(`/generate/${datares?._id}`)
         // window.open(`/generate/${datares?._id}`, "_self");
-        setTimeout(() => {
-          
-        }, 1000);
+   
   
 
       }
