@@ -626,7 +626,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
     
       fetchGeneratedImages(getUser);
-    }, 5000);
+    }, 3000);
   }, []);
 
   const fetchGeneratedImages = async (userId) => {
