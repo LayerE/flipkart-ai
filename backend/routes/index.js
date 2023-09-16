@@ -459,7 +459,7 @@ router.get("/generatedImg", async function (req, res, next) {
 
     return res.json(filteredResult);
   } catch (error) {
-    return res.json({ error: "Server error" });
+    return res.json({ error: "Server error",E: error });
   }
 });
 
