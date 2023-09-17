@@ -219,7 +219,7 @@ export const TempletList = [
       {
         title: "Office  1 ",
 
-        image: "https://www.linkpicture.com/q/image-2_89.png",
+        image: "https://www.linkpicture.com/q/image-2_91.png",
         promt: "in a simple, minimalistic Office space",
         placementType: "",
         surroundingType: "",
@@ -233,7 +233,7 @@ export const TempletList = [
       {
         title: "Office  2 ",
 
-        image: "https://www.linkpicture.com/q/image-2_89.png",
+        image: "https://www.linkpicture.com/q/image-2_91.png",
         promt: " In a modern, luxury bedroom",
         placementType: "",
         surroundingType: "",

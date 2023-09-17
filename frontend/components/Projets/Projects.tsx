@@ -143,7 +143,7 @@ const ProjectWrapper = styled.div`
   .createbox {
     cursor: pointer;
     width: 100%;
-    height: 215px;
+    height: 100%;
     border-radius: 16px;
     background: #f8f8f8;
     border-radius: 16px;

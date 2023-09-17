@@ -125,7 +125,6 @@ export default function CanvasBox({ proid, userId }) {
     return () => {
       saveCanvasToDatabase();
       setTimeout(() => {
-        
         canvasInstanceRef?.dispose();
       }, 500);
       // router.events.off("routeChangeStart", saveCanvasToDatabase);
@@ -144,8 +143,6 @@ export default function CanvasBox({ proid, userId }) {
       // Other canvas operations...
 
       const canvasInstanceRef = canvasInstance?.current;
-
-  
 
       canvasInstanceRef.clear();
       const newEditorBox = new fabric.Rect({
@@ -195,18 +192,14 @@ export default function CanvasBox({ proid, userId }) {
             const img = new Image();
             img.src = options.target._element.src;
             // Resize the image to 512x521 pixels
-      const canvas = document.createElement("canvas");
-      canvas.width = 710;
-      canvas.height = 710;
-      const ctx = canvas.getContext("2d");
-      ctx.drawImage(img, 0, 0, 710, 710);
+            const canvas = document.createElement("canvas");
+            canvas.width = 710;
+            canvas.height = 710;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, 710, 710);
 
-      // Convert the canvas to a data URL
-      selectedObject = canvas.toDataURL("image/png");
-      
-
-          
-
+            // Convert the canvas to a data URL
+            selectedObject = canvas.toDataURL("image/png");
           } else if (options.target._element instanceof HTMLCanvasElement) {
             selectedObject = options.target._element.toDataURL();
           }
@@ -427,7 +420,7 @@ export default function CanvasBox({ proid, userId }) {
 
     setloadercarna(true);
     if (isReady && userId) {
-      console.log("canvasInstance",userId,proid)
+      console.log("canvasInstance", userId, proid);
       axios
         .post(`/api/canvasdata`, {
           user_id: userId,
@@ -443,8 +436,8 @@ export default function CanvasBox({ proid, userId }) {
               function (o, object) {
                 console.log(o, object);
               }
-              );
-              setloadercarna(false)
+            );
+            setloadercarna(false);
             // canvasInstanceRef.loadFromJSON(savedCanvasDataLocal, () => {
             //   canvasInstanceRef.renderAll();
             // });
@@ -495,14 +488,14 @@ export default function CanvasBox({ proid, userId }) {
       // }
 
       // console.log("canvasInstance",canvasInstanceRef)
-    
+
       return () => {
         window.addEventListener(
           "beforeunload",
           function () {
-        // saveCanvasToDatabase();
+            // saveCanvasToDatabase();
 
-             alert("sdfsdffsf")
+            alert("sdfsdffsf");
           },
           false
         );

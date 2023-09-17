@@ -58,6 +58,7 @@ export default function Home() {
     setUserId,
     setGeneratedImgList,
     saveCanvasToDatabase,
+    filteredArray, setFilteredArray
   } = useAppState();
 
   useEffect(() => {
@@ -90,7 +91,6 @@ export default function Home() {
       { url: url, tool: "generated-selected" },
     ]);
   };
-  const [filteredArray, setFilteredArray] = useState([]);
 
   useEffect(() => {
     setprojectId(id);

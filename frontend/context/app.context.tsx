@@ -159,6 +159,7 @@ export const AppContext = createContext<ContextITFC>({
 
 export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const canvasInstance = useRef(null);
+  const [filteredArray, setFilteredArray] = useState([]);
 
   const outerDivRef = useRef(null);
   const [mainLoader, setMainLoader] = useState(true);
@@ -439,7 +440,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       console.log("sdsdfs,", userId, projectId, canvasData, "dsffff");
       console.log(canvasData);
 
-
       SaveProjexts(userId, projectId, canvasData);
       const filteredResult = generatedImgList.filter((obj) =>
         jobId?.includes(obj?.task_id)
@@ -451,9 +451,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       .get(`${process.env.NEXT_PUBLIC_API}/project?id=${getUser}`)
       .then((response) => {
         setproject(response.data);
-
         setJobId(response.data.jobIds);
-
         return response.data;
       })
       .catch((error) => {
@@ -480,7 +478,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       });
       const data = await response.json();
 
-      if (data && filteredResult[0]?.modified_image_url) {
+      if (data && filteredArray[0]?.modified_image_url) {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API}/addPreview`,
           {
@@ -488,10 +486,11 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
             headers: {
               "Content-Type": "application/json",
             },
+          
             body: JSON.stringify({
               userId: userId,
               projectId: projectId,
-              img: filteredResult[0].modified_image_url,
+              img: filteredArray[0]?.modified_image_url,
             }),
           }
         );
@@ -616,7 +615,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [currentStep, setCurrentStep] = useState(-1);
   const { userId } = useAuth();
 
- 
   const fetchGeneratedImages = async (userId) => {
     try {
       const response = await fetch(
@@ -685,7 +683,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
       if (data?.length) {
         setListOfAssetsById(await data);
-        
       }
 
       // setImages(data); // Update the state with the fetched images
@@ -847,20 +844,20 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         });
       });
 
-      const promtText =promtFull
-        // product +
-        // ", " +
-        // selectPlacement +
-        // " " +
-        // placementTest +
-        // ", " +
-        // selectSurrounding +
-        // " " +
-        // surroundingTest +
-        // ", " +
-        // selectBackground +
-        // " " +
-        // backgroundTest;
+      const promtText = promtFull;
+      // product +
+      // ", " +
+      // selectPlacement +
+      // " " +
+      // placementTest +
+      // ", " +
+      // selectSurrounding +
+      // " " +
+      // surroundingTest +
+      // ", " +
+      // selectBackground +
+      // " " +
+      // backgroundTest;
 
       const response = await fetch("/api/generate", {
         method: "POST",
@@ -955,28 +952,28 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [reloder, setreLoader] = useState(true);
 
   // regenrate
-  const RegenerateImageHandeler = async (ueserId, proid , img) => {
+  const RegenerateImageHandeler = async (ueserId, proid, img) => {
     // console.log(promt);
     setLoader(true);
     setGenerationLoader(true);
     try {
       setreLoader(true);
 
-      const promtText = promtFull ? promtFull :" "
-      console.log(promtText,"dfdffffffffffffffffffd");
-        // product +
-        // ", " +
-        // selectPlacement +
-        // " " +
-        // placementTest +
-        // ", " +
-        // selectSurrounding +
-        // " " +
-        // surroundingTest +
-        // ", " +
-        // selectBackground +
-        // " " +
-        // backgroundTest;
+      const promtText = promtFull ? promtFull : " ";
+      console.log(promtText, "dfdffffffffffffffffffd");
+      // product +
+      // ", " +
+      // selectPlacement +
+      // " " +
+      // placementTest +
+      // ", " +
+      // selectSurrounding +
+      // " " +
+      // surroundingTest +
+      // ", " +
+      // selectBackground +
+      // " " +
+      // backgroundTest;
 
       const response = await fetch("/api/generate", {
         method: "POST",
@@ -986,17 +983,16 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         body: JSON.stringify({
           dataUrl: img,
           maskDataUrl: null,
-          prompt: promtText? promtText : " " + " ",
+          prompt: promtText ? promtText : " " + " ",
           user_id: ueserId,
           // lora_type: loara,
           num_images: 3,
         }),
       });
-      
-      
+
       const generate_response = await response.json();
-      
-      console.log(generate_response,"dddddddddddddddddfdfdd");
+
+      console.log(generate_response, "dddddddddddddddddfdfdd");
       if (generate_response?.error) {
         alert(generate_response?.error);
         setLoader(false);
@@ -1029,7 +1025,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           // setJobId((pre) => [...pre, generate_response?.job_id]);
           setRegenratedImgsJobid(generate_response?.job_id);
 
-          console.log(generate_response?.job_id)
+          console.log(generate_response?.job_id);
           // localStorage.setItem("jobId", jobId);
 
           // GetProjextById(proid);
@@ -1086,11 +1082,13 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       value={{
         loadercarna,
         setloadercarna,
-        listofassetsById, setListOfAssetsById,
+        listofassetsById,
+        setListOfAssetsById,
         previewBox,
         loara,
         setLoara,
-       promtFull, setpromtFull,
+        promtFull,
+        setpromtFull,
         GetProjexts,
         canvasRef,
         projectId,
@@ -1151,7 +1149,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setNewassetonCanvas,
         file,
         setFile,
-        mainLoader, setMainLoader,
+        mainLoader,
+        setMainLoader,
         selectPlacement,
         setSelectedPlacement,
         selectSurrounding,
@@ -1211,6 +1210,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         modifidImageArray,
         setModifidImageArray,
         fetchAssetsImagesWithProjectId,
+        filteredArray, setFilteredArray
       }}
     >
       {children}
