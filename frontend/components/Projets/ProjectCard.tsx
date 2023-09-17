@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { styled } from "styled-components";
 import assets from "@/public/assets";
 import Link from "next/link";
+import { useAppState } from "@/context/app.context";
 
 const ProjectCard = ({ data, setProjects, handleDelet, handleEdite }) => {
   const [open, setopen] = useState(false);
@@ -9,6 +10,7 @@ const ProjectCard = ({ data, setProjects, handleDelet, handleEdite }) => {
   const inputRef = useRef(null);
 
   const [projectName, setProjectName] = useState(data.title);
+  const { setFilteredArray} = useAppState();
 
   const handleRename = () => {
     setTimeout(() => {
@@ -31,7 +33,9 @@ const ProjectCard = ({ data, setProjects, handleDelet, handleEdite }) => {
   };
 
   return (
-    <CardWrapper className="projectfile">
+        <CardWrapper className="projectfile" onClick={()=>
+          setFilteredArray([])
+        }>
       <Link href={`/generate/${data._id}`}>
         <div className="img">
           {data?.previewImage !== "" ? (

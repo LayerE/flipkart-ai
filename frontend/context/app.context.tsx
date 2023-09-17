@@ -872,6 +872,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           maskDataUrl: maskDataUrl,
           prompt: promtText.trim(),
           user_id: userId,
+          category:category,
           lora_type: loara,
           num_images: selectResult,
         }),
@@ -988,6 +989,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           maskDataUrl: null,
           prompt: promtText ? promtText : " " + " ",
           user_id: ueserId,
+          category:category,
+
           // lora_type: loara,
           num_images: 3,
         }),

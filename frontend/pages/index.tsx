@@ -24,8 +24,6 @@ import { useRouter } from "next/router";
 import Loader from "@/components/Loader";
 import MainLoader from "@/components/Loader/main";
 
-const inter = Inter({ subsets: ["latin"] });
-
 export default function Home() {
   const { userId } = useAuth();
   const { query, isReady } = useRouter();
@@ -41,7 +39,8 @@ export default function Home() {
     setprojectlist,
     uerId,
     setUserId,
-    mainLoader
+    mainLoader,
+    setFilteredArray,
   } = useAppState();
 
   // const [loadercarna, setloadercarna] = useState(true);
@@ -58,6 +57,7 @@ export default function Home() {
       //   if (userId) localStorage.setItem("userId", userId);
       // }
       setMainLoader(true);
+      setFilteredArray(null);
       axios
         .get(`${process.env.NEXT_PUBLIC_API}/user?id=${userId}`)
         .then(async (response) => {
@@ -100,10 +100,7 @@ export default function Home() {
 
   return (
     <MainPage>
-    
-  {mainLoader ? (
-          <MainLoader />
-        ) : null}
+      {mainLoader ? <MainLoader /> : null}
 
       <motion.div
         initial="hidden"

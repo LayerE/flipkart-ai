@@ -17,7 +17,7 @@ const Projects = ({ onDelet }) => {
   const router = useRouter()
   const [projects, setProjects] = useState([]);
   const { userId } = useAuth();
-  const { activeTab, setprojectlist, projectlist, GetProjexts,renameProject } = useAppState();
+  const { activeTab, setprojectlist,setFilteredArray, projectlist, GetProjexts,renameProject } = useAppState();
 
   const handleCreate = async () => {
     try {
@@ -41,6 +41,7 @@ const Projects = ({ onDelet }) => {
       // console.log(await response.json(), "dfvcvdfvdvcdsd");
       const datares = await response.json();
       if(datares?._id){
+        setFilteredArray([])
         router.push(`/generate/${datares?._id}`)
         // console.log(datares,"sdcdrfc")
         // GetProjexts(userId);

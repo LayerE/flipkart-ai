@@ -78,7 +78,7 @@ export default function Home() {
     const filteredResult = generatedImgList.filter(obj => jobId.includes(obj.task_id));
 
     // Set the filtered array in the state
-    setFilteredArray(filteredResult);
+    // setFilteredArray(filteredResult);
   }, [jobId]);
 
  

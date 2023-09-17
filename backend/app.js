@@ -20,7 +20,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Connect to MongoDB
 connectDB();
-app.disable('etag');
+// app.disable('etag');
 app.use('/api', indexRouter);
 
 

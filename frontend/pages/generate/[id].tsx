@@ -67,19 +67,24 @@ export default function Home() {
     //   if (userId) localStorage.setItem("userId", userId);
     // }
     if (isReady) {
+      // setFilteredArray([])
       GetProjextById(id);
     }
   }, [id, isReady]);
 
   useEffect(() => {
   
-    setInterval(() => {
+   const times = setInterval(() => {
       if (isReady && userId ) {
 
     
       fetchGeneratedImages(userId);
       }
-    }, 3000);
+    }, 5000);
+
+    return(() => {
+      clearInterval(times)
+  })
   }, []);
 
 
@@ -120,13 +125,30 @@ export default function Home() {
     return () => {
       // setprojectId(null);
     };
-  }, [jobId, setGeneratedImgList, generatedImgList, regeneratePopup]);
+  }, [jobId, setGeneratedImgList, regeneratePopup]);
 
   useEffect(() => {
-    if (isReady && userId) {
-      fetchAssetsImages();
+    let time = setInterval(() => {
+      if (isReady && userId ) {
+
+    
+            fetchAssetsImages();
+
+      }
+    }, 5000);
+    return(() => {
+      clearInterval(time)
+  })
+ 
+  }, [isReady,userId, jobId]);
+
+  useEffect(() => {
+    
+    return () => {
+      // setFilteredArray([]);
+
     }
-  }, [isReady,userId, jobId, generatedImgList, setGeneratedImgList]);
+  }, []);
 
   const fetchAssetsImages = async () => {
     try {
