@@ -236,10 +236,41 @@ export const DropdownNOBorder: React.FC = ({ data }) => {
     data.action(option);
     setIsDropdownOpen(false);
   };
+  const popupRef = useRef<HTMLDivElement>(null);
+
+
+  // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  // const popupRef = useRef<HTMLDivElement>(null);
+
+  // const handleToggleDropdown = () => {
+  //   setIsDropdownOpen((prevState) => !prevState);
+  // };
+
+  // const handleOptionSelect = (option: string) => {
+  //   data.action(option);
+  //   setIsDropdownOpen(false);
+  // };
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node)
+      ) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("click", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("click", handleOutsideClick);
+    };
+  }, []);
+
 
   return (
     <DropdownWrapper>
-      <div className="dropdown-container">
+      <div className="dropdown-container" ref={popupRef}>
         <div
           className="dropdown-input"
           onClick={handleToggleDropdown}

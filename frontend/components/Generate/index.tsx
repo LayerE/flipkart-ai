@@ -16,13 +16,15 @@ import { fabric } from "fabric";
 import Label, { DisabledLabel } from "../common/Label";
 import SuggetionInput from "./SuggetionInput";
 import {
+  Loara,
   PlacementSuggestions,
+  categoryList,
   productSuggestions,
   resultList,
 } from "@/store/dropdown";
 import TextLoader from "../Loader/text";
 import { useRouter } from "next/router";
-import { DropdownNOBorder } from "../common/Dropdown";
+import DropdownInput, { DropdownNOBorder } from "../common/Dropdown";
 import { Input, TestArea } from "../common/Input";
 
 const Generate = () => {
@@ -59,6 +61,7 @@ const Generate = () => {
     setpromt,
     promtFull,
     setpromtFull,
+    category, setcategory
   } = useAppState();
 
   const { query, isReady } = useRouter();
@@ -182,7 +185,20 @@ const Generate = () => {
           )}
         </Row>
       </div>
+      <div className="gap">
+        <DisabledLabel> Select your product category:</DisabledLabel>
+        <DropdownInput
+            data={{
+              list: categoryList,
+              action: setcategory,
+              label: "placement",
 
+              activeTab: category,
+            }}
+            style={{width: "100%"}}
+          ></DropdownInput>
+        
+      </div>
       <div className="rowwothtwo" style={{ marginBottom: "0px" }}>
         <DisabledLabel>Number of results</DisabledLabel>
         <div className="two-side">
@@ -205,6 +221,7 @@ const Generate = () => {
           ></DropdownNOBorder>
         </div>
       </div>
+      
 
       <div className="bigGap">
         {/* <Label>Edit the the prompt in the form below.</Label> */}

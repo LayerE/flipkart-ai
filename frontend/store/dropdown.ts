@@ -7,7 +7,7 @@ import Minimal from "@/public/assets/image/Minimal.png";
 import Rocks from "@/public/assets/image/Rocks.png";
 import Room from "@/public/assets/image/Room.png";
 import Waterfalls from "@/public/assets/image/Waterfalls.png";
-export const category = ["Mobile", "Electronics", "Large Items", "Furnitures"];
+export const categoryList = ["Large Appliances", "Apparel & Footwear", "Mobile & Laptops", "Furniture & Decor"];
 
 export const placementList = [
   "Mobile",

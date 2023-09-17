@@ -209,10 +209,13 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const regenerateRef = useRef(null);
   const generateBox = useRef(null);
   const previewBox = useRef(null);
+  
   const [regenratedImgsJobId, setRegenratedImgsJobid] = useState(null);
 
   const [projectId, setprojectId] = useState(null);
   const [uerId, setUserId] = useState(null);
+  const [category, setcategory] = useState(null);
+
   const [listofassets, setListOfAssets] = useState(null);
   const [listofassetsById, setListOfAssetsById] = useState(null);
 
@@ -1210,7 +1213,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         modifidImageArray,
         setModifidImageArray,
         fetchAssetsImagesWithProjectId,
-        filteredArray, setFilteredArray
+        filteredArray, setFilteredArray,
+        category, setcategory
       }}
     >
       {children}

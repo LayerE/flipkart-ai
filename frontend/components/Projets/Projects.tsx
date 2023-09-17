@@ -33,7 +33,7 @@ const Projects = ({ onDelet }) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            title: "Untitled ",
+            title: "Untitled",
             id: userId,
           }),
         }
@@ -42,8 +42,8 @@ const Projects = ({ onDelet }) => {
       const datares = await response.json();
       if(datares?._id){
         router.push(`/generate/${datares?._id}`)
-        console.log(datares,"sdcdrfc")
-        GetProjexts(userId);
+        // console.log(datares,"sdcdrfc")
+        // GetProjexts(userId);
         // window.open(`/generate/${datares?._id}`, "_self");
    
   
