@@ -50,9 +50,8 @@ export default async (req: NextRequest) => {
     } else if (!project_id) {
       return NextResponse.json({ error: "Missing project_id" });
     } else {
-      // We need to save the canvas data to the database
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/${process.env.CANVAS_TABLE}`,
+      await fetch(
+        `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/${process.env.CANVAS_TABLE}$on_conflict=user_id,project_id`,
         {
           headers: {
             apikey: process.env.SUPABASE_SERVICE_KEY as string,
@@ -62,14 +61,12 @@ export default async (req: NextRequest) => {
           },
           method: "POST",
           body: JSON.stringify({
-            user_id,
-            project_id,
-            canvasdata,
+            "user_id": user_id,
+            "project_id": project_id,
+            "canvasdata": canvasdata,
           }),
         }
       );
-
-
       return NextResponse.json({ data: "success" });
     }
   } catch (error) {
