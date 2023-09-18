@@ -234,7 +234,7 @@ export const TempletList = [
         title: "Office  2 ",
 
         image: "https://www.linkpicture.com/q/image-2_91.png",
-        promt: " In a modern, luxury bedroom",
+        promt: " in a simple, minimalistic Office space",
         placementType: "",
         surroundingType: "",
         backgroundType: "",
@@ -248,7 +248,7 @@ export const TempletList = [
         title: "Bedroom   1 ",
 
         image: "https://www.linkpicture.com/q/image-3_54.png",
-        promt: "in a simple, minimalistic Office space",
+        promt: "In a modern, luxury bedroom ",
         placementType: "",
         surroundingType: "",
         backgroundType: "",

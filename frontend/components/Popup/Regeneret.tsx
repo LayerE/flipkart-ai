@@ -149,7 +149,7 @@ const Regeneret = () => {
         GetProjextById(id);
         addimgToCanvasGen(selectedCards);
         setRegeneratePopup({ statu: false });
-        setActiveTab(1);
+        // setActiveTab(1);
       }
       // window.open(`/generate/${datares?._id}`, "_self");
     } catch (error) {

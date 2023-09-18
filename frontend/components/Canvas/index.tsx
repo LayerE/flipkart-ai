@@ -389,14 +389,35 @@ export default function CanvasBox({ proid, userId }) {
       //   opt.e.stopPropagation();
       // });
 
-      canvasInstanceRef.on("selection:created", () => {
+      canvasInstanceRef.on("selection:created", (e) => {
+        var selectedObjects = e.target;
+        var hasGenerated = selectedObjects.some(function (obj) {
+          return obj.category === "generated";
+        });
+        
+        if (hasGenerated) {
+          // Show the additional button if at least one object has the category "generated"
+          rebtn.style.display = "block";
+        }
         btn.style.display = "block";
-        rebtn.style.display = "block";
+
+        // If the object is a subject, add it to the subject objects array
       });
 
-      canvasInstanceRef.on("selection:cleared", function () {
+      canvasInstanceRef.on("selection:cleared", function (e) {
+        var selectedObjects = e.target;
+
+        var hasGenerated = selectedObjects.some(function (obj) {
+          return obj.category !== "generated";
+        });
         btn.style.display = "none";
-        rebtn.style.display = "none";
+
+        
+        if (hasGenerated) {
+          rebtn.style.display = "none";
+          // Show the additional button if at least one object has the category "generated"
+          // rebtn.style.display = "block";
+        }
         setDownloadImg(null);
 
         if (activeTab === 5) {
@@ -568,7 +589,7 @@ export default function CanvasBox({ proid, userId }) {
       setTimeout(() => {
         setRegeneratePopup({ status: true, url: downloadImg });
         console.log("Success", downloadImg);
-        setActiveTab(6);
+        // setActiveTab(6);
         console.log("sdsfs");
       }, 500);
     }

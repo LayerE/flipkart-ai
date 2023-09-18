@@ -606,6 +606,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         // scaleY: scaleY,
       });
       img.set("category", "generated");
+      
       // canvasInstance.current.clear();
       canvasInstance?.current.add(img);
       canvasInstance?.current.setActiveObject(img);
