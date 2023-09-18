@@ -1,4 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
+import { createClient } from "@supabase/supabase-js";
 
 export const config = {
   runtime: "edge",
@@ -13,7 +14,7 @@ export default async (req: NextRequest) => {
     const body = await req.json();
     const { user_id, project_id, canvasdata } = body;
 
-    console.log(user_id, project_id, canvasdata)
+    console.log(user_id, project_id, canvasdata);
 
     if (!user_id) {
       return NextResponse.json({ error: "Missing user_id" });
@@ -40,35 +41,33 @@ export default async (req: NextRequest) => {
       );
 
       const data = await response.json();
-      const newData = data[data.length - 1]
-      console.log("sdsd",newData);
+      const newData = data[data.length - 1];
+      console.log("sdsd", newData);
 
-
-  //  const da =await data[data?.length - 1]
+      //  const da =await data[data?.length - 1]
 
       return NextResponse.json({ newData });
     } else if (!project_id) {
       return NextResponse.json({ error: "Missing project_id" });
     } else {
-      // We need to save the canvas data to the database
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/${process.env.CANVAS_TABLE}`,
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL as string,
+        process.env.SUPABASE_SERVICE_KEY as string
+      );
+
+      const { data, error } = await supabase.rpc(
+        "check_and_insert_canvasdata",
         {
-          headers: {
-            apikey: process.env.SUPABASE_SERVICE_KEY as string,
-            Authorization:
-              `Bearer ${process.env.SUPABASE_SERVICE_KEY}` as string,
-            "Content-Type": "application/json",
-          },
-          method: "POST",
-          body: JSON.stringify({
-            user_id,
-            project_id,
-            canvasdata,
-          }),
+          user_id: user_id,
+          project_id: project_id,
+          canvasdata: canvasdata,
         }
       );
 
+      if (error) {
+        console.log(error);
+        return NextResponse.json({ error: "Something went wrong" });
+      }
 
       return NextResponse.json({ data: "success" });
     }
