@@ -793,7 +793,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
   const generateImageHandeler = async (ueserId, proid) => {
     if (category === null) {
-      toast("Select your product category Fist!")
+      toast("Select your product category first !")
     } else {
       // console.log(promt);
       setLoader(true);
