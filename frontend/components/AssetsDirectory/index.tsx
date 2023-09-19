@@ -57,6 +57,8 @@ const AssetsDir = () => {
                     userId: userId,
                     btn: "Use to generate",
                     generat: true,
+                    index: i,
+                    list: listofassets,
                   })
                 }
               >

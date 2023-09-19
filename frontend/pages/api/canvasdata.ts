@@ -42,7 +42,7 @@ export default async (req: NextRequest) => {
 
       const data = await response.json();
       const newData = data[data.length - 1];
-      console.log("sdsd", newData);
+      console.log("sdsd", data);
 
       //  const da =await data[data?.length - 1]
 
@@ -68,6 +68,8 @@ export default async (req: NextRequest) => {
         console.log(error);
         return NextResponse.json({ error: "Something went wrong" });
       }
+      console.log("post", data);
+
 
       return NextResponse.json({ data: "success" });
     }

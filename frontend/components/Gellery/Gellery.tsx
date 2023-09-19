@@ -104,7 +104,7 @@ const [laoder, setlaoder] = useState(true)
         <div className="imageBox">
           <div className="grid-img">
             {gallery?.map((image, i) => (
-              <div key={i} className="img" onClick={()=> setPopupImage({url:image?.modified_image_url, status: true,userId:userId, btn:"Download ",generat:false })}>
+              <div key={i} className="img" onClick={()=> setPopupImage({url:image?.modified_image_url, status: true,userId:userId, btn:"Download ",generat:false, index: i, list: gallery })}>
                 <picture>
                   <img src={image?.modified_image_url} alt="" />
                 </picture>

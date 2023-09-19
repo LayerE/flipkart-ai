@@ -4,6 +4,8 @@ import { useAuth } from "@clerk/nextjs";
 import { saveAs } from "file-saver";
 import axios from "axios";
 
+import { toast } from "react-toastify";
+
 type ContextProviderProps = {
   children: React.ReactNode;
 };
@@ -180,7 +182,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [loara, setLoara] = useState<string>("");
   const [templet, setTemplet] = useState();
   const [promt, setpromt] = useState("");
-  const [promtFull, setpromtFull] = useState();
+  const [promtFull, setpromtFull] = useState("");
   const [selectColoreStrength, setSelectedColoreStrength] = useState<number>(0);
   const [selectOutLline, setSelectedOutline] = useState<number>(0);
   const [product, setProduct] = useState<string>("");
@@ -386,7 +388,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
       img.on("scaling", () => {
         positionBtn(img);
-
       });
       // img.on("scaling", function () {
       //   positionBtn(img);
@@ -431,8 +432,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   function positionBtn(obj) {
     const btn = PosisionbtnRef.current;
     const absCoords = canvasInstance?.current.getAbsoluteCoords(obj);
-    btn.style.left = absCoords.left -10+ "px";
-    btn.style.top = absCoords.top -40+ "px";
+    btn.style.left = absCoords.left + 10 + "px";
+    btn.style.top = absCoords.top + 10 + "px";
     // btn.style.left = absCoords.left - 150 / 2 + "px";
     // btn.style.top = absCoords.top - 80 / 2 + "px";
   }
@@ -440,8 +441,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   function RegeneratepositionBtn(obj) {
     const btns = regenerateRef.current;
     const absCoords = canvasInstance?.current.getAbsoluteCoords(obj);
-    btns.style.left = (absCoords.left - 100 / 2 + obj.getScaledWidth() / 2) + 'px';
-    btns.style.top = absCoords.top +  obj.getScaledHeight() - 50 + "px";
+    btns.style.left =
+      absCoords.left - 100 / 2 + obj.getScaledWidth() / 2 + "px";
+    btns.style.top = absCoords.top + obj.getScaledHeight() - 50 + "px";
   }
 
   const GetProjexts = (getUser: string) => {
@@ -790,203 +792,210 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   };
 
   const generateImageHandeler = async (ueserId, proid) => {
-    // console.log(promt);
-    setLoader(true);
-    setGenerationLoader(true);
-    const canvas1 = canvasInstance.current;
-    try {
-      const genBox = generateBox.current;
-      const preBox = previewBox.current;
+    if (category === null) {
+      toast("Select your product category Fist!")
+    } else {
+      // console.log(promt);
+      setLoader(true);
+      setGenerationLoader(true);
+      const canvas1 = canvasInstance.current;
+      try {
+        const genBox = generateBox.current;
+        const preBox = previewBox.current;
 
-      addtoRecntly(ueserId, proid);
-      // canvas1.set({
-      //   left: 30,
-      //   top:200
-      // });
-      // canvas1.renderAll();
-      console.log(canvas1);
+        addtoRecntly(ueserId, proid);
+        // canvas1.set({
+        //   left: 30,
+        //   top:200
+        // });
+        // canvas1.renderAll();
+        console.log(canvas1);
 
-      // selectedImg // img url to generate images for the canvas
+        // selectedImg // img url to generate images for the canvas
 
-      const objects = canvas1.getObjects();
+        const objects = canvas1.getObjects();
 
-      const maskObjects = [];
-      const subjectObjects = [];
-      objects.forEach((object) => {
-        // If the object is a mask, add it to the mask objects array
-        if (object.category === "mask") {
-          maskObjects.push(object);
-        }
-        // If the object is a subject, add it to the subject objects array
-        if (object.category === "subject") {
-          subjectObjects.push(object);
-        }
-      });
-
-      // Make image with only the mask objects
-      const maskCanvas = new fabric.Canvas(null, {
-        // width: genRect.width,
-        // height: genRect.height,
-        // top: genRect.height,
-        // left: genRect.height,
-        left: parseInt(genBox.style.left),
-        top: parseInt(genBox.style.top),
-        width: parseInt(genBox.style.width),
-        height: parseInt(genBox.style.height),
-      });
-
-      maskObjects.forEach((object) => {
-        // You can adjust the object's position relative to the canvas as needed
-        object.set({
-          left: object.left - parseInt(genBox.style.left),
-          top: object.top - parseInt(genBox.style.top),
-        });
-        maskCanvas.add(object);
-      });
-      const maskDataUrl = maskCanvas.toDataURL("image/png");
-
-      console.log("mask", maskDataUrl);
-
-      // Make image with only the subject objects
-      const subjectCanvas = new fabric.Canvas(null, {
-        // width: genRect.width,
-        // height: genRect.height,
-        // top: genRect.height,
-        // left: genRect.height,
-        left: parseInt(genBox.style.left),
-        top: parseInt(genBox.style.top),
-        width: parseInt(genBox.style.width),
-        height: parseInt(genBox.style.height),
-      });
-
-      subjectObjects.forEach((object) => {
-        object.set({
-          left: object.left - parseInt(genBox.style.left),
-          top: object.top - parseInt(genBox.style.top),
-        });
-        subjectCanvas.add(object);
-      });
-
-      const subjectDataUrl = subjectCanvas.toDataURL("image/png");
-      console.log("subect", subjectDataUrl);
-
-      maskObjects.forEach((object) => {
-        // You can adjust the object's position relative to the canvas as needed
-        object.set({
-          left: object.left + parseInt(genBox.style.left),
-          top: object.top + parseInt(genBox.style.top),
-        });
-      });
-      subjectObjects.forEach((object) => {
-        object.set({
-          left: object.left + parseInt(genBox.style.left),
-          top: object.top + parseInt(genBox.style.top),
-        });
-      });
-
-      const promtText = promtFull;
-      // product +
-      // ", " +
-      // selectPlacement +
-      // " " +
-      // placementTest +
-      // ", " +
-      // selectSurrounding +
-      // " " +
-      // surroundingTest +
-      // ", " +
-      // selectBackground +
-      // " " +
-      // backgroundTest;
-
-      const response = await fetch("/api/generate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          dataUrl: subjectDataUrl,
-          maskDataUrl: maskDataUrl,
-          prompt: promtText.trim(),
-          user_id: userId,
-          category: category,
-          lora_type: loara,
-          num_images: selectResult,
-        }),
-      });
-
-      const generate_response = await response.json();
-
-      if (generate_response?.error) {
-        alert(generate_response?.error);
-        setLoader(false);
-
-        return false;
-      } else {
-        try {
-          setSelectedresult(1);
-
-          // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
-
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API}/jobId`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              userId: ueserId,
-              projectId: proid,
-              jobId: generate_response?.job_id,
-            }),
-          });
-          // console.log(await response.json(), "dfvcvdfvdvcdsd");
-          const datares = await response;
-
-          if (datares.ok) {
-            setJobId((pre) => [...pre, generate_response?.job_id]);
-            // setRegenratedImgsJobid(generate_response?.job_id);
-            // localStorage.setItem("jobId", jobId);
-
-            GetProjextById(proid);
+        const maskObjects = [];
+        const subjectObjects = [];
+        objects.forEach((object) => {
+          // If the object is a mask, add it to the mask objects array
+          if (object.category === "mask") {
+            maskObjects.push(object);
           }
-          // window.open(`/generate/${datares?._id}`, "_self");
-        } catch (error) {
-          // Handle error
-        }
-      }
-
-      setTimeout(async function () {
-        const loadeImge = await fetchGeneratedImages(ueserId);
-
-        setSelectedImg({
-          status: true,
-          image: loadeImge[0]?.modified_image_url,
-          modifiedImage: loadeImge[0]?.modified_image_url,
+          // If the object is a subject, add it to the subject objects array
+          if (object.category === "subject") {
+            subjectObjects.push(object);
+          }
         });
 
-        setModifidImageArray((pre) => [
-          ...pre,
-          { url: loadeImge[0]?.modified_image_url, tool: "generated" },
-        ]);
+        // Make image with only the mask objects
+        const maskCanvas = new fabric.Canvas(null, {
+          // width: genRect.width,
+          // height: genRect.height,
+          // top: genRect.height,
+          // left: genRect.height,
+          left: parseInt(genBox.style.left),
+          top: parseInt(genBox.style.top),
+          width: parseInt(genBox.style.width),
+          height: parseInt(genBox.style.height),
+        });
 
-        addimgToCanvasGen(loadeImge[0]?.modified_image_url);
-        // canvas1.remove(editorBox).renderAll();
+        maskObjects.forEach((object) => {
+          // You can adjust the object's position relative to the canvas as needed
+          object.set({
+            left: object.left - parseInt(genBox.style.left),
+            top: object.top - parseInt(genBox.style.top),
+          });
+          maskCanvas.add(object);
+        });
+        const maskDataUrl = maskCanvas.toDataURL("image/png");
 
-        setGeneratedImgList(loadeImge.slice(0, 50));
+        console.log("mask", maskDataUrl);
 
-        // setSelectedresult(1);
+        // Make image with only the subject objects
+        const subjectCanvas = new fabric.Canvas(null, {
+          // width: genRect.width,
+          // height: genRect.height,
+          // top: genRect.height,
+          // left: genRect.height,
+          left: parseInt(genBox.style.left),
+          top: parseInt(genBox.style.top),
+          width: parseInt(genBox.style.width),
+          height: parseInt(genBox.style.height),
+        });
 
-        setLoader(false);
-      }, 50000);
-    } catch (error) {
-      console.error("Error generating image:", error);
-    } finally {
-      setGenerationLoader(false);
-      // canvas1.set({
-      //   top: 0,
-      //   left: 0
-      // });
-      // canvas1.renderAll();
+        subjectObjects.forEach((object) => {
+          object.set({
+            left: object.left - parseInt(genBox.style.left),
+            top: object.top - parseInt(genBox.style.top),
+          });
+          subjectCanvas.add(object);
+        });
+
+        const subjectDataUrl = subjectCanvas.toDataURL("image/png");
+        console.log("subect", subjectDataUrl);
+
+        maskObjects.forEach((object) => {
+          // You can adjust the object's position relative to the canvas as needed
+          object.set({
+            left: object.left + parseInt(genBox.style.left),
+            top: object.top + parseInt(genBox.style.top),
+          });
+        });
+        subjectObjects.forEach((object) => {
+          object.set({
+            left: object.left + parseInt(genBox.style.left),
+            top: object.top + parseInt(genBox.style.top),
+          });
+        });
+
+        const promtText = promtFull;
+        // product +
+        // ", " +
+        // selectPlacement +
+        // " " +
+        // placementTest +
+        // ", " +
+        // selectSurrounding +
+        // " " +
+        // surroundingTest +
+        // ", " +
+        // selectBackground +
+        // " " +
+        // backgroundTest;
+
+        const response = await fetch("/api/generate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            dataUrl: subjectDataUrl,
+            maskDataUrl: maskDataUrl,
+            prompt: promtText.trim(),
+            user_id: userId,
+            category: category,
+            lora_type: loara,
+            num_images: selectResult,
+          }),
+        });
+
+        const generate_response = await response.json();
+
+        if (generate_response?.error) {
+          alert(generate_response?.error);
+          setLoader(false);
+
+          return false;
+        } else {
+          try {
+            setSelectedresult(1);
+
+            // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
+
+            const response = await fetch(
+              `${process.env.NEXT_PUBLIC_API}/jobId`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  userId: ueserId,
+                  projectId: proid,
+                  jobId: generate_response?.job_id,
+                }),
+              }
+            );
+            // console.log(await response.json(), "dfvcvdfvdvcdsd");
+            const datares = await response;
+
+            if (datares.ok) {
+              setJobId((pre) => [...pre, generate_response?.job_id]);
+              // setRegenratedImgsJobid(generate_response?.job_id);
+              // localStorage.setItem("jobId", jobId);
+
+              GetProjextById(proid);
+            }
+            // window.open(`/generate/${datares?._id}`, "_self");
+          } catch (error) {
+            // Handle error
+          }
+        }
+
+        setTimeout(async function () {
+          const loadeImge = await fetchGeneratedImages(ueserId);
+
+          setSelectedImg({
+            status: true,
+            image: loadeImge[0]?.modified_image_url,
+            modifiedImage: loadeImge[0]?.modified_image_url,
+          });
+
+          setModifidImageArray((pre) => [
+            ...pre,
+            { url: loadeImge[0]?.modified_image_url, tool: "generated" },
+          ]);
+
+          addimgToCanvasGen(loadeImge[0]?.modified_image_url);
+          // canvas1.remove(editorBox).renderAll();
+
+          setGeneratedImgList(loadeImge.slice(0, 50));
+
+          // setSelectedresult(1);
+
+          setLoader(false);
+        }, 50000);
+      } catch (error) {
+        console.error("Error generating image:", error);
+      } finally {
+        setGenerationLoader(false);
+        // canvas1.set({
+        //   top: 0,
+        //   left: 0
+        // });
+        // canvas1.renderAll();
+      }
     }
   };
 
@@ -1001,7 +1010,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       setreLoader(true);
 
       const promtText = promtFull ? promtFull : " ";
-      console.log(promtText, "dfdffffffffffffffffffd");
+
       // product +
       // ", " +
       // selectPlacement +
@@ -1035,7 +1044,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
       const generate_response = await response.json();
 
-      console.log(generate_response, "dddddddddddddddddfdfdd");
       if (generate_response?.error) {
         alert(generate_response?.error);
         setLoader(false);

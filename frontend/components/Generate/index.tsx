@@ -178,7 +178,7 @@ const Generate = () => {
           ) : (
             <Button
               onClick={() => generateImageHandeler(userId, id)}
-              disabled={promtFull === "" ? true : false}
+              disabled={promtFull === " " ? true : false}
             >
               {generationLoader ? "Loading..." : "Generate"}
             </Button>

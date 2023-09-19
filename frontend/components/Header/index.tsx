@@ -171,7 +171,7 @@ const Headers = styled.div`
 }
   position: absolute;
   top: 0;
-  z-index: 9999;
+  z-index: 999;
   background-color: #fff;
   padding: 0 50px;
   width: 100%;

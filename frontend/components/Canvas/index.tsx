@@ -153,6 +153,7 @@ export default function CanvasBox({ proid, userId }) {
         fill: "transparent",
         stroke: "rgba(249, 208, 13, 1)",
         strokeWidth: 1,
+        excludeFromExport: true,
       });
 
       // canvasInstanceRef.add(newEditorBox);
@@ -219,6 +220,7 @@ export default function CanvasBox({ proid, userId }) {
         // originX: "center",
         // originY: "center",
         selectable: false,
+        excludeFromExport: true,
         fill: "rgba(0, 0, 0, 1)",
       });
       canvasInstanceRef.add(EditorBoxText);
@@ -333,6 +335,19 @@ export default function CanvasBox({ proid, userId }) {
         }
       });
 
+      // canvasInstanceRef.clipTo = function(ctx) {
+      //   ctx.save();
+      //   ctx.globalCompositeOperation = 'destination-in'; // This ensures drawing is clipped to the image
+
+      //   var activeObject = canvasInstanceRef.getActiveObject();
+      //   ctx.beginPath();
+      //   // Define your clipping path here (e.g., a rectangle)
+      //   ctx.rect(activeObject.left, activeObject.top, activeObject.width, activeObject.height);
+      //   ctx.closePath();
+      //   ctx.fill();
+      //   ctx.restore();
+      // };
+
       // canvasInstanceRef.on("mouse:wheel", function (opt) {
       //   var delta = opt.e.deltaY;
       //   var zoom = canvasInstanceRef.getZoom();
@@ -432,6 +447,15 @@ export default function CanvasBox({ proid, userId }) {
       // }, 300);
     };
   }, [canvasInstance.current]);
+
+  const DeletIrem = ()=>{
+    const activeObject = canvasInstance?.current?.getActiveObject();
+    if (activeObject) {
+      canvasInstance?.current?.remove(activeObject);
+      canvasInstance?.current?.renderAll();
+    }
+
+  }
 
   useEffect(() => {
     // Fetch canvas data from your API and load it into the canvas
@@ -578,6 +602,9 @@ export default function CanvasBox({ proid, userId }) {
           <button className="selectone" onClick={() => sendImageToBack()}>
             Back
           </button>
+          <button className="selectone" onClick={() => DeletIrem()}>
+          Delete 
+          </button>
         </div>
         <div
           id="inline-btn"
@@ -591,7 +618,7 @@ export default function CanvasBox({ proid, userId }) {
           <button className="selectone yello">Regenerate Product</button>
         </div>
 
-        <div className="ss">
+        {/* <div className="ss">
           <picture>
             <img
               onClick={() => saveCanvasToDatabase()}
@@ -599,7 +626,7 @@ export default function CanvasBox({ proid, userId }) {
               alt=""
             />
           </picture>
-        </div>
+        </div> */}
 
         <canvas ref={canvasRef} />
       </div>
@@ -660,7 +687,7 @@ const Wrapper = styled.div`
     padding: 5px 8px;
     background: rgba(249, 208, 13, 1) !important;
 
-
+color: #000;
     font-size: 12px;
     font-weight: 500;
     transition: all 0.3 ease;
