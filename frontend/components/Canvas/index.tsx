@@ -334,22 +334,7 @@ export default function CanvasBox({ proid, userId }) {
         }
       });
 
-      document.addEventListener("keydown", (e) => {
-        // Check if the pressed key is 'Delete' (code: 46) or 'Backspace' (code: 8) for wider compatibility
-        if (e.keyCode === 46 || e.keyCode === 8) {
-          // Check if the focus is NOT on an input or textarea
-          if (
-            document.activeElement.tagName !== "INPUT" &&
-            document.activeElement.tagName !== "TEXTAREA"
-          ) {
-            const activeObject = canvasInstanceRef?.getActiveObject();
-            if (activeObject) {
-              canvasInstanceRef?.remove(activeObject);
-              canvasInstanceRef?.renderAll();
-            }
-          }
-        }
-      });
+     
 
       // canvasInstanceRef.on("mouse:wheel", function (opt) {
       //   var delta = opt.e.deltaY;
@@ -391,14 +376,14 @@ export default function CanvasBox({ proid, userId }) {
 
       canvasInstanceRef.on("selection:created", (e) => {
         var selectedObjects = e.target;
-        var hasGenerated = selectedObjects.some(function (obj) {
-          return obj.category === "generated";
-        });
+        // var hasGenerated = selectedObjects.some(function (obj) {
+        //   return obj.category === "generated";
+        // });
         
-        if (hasGenerated) {
+        // if (hasGenerated) {
           // Show the additional button if at least one object has the category "generated"
-          rebtn.style.display = "block";
-        }
+          // rebtn.style.display = "block";
+        // }
         btn.style.display = "block";
 
         // If the object is a subject, add it to the subject objects array
@@ -407,21 +392,39 @@ export default function CanvasBox({ proid, userId }) {
       canvasInstanceRef.on("selection:cleared", function (e) {
         var selectedObjects = e.target;
 
-        var hasGenerated = selectedObjects.some(function (obj) {
-          return obj.category !== "generated";
-        });
+        // var hasGenerated = selectedObjects.some(function (obj) {
+        //   return obj.category !== "generated";
+        // });
         btn.style.display = "none";
 
         
-        if (hasGenerated) {
-          rebtn.style.display = "none";
+        // if (hasGenerated) {
+          // rebtn.style.display = "none";
           // Show the additional button if at least one object has the category "generated"
           // rebtn.style.display = "block";
-        }
+        // }
         setDownloadImg(null);
 
         if (activeTab === 5) {
           setActiveTab(1);
+        }
+      });
+
+
+      document.addEventListener("keydown", (e) => {
+        // Check if the pressed key is 'Delete' (code: 46) or 'Backspace' (code: 8) for wider compatibility
+        if (e.keyCode === 46 || e.keyCode === 8) {
+          // Check if the focus is NOT on an input or textarea
+          if (
+            document.activeElement.tagName !== "INPUT" &&
+            document.activeElement.tagName !== "TEXTAREA"
+          ) {
+            const activeObject = canvasInstanceRef?.getActiveObject();
+            if (activeObject) {
+              canvasInstanceRef?.remove(activeObject);
+              canvasInstanceRef?.renderAll();
+            }
+          }
         }
       });
     }
@@ -472,11 +475,6 @@ export default function CanvasBox({ proid, userId }) {
           return error;
         });
 
-      setInterval(() => {
-        if (!loadercarna) {
-          // saveCanvasToDatabase();
-        }
-      }, 5000);
       // try {
 
       //   if (canvasInstanceRef) {
@@ -510,17 +508,7 @@ export default function CanvasBox({ proid, userId }) {
 
       // console.log("canvasInstance",canvasInstanceRef)
 
-      return () => {
-        window.addEventListener(
-          "beforeunload",
-          function () {
-            // saveCanvasToDatabase();
-
-            alert("sdfsdffsf");
-          },
-          false
-        );
-      };
+     
     }
   }, [isReady, userId]);
 
@@ -530,8 +518,7 @@ export default function CanvasBox({ proid, userId }) {
         router.events.off("routeChangeStart", saveCanvasToDatabase);
 
         saveCanvasToDatabase();
-        // setTimeout(() => {
-        // }, 300);
+      
       };
     };
   }, []);
@@ -549,24 +536,7 @@ export default function CanvasBox({ proid, userId }) {
     // }
   };
 
-  // const getCanvs = async (pro) => {
-  //   // Load saved canvas data from local storage
-  //   if (!proid === undefined || !proid === " " || !proid === null) {
-  //     const canvasInstanceRef = canvasInstance.current;
-  //     const savedCanvasDataLocal = localStorage.getItem(proid);
-  //     const savedCanvasDB = project?.canvas;
-  //     // console.log(savedCanvasDataLocal, "dfdsf");
-  //     if (savedCanvasDB && !savedCanvasDataLocal) {
-  //       localStorage.setItem(proid, savedCanvasDB);
-  //     }
-  //     if (savedCanvasDataLocal) {
-  //       // console.log(savedCanvas,"dfdfsdgfdgfd")
-  //       canvasInstanceRef.loadFromJSON(savedCanvasDataLocal, () => {
-  //         canvasInstanceRef.renderAll();
-  //       });
-  //     }
-  //   }
-  // };
+
 
   const generationBoxStyle = {
     left: `${30}px`,
@@ -623,7 +593,7 @@ export default function CanvasBox({ proid, userId }) {
           id="inline-btn"
           className="regenrat"
           ref={regenerateRef}
-          // style={{ display: btnVisible ? "block" : "none" }}
+          style={{ display:  "none" }}
           onClick={() => {
             handelRegenrate();
           }}

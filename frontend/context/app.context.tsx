@@ -299,6 +299,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         // scaleX: scaleX,
         // scaleY: scaleY,
       });
+      img.on("selected", () => {
+        const rebtn = regenerateRef.current;
+        rebtn.style.display = "none";
+        positionBtn(img);
+        // RegeneratepositionBtn(img);
+      });
       img.on("moving", () => {
         positionBtn(img);
       });
@@ -361,9 +367,13 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       //   // scaleX: scaleX,
       //   // scaleY: scaleY,
       // });
-      img.on("mouse:down", () => {
+      img.on("selected", () => {
+
+        const rebtn = regenerateRef.current;
+        rebtn.style.display = "none";
         positionBtn(img);
         // RegeneratepositionBtn(img);
+    
       });
 
       img.on("moving", () => {
@@ -560,14 +570,23 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       //   scaledWidth = scaledHeight * imageAspectRatio;
       // }
 
-      img.on("mouse:down", () => {
+      img.on("selected", () => {
+        const rebtn = regenerateRef.current;
+        rebtn.style.display = "block";
         positionBtn(img);
         RegeneratepositionBtn(img);
+
+
       });
 
       img.on("moving", () => {
         positionBtn(img);
         RegeneratepositionBtn(img);
+      });
+   
+
+      img.on("selection:cleared", () => {
+
       });
 
       // img.on("scaling", function () {
