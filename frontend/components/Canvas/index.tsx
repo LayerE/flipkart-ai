@@ -588,7 +588,7 @@ export default function CanvasBox({ proid, userId }) {
             handelRegenrate();
           }}
         >
-          <button className="selectone yello">Regenrate Product</button>
+          <button className="selectone yello">Regenerate Product</button>
         </div>
 
         <div className="ss">
