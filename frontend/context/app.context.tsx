@@ -209,7 +209,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const regenerateRef = useRef(null);
   const generateBox = useRef(null);
   const previewBox = useRef(null);
-  
+
   const [regenratedImgsJobId, setRegenratedImgsJobid] = useState(null);
 
   const [projectId, setprojectId] = useState(null);
@@ -368,17 +368,25 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       //   // scaleY: scaleY,
       // });
       img.on("selected", () => {
-
         const rebtn = regenerateRef.current;
         rebtn.style.display = "none";
+
+        const btn = PosisionbtnRef.current;
+        btn.style.display = "block";
         positionBtn(img);
         // RegeneratepositionBtn(img);
-    
       });
 
       img.on("moving", () => {
+        const btn = PosisionbtnRef.current;
+        btn.style.display = "block";
         positionBtn(img);
         // RegeneratepositionBtn(img);
+      });
+
+      img.on("scaling", () => {
+        positionBtn(img);
+
       });
       // img.on("scaling", function () {
       //   positionBtn(img);
@@ -423,15 +431,17 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   function positionBtn(obj) {
     const btn = PosisionbtnRef.current;
     const absCoords = canvasInstance?.current.getAbsoluteCoords(obj);
-    btn.style.left = absCoords.left + "px";
-    btn.style.top = absCoords.top + "px";
+    btn.style.left = absCoords.left -10+ "px";
+    btn.style.top = absCoords.top -40+ "px";
+    // btn.style.left = absCoords.left - 150 / 2 + "px";
+    // btn.style.top = absCoords.top - 80 / 2 + "px";
   }
 
   function RegeneratepositionBtn(obj) {
     const btns = regenerateRef.current;
     const absCoords = canvasInstance?.current.getAbsoluteCoords(obj);
-    btns.style.left = absCoords.left + 150 + "px";
-    btns.style.top = absCoords.top + 330 + "px";
+    btns.style.left = (absCoords.left - 100 / 2 + obj.getScaledWidth() / 2) + 'px';
+    btns.style.top = absCoords.top +  obj.getScaledHeight() - 50 + "px";
   }
 
   const GetProjexts = (getUser: string) => {
@@ -499,7 +509,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
             headers: {
               "Content-Type": "application/json",
             },
-          
+
             body: JSON.stringify({
               userId: userId,
               projectId: projectId,
@@ -575,18 +585,25 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         rebtn.style.display = "block";
         positionBtn(img);
         RegeneratepositionBtn(img);
-
-
+        const btn = PosisionbtnRef.current;
+        btn.style.display = "block";
       });
 
       img.on("moving", () => {
+        const rebtn = regenerateRef.current;
+        rebtn.style.display = "block";
         positionBtn(img);
         RegeneratepositionBtn(img);
+        const btn = PosisionbtnRef.current;
+        btn.style.display = "block";
       });
-   
 
-      img.on("selection:cleared", () => {
+      img.on("scaling", () => {
+        const btn = PosisionbtnRef.current;
+        btn.style.display = "block";
+        positionBtn(img);
 
+        RegeneratepositionBtn(img);
       });
 
       // img.on("scaling", function () {
@@ -625,7 +642,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         // scaleY: scaleY,
       });
       img.set("category", "generated");
-      
+
       // canvasInstance.current.clear();
       canvasInstance?.current.add(img);
       canvasInstance?.current.setActiveObject(img);
@@ -892,7 +909,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           maskDataUrl: maskDataUrl,
           prompt: promtText.trim(),
           user_id: userId,
-          category:category,
+          category: category,
           lora_type: loara,
           num_images: selectResult,
         }),
@@ -1009,7 +1026,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           maskDataUrl: null,
           prompt: promtText ? promtText : " " + " ",
           user_id: ueserId,
-          category:category,
+          category: category,
 
           // lora_type: loara,
           num_images: 3,
@@ -1236,8 +1253,10 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         modifidImageArray,
         setModifidImageArray,
         fetchAssetsImagesWithProjectId,
-        filteredArray, setFilteredArray,
-        category, setcategory
+        filteredArray,
+        setFilteredArray,
+        category,
+        setcategory,
       }}
     >
       {children}

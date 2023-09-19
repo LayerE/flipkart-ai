@@ -108,7 +108,6 @@ export default function CanvasBox({ proid, userId }) {
       return {
         left: object.left,
         top: object.top,
-        bottom: object.bottom,
       };
     };
 
@@ -334,8 +333,6 @@ export default function CanvasBox({ proid, userId }) {
         }
       });
 
-     
-
       // canvasInstanceRef.on("mouse:wheel", function (opt) {
       //   var delta = opt.e.deltaY;
       //   var zoom = canvasInstanceRef.getZoom();
@@ -379,10 +376,10 @@ export default function CanvasBox({ proid, userId }) {
         // var hasGenerated = selectedObjects.some(function (obj) {
         //   return obj.category === "generated";
         // });
-        
+
         // if (hasGenerated) {
-          // Show the additional button if at least one object has the category "generated"
-          // rebtn.style.display = "block";
+        // Show the additional button if at least one object has the category "generated"
+        // rebtn.style.display = "block";
         // }
         btn.style.display = "block";
 
@@ -397,11 +394,10 @@ export default function CanvasBox({ proid, userId }) {
         // });
         btn.style.display = "none";
 
-        
         // if (hasGenerated) {
-          // rebtn.style.display = "none";
-          // Show the additional button if at least one object has the category "generated"
-          // rebtn.style.display = "block";
+        rebtn.style.display = "none";
+        // Show the additional button if at least one object has the category "generated"
+        // rebtn.style.display = "block";
         // }
         setDownloadImg(null);
 
@@ -409,7 +405,6 @@ export default function CanvasBox({ proid, userId }) {
           setActiveTab(1);
         }
       });
-
 
       document.addEventListener("keydown", (e) => {
         // Check if the pressed key is 'Delete' (code: 46) or 'Backspace' (code: 8) for wider compatibility
@@ -507,8 +502,6 @@ export default function CanvasBox({ proid, userId }) {
       // }
 
       // console.log("canvasInstance",canvasInstanceRef)
-
-     
     }
   }, [isReady, userId]);
 
@@ -518,7 +511,6 @@ export default function CanvasBox({ proid, userId }) {
         router.events.off("routeChangeStart", saveCanvasToDatabase);
 
         saveCanvasToDatabase();
-      
       };
     };
   }, []);
@@ -535,8 +527,6 @@ export default function CanvasBox({ proid, userId }) {
     localStorage.setItem(proid, canvasData);
     // }
   };
-
-
 
   const generationBoxStyle = {
     left: `${30}px`,
@@ -593,12 +583,12 @@ export default function CanvasBox({ proid, userId }) {
           id="inline-btn"
           className="regenrat"
           ref={regenerateRef}
-          style={{ display:  "none" }}
+          style={{ display: "none" }}
           onClick={() => {
             handelRegenrate();
           }}
         >
-          <button className="selectone">Regenrate Product</button>
+          <button className="selectone yello">Regenrate Product</button>
         </div>
 
         <div className="ss">
@@ -666,16 +656,23 @@ const Wrapper = styled.div`
   .selectone {
     border-radius: 4px;
     cursor: pointer;
-    border: 2px solid #d9d9d9;
-    padding: 4px 8px;
+    border: 2px solid rgba(249, 208, 13, 1) ;
+    padding: 5px 8px;
+    background: rgba(249, 208, 13, 1) !important;
 
-    font-size: 11px;
-    font-weight: bold;
+
+    font-size: 12px;
+    font-weight: 500;
     transition: all 0.3 ease;
-    margin-right: 5px;
+    margin-right: 3px;
 
     &:hover {
       border: 2px solid rgba(249, 208, 13, 1);
     }
+  }
+
+  .yello{
+
+
   }
 `;
