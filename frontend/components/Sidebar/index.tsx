@@ -255,6 +255,9 @@ const Sidebar: React.FC = () => {
 };
 
 const SideBar = styled.div`
+position: relative;
+z-index: 200;
+background-color: #FFF;
   .new {
     height: 100vh;
     display: flex;

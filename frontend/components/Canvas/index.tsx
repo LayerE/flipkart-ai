@@ -651,7 +651,7 @@ const Wrapper = styled.div`
   }
   #inline-btn {
     position: absolute;
-    z-index: 200;
+    z-index: 10;
   }
   .selectone {
     border-radius: 4px;
