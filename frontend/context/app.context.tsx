@@ -224,6 +224,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [newassetonCanvas, setNewassetonCanvas] = useState(null);
 
   const [genRect, setgenRect] = useState();
+  const [assetLoader, setassetLoader] = useState(false)
 
   const canvasHistory = useRef([]);
   const currentCanvasIndex = useRef(-1);
@@ -1128,9 +1129,13 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
   const [loadercarna, setloadercarna] = useState(false);
 
+
+ 
+
   return (
     <AppContext.Provider
       value={{
+       
         loadercarna,
         setloadercarna,
         listofassetsById,
@@ -1255,6 +1260,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setLoader,
         positionBtn,
         promt,
+        assetLoader, setassetLoader,
         setpromt,
         undoArray,
         setUndoArray,

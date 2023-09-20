@@ -64,7 +64,7 @@ export const Suggestion1 = styled.div`
 `;
 export const TestArea = styled.textarea`
   padding: 0.5rem 0.75rem;
-  border: 1px solid ${(props) => props.theme.stroke};
+  border: 1px solid #d9d9d9;
   outline: none;
   color: #000;
   border-radius: 0.5rem;
@@ -73,6 +73,11 @@ export const TestArea = styled.textarea`
   width: 100%;
   font-size: 14px;
   transition: all 0.3s ease;
+
+  &:focus-visible{
+    border: 2px solid ${(props) => props.theme.btnPrimary};
+
+  }
 
   &:disabled {
     color: #fff7f7 !important;
@@ -189,10 +194,11 @@ export const FileUpload: React.FC = ({ type, title, uerId }) => {
     projectId,
     // uerId,
     setloadercarna,
-  } = useAppState();
-  const [assetLoader, setassetLoader] = useState(false)
+    assetLoader, setassetLoader,
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  } = useAppState();
+
+  const handleFileChange = (event) => {
     setassetLoader(true)
 
     const selectedFile = event.target.files?.[0] || null;
@@ -206,10 +212,10 @@ export const FileUpload: React.FC = ({ type, title, uerId }) => {
       const reader = new FileReader();
       reader.onloadend = async () => {
         if (type === "element") {
-          addimgToCanvas(reader.result);
+          // addimgToCanvas(reader.result);
         } else {
           const filename = `img${Date.now()}`;
-          setLoader(true);
+          // setLoader(true);
 
           const response = await fetch("/api/removebg", {
             method: "POST",
@@ -231,11 +237,11 @@ export const FileUpload: React.FC = ({ type, title, uerId }) => {
               dataArray: data,
             });
             setassetLoader(false)
-            setLoader(false);
+            // setLoader(false);
             // setloadercarna(false);
           } else {
             console.log("bg not removed");
-            setLoader(false);
+            // setLoader(false);
             // setloadercarna(false);
             setassetLoader(false)
 
@@ -254,7 +260,6 @@ export const FileUpload: React.FC = ({ type, title, uerId }) => {
       reader.readAsDataURL(selectedFile);
     }
   };
-
   const handleRemoveFile = () => {
     setFile(null);
   };
