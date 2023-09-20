@@ -205,6 +205,7 @@ export const ThemedGlobalStyle = createGlobalStyle`
   body { 
     font-family: var(--ff-content);
     height: 100%;
+    background-color: #fff;
  }
  
   /* Set core body defaults */
