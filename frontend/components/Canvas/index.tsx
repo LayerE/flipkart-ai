@@ -57,10 +57,14 @@ export default function CanvasBox({ proid, userId }) {
     genRect,
     setgenRect,
     positionBtn,
+    newEditorBox,
+    imageGenRect,
+    zoom, setZoomCanvas,
+
 
     // canvasRef
   } = useAppState();
-  let newEditorBox;
+  // let newEditorBox;
   // const [loadercarna, setloadercarna] = useState(false);
   const [canvasZoom, setCanvasZoom] = useState(1);
   const [canvasPosition, setCanvasPosition] = useState({ x: 0, y: 0 });
@@ -100,17 +104,7 @@ export default function CanvasBox({ proid, userId }) {
       // Other canvas operations...
     }
 
-    fabric.Object.prototype.transparentCorners = false;
-    // fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
-    // Add a custom method to the Fabric canvas prototype
-
-    fabric.Canvas.prototype.getAbsoluteCoords = function (object) {
-      return {
-        left: object.left,
-        top: object.top,
-      };
-    };
-
+   
     // getCanvs(project);
 
     // Resize canvas when the window is resized
@@ -144,45 +138,22 @@ export default function CanvasBox({ proid, userId }) {
       const canvasInstanceRef = canvasInstance?.current;
 
       canvasInstanceRef.clear();
-      const newEditorBox = new fabric.Rect({
-        left: 30,
-        top: 120,
-        width: 380,
-        height: 380,
-        selectable: false,
-        fill: "transparent",
-        stroke: "rgba(249, 208, 13, 1)",
-        strokeWidth: 1,
-        excludeFromExport: true,
-      });
+   
+      canvasInstanceRef.add(imageGenRect);
 
-      // canvasInstanceRef.add(newEditorBox);
+      canvasInstanceRef.add(newEditorBox);
       // canvasInstanceRef.renderAll();
       const btn = PosisionbtnRef.current;
       const rebtn = regenerateRef.current;
-      const genBox = generateBox.current;
+      // const genBox = generateBox.current;
       const preBox = previewBox.current;
 
       // Assuming you have a Fabric.js canvas object named 'canvas'
 
-      // // Set the zoom level (e.g., zoom in by a factor of 2)
-      // var zoomLevel = 0.8;
-      // canvasInstanceRef.setZoom(zoomLevel);
 
-      // // Set the zooming point (x, y) coordinates
-      // var zoomPointX = 100; // X-coordinate of the zooming point
-      // var zoomPointY = 100; // Y-coordinate of the zooming point
-
-      // // Calculate the zoom origin based on the zooming point
-      // var zoomOriginX = canvasInstanceRef.width / 2 - zoomPointX * zoomLevel;
-      // var zoomOriginY = canvasInstanceRef.height / 2 - zoomPointY * zoomLevel;
-
-      // // Set the zoom origin
-      // canvasInstanceRef.zoomToPoint(
-      //   new fabric.Point(zoomOriginX, zoomOriginY),
-      //   zoomLevel
-      // );
-
+     
+  
+    
       // When a user clicks on an image on the canvas
       canvasInstanceRef.on("mouse:down", function (options) {
         if (options.target && options.target.type === "image") {
@@ -224,16 +195,7 @@ export default function CanvasBox({ proid, userId }) {
         fill: "rgba(0, 0, 0, 1)",
       });
       canvasInstanceRef.add(EditorBoxText);
-      const imageGenRect = new fabric.Rect({
-        left: 400,
-        top: 120,
-        width: 380,
-        height: 380,
-        selectable: false,
-        // fill: "rgba(249, 208, 13, 0.23)",
-        // fill: "transparent",
-      });
-
+   
       const imageGenText = new fabric.Text("Generated image will appear here", {
         left: 450 + 20,
         top: 200 + 20,
@@ -247,18 +209,22 @@ export default function CanvasBox({ proid, userId }) {
         fill: "rgba(0, 0, 0, 1)",
       });
 
-      genBox.addEventListener("click", (e) => {
-        // Check if the pressed key is 'Delete' (code: 46) or 'Backspace' (code: 8) for wider compatibility
-        const dataURL = canvasInstanceRef.toDataURL({
-          format: "png",
-          left: parseInt(genBox.style.left),
-          top: parseInt(genBox.style.top),
-          width: parseInt(genBox.style.width),
-          height: parseInt(genBox.style.height),
-        });
-        // setDownloadImg(dataURL);
-        setDownloadImg(dataURL);
-      });
+      // genBox.addEventListener("click", (e) => {
+      //   // Check if the pressed key is 'Delete' (code: 46) or 'Backspace' (code: 8) for wider compatibility
+      //   const dataURL = canvasInstanceRef.toDataURL({
+      //     format: "png",
+      //     // left: parseInt(genBox.style.left),
+      //     // top: parseInt(genBox.style.top),
+      //     // width: parseInt(genBox.style.width),
+      //     // height: parseInt(genBox.style.height),
+      //       left:newEditorBox.left,
+      //     top:newEditorBox.top,
+      //     width: newEditorBox.width,
+      //     height:newEditorBox.height,
+      //   });
+      //   // setDownloadImg(dataURL);
+      //   setDownloadImg(dataURL);
+      // });
       newEditorBox.on("mousedown", function () {
         const originalStrokeColor = newEditorBox.stroke;
         const originalStrokeWidth = newEditorBox.strokeWidth;
@@ -267,12 +233,12 @@ export default function CanvasBox({ proid, userId }) {
         newEditorBox.set("stroke", "transparent");
         newEditorBox.set("strokeWidth", 0);
         canvasInstanceRef.renderAll();
-        console.log(parseInt(genBox.style.left), genBox.style.top);
+        console.log(parseInt(newEditorBox.left), newEditorBox.top);
 
         const dataURL = canvasInstanceRef.toDataURL({
           format: "png",
-          left: parseInt(genBox.style.left),
-          top: parseInt(genBox.style.top),
+          left:newEditorBox.left,
+              top:newEditorBox.top,
           width: 512,
           height: 512,
         });
@@ -348,43 +314,7 @@ export default function CanvasBox({ proid, userId }) {
       //   ctx.restore();
       // };
 
-      // canvasInstanceRef.on("mouse:wheel", function (opt) {
-      //   var delta = opt.e.deltaY;
-      //   var zoom = canvasInstanceRef.getZoom();
-      //   zoom *= 0.999 ** delta;
-      //   if (zoom > 20) zoom = 20;
-      //   if (zoom < 0.01) zoom = 0.01;
-      //   canvasInstanceRef.zoomToPoint(
-      //     { x: opt.e.offsetX, y: opt.e.offsetY },
-      //     zoom
-      //   );
-      //   positionBtn(canvasInstanceRef._activeObject);
-      //   // genBox.style.transform = `scale(${zoom})`;
-      //   // genBox.style.transform = `scale(${zoom}) translate(${newEditorBox.x}px, ${newEditorBox.y}px)`;
-      //   // Get the coordinates of the inner rectangle
-      //   var innerRectCoords = newEditorBox.getBoundingRect();
-      //   // Update the position and zoom of the outer div
-      //   // genBox.style.transform = `scale(${zoom})`;
-      //   // genBox.style.left = `${innerRectCoords.left * zoom}px`;
-      //   // genBox.style.top = `${innerRectCoords.top * zoom}px`;
-      //   // Calculate the adjusted position for the outer div
-      //   // var canvasContainer = document.getElementById('canvas-container');
-      //   var canvasScrollLeft = genBox.scrollLeft;
-      //   var canvasScrollTop = genBox.scrollTop;
-      //   var adjustedLeft = (innerRectCoords.left - canvasScrollLeft) * zoom;
-      //   var adjustedLeftPr =
-      //     (innerRectCoords.left + 400 - canvasScrollLeft) * zoom;
-      //   var adjustedTop = (innerRectCoords.top - canvasScrollTop) * zoom;
-      //   // Update the position and zoom of the outer div
-      //   preBox.style.transform = `scale(${zoom})`;
-      //   genBox.style.transform = `scale(${zoom})`;
-      //   genBox.style.left = `${adjustedLeft}px`;
-      //   genBox.style.top = `${adjustedTop}px`;
-      //   preBox.style.top = `${adjustedTop}px`;
-      //   preBox.style.left = `${adjustedLeftPr}px`;
-      //   opt.e.preventDefault();
-      //   opt.e.stopPropagation();
-      // });
+  
 
       canvasInstanceRef.on("selection:created", (e) => {
         var selectedObjects = e.target;
@@ -446,7 +376,7 @@ export default function CanvasBox({ proid, userId }) {
       // setTimeout(() => {
       // }, 300);
     };
-  }, [canvasInstance.current]);
+  }, [canvasInstance.current,zoom]);
 
   const DeletIrem = ()=>{
     const activeObject = canvasInstance?.current?.getActiveObject();
@@ -456,6 +386,85 @@ export default function CanvasBox({ proid, userId }) {
     }
 
   }
+
+  useEffect(() => {
+
+    if (canvasInstance?.current && loadercarna) {
+
+
+      const canvasInstanceRef = canvasInstance?.current;
+    // canvasInstanceRef.on("mouse:wheel", function (opt) {
+    //   var delta = opt.e.deltaY;
+    //   var zooms = canvasInstanceRef.getZoom();
+
+    //   zooms *= 0.999 ** delta;
+    //   if (zooms > 2) zooms = 2;
+    //   if (zooms < 0.3) zooms = 0.3;
+    //   canvasInstanceRef.zoomToPoint(
+    //     { x: opt.e.offsetX, y: opt.e.offsetY },
+    //     zooms
+    //   );
+    //   setZoomCanvas(zooms)
+
+    //   console.log(zoom)
+    
+    //   // genBox.style.transform = `scale(${zoom})`;
+    //   // genBox.style.transform = `scale(${zoom}) translate(${newEditorBox.x}px, ${newEditorBox.y}px)`;
+    //   // Get the coordinates of the inner rectangle
+
+    //   // Update the position and zoom of the outer div
+    //   // genBox.style.transform = `scale(${zoom})`;
+    //   // genBox.style.left = `${innerRectCoords.left * zoom}px`;
+    //   // genBox.style.top = `${innerRectCoords.top * zoom}px`;
+    //   // Calculate the adjusted position for the outer div
+    //   // var canvasContainer = document.getElementById('canvas-container');
+    
+    //   opt.e.preventDefault();
+    //   opt.e.stopPropagation();
+    // });
+
+
+
+    fabric.Object.prototype.transparentCorners = false;
+    // fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
+    // Add a custom method to the Fabric canvas prototype
+
+      // Set the zoom level (e.g., zoom in by a factor of 2)
+      var zoomLevel = zoom;
+      
+      canvasInstanceRef.setZoom(zoom);
+      var zooms = canvasInstanceRef.getZoom();
+      
+      console.log(" position", zooms)
+
+      // Set the zooming point (x, y) coordinates
+      var zoomPointX = 100; // X-coordinate of the zooming point
+      var zoomPointY = 100; // Y-coordinate of the zooming point
+
+      // Calculate the zoom origin based on the zooming point
+      var zoomOriginX = canvasInstanceRef.width / 2 - zoomPointX * zoom;
+      var zoomOriginY = canvasInstanceRef.height / 2 - zoomPointY * zoom;
+
+      // Set the zoom origin
+      canvasInstanceRef.zoomToPoint(
+        new fabric.Point(zoomOriginX, zoomOriginY),
+        zoom
+      );
+      
+      
+      fabric.Canvas.prototype.getAbsoluteCoords = function (object) {
+        return {
+          left: object.left * zoom,
+          top: object.top * zoom,
+        };
+      };
+      setZoomCanvas(zooms)
+  }
+  }, [canvasInstance.current, zoom, setZoomCanvas]);
+
+
+
+
 
   useEffect(() => {
     // Fetch canvas data from your API and load it into the canvas
@@ -584,16 +593,16 @@ export default function CanvasBox({ proid, userId }) {
       {loadercarna ? <Loader /> : null}
       <div className="convas-continer">
         <div className="generationBox">
-          <div
+          {/* <div
             className="leftbox"
             ref={generateBox}
             style={generationBoxStyle}
-          ></div>
-          <div
+          ></div> */}
+          {/* <div
             className="rightbox"
             ref={previewBox}
             style={PreviewBoxStyle}
-          ></div>
+          ></div> */}
         </div>
         <div id="inline-btn" ref={PosisionbtnRef}>
           <button className="selectone" onClick={() => bringImageToFront()}>
