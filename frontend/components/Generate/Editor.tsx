@@ -20,7 +20,6 @@ import {
   renderStrength,
   resultList,
   surroundingList,
-
   test,
 } from "@/store/dropdown";
 import { useAppState } from "@/context/app.context";
@@ -51,8 +50,12 @@ const EditorSection = () => {
     setSelectedColoreStrength,
     selectOutLline,
     setSelectedOutline,
-  loara, setLoara,
-
+    loara,
+    setLoara,
+    activeSize,
+    setActiveSize,
+    customsize,
+    setCustomsize,
     product,
     setProduct,
     placementTest,
@@ -96,6 +99,59 @@ const EditorSection = () => {
       suggestion.toLowerCase().includes(placementTest.toLowerCase())
   );
 
+  const sizeList = [
+    {
+      id: 1,
+      title: "Default",
+      subTittle: "1024✕1024",
+      h: 1024,
+      w: 1024,
+    },
+    {
+      id: 2,
+      title: "Instagram Post",
+      subTittle: "1080✕1080",
+      h: 1080,
+      w: 1080,
+    },
+    {
+      id: 3,
+      title: "Instagram Story",
+      subTittle: "1080✕1920",
+      h: 1920,
+      w: 1080,
+    },
+    {
+      id: 4,
+      title: "Facebook Post",
+      subTittle: "940✕788",
+      h: 788,
+      w: 940,
+    },
+    {
+      id: 5,
+      title: "16:9",
+      subTittle: "1920✕1080",
+      h: 1080,
+      w: 1920,
+    },
+    {
+      id: 6,
+      title: "9:16",
+      subTittle: "1080✕1920",
+      h: 1920,
+      w: 1080,
+    },
+    {
+      id: 7,
+      title: "Custom",
+      subTittle: "1024✕1024",
+      h: 1024,
+      w: 1024,
+      custom: true,
+    },
+  ];
+
   return (
     <motion.div
       initial="hidden"
@@ -104,15 +160,76 @@ const EditorSection = () => {
       className="accest"
     >
       <BoxOff className="boxof">
-      <div className="filde gap">
+        <div className="gap">
+          <Label>Canvas size</Label>
+
+          <div className="sixBox">
+            {sizeList?.map((item, i) => (
+              <div
+                key={i}
+                className={`items ${
+                  activeSize.id === item.id ? "actives" : ""
+                }`}
+                onClick={() => {
+                  setActiveSize(item);
+                }}
+              >
+                <div className="tittl">{item.title}</div>
+                {item?.custom ? (
+                  <div className="input">
+                    <input
+                      type="number"
+                      readOnly={activeSize.id === item.id ? "" : "readOnly"}
+                      value={customsize.w}
+                      onChange={(e) =>
+                        setCustomsize((pre) => ({ ...pre, w: e.target.value }))
+                      }
+                    />
+                    X
+                    <input
+                      type="number"
+                      value={customsize.h}
+                      onChange={(e) =>
+                        setCustomsize((pre) => ({ ...pre, h: e.target.value }))
+                      }
+                    />
+                  </div>
+                ) : (
+                  <div className="sub">{item.subTittle}</div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="gap">
+          <div className="two">
+            <Label>No. of images to generate</Label>
+            <div className="rangeValue">
+              <Label> {selectResult}</Label>
+            </div>
+          </div>
+          <div className="rangebox">
+            <input
+              type="range"
+              min="1"
+              max="6"
+              step="1"
+              value={selectResult}
+              onChange={(e) => setSelectedresult(parseInt(e.target.value, 10))}
+            />
+          </div>
+        </div>
+
+        {/* <div className="filde gap">
         <DisabledLabel>Product</DisabledLabel>
         <SuggetionInput
           value={product}
           setValue={setProduct}
           suggetion={ProductSuggestionsFilter}
         />
-      </div>
-      {/* <div className="gap">
+      </div> */}
+        {/* <div className="gap">
         <DisabledLabel>Lora</DisabledLabel>
         <DropdownInput
             data={{
@@ -126,7 +243,7 @@ const EditorSection = () => {
           ></DropdownInput>
         
       </div> */}
-      <div className="gap">
+        {/* <div className="gap">
         <DisabledLabel>Placement</DisabledLabel>
         <div className="two-side">
           <DropdownInput
@@ -182,9 +299,9 @@ const EditorSection = () => {
             suggetion={BackgroundSuggestionsFilter}
           />
         </div>
-      </div>
-    
-      {/* <div className="rowwothtwo">
+      </div> */}
+
+        {/* <div className="rowwothtwo">
         <Label>Render strength</Label>
         <div className="dropdown-smaill">
           <DropdownNOBorder
@@ -227,9 +344,183 @@ const EditorSection = () => {
 
 export default EditorSection;
 export const BoxOff = styled.div`
-/* height: 100%; */
-/* overflow: hidden; */
-  
+  /* height: 100%; */
+  /* overflow: hidden; */
+  .two {
+    display: flex;
+    justify-content: space-between;
+  }
+  .rangeValue {
+    background: rgba(249, 208, 13, 1);
+    padding: 5px 12px;
+    border-radius: 5px;
+  }
+  .sixBox {
+    border: 1px solid #d9d9d9;
+    border-radius: 6px;
+
+    .items {
+      border-bottom: 1px solid #d9d9d9;
+      padding: 10px;
+      font-size: 16px;
+      transition: all 0.3s ease-in-out;
+      display: flex;
+      justify-content: space-between;
+      /* align-items: center; */
+      .sub {
+        opacity: 0;
+        transition: all 0.5s ease-in-out;
+        color: #7a7979;
+      }
+
+      &:hover {
+        background-color: rgba(249, 208, 13, 0.23);
+
+        .sub {
+          opacity: 1;
+        }
+      }
+
+      .tittl {
+        font-weight: 500;
+      }
+      .input {
+        display: flex;
+        gap: 5px;
+
+        input {
+          width: 60px;
+          background-color: #fff;
+          color: #7a7979;
+          padding: 0 5px;
+          border: 1px solid #d9d9d9;
+          &:hover {
+            border: 1px solid #d9d9d9;
+          }
+          &:focus-visible {
+            border: 1px solid #d9d9d9;
+          }
+        }
+      }
+    }
+  }
+  /* Chrome, Safari, Edge, Opera */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox */
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+  .actives {
+    background-color: #f8d62bfe !important;
+  }
+
+  /* Chrome, Safari, Edge, Opera */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox */
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+
+  input[type="range"] {
+    height: 20px;
+    -webkit-appearance: none;
+    /* margin: 10px 0; */
+    width: 100%;
+    background: #fff;
+  }
+  input[type="range"]:focus {
+    outline: none;
+  }
+  input[type="range"]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 5px;
+    cursor: pointer;
+    animate: 0.2s;
+    /* box-shadow: 0px 0px 0px #000000; */
+    background: rgba(249, 208, 13, 1);
+    border-radius: 1px;
+    border: 0px solid #000000;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    /* box-shadow: 0px 0px 0px #000000; */
+    border: 1px solid rgba(249, 208, 13, 1);
+    height: 15px;
+    width: 15px;
+    border-radius: 25px;
+    background: #dac149;
+    cursor: pointer;
+    -webkit-appearance: none;
+    margin-top: -4px;
+  }
+  input[type="range"]:focus::-webkit-slider-runnable-track {
+    background: rgba(249, 208, 13, 1);
+  }
+  input[type="range"]::-moz-range-track {
+    width: 100%;
+    height: 5px;
+    cursor: pointer;
+    animate: 0.2s;
+    box-shadow: 0px 0px 0px #000000;
+    background: rgba(249, 208, 13, 1);
+    border-radius: 1px;
+    border: 0px solid #000000;
+  }
+  input[type="range"]::-moz-range-thumb {
+    box-shadow: 0px 0px 0px #000000;
+    border: 1px solid #rgba(249, 208, 13, 1);
+    height: 18px;
+    width: 18px;
+    border-radius: 25px;
+    background: rgba(249, 208, 13, 1);
+    cursor: pointer;
+  }
+  input[type="range"]::-ms-track {
+    width: 100%;
+    height: 5px;
+    cursor: pointer;
+    animate: 0.2s;
+    background: transparent;
+    border-color: transparent;
+    color: transparent;
+  }
+  input[type="range"]::-ms-fill-lower {
+    background: rgba(249, 208, 13, 1);
+    border: 0px solid #000000;
+    border-radius: 2px;
+    /* box-shadow: 0px 0px 0px #000000; */
+  }
+  input[type="range"]::-ms-fill-upper {
+    background: rgba(249, 208, 13, 1);
+    border: 0px solid #000000;
+    border-radius: 2px;
+    /* box-shadow: 0px 0px 0px #000000; */
+  }
+  input[type="range"]::-ms-thumb {
+    margin-top: 1px;
+    /* box-shadow: 0px 0px 0px #000000; */
+    border: 1px solid rgba(249, 208, 13, 1);
+    height: 18px;
+    width: 18px;
+    border-radius: 25px;
+    background: rgba(249, 208, 13, 1);
+    cursor: pointer;
+  }
+  input[type="range"]:focus::-ms-fill-lower {
+    background: rgba(249, 208, 13, 1);
+  }
+  input[type="range"]:focus::-ms-fill-upper {
+    background: rgba(249, 208, 13, 1);
+  }
 `;
 export const ResponsiveRowWraptwo = styled(Row)`
   display: grid !important;

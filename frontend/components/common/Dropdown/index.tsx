@@ -191,7 +191,7 @@ const DropdownWrapper = styled.div`
   }
   .dropdown-content {
     
-    top: 23px;
+    bottom: 30px;
 
     position: absolute;
     z-index: 10;

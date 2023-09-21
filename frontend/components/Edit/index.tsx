@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
-import Label from "../common/Label";
+import Label, { DisabledLabel } from "../common/Label";
 import { Row } from "../common/Row";
-import DropdownInput from "../common/Dropdown";
+import DropdownInput, { DropdownNOBorder } from "../common/Dropdown";
 import Button from "../common/Button";
 import { useAppState } from "@/context/app.context";
 
@@ -13,9 +13,12 @@ import { saveAs } from "file-saver";
 import { SketchPicker } from "react-color";
 import { motion } from "framer-motion";
 import { arrayBufferToDataURL, dataURLtoFile } from "@/utils/BufferToDataUrl";
-import { coloreMode } from "@/store/dropdown";
+import { ImgFormate, coloreMode } from "@/store/dropdown";
 import { Input } from "../common/Input";
 import { Console } from "console";
+import { useAuth } from "@clerk/nextjs";
+import { useRouter } from "next/router";
+import { styled } from "styled-components";
 
 const Edit = () => {
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
@@ -29,6 +32,7 @@ const Edit = () => {
     downloadImg,
     canvasInstance,
     addimgToCanvasGen,
+    addimgToCanvasSubject,
     modifidImageArray,
     isMagic,
     setIsMagic,
@@ -37,7 +41,15 @@ const Edit = () => {
     bringImageToFront,
     sendImageToBack,
     setLoader,
+    downloadeImgFormate,
+    setDownloadeImgFormate,
+    mode, setMode
   } = useAppState();
+
+  const { userId } = useAuth();
+  const { query, isReady } = useRouter();
+  // const { id } = query;
+  const id = (query.id as string[]) || [];
   /* eslint-disable */
 
   useEffect(() => {
@@ -130,20 +142,21 @@ const Edit = () => {
 
   const HandelBG = async () => {
     setLoader(true);
-    const response = await fetch(
-      "https://dhanushreddy29-remove-background.hf.space/run/predict",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          data: [modifidImageArray[modifidImageArray.length - 1]?.url],
-        }),
-      }
-    );
+    const response = await fetch("/api/removebg", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        dataUrl: downloadImg,
+        user_id: userId,
+        project_id: id,
+      }),
+    });
     const data = await response.json();
     if (data) {
+      addimgToCanvasSubject(data?.data?.data[0]);
       // addimgToCanvasGen(data?.data[0]);
-      setSelectedImg({ status: true, image: data?.data[0] });
+      // setSelectedImg({ status: true, image: data?.data[0] });
+      // addimgToCanvasGen(data);
 
       setModifidImageArray((pre) => [
         ...pre,
@@ -210,10 +223,7 @@ const Edit = () => {
     // const data = await response;
     // console.log(await data, "upscale ");
 
-    const data = await upSacle(
-      downloadImg,
-      "imger"
-    );
+    const data = await upSacle(downloadImg, "imger");
     console.log(data, "upscale ");
 
     if (data) {
@@ -233,7 +243,51 @@ const Edit = () => {
     setColore(color.hex);
   };
 
- 
+
+
+  const [size, setsize] = useState(40);
+
+  const [isEraseMode, setIsEraseMode] = useState(false);
+  const history = useRef([]);
+  const historyIndex = useRef(-1);
+  useEffect(() => {
+    canvasInstance.current.on("object:added", () => {
+        history.current.push(JSON.stringify(canvasInstance.current.toJSON()));
+        historyIndex.current += 1;
+      });
+  }, [size,canvasInstance])
+  
+
+  const toggleEraseMode = () => {
+    setIsEraseMode(!isEraseMode);
+    if (isEraseMode) {
+      // code to enable eraser
+      canvasInstance.current.isDrawingMode = true;
+      canvasInstance.current.freeDrawingBrush.color = "#f8f8f8"; // Assuming background is white
+      canvasInstance.current.freeDrawingBrush.width = size; // Set the width of the eraser
+    } else {
+      // code to disable eraser
+      canvasInstance.current.isDrawingMode = false;
+    }
+  };
+  const undoAction = () => {
+    if (historyIndex.current === 0) return;
+
+    historyIndex.current -= 1;
+    const prevState = JSON.parse(history.current[historyIndex.current]);
+    canvasInstance.current.loadFromJSON(prevState);
+  };
+
+  const clearDrawing = () => {
+    setIsEraseMode(false)
+    const objects = canvasInstance.current.getObjects();
+    objects.forEach((object) => {
+      if (object.type === "path") {
+        // Assuming paths are used for free drawing and erasing
+        canvasInstance.current.remove(object);
+      }
+    });
+  };
 
   return (
     <motion.div
@@ -243,20 +297,21 @@ const Edit = () => {
       className={downloadImg ? "accest" : "accest blure"}
       style={{ paddingBottom: "50px" }}
     >
-      <div className="gap"></div>
-      <div className="gap">
-        <Label>Arrange</Label>
-        <div className="selectbox">
-          <div className={"selectone"} onClick={() => bringImageToFront()}>
-            Bring to Front
-          </div>
-          <div className={"selectone"} onClick={() => sendImageToBack()}>
-            Send to back
+      <WrapperEdit>
+        <div className="gap"></div>
+        <div className="gap">
+          <Label>Arrange</Label>
+          <div className="selectbox">
+            <div className={"selectone"} onClick={() => bringImageToFront()}>
+              Bring to Front
+            </div>
+            <div className={"selectone"} onClick={() => sendImageToBack()}>
+              Send to back
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* <div className="gap">
+        {/* <div className="gap">
         <Label>Color</Label>
         <div className="rowwothtwo">
           <DropdownInput
@@ -285,56 +340,241 @@ const Edit = () => {
           </div>
         </div>
       </div> */}
-      <div className="gap">
-        <Label>Tools</Label>
-
         <div className="gap">
+          <Label>Tools</Label>
 
-        <div className={"selectTool"} onClick={() => setIsMagic(true)}>
+          <div className="gap">
+            <div className="mageic">
+              <div className="gaps">
+                <Label>Magic Erase</Label>
+                <DisabledLabel>
+                  Erase then click Generate to replace any unwanted parts of the
+                  background.
+                </DisabledLabel>
+              </div>
+              <div className="gap">
+                <Label>Mode</Label>
+                <div className="modeBtns">
+                  <div className={`btn ${mode  ? "activBtn" : ""}`} onClick={()=> {setMode(true);toggleEraseMode() }} >Erase</div>
+                  <div className={`btn ${mode  ? "" : "activBtn"}`} onClick={()=> {setMode(false); clearDrawing()}} >Restore</div>
+                </div>
+              </div>
+              <div className="gap">
+                <Label>Brush size</Label>
+                <div className="rangebox">
+                  <input
+                    type="range"
+                    min="1"
+                    max="6"
+                    step="1"
+                    // value={selectResult}
+                    // onChange={(e) => setSelectedresult(parseInt(e.target.value, 10))}
+                  />
+                </div>
+              </div>
+            </div>
+            {/* <div className={"selectTool"} onClick={() => setIsMagic(true)}>
             <Label>Magic Erase</Label>
             <div>
               <p>Paint over objects to erase from the image</p>
             </div>
-          </div>
-         
+          </div> */}
 
-          <div
-            className={
-              "selectTool "
-              //  "selectTool ativeimg"
-            }
-            onClick={() => UpscaleBG()}
-          >
-            <Label>Upscale</Label>
-            <div>
-              <p>Upscale image up to 2k resolution</p>
+            <div
+              className={
+                "selectTool "
+                //  "selectTool ativeimg"
+              }
+              onClick={() => UpscaleBG()}
+            >
+              <Label>Upscale</Label>
+              <div>
+                <p>Upscale image up to 2k resolution</p>
+              </div>
+            </div>
+
+            <div
+              className={"selectTool"}
+              onClick={() => {
+                HandelBG();
+              }}
+            >
+              <Label>Remove Background</Label>
+              <div>
+                <p>Remove the background of your image in one click</p>
+              </div>
             </div>
           </div>
-
-          <div
-            className={"selectTool"}
-            onClick={() => {
-              HandelBG();
-            }}
-          >
-            <Label>Remove Background</Label>
-            <div>
-              <p>Remove the background of your image in one click</p>
-            </div>
-          </div>
-         
         </div>
-      </div>
-      <Row>
-        <Button
-          disabled={previewLoader === true ? true : false}
-          onClick={() => handileDownload()}
-        >
-          Download
-        </Button>
-      </Row>
+
+        <div className="gap">
+          <div className="rowwothtwo">
+            <Label>Select image formate</Label>
+            <div className="two-side">
+              <DropdownNOBorder
+                data={{
+                  list: ImgFormate,
+                  action: setDownloadeImgFormate,
+                  activeTab: downloadeImgFormate,
+                }}
+              ></DropdownNOBorder>
+            </div>
+          </div>
+        </div>
+
+        <Row>
+          <Button
+            disabled={previewLoader === true ? true : false}
+            onClick={() => handileDownload()}
+          >
+            Download
+          </Button>
+        </Row>
+      </WrapperEdit>
     </motion.div>
   );
 };
 
 export default Edit;
+
+const WrapperEdit = styled.div`
+.gaps{
+  margin-bottom: 10px;
+}
+  .modeBtns {
+    display: flex;
+    width: 100%;
+    border: 1px solid rgba(249, 208, 13, 1);
+    border-radius: 6px;
+    justify-content: space-between;
+  }
+  .btn {
+    width: 100%;
+    padding: 10px;
+    cursor: pointer;
+
+    text-align: center;
+  }
+
+  .activBtn {
+    background: rgba(249, 208, 13, 1);
+  }
+
+  /* Chrome, Safari, Edge, Opera */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox */
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+  .actives {
+    background-color: #f8d62bfe !important;
+  }
+
+  /* Chrome, Safari, Edge, Opera */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox */
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+
+  input[type="range"] {
+    height: 20px;
+    -webkit-appearance: none;
+    /* margin: 10px 0; */
+    width: 100%;
+    background: #fff;
+  }
+  input[type="range"]:focus {
+    outline: none;
+  }
+  input[type="range"]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 5px;
+    cursor: pointer;
+    animate: 0.2s;
+    /* box-shadow: 0px 0px 0px #000000; */
+    background: rgba(249, 208, 13, 1);
+    border-radius: 1px;
+    border: 0px solid #000000;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    /* box-shadow: 0px 0px 0px #000000; */
+    border: 1px solid rgba(249, 208, 13, 1);
+    height: 15px;
+    width: 15px;
+    border-radius: 25px;
+    background: #dac149;
+    cursor: pointer;
+    -webkit-appearance: none;
+    margin-top: -6px;
+  }
+  input[type="range"]:focus::-webkit-slider-runnable-track {
+    background: rgba(249, 208, 13, 1);
+  }
+  input[type="range"]::-moz-range-track {
+    width: 100%;
+    height: 5px;
+    cursor: pointer;
+    animate: 0.2s;
+    box-shadow: 0px 0px 0px #000000;
+    background: rgba(249, 208, 13, 1);
+    border-radius: 1px;
+    border: 0px solid #000000;
+  }
+  input[type="range"]::-moz-range-thumb {
+    box-shadow: 0px 0px 0px #000000;
+    border: 1px solid #rgba(249, 208, 13, 1);
+    height: 18px;
+    width: 18px;
+    border-radius: 25px;
+    background: rgba(249, 208, 13, 1);
+    cursor: pointer;
+  }
+  input[type="range"]::-ms-track {
+    width: 100%;
+    height: 5px;
+    cursor: pointer;
+    animate: 0.2s;
+    background: transparent;
+    border-color: transparent;
+    color: transparent;
+  }
+  input[type="range"]::-ms-fill-lower {
+    background: rgba(249, 208, 13, 1);
+    border: 0px solid #000000;
+    border-radius: 2px;
+    /* box-shadow: 0px 0px 0px #000000; */
+  }
+  input[type="range"]::-ms-fill-upper {
+    background: rgba(249, 208, 13, 1);
+    border: 0px solid #000000;
+    border-radius: 2px;
+    /* box-shadow: 0px 0px 0px #000000; */
+  }
+  input[type="range"]::-ms-thumb {
+    margin-top: 1px;
+    /* box-shadow: 0px 0px 0px #000000; */
+    border: 1px solid rgba(249, 208, 13, 1);
+    height: 18px;
+    width: 18px;
+    border-radius: 25px;
+    background: rgba(249, 208, 13, 1);
+    cursor: pointer;
+  }
+  input[type="range"]:focus::-ms-fill-lower {
+    background: rgba(249, 208, 13, 1);
+  }
+  input[type="range"]:focus::-ms-fill-upper {
+    background: rgba(249, 208, 13, 1);
+  }
+`;

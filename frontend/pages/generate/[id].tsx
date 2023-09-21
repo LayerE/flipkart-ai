@@ -58,7 +58,8 @@ export default function Home() {
     setUserId,
     setGeneratedImgList,
     saveCanvasToDatabase,
-    filteredArray, setFilteredArray
+    filteredArray, setFilteredArray,
+ 
   } = useAppState();
 
   useEffect(() => {
@@ -163,6 +164,10 @@ export default function Home() {
 
       if (data?.length) {
         setFilteredArray(data);
+        
+        setLoader(false);
+
+        
       }
 
       // setImages(data); // Update the state with the fetched images

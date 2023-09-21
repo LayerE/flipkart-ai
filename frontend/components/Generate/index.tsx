@@ -61,7 +61,8 @@ const Generate = () => {
     setpromt,
     promtFull,
     setpromtFull,
-    category, setcategory
+    category, setcategory,
+    filteredArray
   } = useAppState();
 
   const { query, isReady } = useRouter();
@@ -204,19 +205,10 @@ const Generate = () => {
         </Row>
       </div>
      
-      <div className="rowwothtwo" style={{ marginBottom: "0px" }}>
+      {/* <div className="rowwothtwo" style={{ marginBottom: "0px" }}>
         <DisabledLabel>Number of results</DisabledLabel>
         <div className="two-side">
-          {/* <DropdownInput
-        style ={{minWidth: "500px"}}
-            data={{
-              list: resultList,
-              // label: "background",
-
-              action: setSelectedresult,
-              activeTab: selectResult,
-            }}
-          ></DropdownInput> */}
+         
           <DropdownNOBorder
             data={{
               list: resultList,
@@ -225,7 +217,7 @@ const Generate = () => {
             }}
           ></DropdownNOBorder>
         </div>
-      </div>
+      </div> */}
       
 
       <div className="bigGap">
@@ -296,8 +288,13 @@ export const SwchichBtn = styled(Row)`
   .activeSwitch {
     border-bottom: 5px solid rgba(249, 208, 13, 1);
   }
+
+
+  
 `;
 export const Wrapper = styled.div`
   /* max-height: 600px;
   overflow-y: scroll; */
+
+  
 `;

@@ -130,7 +130,7 @@ const GelleryWrapper = styled.div`
     img {
       width: 100%;
       height: 180px;
-      /* object-fit: cover; */
+      object-fit: contain;
     }
   }
 `;

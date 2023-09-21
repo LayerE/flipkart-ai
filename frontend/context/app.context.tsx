@@ -230,6 +230,21 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const canvasHistory = useRef([]);
   const currentCanvasIndex = useRef(-1);
   const canvasRef = useRef(null);
+  const [activeTemplet, setActiveTemplet] = useState(null);
+  const [downloadeImgFormate, setDownloadeImgFormate] = useState("png");
+  const [mode, setMode] = useState(false);
+
+  
+  const [activeSize, setActiveSize] = useState( {
+    id: 1,
+    title: "Default",
+    subTittle: "1024✕1024",
+    h: 1024,
+    w: 1024,
+  });
+  const [customsize, setCustomsize] = useState({w:1024 , h: 1024});
+
+
 
   const [btnVisible, setBtnVisible] = useState(false);
   const handileDownload = (url: string) => {
@@ -802,7 +817,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     left: 100,
     top: 160,
     width: 512,
-    height: 512,
+    height:512,
     selectable: false,
     fill: "transparent",
     stroke: "rgba(249, 208, 13, 1)",
@@ -963,7 +978,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           return false;
         } else {
           try {
-            setSelectedresult(1);
+            // setSelectedresult(1);
 
             // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
 
@@ -997,29 +1012,29 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           }
         }
 
-        setTimeout(async function () {
-          const loadeImge = await fetchGeneratedImages(ueserId);
+        // setTimeout(async function () {
+        //   const loadeImge = await fetchGeneratedImages(ueserId);
 
-          setSelectedImg({
-            status: true,
-            image: loadeImge[0]?.modified_image_url,
-            modifiedImage: loadeImge[0]?.modified_image_url,
-          });
+        //   setSelectedImg({
+        //     status: true,
+        //     image: loadeImge[0]?.modified_image_url,
+        //     modifiedImage: loadeImge[0]?.modified_image_url,
+        //   });
 
-          setModifidImageArray((pre) => [
-            ...pre,
-            { url: loadeImge[0]?.modified_image_url, tool: "generated" },
-          ]);
+        //   setModifidImageArray((pre) => [
+        //     ...pre,
+        //     { url: loadeImge[0]?.modified_image_url, tool: "generated" },
+        //   ]);
 
-          addimgToCanvasGen(loadeImge[0]?.modified_image_url);
-          // canvas1.remove(editorBox).renderAll();
+        //   addimgToCanvasGen(loadeImge[0]?.modified_image_url);
+        //   // canvas1.remove(editorBox).renderAll();
 
-          setGeneratedImgList(loadeImge.slice(0, 50));
+        //   setGeneratedImgList(loadeImge.slice(0, 50));
 
-          // setSelectedresult(1);
+        //   // setSelectedresult(1);
 
-          setLoader(false);
-        }, 50000);
+        //   setLoader(false);
+        // }, 50000);
       } catch (error) {
         console.error("Error generating image:", error);
       } finally {
@@ -1142,7 +1157,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
         setGeneratedImgList(loadeImge.slice(0, 20));
 
-        setSelectedresult(1);
+        // setSelectedresult(1);
 
         setLoader(false);
       }, 30000);
@@ -1185,11 +1200,16 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   return (
     <AppContext.Provider
       value={{
+        mode, setMode,
         handleZoomIn,
         handleZoomOut,
         newEditorBox,
+        customsize, setCustomsize,
         zoom,
         setZoomCanvas,
+        activeSize, setActiveSize,
+        activeTemplet, setActiveTemplet,
+
         imageGenRect,
         loadercarna,
         setloadercarna,
@@ -1203,6 +1223,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         GetProjexts,
         canvasRef,
         projectId,
+        downloadeImgFormate, setDownloadeImgFormate,
         setprojectId,
         uerId,
         setUserId,

@@ -65,9 +65,7 @@ export function theme(): DefaultTheme {
       paddingSmall: ".5rem",
       padding: "1rem",
       paddingTop: "130px",
-      paddingTopMobile: "100px"
-
-
+      paddingTopMobile: "100px",
     },
     //ctr width
     ctrSizes: {

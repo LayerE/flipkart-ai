@@ -36,6 +36,7 @@ const Tamplates = () => {
     loader,
     backgroundTest,
     GetProjextById,
+    activeTemplet, setActiveTemplet
   } = useAppState();
   const { userId } = useAuth();
   const { query, isReady } = useRouter();
@@ -74,7 +75,6 @@ const Tamplates = () => {
     }
   };
   const [filterRecently, setfilterRecently] = useState();
-  const [activeItem, setActiveItem] = useState(null);
 
   useEffect(() => {
     GetProjextById(id);
@@ -117,14 +117,14 @@ const Tamplates = () => {
               {filterRecently?.slice(0, 5).map((test, i) => (
                 <div
                   key={i}
-                  className={`imageBoxs ${activeItem === test ? "actives" : ""}`}
+                  className={`imageBoxs ${activeTemplet === test ? "actives" : ""}`}
                   onClick={() => {
                     if(!loader)
                     {
 
                   
                     
-                  setActiveItem(test); // Set the current item as active
+                  setActiveTemplet(test); // Set the current item as active
 
                     setPlacementTest(test.placement);
                     setSurroundingTest(test.surrounding);
@@ -163,13 +163,13 @@ const Tamplates = () => {
               { testd.list.map((test, i) =>(
                 <div
                 key={i}
-                className={`imageBoxs ${activeItem === test ? "actives" : ""}`}
+                className={`imageBoxs ${activeTemplet === test ? "actives" : ""}`}
 
                 onClick={() => {
                   if(!loader)
                   {
 
-                  setActiveItem(test); // Set the current item as active
+                  setActiveTemplet(test); // Set the current item as active
                   // addtoRecntly(test);
                   setTemplet(test)
                   // setProduct(test.product);

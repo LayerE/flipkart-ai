@@ -62,6 +62,7 @@ export default function CanvasBox({ proid, userId }) {
     imageGenRect,
     zoom,
     setZoomCanvas,
+    activeSize
 
     // canvasRef
   } = useAppState();
@@ -183,7 +184,7 @@ export default function CanvasBox({ proid, userId }) {
       const EditorBoxText = new fabric.Text("Place Your Product Here", {
         left: newEditorBox.left + 20, // center of the rectangle
         top: newEditorBox.top + 20, // center of the rectangle
-        fontSize: 16,
+        fontSize: 24,
         // originX: "center",
         // originY: "center",
         selectable: false,
@@ -370,7 +371,7 @@ export default function CanvasBox({ proid, userId }) {
       // setTimeout(() => {
       // }, 300);
     };
-  }, [canvasInstance.current, zoom]);
+  }, [canvasInstance.current, activeSize]);
 
   const DeletIrem = () => {
     const activeObject = canvasInstance?.current?.getActiveObject();
@@ -447,7 +448,7 @@ export default function CanvasBox({ proid, userId }) {
       };
       setZoomCanvas(zooms);
     }
-  }, [canvasInstance.current, zoom, setZoomCanvas]);
+  }, [canvasInstance.current, zoom, setZoomCanvas,activeSize]);
 
   useEffect(() => {
     // Fetch canvas data from your API and load it into the canvas

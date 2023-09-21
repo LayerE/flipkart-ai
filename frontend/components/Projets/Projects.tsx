@@ -8,6 +8,7 @@ import { useAppState } from "@/context/app.context";
 import { useAuth } from "@clerk/nextjs";
 import { setTimeout } from "timers";
 import { useRouter } from 'next/router'
+import MainLoader from "../Loader/main";
 const fadeIn = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 0.5 } },
@@ -18,11 +19,12 @@ const Projects = ({ onDelet }) => {
   const [projects, setProjects] = useState([]);
   const { userId } = useAuth();
   const { activeTab, setprojectlist,setFilteredArray, projectlist, GetProjexts,renameProject } = useAppState();
+  const [projectsLoader, setprojectsLoader] = useState(false);
 
   const handleCreate = async () => {
     try {
       // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
-   
+      setprojectsLoader(true);
       console.log(userId);
       if(userId){
       const response = await fetch(
@@ -42,14 +44,16 @@ const Projects = ({ onDelet }) => {
       const datares = await response.json();
       if(datares?._id){
         setFilteredArray([])
+        
         router.push(`/generate/${datares?._id}`)
         // console.log(datares,"sdcdrfc")
         // GetProjexts(userId);
         // window.open(`/generate/${datares?._id}`, "_self");
-   
-  
-
+        
+        
+        
       }
+      // setprojectsLoader(false);
      
       }
     } catch (error) {
@@ -87,6 +91,15 @@ const Projects = ({ onDelet }) => {
   };
 
   return (
+    < >
+      {projectsLoader ? <DaoderWarpper>
+      <div className="jumping-dots-loader">
+        {" "}
+        <span></span> <span></span> <span></span>{" "}
+      </div>
+      <div className="moving-gradient"></div>
+    </DaoderWarpper> : null}
+
     <motion.div
       initial="hidden"
       animate="visible"
@@ -126,10 +139,83 @@ const Projects = ({ onDelet }) => {
         {/* </Link> */}
       </ProjectWrapper>
     </motion.div>
+
+    </>
   );
 };
 
 export default Projects;
+
+
+const DaoderWarpper = styled.div`
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+  z-index: 100;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .loader-demo-box {
+    border-radius: 0.25rem !important;
+  }
+
+  .loader-demo-box {
+    width: 100%;
+    height: 200px;
+  }
+
+  .jumping-dots-loader {
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+    position: relative;
+    margin: 0 auto;
+  }
+
+  .jumping-dots-loader span {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
+    background-color: #f9d00d;
+    margin: 35px 5px;
+  }
+
+  .jumping-dots-loader span:nth-child(1) {
+    animation: bounce 1s ease-in-out infinite;
+  }
+
+  .jumping-dots-loader span:nth-child(2) {
+    animation: bounce 1s ease-in-out 0.33s infinite;
+  }
+
+  .jumping-dots-loader span:nth-child(3) {
+    animation: bounce 1s ease-in-out 0.66s infinite;
+  }
+
+  @keyframes bounce {
+    0%,
+    75%,
+    100% {
+      -webkit-transform: translateY(0);
+      -ms-transform: translateY(0);
+      -o-transform: translateY(0);
+      transform: translateY(0);
+    }
+
+    25% {
+      -webkit-transform: translateY(-20px);
+      -ms-transform: translateY(-20px);
+      -o-transform: translateY(-20px);
+      transform: translateY(-20px);
+    }
+  }
+`;
+
 
 const ProjectWrapper = styled.div`
   width: 100%;

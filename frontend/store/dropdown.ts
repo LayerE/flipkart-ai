@@ -15,6 +15,14 @@ export const placementList = [
   "Large Items",
   "Furnitures",
 ];
+
+export const ImgFormate = [
+  "png",
+  "jpeg",
+  "webp",
+  "svg",
+
+];
 export const surroundingList = [
   "Mobile",
   "Electronics",

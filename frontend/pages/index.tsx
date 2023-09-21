@@ -41,6 +41,14 @@ export default function Home() {
     setUserId,
     mainLoader,
     setFilteredArray,
+    setActiveTab,
+    setpromtFull,
+    setActiveTemplet,
+    setcategory,
+    setDownloadeImgFormate,
+    setProduct,
+    setpromt
+
   } = useAppState();
 
   // const [loadercarna, setloadercarna] = useState(true);
@@ -56,6 +64,18 @@ export default function Home() {
       //   setTimeout(() => {}, 3000);
       //   if (userId) localStorage.setItem("userId", userId);
       // }
+
+//  reset
+setActiveTab(1)
+setcategory(null)
+setpromtFull("")
+setActiveTemplet(null)
+setDownloadeImgFormate("png")
+setProduct("")
+setpromt("")
+
+
+      // 
       setMainLoader(true);
       setFilteredArray(null);
       axios
