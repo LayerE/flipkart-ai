@@ -12,7 +12,6 @@ import Loader from "../Loader";
 import { setInterval } from "timers";
 import { saveAs } from "file-saver";
 
-
 // import { useBeforeUnload } from "react-router-dom";
 
 export default function CanvasBox({ proid, userId }) {
@@ -61,8 +60,8 @@ export default function CanvasBox({ proid, userId }) {
     positionBtn,
     newEditorBox,
     imageGenRect,
-    zoom, setZoomCanvas,
-
+    zoom,
+    setZoomCanvas,
 
     // canvasRef
   } = useAppState();
@@ -106,7 +105,6 @@ export default function CanvasBox({ proid, userId }) {
       // Other canvas operations...
     }
 
-   
     // getCanvs(project);
 
     // Resize canvas when the window is resized
@@ -140,7 +138,7 @@ export default function CanvasBox({ proid, userId }) {
       const canvasInstanceRef = canvasInstance?.current;
 
       canvasInstanceRef.clear();
-   
+
       canvasInstanceRef.add(imageGenRect);
 
       canvasInstanceRef.add(newEditorBox);
@@ -152,10 +150,6 @@ export default function CanvasBox({ proid, userId }) {
 
       // Assuming you have a Fabric.js canvas object named 'canvas'
 
-
-     
-  
-    
       // When a user clicks on an image on the canvas
       canvasInstanceRef.on("mouse:down", function (options) {
         if (options.target && options.target.type === "image") {
@@ -197,7 +191,7 @@ export default function CanvasBox({ proid, userId }) {
         fill: "rgba(0, 0, 0, 1)",
       });
       canvasInstanceRef.add(EditorBoxText);
-   
+
       const imageGenText = new fabric.Text("Generated image will appear here", {
         left: 450 + 20,
         top: 200 + 20,
@@ -239,13 +233,13 @@ export default function CanvasBox({ proid, userId }) {
 
         const dataURL = canvasInstanceRef.toDataURL({
           format: "png",
-          left:newEditorBox.left,
-              top:newEditorBox.top,
+          left: newEditorBox.left,
+          top: newEditorBox.top,
           width: 512,
           height: 512,
         });
         // setDownloadImg(dataURL);
-        setDownloadImg(dataURL);
+        // setDownloadImg(dataURL);
         setSelectedImg(dataURL);
 
         //
@@ -316,8 +310,6 @@ export default function CanvasBox({ proid, userId }) {
       //   ctx.restore();
       // };
 
-  
-
       canvasInstanceRef.on("selection:created", (e) => {
         var selectedObjects = e.target;
         // var hasGenerated = selectedObjects.some(function (obj) {
@@ -378,66 +370,60 @@ export default function CanvasBox({ proid, userId }) {
       // setTimeout(() => {
       // }, 300);
     };
-  }, [canvasInstance.current,zoom]);
+  }, [canvasInstance.current, zoom]);
 
-  const DeletIrem = ()=>{
+  const DeletIrem = () => {
     const activeObject = canvasInstance?.current?.getActiveObject();
     if (activeObject) {
       canvasInstance?.current?.remove(activeObject);
       canvasInstance?.current?.renderAll();
     }
-
-  }
+  };
 
   useEffect(() => {
-
     if (canvasInstance?.current && loadercarna) {
-
-
       const canvasInstanceRef = canvasInstance?.current;
-    // canvasInstanceRef.on("mouse:wheel", function (opt) {
-    //   var delta = opt.e.deltaY;
-    //   var zooms = canvasInstanceRef.getZoom();
+      // canvasInstanceRef.on("mouse:wheel", function (opt) {
+      //   var delta = opt.e.deltaY;
+      //   var zooms = canvasInstanceRef.getZoom();
 
-    //   zooms *= 0.999 ** delta;
-    //   if (zooms > 2) zooms = 2;
-    //   if (zooms < 0.3) zooms = 0.3;
-    //   canvasInstanceRef.zoomToPoint(
-    //     { x: opt.e.offsetX, y: opt.e.offsetY },
-    //     zooms
-    //   );
-    //   setZoomCanvas(zooms)
+      //   zooms *= 0.999 ** delta;
+      //   if (zooms > 2) zooms = 2;
+      //   if (zooms < 0.3) zooms = 0.3;
+      //   canvasInstanceRef.zoomToPoint(
+      //     { x: opt.e.offsetX, y: opt.e.offsetY },
+      //     zooms
+      //   );
+      //   setZoomCanvas(zooms)
 
-    //   console.log(zoom)
-    
-    //   // genBox.style.transform = `scale(${zoom})`;
-    //   // genBox.style.transform = `scale(${zoom}) translate(${newEditorBox.x}px, ${newEditorBox.y}px)`;
-    //   // Get the coordinates of the inner rectangle
+      //   console.log(zoom)
 
-    //   // Update the position and zoom of the outer div
-    //   // genBox.style.transform = `scale(${zoom})`;
-    //   // genBox.style.left = `${innerRectCoords.left * zoom}px`;
-    //   // genBox.style.top = `${innerRectCoords.top * zoom}px`;
-    //   // Calculate the adjusted position for the outer div
-    //   // var canvasContainer = document.getElementById('canvas-container');
-    
-    //   opt.e.preventDefault();
-    //   opt.e.stopPropagation();
-    // });
+      //   // genBox.style.transform = `scale(${zoom})`;
+      //   // genBox.style.transform = `scale(${zoom}) translate(${newEditorBox.x}px, ${newEditorBox.y}px)`;
+      //   // Get the coordinates of the inner rectangle
 
+      //   // Update the position and zoom of the outer div
+      //   // genBox.style.transform = `scale(${zoom})`;
+      //   // genBox.style.left = `${innerRectCoords.left * zoom}px`;
+      //   // genBox.style.top = `${innerRectCoords.top * zoom}px`;
+      //   // Calculate the adjusted position for the outer div
+      //   // var canvasContainer = document.getElementById('canvas-container');
 
+      //   opt.e.preventDefault();
+      //   opt.e.stopPropagation();
+      // });
 
-    fabric.Object.prototype.transparentCorners = false;
-    // fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
-    // Add a custom method to the Fabric canvas prototype
+      fabric.Object.prototype.transparentCorners = false;
+      // fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
+      // Add a custom method to the Fabric canvas prototype
 
       // Set the zoom level (e.g., zoom in by a factor of 2)
       var zoomLevel = zoom;
-      
+
       canvasInstanceRef.setZoom(zoom);
       var zooms = canvasInstanceRef.getZoom();
-      
-      console.log(" position", zooms)
+
+      console.log(" position", zooms);
 
       // Set the zooming point (x, y) coordinates
       var zoomPointX = 100; // X-coordinate of the zooming point
@@ -452,21 +438,16 @@ export default function CanvasBox({ proid, userId }) {
         new fabric.Point(zoomOriginX, zoomOriginY),
         zoom
       );
-      
-      
+
       fabric.Canvas.prototype.getAbsoluteCoords = function (object) {
         return {
           left: object.left * zoom,
           top: object.top * zoom,
         };
       };
-      setZoomCanvas(zooms)
-  }
+      setZoomCanvas(zooms);
+    }
   }, [canvasInstance.current, zoom, setZoomCanvas]);
-
-
-
-
 
   useEffect(() => {
     // Fetch canvas data from your API and load it into the canvas
@@ -590,7 +571,7 @@ export default function CanvasBox({ proid, userId }) {
     }
   };
 
-  const downlaedImf = ()=>{
+  const downlaedImf = () => {
     if (downloadImg) {
       // const url = modifidImageArray[modifidImageArray.length - 1]?.url;
       const url = downloadImg;
@@ -600,8 +581,7 @@ export default function CanvasBox({ proid, userId }) {
       saveAs(url, `image${Date.now()}.png`);
     } else {
     }
-
-  }
+  };
 
   return (
     <Wrapper>
@@ -626,11 +606,37 @@ export default function CanvasBox({ proid, userId }) {
           <button className="selectone" onClick={() => sendImageToBack()}>
             Back
           </button>
-          <button className="selectone" onClick={() =>   DeletIrem()}>
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" className="delet"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"></path></svg>
+          <button className="selectone" onClick={() => DeletIrem()}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              aria-hidden="true"
+              className="delet"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+              ></path>
+            </svg>
           </button>
           <button className="selectone" onClick={() => downlaedImf()}>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" className="delet" ><path fill-rule="evenodd" d="M10 3a.75.75 0 01.75.75v10.638l3.96-4.158a.75.75 0 111.08 1.04l-5.25 5.5a.75.75 0 01-1.08 0l-5.25-5.5a.75.75 0 111.08-1.04l3.96 4.158V3.75A.75.75 0 0110 3z" clip-rule="evenodd"></path></svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+              className="delet"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 3a.75.75 0 01.75.75v10.638l3.96-4.158a.75.75 0 111.08 1.04l-5.25 5.5a.75.75 0 01-1.08 0l-5.25-5.5a.75.75 0 111.08-1.04l3.96 4.158V3.75A.75.75 0 0110 3z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
           </button>
         </div>
         <div
