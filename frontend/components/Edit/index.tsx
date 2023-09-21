@@ -256,7 +256,7 @@ const Edit = () => {
         </div>
       </div>
 
-      <div className="gap">
+      {/* <div className="gap">
         <Label>Color</Label>
         <div className="rowwothtwo">
           <DropdownInput
@@ -284,21 +284,19 @@ const Edit = () => {
             <Input value={colore} style={{ width: "100px" }} />
           </div>
         </div>
-      </div>
+      </div> */}
       <div className="gap">
         <Label>Tools</Label>
+
         <div className="gap">
-          {/* <div
-            className={"selectTool"}
-            onClick={() => {
-              HandelBG();
-            }}
-          >
-            <Label>Remove Background</Label>
+
+        <div className={"selectTool"} onClick={() => setIsMagic(true)}>
+            <Label>Magic Erase</Label>
             <div>
-              <p>Remove the background of your image in one click</p>
+              <p>Paint over objects to erase from the image</p>
             </div>
-          </div> */}
+          </div>
+         
 
           <div
             className={
@@ -309,15 +307,22 @@ const Edit = () => {
           >
             <Label>Upscale</Label>
             <div>
-              <p>Super resolution</p>
+              <p>Upscale image up to 2k resolution</p>
             </div>
           </div>
-          {/* <div className={"selectTool"} onClick={() => setIsMagic(true)}>
-            <Label>Magic Erase</Label>
+
+          <div
+            className={"selectTool"}
+            onClick={() => {
+              HandelBG();
+            }}
+          >
+            <Label>Remove Background</Label>
             <div>
-              <p>Paint over objects to erase from the image</p>
+              <p>Remove the background of your image in one click</p>
             </div>
-          </div> */}
+          </div>
+         
         </div>
       </div>
       <Row>

@@ -255,7 +255,7 @@ a{
 
 font-size: 18px;
 font-style: normal;
-font-weight: 700;
+font-weight: bold;
 line-height: 24px;
 margin-bottom:20px;
 

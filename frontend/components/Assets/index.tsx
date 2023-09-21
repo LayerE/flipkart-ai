@@ -59,6 +59,9 @@ const Assets: React.FC = () => {
         <Row>
           <FileUpload  type={"product"}  title={"Upload Product Photo"} uerId={userId} />
         </Row>
+        <Row>
+          <Label>Or use sample products</Label>
+        </Row>
         <ResponsiveRowWraptwo>
           {productList?.map((test, i) => (
             <div
@@ -81,7 +84,7 @@ const Assets: React.FC = () => {
       <div className="gap">
         {listofassetsById?.length ? (
           <Row>
-            <Label>Uploaded Assets</Label>
+            <Label>Uploaded Products</Label>
           </Row>
         ) : null}
 

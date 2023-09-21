@@ -26,9 +26,9 @@ const ListOf: React.FC = () => {
   return (
     <div className="accest">
       <div className="gap">
-        <Row>
+        {/* <Row>
           <Label>Select an element to add</Label>
-        </Row>
+        </Row> */}
 
         <ResponsiveRowWraptwo>
           {viewMore?.list?.map((test:string, i:number) => (

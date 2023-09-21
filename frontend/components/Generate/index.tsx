@@ -102,7 +102,24 @@ const Generate = () => {
       variants={fadeIn}
       className="accest"
     >
+       <div className="gap">
+        <DisabledLabel> Select your product category </DisabledLabel>
+        <DropdownInput
+            data={{
+              list: categoryList,
+              action: setcategory,
+              label: "placement",
+
+              activeTab: category,
+            }}
+            style={{width: "100%"}}
+          ></DropdownInput>
+        
+      </div>
       <div className="gap">
+      <DisabledLabel>Describe your photo </DisabledLabel>
+
+        
         <Row>
           {/* <PromtGeneratePreview className="generatePreview">
             {product !== null && product !== "" ? (
@@ -185,20 +202,7 @@ const Generate = () => {
           )}
         </Row>
       </div>
-      <div className="gap">
-        <DisabledLabel> Select your product category:</DisabledLabel>
-        <DropdownInput
-            data={{
-              list: categoryList,
-              action: setcategory,
-              label: "placement",
-
-              activeTab: category,
-            }}
-            style={{width: "100%"}}
-          ></DropdownInput>
-        
-      </div>
+     
       <div className="rowwothtwo" style={{ marginBottom: "0px" }}>
         <DisabledLabel>Number of results</DisabledLabel>
         <div className="two-side">
@@ -227,7 +231,7 @@ const Generate = () => {
         {/* <Label>Edit the the prompt in the form below.</Label> */}
       </div>
       {/* <div className="gap"></div> */}
-      {/* <SwchichBtn className="swich">
+      <SwchichBtn className="swich">
         <div
           className={changeTab ? "btnswitch " : "btnswitch activeSwitch"}
           onClick={() => setChangeTab(false)}
@@ -238,9 +242,9 @@ const Generate = () => {
           className={changeTab ? "btnswitch activeSwitch" : "btnswitch "}
           onClick={() => setChangeTab(true)}
         >
-          Edit Prompt
+          Settings
         </div>
-      </SwchichBtn> */}
+      </SwchichBtn>
       <Wrapper className="wrappper">
         {changeTab ? <EditorSection /> : <Tamplates />}
       </Wrapper>

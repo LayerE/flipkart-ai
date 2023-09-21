@@ -36,18 +36,18 @@ const TabData = [
     image: assets.icons.generate_icon,
     tittle: "Generate",
   },
-  {
-    id: 3,
+  // {
+  //   id: 3,
 
-    image: assets.icons.element_icon,
-    tittle: "Elements",
-  },
-  {
-    id: 4,
+  //   image: assets.icons.element_icon,
+  //   tittle: "Elements",
+  // },
+  // {
+  //   id: 4,
 
-    image: assets.icons.user_icon,
-    tittle: "Humans",
-  },
+  //   image: assets.icons.user_icon,
+  //   tittle: "Humans",
+  // },
   {
     id: 5,
 
@@ -107,7 +107,7 @@ const Sidebar: React.FC = () => {
             </div>
             <div className="tittle">
               {activeTab === 1 ? (
-                "Add assets"
+                "Product Assets"
               ) : activeTab === 2  && viewMore?.status == true ? (
                 <div
                   style={{
@@ -136,7 +136,7 @@ const Sidebar: React.FC = () => {
                   {viewMore.title}{" "}
                 </div>
               ) : activeTab === 2 ?(
-                "Generate Photoshoot"
+                "Create Product Photoshoot "
               ) : activeTab === 3 && viewMore?.status == true ? (
                 <div
                   style={{

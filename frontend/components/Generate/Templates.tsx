@@ -74,6 +74,7 @@ const Tamplates = () => {
     }
   };
   const [filterRecently, setfilterRecently] = useState();
+  const [activeItem, setActiveItem] = useState(null);
 
   useEffect(() => {
     GetProjextById(id);
@@ -94,7 +95,7 @@ const Tamplates = () => {
           <>
             <div className=" rows">
               <div className="left">
-                <Label>Recently Used</Label>
+                <Label>Recent Templates </Label>
               </div>
               <div className="right">
                 <div
@@ -102,7 +103,7 @@ const Tamplates = () => {
                   onClick={() =>
                     setViewMore({
                       status: true,
-                      title: "Recently Used",
+                      title: "Recently Used Templates",
                       index: 1,
                       list: project?.recently,
                     })
@@ -116,8 +117,10 @@ const Tamplates = () => {
               {filterRecently?.slice(0, 5).map((test, i) => (
                 <div
                   key={i}
-                  className={"imageBoxs"}
+                  className={`imageBoxs ${activeItem === test ? "actives" : ""}`}
                   onClick={() => {
+                  setActiveItem(test); // Set the current item as active
+
                     setPlacementTest(test.placement);
                     setSurroundingTest(test.surrounding);
                     setBackgrundTest(test.background);
@@ -140,7 +143,7 @@ const Tamplates = () => {
 
         <div className=" rowsnew">
           <div className="left">
-            <Label>Select a template below.</Label>
+            <Label>Select a Template Below:</Label>
           </div>
         </div>
           {TempletList.map((testd, i) => (
@@ -154,8 +157,10 @@ const Tamplates = () => {
               { testd.list.map((test, i) =>(
                 <div
                 key={i}
-                className={"imageBoxs"}
+                className={`imageBoxs ${activeItem === test ? "actives" : ""}`}
+
                 onClick={() => {
+                  setActiveItem(test); // Set the current item as active
                   // addtoRecntly(test);
                   setTemplet(test)
                   // setProduct(test.product);
@@ -259,6 +264,7 @@ export const RecentWrapper = styled(Row)`
   .horizontaScrollBox::-webkit-scrollbar {
     display: none !important;
   }
+
   .imageBoxs {
     border-radius: 8px;
     border: 2px solid #d9d9d9;
@@ -304,5 +310,16 @@ export const RecentWrapper = styled(Row)`
     &:hover {
       border: 2px solid rgba(249, 208, 13, 1);
     }
+  }
+  .actives{
+    border: 2px solid rgba(249, 208, 13, 1);
+    background-color: rgba(249, 208, 13, 0.23);
+    img {
+   
+        transform: scale(1.1);
+      
+    }
+
+
   }
 `;

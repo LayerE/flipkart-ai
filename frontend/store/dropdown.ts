@@ -220,7 +220,7 @@ export const TempletList = [
         title: "Office  1 ",
 
         image: "https://www.linkpicture.com/q/image-2_91.png",
-        promt: "in a simple, minimalistic Office space",
+        promt: "in a modern, class office space",
         placementType: "",
         surroundingType: "",
         backgroundType: "",
