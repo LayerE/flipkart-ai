@@ -198,7 +198,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
   const [undoArray, setUndoArray] = useState<string[]>([]);
   const [editorBox, setEditorBox] = useState<fabric.Rect | null>(null);
-  const [zoom, setZoomCanvas] = useState<number>(0.6);
+  const [zoom, setZoomCanvas] = useState<number>(0.75);
 
   const [popup, setPopup] = useState<object>({});
   const [popupImage, setPopupImage] = useState<object>({});
@@ -256,8 +256,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     }
   };
 
-
-  
   // useEffect(() => {
   //   if (!canvasInstance.current) {
   //     canvasInstance.current = new fabric.Canvas(canvasRef.current, {
@@ -387,7 +385,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         const btn = PosisionbtnRef.current;
         btn.style.display = "block";
         positionBtn(img);
-        console.log(zoom)
+        console.log(zoom);
         // RegeneratepositionBtn(img);
       });
 
@@ -445,14 +443,14 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
   function RegeneratepositionBtn(obj) {
     var zooms = canvasInstance?.current.getZoom();
-    
-    console.log("regenerate position", zooms)
+
+    console.log("regenerate position", zooms);
     const btns = regenerateRef.current;
     const absCoords = canvasInstance?.current.getAbsoluteCoords(obj);
     btns.style.left =
-    absCoords.left - 100 / 2 + obj.getScaledWidth()* zooms / 2 + "px";
+      absCoords.left - 100 / 2 + (obj.getScaledWidth() * zooms) / 2 + "px";
     btns.style.top = absCoords.top + obj.getScaledHeight() * zooms - 50 + "px";
-    setZoomCanvas(zooms)
+    setZoomCanvas(zooms);
   }
 
   const GetProjexts = (getUser: string) => {
@@ -800,10 +798,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     canvasInstance.current.renderAll();
   };
 
-
   const newEditorBox = new fabric.Rect({
-    left: 200,
-    top: 420,
+    left: 100,
+    top: 160,
     width: 512,
     height: 512,
     selectable: false,
@@ -814,8 +811,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   });
 
   const imageGenRect = new fabric.Rect({
-    left: 760,
-    top: 420,
+    left: 660,
+    top: 160,
     width: 512,
     height: 512,
     selectable: false,
@@ -842,7 +839,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         //   top:200
         // });
         // canvas1.renderAll();
-        console.log(canvas1);
 
         // selectedImg // img url to generate images for the canvas
 
@@ -876,14 +872,14 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         maskObjects.forEach((object) => {
           // You can adjust the object's position relative to the canvas as needed
           object.set({
-            left: object.left -  newEditorBox.left,
+            left: object.left - newEditorBox.left,
             top: object.top - newEditorBox.top,
           });
           maskCanvas.add(object);
         });
         const maskDataUrl = maskCanvas.toDataURL("image/png");
 
-        console.log("mask", maskDataUrl);
+        // console.log("mask", maskDataUrl);
 
         // Make image with only the subject objects
         const subjectCanvas = new fabric.StaticCanvas(null, {
@@ -899,28 +895,33 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
         subjectObjects.forEach((object) => {
           object.set({
-            left: object.left -newEditorBox.left,
-            top: object.top -newEditorBox.top,
+            left: object.left - newEditorBox.left,
+            top: object.top - newEditorBox.top,
           });
           subjectCanvas.add(object);
         });
 
         const subjectDataUrl = subjectCanvas.toDataURL("image/png");
-        console.log("subect", subjectDataUrl);
 
         maskObjects.forEach((object) => {
           // You can adjust the object's position relative to the canvas as needed
           object.set({
             left: object.left + newEditorBox.left,
-            top: object.top +newEditorBox.top,
+            top: object.top + newEditorBox.top,
           });
+          // maskCanvas.remove(object);
         });
         subjectObjects.forEach((object) => {
           object.set({
             left: object.left + newEditorBox.left,
             top: object.top + newEditorBox.top,
           });
+          // subjectCanvas.remove(object);
         });
+        // subjectCanvas?.dispose();
+
+        // subjectCanvas.clear()
+        // maskCanvas.clear()
 
         const promtText = promtFull;
         // product +
@@ -1167,17 +1168,16 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     const newZoom = canvasInstanceRef.getZoom() * 1.1; // Increase zoom by 10%
     canvasInstanceRef.setZoom(newZoom);
     canvasInstanceRef.renderAll();
-    setZoomCanvas(newZoom)
-    
-  console.log(zoom)
+    setZoomCanvas(newZoom);
 
+    console.log(zoom);
   };
-  
+
   const handleZoomOut = () => {
     const canvasInstanceRef = canvasInstance?.current;
 
     const newZoom = canvasInstanceRef.getZoom() / 1.1; // Decrease zoom by 10%
-    setZoomCanvas(newZoom)
+    setZoomCanvas(newZoom);
     canvasInstanceRef.setZoom(newZoom);
     canvasInstanceRef.renderAll();
   };
@@ -1188,7 +1188,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         handleZoomIn,
         handleZoomOut,
         newEditorBox,
-        zoom, setZoomCanvas,
+        zoom,
+        setZoomCanvas,
         imageGenRect,
         loadercarna,
         setloadercarna,
