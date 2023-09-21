@@ -376,14 +376,14 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         rebtn.style.display = "none";
 
         const btn = PosisionbtnRef.current;
-        btn.style.display = "block";
+        btn.style.display = "flex";
         positionBtn(img);
         // RegeneratepositionBtn(img);
       });
 
       img.on("moving", () => {
         const btn = PosisionbtnRef.current;
-        btn.style.display = "block";
+        btn.style.display = "flex";
         positionBtn(img);
         console.log(zoom);
         // RegeneratepositionBtn(img);
@@ -595,7 +595,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         positionBtn(img);
         RegeneratepositionBtn(img);
         const btn = PosisionbtnRef.current;
-        btn.style.display = "block";
+        btn.style.display = "flex";
       });
 
       img.on("moving", () => {
@@ -604,12 +604,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         positionBtn(img);
         RegeneratepositionBtn(img);
         const btn = PosisionbtnRef.current;
-        btn.style.display = "block";
+        btn.style.display = "flex";
       });
 
       img.on("scaling", () => {
         const btn = PosisionbtnRef.current;
-        btn.style.display = "block";
+        btn.style.display = "flex";
         positionBtn(img);
 
         RegeneratepositionBtn(img);

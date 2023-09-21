@@ -74,6 +74,8 @@ export const TestArea = styled.textarea`
   font-size: 14px;
   transition: all 0.3s ease;
 
+  cursor: auto;
+
   &:focus-visible{
     border: 2px solid ${(props) => props.theme.btnPrimary};
 

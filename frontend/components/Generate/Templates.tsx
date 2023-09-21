@@ -33,7 +33,7 @@ const Tamplates = () => {
     loara,
     setLoara,
     promt, setpromt,
-
+    loader,
     backgroundTest,
     GetProjextById,
   } = useAppState();
@@ -119,6 +119,11 @@ const Tamplates = () => {
                   key={i}
                   className={`imageBoxs ${activeItem === test ? "actives" : ""}`}
                   onClick={() => {
+                    if(!loader)
+                    {
+
+                  
+                    
                   setActiveItem(test); // Set the current item as active
 
                     setPlacementTest(test.placement);
@@ -129,6 +134,7 @@ const Tamplates = () => {
                     setSelectedBackground(test.backgroundType);
                     setLoara(test.lora);
                     setpromt(test.promt);
+                    }
                   }}
                 >
                   <picture>
@@ -160,6 +166,9 @@ const Tamplates = () => {
                 className={`imageBoxs ${activeItem === test ? "actives" : ""}`}
 
                 onClick={() => {
+                  if(!loader)
+                  {
+
                   setActiveItem(test); // Set the current item as active
                   // addtoRecntly(test);
                   setTemplet(test)
@@ -172,6 +181,8 @@ const Tamplates = () => {
                   setSelectedBackground(test.backgroundType);
                   setLoara(test.lora);
                   setpromt(test.promt);
+
+                  }
   
                 }}
               >

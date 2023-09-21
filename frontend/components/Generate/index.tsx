@@ -183,6 +183,7 @@ const Generate = () => {
           <TestArea
             value={promtFull}
             onChange={(e) => handelPromt(e)}
+            readonly={loader? "readonly": false}
             // value={placementTest}
             // setValue={setPlacementTest}
             // suggetion={PlacementSuggestionsFilter}
