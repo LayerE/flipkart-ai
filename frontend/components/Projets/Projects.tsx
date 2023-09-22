@@ -134,6 +134,7 @@ const Projects = ({ onDelet }) => {
             setProjects={setProjects}
             handleDelet={handleDelet}
             handleEdite={handleEdite}
+            setprojectsLoader={setprojectsLoader}
           />
         ))}
         {/* </Link> */}

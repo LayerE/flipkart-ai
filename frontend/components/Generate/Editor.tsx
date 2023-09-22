@@ -160,6 +160,24 @@ const EditorSection = () => {
       className="accest"
     >
       <BoxOff className="boxof">
+      <div className="gaps">
+          <div className="two">
+            <Label>No. of images to generate</Label>
+            <div className="rangeValue">
+              <Label> {selectResult}</Label>
+            </div>
+          </div>
+          <div className="rangebox">
+            <input
+              type="range"
+              min="1"
+              max="4"
+              step="1"
+              value={selectResult}
+              onChange={(e) => setSelectedresult(parseInt(e.target.value, 10))}
+            />
+          </div>
+        </div>
         <div className="gap">
           <Label>Canvas size</Label>
 
@@ -202,24 +220,7 @@ const EditorSection = () => {
           </div>
         </div>
 
-        <div className="gap">
-          <div className="two">
-            <Label>No. of images to generate</Label>
-            <div className="rangeValue">
-              <Label> {selectResult}</Label>
-            </div>
-          </div>
-          <div className="rangebox">
-            <input
-              type="range"
-              min="1"
-              max="6"
-              step="1"
-              value={selectResult}
-              onChange={(e) => setSelectedresult(parseInt(e.target.value, 10))}
-            />
-          </div>
-        </div>
+      
 
         {/* <div className="filde gap">
         <DisabledLabel>Product</DisabledLabel>
@@ -346,6 +347,9 @@ export default EditorSection;
 export const BoxOff = styled.div`
   /* height: 100%; */
   /* overflow: hidden; */
+  .gaps{
+    margin-top: 20px;
+  }
   .two {
     display: flex;
     justify-content: space-between;

@@ -288,7 +288,7 @@ background-color: #FFF;
     cursor: pointer;
     border-radius: 7px;
     border: 2px solid #d9d9d9;
-    padding: 1.3rem 1.2rem;
+    padding: 0.8rem 1.2rem;
     position: relative;
     transition: all 0.3 ease;
 
@@ -302,7 +302,7 @@ background-color: #FFF;
       z-index: 50;
     }
     p {
-      margin-top: 16px;
+      margin-top: 8px;
       color: #b2a4a4;
       font-size: 12px;
       font-weight: 400;

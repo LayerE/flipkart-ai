@@ -3,11 +3,14 @@ import { styled } from "styled-components";
 import assets from "@/public/assets";
 import Link from "next/link";
 import { useAppState } from "@/context/app.context";
+import { useRouter } from 'next/router'
 
-const ProjectCard = ({ data, setProjects, handleDelet, handleEdite }) => {
+const ProjectCard = ({ data, setProjects, handleDelet, handleEdite, setprojectsLoader }) => {
   const [open, setopen] = useState(false);
   const [rename, setRename] = useState(false);
   const inputRef = useRef(null);
+  const router = useRouter()
+
 
   const [projectName, setProjectName] = useState(data.title);
   const { setFilteredArray} = useAppState();
@@ -32,17 +35,26 @@ const ProjectCard = ({ data, setProjects, handleDelet, handleEdite }) => {
     setopen(false);
   };
 
+  const navigate =()=>{
+    setFilteredArray([])
+
+    setprojectsLoader(true)
+    router.push(`/generate/${data._id}`)
+
+
+  }
+
   return (
-        <CardWrapper className="projectfile" onClick={()=>
-          setFilteredArray([])
+        <CardWrapper className="projectfile link" onClick={()=>
+          navigate()
         }>
-      <Link href={`/generate/${data._id}`}>
+      <div className="" >
         <div className="img">
           {data?.previewImage !== "" ? (
             <img src={data?.previewImage} alt="" />
           ) : null}
         </div>
-      </Link>
+      </div>
       <div className="testcreat">
         <div className="pro-name">
           <input
@@ -120,6 +132,10 @@ const ProjectCard = ({ data, setProjects, handleDelet, handleEdite }) => {
 export default ProjectCard;
 
 const CardWrapper = styled.div`
+cursor: pointer;
+.link{
+  cursor: pointer;
+}
   .img {
     width: 100%;
     height: 100%;

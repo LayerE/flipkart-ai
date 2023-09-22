@@ -298,8 +298,8 @@ const Edit = () => {
       style={{ paddingBottom: "50px" }}
     >
       <WrapperEdit>
-        <div className="gap"></div>
-        <div className="gap">
+        {/* <div className="gap"></div> */}
+        <div className="gaps">
           <Label>Arrange</Label>
           <div className="selectbox">
             <div className={"selectone"} onClick={() => bringImageToFront()}>
@@ -343,7 +343,8 @@ const Edit = () => {
         <div className="gap">
           <Label>Tools</Label>
 
-          <div className="gap">
+          <div className="gaps">
+          <div className="selectTool">
             <div className="mageic">
               <div className="gaps">
                 <Label>Magic Erase</Label>
@@ -352,14 +353,14 @@ const Edit = () => {
                   background.
                 </DisabledLabel>
               </div>
-              <div className="gap">
+              <div className="gaps">
                 <Label>Mode</Label>
                 <div className="modeBtns">
                   <div className={`btn ${mode  ? "activBtn" : ""}`} onClick={()=> {setMode(true);toggleEraseMode() }} >Erase</div>
                   <div className={`btn ${mode  ? "" : "activBtn"}`} onClick={()=> {setMode(false); clearDrawing()}} >Restore</div>
                 </div>
               </div>
-              <div className="gap">
+              <div className="">
                 <Label>Brush size</Label>
                 <div className="rangebox">
                   <input
@@ -371,6 +372,7 @@ const Edit = () => {
                     // onChange={(e) => setSelectedresult(parseInt(e.target.value, 10))}
                   />
                 </div>
+              </div>
               </div>
             </div>
             {/* <div className={"selectTool"} onClick={() => setIsMagic(true)}>
@@ -407,7 +409,7 @@ const Edit = () => {
           </div>
         </div>
 
-        <div className="gap">
+        <div className="gaps">
           <div className="rowwothtwo">
             <Label>Select image formate</Label>
             <div className="two-side">
@@ -450,7 +452,7 @@ const WrapperEdit = styled.div`
   }
   .btn {
     width: 100%;
-    padding: 10px;
+    padding: 5px;
     cursor: pointer;
 
     text-align: center;
