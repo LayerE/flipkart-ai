@@ -839,6 +839,20 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
     // fill: "transparent",
   });
+
+  const  changeRectangleSize =  ()=> {
+
+
+    
+    // Set the new width and height for the rectangle
+    newEditorBox.set({ width: activeSize.w, height: activeSize.h });
+    console.log("dfd", newEditorBox)
+
+    // Redraw the canvas
+    canvasInstance?.current.renderAll();
+
+    
+}
   const generateImageHandeler = async (ueserId, proid) => {
     if (category === null) {
       toast("Select your product category first !");
@@ -1203,6 +1217,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   return (
     <AppContext.Provider
       value={{
+        changeRectangleSize,
         mode, setMode,
         handleZoomIn,
         handleZoomOut,

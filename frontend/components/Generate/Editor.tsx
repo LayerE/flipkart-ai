@@ -67,6 +67,7 @@ const EditorSection = () => {
     previewLoader,
     setPriviewLoader,
     generationLoader,
+    changeRectangleSize,
     setGenerationLoader,
   } = useAppState();
 
@@ -190,6 +191,7 @@ const EditorSection = () => {
                 }`}
                 onClick={() => {
                   setActiveSize(item);
+                  changeRectangleSize()
                 }}
               >
                 <div className="tittl">{item.title}</div>

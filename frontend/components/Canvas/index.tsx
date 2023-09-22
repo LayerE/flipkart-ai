@@ -62,7 +62,7 @@ export default function CanvasBox({ proid, userId }) {
     imageGenRect,
     zoom,
     setZoomCanvas,
-    activeSize
+    activeSize,
 
     // canvasRef
   } = useAppState();
@@ -109,12 +109,12 @@ export default function CanvasBox({ proid, userId }) {
     // getCanvs(project);
 
     // Resize canvas when the window is resized
-    // window.addEventListener("resize", () => {
-    //   canvasInstanceRef?.setDimensions({
-    //     width: window?.innerWidth,
-    //     height: window?.innerHeight,
-    //   });
-    // });
+    window.addEventListener("resize", () => {
+      canvasInstanceRef?.setDimensions({
+        width: window?.innerWidth,
+        height: window?.innerHeight,
+      });
+    });
 
     return () => {
       saveCanvasToDatabase();
@@ -448,7 +448,7 @@ export default function CanvasBox({ proid, userId }) {
       };
       setZoomCanvas(zooms);
     }
-  }, [canvasInstance.current, zoom, setZoomCanvas,activeSize]);
+  }, [canvasInstance.current, zoom, setZoomCanvas, activeSize]);
 
   useEffect(() => {
     // Fetch canvas data from your API and load it into the canvas

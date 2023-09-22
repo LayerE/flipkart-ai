@@ -45,16 +45,16 @@ const ProjectCard = ({ data, setProjects, handleDelet, handleEdite, setprojectsL
   }
 
   return (
-        <CardWrapper className="projectfile link" onClick={()=>
+        <CardWrapper className="projectfile link" >
+      {/* <div className="" > */}
+        <div className="img" onClick={()=>
           navigate()
-        }>
-      <div className="" >
-        <div className="img">
+        } >
           {data?.previewImage !== "" ? (
             <img src={data?.previewImage} alt="" />
           ) : null}
         </div>
-      </div>
+      {/* </div> */}
       <div className="testcreat">
         <div className="pro-name">
           <input
