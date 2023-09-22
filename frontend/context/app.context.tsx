@@ -233,6 +233,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [activeTemplet, setActiveTemplet] = useState(null);
   const [downloadeImgFormate, setDownloadeImgFormate] = useState("png");
   const [mode, setMode] = useState(false);
+  const [incremetPosition, setIncremetPosition] = useState(0);
+
 
   
   const [activeSize, setActiveSize] = useState( {
@@ -357,8 +359,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       );
       const randomTop = getRandomPosition(300);
       img.set({
-        left: randomLeft,
-        top: randomTop,
+        left: 300,
+        top: 300,
         // scaleX: scaleX,
         // scaleY: scaleY,
       });
@@ -659,12 +661,13 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       img.scaleToHeight(scaledHeight);
       // Set the position of the image
       img.set({
-        left: imageGenRect.left,
-        top: imageGenRect.top,
-
+        left: imageGenRect.left +incremetPosition ,
+        top: imageGenRect.top + incremetPosition,
+        
         // scaleX: scaleX,
         // scaleY: scaleY,
       });
+      setIncremetPosition(incremetPosition+25)
       img.set("category", "generated");
 
       // canvasInstance.current.clear();
