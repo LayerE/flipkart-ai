@@ -107,6 +107,10 @@ const EditorSection = () => {
       subTittle: "1024✕1024",
       h: 1024,
       w: 1024,
+      l: 100,
+      t: 300,
+      gl: 1224,
+      gt: 300
     },
     {
       id: 2,
@@ -114,6 +118,10 @@ const EditorSection = () => {
       subTittle: "1080✕1080",
       h: 1080,
       w: 1080,
+      l: 100,
+      t: 300,
+      gl: 1280,
+      gt: 300
     },
     {
       id: 3,
@@ -121,6 +129,10 @@ const EditorSection = () => {
       subTittle: "1080✕1920",
       h: 1920,
       w: 1080,
+      l: 100,
+      t: 300,
+      gl: 1280,
+      gt: 300
     },
     {
       id: 4,
@@ -128,6 +140,10 @@ const EditorSection = () => {
       subTittle: "940✕788",
       h: 788,
       w: 940,
+      l: 100,
+      t: 300,
+      gl: 1140,
+      gt: 300
     },
     {
       id: 5,
@@ -135,6 +151,10 @@ const EditorSection = () => {
       subTittle: "1920✕1080",
       h: 1080,
       w: 1920,
+      l: 100,
+      t: 300,
+      gl: 2120,
+      gt: 300
     },
     {
       id: 6,
@@ -142,6 +162,10 @@ const EditorSection = () => {
       subTittle: "1080✕1920",
       h: 1920,
       w: 1080,
+      l: 100,
+      t: 300,
+      gl: 1280,
+      gt: 300
     },
     {
       id: 7,
@@ -149,6 +173,10 @@ const EditorSection = () => {
       subTittle: "1024✕1024",
       h: 1024,
       w: 1024,
+      l: 100,
+      t: 300,
+      gl: 1224,
+      gt: 300,
       custom: true,
     },
   ];

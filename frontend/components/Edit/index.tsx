@@ -19,6 +19,8 @@ import { Console } from "console";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/router";
 import { styled } from "styled-components";
+import { fabric } from "fabric";
+import TextLoader from "../Loader/text";
 
 const Edit = () => {
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
@@ -43,7 +45,17 @@ const Edit = () => {
     setLoader,
     downloadeImgFormate,
     setDownloadeImgFormate,
-    mode, setMode
+    mode,
+    setMode,
+    brushSize,
+    setBrushSize,
+    linesHistory,
+    setLinesHistory,
+    lines,
+    setLines,
+    magicLoader,
+    setMagicloder,
+    HandleInpainting,
   } = useAppState();
 
   const { userId } = useAuth();
@@ -83,7 +95,7 @@ const Edit = () => {
 
       console.log(url);
 
-      saveAs(url, `image${Date.now()}.png`);
+      saveAs(url, `image${Date.now()}.${downloadeImgFormate}`);
     } else {
     }
   };
@@ -243,8 +255,6 @@ const Edit = () => {
     setColore(color.hex);
   };
 
-
-
   const [size, setsize] = useState(40);
 
   const [isEraseMode, setIsEraseMode] = useState(false);
@@ -252,21 +262,43 @@ const Edit = () => {
   const historyIndex = useRef(-1);
   useEffect(() => {
     canvasInstance.current.on("object:added", () => {
-        history.current.push(JSON.stringify(canvasInstance.current.toJSON()));
-        historyIndex.current += 1;
-      });
-  }, [size,canvasInstance])
-  
+      history.current.push(JSON.stringify(canvasInstance.current.toJSON()));
+      historyIndex.current += 1;
+    });
+  }, [size, canvasInstance]);
 
   const toggleEraseMode = () => {
     setIsEraseMode(!isEraseMode);
-    if (isEraseMode) {
-      // code to enable eraser
+    const activeObject = canvasInstance.current.getActiveObject();
+
+    if (activeObject && activeObject.type === "image") {
       canvasInstance.current.isDrawingMode = true;
-      canvasInstance.current.freeDrawingBrush.color = "#f8f8f8"; // Assuming background is white
-      canvasInstance.current.freeDrawingBrush.width = size; // Set the width of the eraser
+      canvasInstance.current.freeDrawingBrush.color = "black"; // Set brush color
+      canvasInstance.current.freeDrawingBrush.width = 2; // Set brush width
+      canvasInstance.current.freeDrawingBrush.shadow = null; // Remove shadow
+
+      // Create a mask from the selected image
+      const mask = new fabric.Rect({
+        width: activeObject.width,
+        height: activeObject.height,
+        left: activeObject.left,
+        top: activeObject.top,
+        opacity: 0, // Make the mask invisible
+        selectable: false, // Disable selection for the mask
+        evented: false, // Disable events for the mask
+      });
+
+      // Set the mask as a clipping object to restrict drawing
+      activeObject.set({
+        clipTo: function (ctx) {
+          return function () {
+            mask.render(ctx);
+          };
+        },
+      });
+
+      canvasInstance.current.add(mask); // Add the mask to the canvas
     } else {
-      // code to disable eraser
       canvasInstance.current.isDrawingMode = false;
     }
   };
@@ -279,7 +311,7 @@ const Edit = () => {
   };
 
   const clearDrawing = () => {
-    setIsEraseMode(false)
+    setIsEraseMode(false);
     const objects = canvasInstance.current.getObjects();
     objects.forEach((object) => {
       if (object.type === "path") {
@@ -287,6 +319,16 @@ const Edit = () => {
         canvasInstance.current.remove(object);
       }
     });
+  };
+
+  const undoLastDrawing = () => {
+    if (linesHistory.length === 0) return;
+
+    const lastVersion = linesHistory[linesHistory.length - 1];
+    setLines(lastVersion);
+
+    // Remove the last version from history
+    setLinesHistory(linesHistory.slice(0, linesHistory.length - 1));
   };
 
   return (
@@ -344,35 +386,85 @@ const Edit = () => {
           <Label>Tools</Label>
 
           <div className="gaps">
-          <div className="selectTool">
-            <div className="mageic">
-              <div className="gaps">
-                <Label>Magic Erase</Label>
-                <DisabledLabel>
-                  Erase then click Generate to replace any unwanted parts of the
-                  background.
-                </DisabledLabel>
-              </div>
-              <div className="gaps">
-                <Label>Mode</Label>
-                <div className="modeBtns">
-                  <div className={`btn ${mode  ? "activBtn" : ""}`} onClick={()=> {setMode(true);toggleEraseMode() }} >Erase</div>
-                  <div className={`btn ${mode  ? "" : "activBtn"}`} onClick={()=> {setMode(false); clearDrawing()}} >Restore</div>
+            <div className={isMagic ?  "selectTool activeTool" :"selectTool"} onClick={() => setIsMagic(true)}>
+              <div className="mageic">
+                <div className="gaps">
+                  <Label>Magic Erase</Label>
+                  <DisabledLabel>
+                    Erase then click Generate to replace any unwanted parts of
+                    the background.
+                  </DisabledLabel>
                 </div>
-              </div>
-              <div className="">
-                <Label>Brush size</Label>
-                <div className="rangebox">
-                  <input
-                    type="range"
-                    min="1"
-                    max="6"
-                    step="1"
-                    // value={selectResult}
-                    // onChange={(e) => setSelectedresult(parseInt(e.target.value, 10))}
-                  />
+                <div className="gaps">
+                  <div className="flex">
+                    <Label>Mode</Label>
+                    {linesHistory.length === 0 ? null : (
+                      <div onClick={undoLastDrawing}>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="14"
+                          viewBox="0 0 16 14"
+                          fill="none"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M5.70679 0.292786C5.89426 0.480314 5.99957 0.734622 5.99957 0.999786C5.99957 1.26495 5.89426 1.51926 5.70679 1.70679L3.41379 3.99979H8.99979C10.8563 3.99979 12.6368 4.73728 13.9495 6.05004C15.2623 7.36279 15.9998 9.14327 15.9998 10.9998V12.9998C15.9998 13.265 15.8944 13.5194 15.7069 13.7069C15.5194 13.8944 15.265 13.9998 14.9998 13.9998C14.7346 13.9998 14.4802 13.8944 14.2927 13.7069C14.1051 13.5194 13.9998 13.265 13.9998 12.9998V10.9998C13.9998 9.6737 13.473 8.40193 12.5353 7.46425C11.5976 6.52657 10.3259 5.99979 8.99979 5.99979H3.41379L5.70679 8.29279C5.8023 8.38503 5.87848 8.49538 5.93089 8.61738C5.9833 8.73939 6.01088 8.87061 6.01204 9.00339C6.01319 9.13616 5.98789 9.26784 5.93761 9.39074C5.88733 9.51364 5.81307 9.62529 5.71918 9.71918C5.62529 9.81307 5.51364 9.88733 5.39074 9.93761C5.26784 9.98789 5.13616 10.0132 5.00339 10.012C4.87061 10.0109 4.73939 9.9833 4.61738 9.93089C4.49538 9.87848 4.38503 9.8023 4.29279 9.70679L0.292786 5.70679C0.105315 5.51926 0 5.26495 0 4.99979C0 4.73462 0.105315 4.48031 0.292786 4.29279L4.29279 0.292786C4.48031 0.105315 4.73462 0 4.99979 0C5.26495 0 5.51926 0.105315 5.70679 0.292786Z"
+                            fill="black"
+                          ></path>
+                        </svg>
+                      </div>
+                    )}
+                  </div>
+                  <div className="modeBtns">
+                    <div
+                      className={`btn ${mode === "pen" ? "activBtn" : ""}`}
+                      onClick={() => {
+                        setMode("pen");
+                        // toggleEraseMode();
+                      }}
+                    >
+                      Erase
+                    </div>
+                    <div
+                      className={`btn ${mode === "eraser" ? "activBtn" : ""}`}
+                      onClick={() => {
+                        setMode("eraser");
+                        // clearDrawing();
+                      }}
+                    >
+                      Restore
+                    </div>
+                  </div>
                 </div>
-              </div>
+                <div className="">
+                  <Label>Brush size</Label>
+                  <div className="rangebox">
+                    <input
+                      type="range"
+                      min="5"
+                      max="100"
+                      step="1"
+                      value={brushSize}
+                      onChange={(e) =>
+                        setBrushSize(parseInt(e.target.value, 10))
+                      }
+                    />
+                  </div>
+                </div>
+                <Row>
+                  {magicLoader ? (
+                    <TextLoader />
+                  ) : (
+                    <Button
+                      onClick={() => HandleInpainting()}
+                      disabled={linesHistory.length === 0 ? true : false}
+                    >
+                      Generate
+                    </Button>
+                  )}
+                </Row>
               </div>
             </div>
             {/* <div className={"selectTool"} onClick={() => setIsMagic(true)}>
@@ -440,9 +532,14 @@ const Edit = () => {
 export default Edit;
 
 const WrapperEdit = styled.div`
-.gaps{
-  margin-bottom: 10px;
-}
+  .gaps {
+    margin-bottom: 10px;
+  }
+  .flex {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
   .modeBtns {
     display: flex;
     width: 100%;

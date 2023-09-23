@@ -18,9 +18,9 @@ export const placementList = [
 
 export const ImgFormate = [
   "png",
-  "jpeg",
+  "jpg",
   "webp",
-  "svg",
+  "avif",
 
 ];
 export const surroundingList = [

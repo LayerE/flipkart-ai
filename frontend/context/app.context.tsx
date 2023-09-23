@@ -5,6 +5,7 @@ import { saveAs } from "file-saver";
 import axios from "axios";
 
 import { toast } from "react-toastify";
+import { arrayBufferToDataURL, dataURLtoFile } from "@/utils/BufferToDataUrl";
 
 type ContextProviderProps = {
   children: React.ReactNode;
@@ -198,7 +199,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
   const [undoArray, setUndoArray] = useState<string[]>([]);
   const [editorBox, setEditorBox] = useState<fabric.Rect | null>(null);
-  const [zoom, setZoomCanvas] = useState<number>(0.65);
+  const [zoom, setZoomCanvas] = useState<number>(0.3);
 
   const [popup, setPopup] = useState<object>({});
   const [popupImage, setPopupImage] = useState<object>({});
@@ -232,25 +233,95 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const canvasRef = useRef(null);
   const [activeTemplet, setActiveTemplet] = useState(null);
   const [downloadeImgFormate, setDownloadeImgFormate] = useState("png");
-  const [mode, setMode] = useState(false);
+  // const [mode, setMode] = useState(false);
   const [incremetPosition, setIncremetPosition] = useState(0);
+  const [magickErase, setmagickErase] = useState(false);
+  // maig
+  const [brushSize, setBrushSize] = useState(5);
 
+  const [linesHistory, setLinesHistory] = useState([]);
+  const [lines, setLines] = useState([]);
 
-  
-  const [activeSize, setActiveSize] = useState( {
+  const [mode, setMode] = useState("pen");
+  const [magicLoader, setMagicloder] = useState(false);
+  const stageRef = useRef(null);
+
+  const saveImage = () => {
+    const stage = stageRef.current;
+
+    const dataURL = stage.toDataURL();
+
+    return dataURL;
+  };
+  const saveCanvasToBlobURL = () => {
+    const canvas = stageRef.current;
+    canvas.findOne("Image").hide();
+    const base = canvas.toDataURL();
+    canvas.findOne("Image").show();
+
+    return base;
+  };
+
+  const Inpainting = async (
+    photo: string,
+    filename: string,
+    mask: string
+  ): Promise<string> => {
+    const form = new FormData();
+    const fileItem = await dataURLtoFile(photo, filename);
+    const maskFile = await dataURLtoFile(mask, "mask.png");
+
+    form.append("image_file", fileItem);
+    form.append("mask_file", maskFile);
+
+    const response = await fetch("https://clipdrop-api.co/cleanup/v1", {
+      method: "POST",
+      headers: {
+        "x-api-key":
+          "60ac33bf0e64004c10379344a8e59039a707b54c43b2a30d63aae2f3501ce692538f2e62be79d352e8b3c97206ef016b",
+      },
+      body: form,
+    });
+
+    const buffer = await response.arrayBuffer();
+    const dataURL = await arrayBufferToDataURL(buffer);
+    if (dataURL) {
+      setLinesHistory([]);
+      setLines([]);
+
+      addimgToCanvasGen(dataURL);
+      setIsMagic(false);
+      setMagicloder(false);
+    } else {
+      setMagicloder(false);
+    }
+
+    return dataURL;
+  };
+  const HandleInpainting = async () => {
+    setMagicloder(true);
+    const mask = await saveCanvasToBlobURL();
+    const ogimage = await saveImage();
+
+    await Inpainting(ogimage, "hero.png", mask);
+  };
+
+  const [activeSize, setActiveSize] = useState({
     id: 1,
     title: "Default",
     subTittle: "1024✕1024",
     h: 1024,
     w: 1024,
+    l: 100,
+    t: 300,
+    gl: 1224,
+    gt: 300,
   });
-  const [customsize, setCustomsize] = useState({w:1024 , h: 1024});
-
-
+  const [customsize, setCustomsize] = useState({ w: 1024, h: 1024 });
 
   const [btnVisible, setBtnVisible] = useState(false);
   const handileDownload = (url: string) => {
-    saveAs(url, `image${Date.now()}.png`);
+    saveAs(url, `image${Date.now()}.${downloadeImgFormate}`);
   };
 
   const getBase64FromUrl = async (url: string) => {
@@ -345,8 +416,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       // Set the image's dimensions
 
       img.scaleToWidth(200);
-      const canvasWidth = 360;
-      const canvasHeight = 400;
+      const canvasWidth = activeSize.w;
+      const canvasHeight = activeSize.h;
       const imageAspectRatio = img.width / img.height;
 
       // Calculate the maximum width and height based on the canvas size
@@ -375,8 +446,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         scaledWidth = scaledHeight * imageAspectRatio;
       }
 
-      img.scaleToWidth(200);
-      img.scaleToHeight(250);
+      img.scaleToWidth(activeSize.w /2);
+      img.scaleToHeight(activeSize.w /2);
       // img.scaleToHeight(150);
       // Scale the image to have the same width and height as the rectangle
       // const scaleX = downloadRect.width / img.width;
@@ -588,8 +659,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       // Set the image's dimensions
 
       // img.scaleToWidth(200);
-      const canvasWidth = 512;
-      const canvasHeight = 512;
+      const canvasWidth = activeSize.w;
+      const canvasHeight = activeSize.h;
       const imageAspectRatio = img.width / img.height;
 
       // Calculate the maximum width and height based on the canvas size
@@ -661,13 +732,13 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       img.scaleToHeight(scaledHeight);
       // Set the position of the image
       img.set({
-        left: imageGenRect.left +incremetPosition ,
-        top: imageGenRect.top + incremetPosition,
-        
+        left: activeSize.gl,
+        top: activeSize.gt ,
+
         // scaleX: scaleX,
         // scaleY: scaleY,
       });
-      setIncremetPosition(incremetPosition+25)
+      setIncremetPosition(incremetPosition + 25);
       img.set("category", "generated");
 
       // canvasInstance.current.clear();
@@ -806,7 +877,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const sendImageToBack = () => {
     const activeObject = canvasInstance.current.getActiveObject();
     if (!activeObject) {
-      alert("Please select an object on the canvas first.");
+      // alert("Please select an object on the canvas first.");
+      toast("Please select an object on the canvas first.");
+
       return;
     }
     console.log(activeObject);
@@ -817,10 +890,10 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   };
 
   const newEditorBox = new fabric.Rect({
-    left: 100,
-    top: 160,
-    width: 512,
-    height:512,
+    left: activeSize.l,
+    top: activeSize.t,
+    width: activeSize.w,
+    height: activeSize.h,
     selectable: false,
     fill: "transparent",
     stroke: "rgba(249, 208, 13, 1)",
@@ -840,19 +913,15 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     // fill: "transparent",
   });
 
-  const  changeRectangleSize =  ()=> {
-
-
-    
+  const changeRectangleSize = () => {
     // Set the new width and height for the rectangle
     newEditorBox.set({ width: activeSize.w, height: activeSize.h });
-    console.log("dfd", newEditorBox)
 
     // Redraw the canvas
     canvasInstance?.current.renderAll();
 
-    
-}
+    console.log("dfd", newEditorBox);
+  };
   const generateImageHandeler = async (ueserId, proid) => {
     if (category === null) {
       toast("Select your product category first !");
@@ -989,7 +1058,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         const generate_response = await response.json();
 
         if (generate_response?.error) {
-          alert(generate_response?.error);
+          // alert(generate_response?.error);
+      toast.error(generate_response?.error);
+
           setLoader(false);
 
           return false;
@@ -1111,7 +1182,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       const generate_response = await response.json();
 
       if (generate_response?.error) {
-        alert(generate_response?.error);
+      toast.error(generate_response?.error);
+
+        // alert(generate_response?.error);
         setLoader(false);
         setreLoader(false);
 
@@ -1218,16 +1291,32 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     <AppContext.Provider
       value={{
         changeRectangleSize,
-        mode, setMode,
+        stageRef,
+        mode,
+        setMode,
         handleZoomIn,
+        Inpainting,
+        HandleInpainting,
+        magicLoader,
+        setMagicloder,
+        linesHistory,
+        setLinesHistory,
+        magickErase,
+        setmagickErase,
+        lines,
+        setLines,
         handleZoomOut,
         newEditorBox,
-        customsize, setCustomsize,
+        customsize,
+        setCustomsize,
         zoom,
         setZoomCanvas,
-        activeSize, setActiveSize,
-        activeTemplet, setActiveTemplet,
-
+        activeSize,
+        setActiveSize,
+        activeTemplet,
+        setActiveTemplet,
+        brushSize,
+        setBrushSize,
         imageGenRect,
         loadercarna,
         setloadercarna,
@@ -1241,7 +1330,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         GetProjexts,
         canvasRef,
         projectId,
-        downloadeImgFormate, setDownloadeImgFormate,
+        downloadeImgFormate,
+        setDownloadeImgFormate,
         setprojectId,
         uerId,
         setUserId,

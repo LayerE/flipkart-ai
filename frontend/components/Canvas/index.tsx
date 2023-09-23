@@ -11,6 +11,7 @@ import axios from "axios";
 import Loader from "../Loader";
 import { setInterval } from "timers";
 import { saveAs } from "file-saver";
+import PopupCanvas from "./popupCanvas";
 
 // import { useBeforeUnload } from "react-router-dom";
 
@@ -36,6 +37,7 @@ export default function CanvasBox({ proid, userId }) {
     setCurrentStep,
     RegenerateImageHandeler,
     GetProjextById,
+    isMagic,
     setEditorBox,
     bringImageToFront,
     sendImageToBack,
@@ -63,6 +65,8 @@ export default function CanvasBox({ proid, userId }) {
     zoom,
     setZoomCanvas,
     activeSize,
+    downloadeImgFormate,
+    setActiveSize,
 
     // canvasRef
   } = useAppState();
@@ -72,6 +76,7 @@ export default function CanvasBox({ proid, userId }) {
   const [canvasPosition, setCanvasPosition] = useState({ x: 0, y: 0 });
   const canvasRef = useRef(null);
   const [canvas, setCanvas] = useState(null);
+
   /* eslint-disable */
 
   useEffect(() => {
@@ -102,7 +107,7 @@ export default function CanvasBox({ proid, userId }) {
     const canvasInstanceRef = canvasInstance.current;
     if (canvasInstanceRef) {
       // Perform operations on canvasInstanceRef
-      canvasInstanceRef.clear();
+      // canvasInstanceRef.clear();
       // Other canvas operations...
     }
 
@@ -115,6 +120,10 @@ export default function CanvasBox({ proid, userId }) {
         height: window?.innerHeight,
       });
     });
+
+    setTimeout(() => {
+      setStar(true);
+    }, 1000);
 
     return () => {
       saveCanvasToDatabase();
@@ -130,24 +139,63 @@ export default function CanvasBox({ proid, userId }) {
 
   // Load canvas data from the database when the component mounts
 
-  useEffect(() => {
-    if (canvasInstance?.current && loadercarna) {
-      // Perform operations on canvasInstanceRef
-      canvasInstance?.current.clear();
-      // Other canvas operations...
+  const [re, setRe] = useState(1);
+  const [state, setStar] = useState(false);
 
+  // useEffect(() => {
+  //   const canvasInstanceRef = canvasInstance?.current;
+  //   if (canvasInstance?.current) {
+  //     if (re <= 4) {
+  //       setRe(re + 1);
+  //     }
+  //     console.log(`fdsfgsf`);
+
+  //     // canvasInstanceRef.add(newEditorBox);
+  //     // canvasInstanceRef.add(imageGenRect);
+
+  //     // canvasInstanceRef.remove(newEditorBox);
+  //   }
+
+  //   return () => {
+  //     // canvasInstanceRef.remove(newEditorBox);
+  //     // canvasInstanceRef.remove(imageGenRect);
+  //   };
+  // }, [activeSize, re]);
+
+
+  useEffect(() => {
+   
+    if (canvasInstance?.current && state && isReady) {
+      if (re <= 2) {
+        setRe(re + 1);
+      }
+      // canvasInstance?.current.clear();
+      // Other canvas operations...
       const canvasInstanceRef = canvasInstance?.current;
 
-      canvasInstanceRef.clear();
-
-      canvasInstanceRef.add(imageGenRect);
-
-      canvasInstanceRef.add(newEditorBox);
       // canvasInstanceRef.renderAll();
       const btn = PosisionbtnRef.current;
       const rebtn = regenerateRef.current;
       // const genBox = generateBox.current;
       const preBox = previewBox.current;
+
+      canvasInstanceRef.add(newEditorBox);
+      canvasInstanceRef.add(imageGenRect);
+
+      newEditorBox.set({
+        width: activeSize.w,
+        height: activeSize.h,
+        left: activeSize.l,
+        top: activeSize.t,
+      });
+      imageGenRect.set({
+        width: activeSize.w,
+        height: activeSize.h,
+        left: activeSize.gl,
+        top: activeSize.gt,
+      });
+
+      canvasInstance?.current.renderAll();
 
       // Assuming you have a Fabric.js canvas object named 'canvas'
 
@@ -184,7 +232,7 @@ export default function CanvasBox({ proid, userId }) {
       const EditorBoxText = new fabric.Text("Place Your Product Here", {
         left: newEditorBox.left + 20, // center of the rectangle
         top: newEditorBox.top + 20, // center of the rectangle
-        fontSize: 24,
+        fontSize: 44,
         // originX: "center",
         // originY: "center",
         selectable: false,
@@ -222,34 +270,34 @@ export default function CanvasBox({ proid, userId }) {
       //   // setDownloadImg(dataURL);
       //   setDownloadImg(dataURL);
       // });
-      newEditorBox.on("mousedown", function () {
-        const originalStrokeColor = newEditorBox.stroke;
-        const originalStrokeWidth = newEditorBox.strokeWidth;
+      // newEditorBox.on("mousedown", function () {
+      //   const originalStrokeColor = newEditorBox.stroke;
+      //   const originalStrokeWidth = newEditorBox.strokeWidth;
 
-        // Make the rectangle stroke transparent
-        newEditorBox.set("stroke", "transparent");
-        newEditorBox.set("strokeWidth", 0);
-        canvasInstanceRef.renderAll();
-        console.log(parseInt(newEditorBox.left), newEditorBox.top);
+      //   // Make the rectangle stroke transparent
+      //   newEditorBox.set("stroke", "transparent");
+      //   newEditorBox.set("strokeWidth", 0);
+      //   canvasInstanceRef.renderAll();
+      //   console.log(parseInt(newEditorBox.left), newEditorBox.top);
 
-        const dataURL = canvasInstanceRef.toDataURL({
-          format: "png",
-          left: newEditorBox.left,
-          top: newEditorBox.top,
-          width: 512,
-          height: 512,
-        });
-        // setDownloadImg(dataURL);
-        // setDownloadImg(dataURL);
-        setSelectedImg(dataURL);
+      //   const dataURL = canvasInstanceRef.toDataURL({
+      //     format: "png",
+      //     left: newEditorBox.left,
+      //     top: newEditorBox.top,
+      //     width: 512,
+      //     height: 512,
+      //   });
+      //   // setDownloadImg(dataURL);
+      //   // setDownloadImg(dataURL);
+      //   setSelectedImg(dataURL);
 
-        //
+      //   //
 
-        // Reset the rectangle's stroke properties
-        newEditorBox.set("stroke", originalStrokeColor);
-        newEditorBox.set("strokeWidth", originalStrokeWidth);
-        canvasInstanceRef.renderAll();
-      });
+      //   // Reset the rectangle's stroke properties
+      //   newEditorBox.set("stroke", originalStrokeColor);
+      //   newEditorBox.set("strokeWidth", originalStrokeWidth);
+      //   canvasInstanceRef.renderAll();
+      // });
 
       const objects = canvasInstanceRef.getObjects();
 
@@ -316,6 +364,7 @@ export default function CanvasBox({ proid, userId }) {
         // var hasGenerated = selectedObjects.some(function (obj) {
         //   return obj.category === "generated";
         // });
+        // selectedObjects.selectable = false;
 
         // if (hasGenerated) {
         // Show the additional button if at least one object has the category "generated"
@@ -370,8 +419,10 @@ export default function CanvasBox({ proid, userId }) {
       // saveCanvasToDatabase();
       // setTimeout(() => {
       // }, 300);
+      canvasInstance?.current.remove(newEditorBox);
+      canvasInstance?.current.remove(imageGenRect);
     };
-  }, [canvasInstance.current, activeSize]);
+  }, [canvasInstance.current, activeSize, setActiveSize, re,state]);
 
   const DeletIrem = () => {
     const activeObject = canvasInstance?.current?.getActiveObject();
@@ -448,7 +499,7 @@ export default function CanvasBox({ proid, userId }) {
       };
       setZoomCanvas(zooms);
     }
-  }, [canvasInstance.current, zoom, setZoomCanvas, activeSize]);
+  }, [canvasInstance.current]);
 
   useEffect(() => {
     // Fetch canvas data from your API and load it into the canvas
@@ -579,7 +630,7 @@ export default function CanvasBox({ proid, userId }) {
 
       console.log(url);
 
-      saveAs(url, `image${Date.now()}.png`);
+      saveAs(url, `image${Date.now()}.${downloadeImgFormate}`);
     } else {
     }
   };
@@ -587,6 +638,8 @@ export default function CanvasBox({ proid, userId }) {
   return (
     <Wrapper>
       {loadercarna ? <Loader /> : null}
+
+      {isMagic ? <PopupCanvas /> : null}
       <div className="convas-continer">
         <div className="generationBox">
           {/* <div
@@ -652,15 +705,15 @@ export default function CanvasBox({ proid, userId }) {
           <button className="selectone yello">Regenerate Product</button>
         </div>
 
-        {/* <div className="ss">
+        <div className="ss">
           <picture>
             <img
-              onClick={() => saveCanvasToDatabase()}
+              onClick={() => updateNewEditorBoxSize(300, 200)}
               src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAYFBMVEX///8AAAD4+Pjv7+8aGhoTExOYmJiTk5P09PQICAiQkJD6+vp/f39WVlbGxsaurq5ubm6FhYUnJye8vLwfHx9oaGjR0dHq6urg4OB1dXWkpKS2trY0NDQpKSlNTU1fX19H7sBTAAADJUlEQVR4nO3d224iMRBFUbo7QLhDrkwyM/n/vxwhTR5AUDbUsV1Ee78iFSw5pIliN6MRERERERERERERERERxWvRn29xy7CTGVc9WqR+vVu9dOeb3jLwZMYx4vHk0YnEYNVPni7o6gi7uYRxuWeDpxHOEsLbniO7pQ2sIixK3CaAdYQFiakVrCUsRky8BysKC/266dPAasIyqziNJCyxir11HawvLLCK6wxgTaF+FXfRhPJVXIUTildxcenDdkOhdhVzrhXVhdJVjClUEoMKhcSoQh0xrFBGjCtUEQMLRReNyELNKoYWSoixhQpicKGAGF3oJ4YXuonxhd6Lxh0Inat4D0LfKt6FsPP88w0hQoQIf5Aw9V/uexTOp0cd7+f4EUIzhAjzQ4jw1hDWFur3D0QT/pLJvnsPJny4aYOp1UcwYfcpo/0vZ49LVaHrOc40vwpYRfh7kOlG1/6M1hF240/Ze3Gf3O3ZRNh1f17nE0HLv9f6qgkbhhBh/BAijB9ChPFDiDB+CBHGDyHC+CFEGD+ECOOHEGH8ECKMH0KE8UOIMH5VhF+bN+mWmtHwtvmKIxxPtbrvhsk4hnBbxndoyNo9VFq4kXnOtWkvfJZhzpdxv7iywrIreCi9ikWFWxnkcsn3YlFhjbvDFn0RqeHl7w17aNJQ+ChTWKV27hcUvsoQdq/NhB8yg11iW3RB4V5msNs3E77LDHaJAyblhLNyH0iPG1oJx9WE9t8YCK0Qygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxPC/VCnfSth91Ar+2V4hHnf6dy4F9ctjLO+l7txKw8w77vVG7dzCdetX35Ga5ewv+7+7y16cp7bmbYGJPOe2wl/EnjmXMKs839NE5x/XLY2mC39wIzzfw0TnX+Me1GUrOCh51lryvmEZ5D7Sbzr4tNUe4C1X+9WcT6Gv6x26xIHdBd9lORfTkRERERERERERERERESC/gF2IVePB+evpwAAAABJRU5ErkJggg=="
               alt=""
             />
           </picture>
-        </div> */}
+        </div>
 
         <canvas ref={canvasRef} />
       </div>

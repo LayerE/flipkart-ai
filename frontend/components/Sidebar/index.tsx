@@ -238,7 +238,7 @@ const Sidebar: React.FC = () => {
               <Element />
             ) : activeTab === 4 ? (
               <Humans />
-            ) : activeTab === 5 && isMagic == true ? (
+            ) : activeTab === 5 && isMagic === "true" ? (
               <MagicEraser />
             ) :activeTab === 5? (
               <Edit />
@@ -291,6 +291,7 @@ background-color: #FFF;
     padding: 0.8rem 1.2rem;
     position: relative;
     transition: all 0.3 ease;
+    margin-top: 5px;
 
     &:hover {
       border: 2px solid rgba(249, 208, 13, 1);
@@ -308,6 +309,12 @@ background-color: #FFF;
       font-weight: 400;
       line-height: 13px;
     }
+  }
+
+  .activeTool{
+    border: 2px solid rgba(249, 208, 13, 1);
+
+
   }
   .rowwothtwo {
     display: flex;
