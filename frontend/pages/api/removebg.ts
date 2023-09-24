@@ -66,7 +66,7 @@ export default async function handler(req: NextRequest, res: NextResponse) {
 
     let config = {
       method: "post",
-      maxBodyLength: Infinity,
+      maxBodyLength: 10 * 1024 * 1024,
       url: "https://clipdrop-api.co/remove-background/v1",
       headers: {
         "x-api-key": process.env.CLIPDROP_API_KEY || null,
