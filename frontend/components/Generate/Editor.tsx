@@ -167,18 +167,18 @@ const EditorSection = () => {
       gl: 730,
       gt: 160
     },
-    {
-      id: 7,
-      title: "Custom",
-      subTittle: "1024✕1024",
-      h: 1024,
-      w: 1024,
-      l: 100,
-      t: 160,
-      gl: 1224,
-      gt: 160,
-      custom: true,
-    },
+    // {
+    //   id: 7,
+    //   title: "Custom",
+    //   subTittle: "1024✕1024",
+    //   h: 1024,
+    //   w: 1024,
+    //   l: 100,
+    //   t: 160,
+    //   gl: 1224,
+    //   gt: 160,
+    //   custom: true,
+    // },
   ];
 
   return (
