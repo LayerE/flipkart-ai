@@ -11,7 +11,8 @@ export default authMiddleware({
     "/api/images",
     "/api/user",
     "/api/canvasdata",
-  ],  
+    "/api/upscale",
+  ],
 });
 
 export const config = {

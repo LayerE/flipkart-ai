@@ -30,7 +30,7 @@ const uploadImage = async (dataUrl: string) => {
   }
 };
 
-export default async function handler(req: NextRequest, res) {
+export default async function handler(req: NextRequest, res: NextResponse) {
   try {
     if (req.method !== "POST") {
       // return NextResponse.json({ error: "Method not allowed" });
