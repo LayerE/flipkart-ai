@@ -42,11 +42,10 @@ export default async (req: NextRequest) => {
 
       const data = await response.json();
       const newData = data[data.length - 1];
-      console.log("sdsd", data);
 
       //  const da =await data[data?.length - 1]
 
-      return NextResponse.json({ newData });
+      return NextResponse.json(newData);
     } else if (!project_id) {
       return NextResponse.json({ error: "Missing project_id" });
     } else {
