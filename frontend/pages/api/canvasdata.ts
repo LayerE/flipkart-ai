@@ -52,15 +52,20 @@ export default async (req: NextRequest) => {
     } else {
       const supabase = createClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL as string,
-        process.env.SUPABASE_SERVICE_KEY as string
+        process.env.SUPABASE_SERVICE_KEY as string,
+        {
+          auth: {
+            persistSession: false,
+          },
+        }
       );
 
       const { data, error } = await supabase.rpc(
-        "check_and_insert_canvasdata",
+        "check_and_insert_canvas",
         {
-          user_id: user_id,
-          project_id: project_id,
-          canvasdata: canvasdata,
+          user_id_arg: user_id,
+          project_id_arg: project_id,
+          canvasdata_arg: canvasdata,
         }
       );
 
@@ -69,7 +74,6 @@ export default async (req: NextRequest) => {
         return NextResponse.json({ error: "Something went wrong" });
       }
       console.log("post", data);
-
 
       return NextResponse.json({ data: "success" });
     }
