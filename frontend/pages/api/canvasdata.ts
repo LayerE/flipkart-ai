@@ -14,8 +14,6 @@ export default async (req: NextRequest) => {
     const body = await req.json();
     const { user_id, project_id, canvasdata } = body;
 
-    console.log(user_id, project_id, canvasdata);
-
     if (!user_id) {
       return NextResponse.json({ error: "Missing user_id" });
     }
@@ -72,7 +70,6 @@ export default async (req: NextRequest) => {
         console.log(error);
         return NextResponse.json({ error: "Something went wrong" });
       }
-      console.log("post", data);
 
       return NextResponse.json({ data: "success" });
     }
