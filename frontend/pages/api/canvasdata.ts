@@ -14,8 +14,6 @@ export default async (req: NextRequest) => {
     const body = await req.json();
     const { user_id, project_id, canvasdata } = body;
 
-    console.log(user_id, project_id, canvasdata);
-
     if (!user_id) {
       return NextResponse.json({ error: "Missing user_id" });
     }
@@ -42,25 +40,29 @@ export default async (req: NextRequest) => {
 
       const data = await response.json();
       const newData = data[data.length - 1];
-      console.log("sdsd", data);
 
       //  const da =await data[data?.length - 1]
 
-      return NextResponse.json({ newData });
+      return NextResponse.json(newData);
     } else if (!project_id) {
       return NextResponse.json({ error: "Missing project_id" });
     } else {
       const supabase = createClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL as string,
-        process.env.SUPABASE_SERVICE_KEY as string
+        process.env.SUPABASE_SERVICE_KEY as string,
+        {
+          auth: {
+            persistSession: false,
+          },
+        }
       );
 
       const { data, error } = await supabase.rpc(
-        "check_and_insert_canvasdata",
+        "check_and_insert_canvas",
         {
-          user_id: user_id,
-          project_id: project_id,
-          canvasdata: canvasdata,
+          user_id_arg: user_id,
+          project_id_arg: project_id,
+          canvasdata_arg: canvasdata,
         }
       );
 
@@ -68,8 +70,6 @@ export default async (req: NextRequest) => {
         console.log(error);
         return NextResponse.json({ error: "Something went wrong" });
       }
-      console.log("post", data);
-
 
       return NextResponse.json({ data: "success" });
     }
