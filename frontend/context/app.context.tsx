@@ -199,7 +199,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
   const [undoArray, setUndoArray] = useState<string[]>([]);
   const [editorBox, setEditorBox] = useState<fabric.Rect | null>(null);
-  const [zoom, setZoomCanvas] = useState<number>(0.3);
+  const [zoom, setZoomCanvas] = useState<number>(0.6);
 
   const [popup, setPopup] = useState<object>({});
   const [popupImage, setPopupImage] = useState<object>({});
@@ -310,12 +310,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     id: 1,
     title: "Default",
     subTittle: "1024✕1024",
-    h: 1024,
-    w: 1024,
+    h: 512,
+    w: 512,
     l: 100,
-    t: 300,
-    gl: 1224,
-    gt: 300,
+    t: 160,
+    gl: 652,
+    gt: 160,
   });
   const [customsize, setCustomsize] = useState({ w: 1024, h: 1024 });
 

@@ -85,6 +85,7 @@ export default function CanvasBox({ proid, userId }) {
     canvasInstance.current = new fabric.Canvas(canvasRef?.current, {
       width: window.innerWidth,
       height: window.innerHeight,
+      preserveObjectStacking:true
       // selectionLineWidth: 2,
       // transparentCorners: false,
       // originX: "center",
@@ -166,9 +167,9 @@ export default function CanvasBox({ proid, userId }) {
   useEffect(() => {
    
     if (canvasInstance?.current && state && isReady) {
-      if (re <= 2) {
-        setRe(re + 1);
-      }
+      // if (re <= 2) {
+      //   setRe(re + 1);
+      // }
       // canvasInstance?.current.clear();
       // Other canvas operations...
       const canvasInstanceRef = canvasInstance?.current;
@@ -182,6 +183,7 @@ export default function CanvasBox({ proid, userId }) {
       canvasInstanceRef.add(newEditorBox);
       canvasInstanceRef.add(imageGenRect);
 
+
       newEditorBox.set({
         width: activeSize.w,
         height: activeSize.h,
@@ -193,7 +195,14 @@ export default function CanvasBox({ proid, userId }) {
         height: activeSize.h,
         left: activeSize.gl,
         top: activeSize.gt,
+        
       });
+      canvasInstance.current.sendBackwards(newEditorBox);
+      canvasInstance.current.sendBackwards(imageGenRect);
+
+      canvasInstance.current.discardActiveObject();
+      // canvas.requestRenderAll();
+
 
       canvasInstance?.current.renderAll();
 
@@ -232,7 +241,7 @@ export default function CanvasBox({ proid, userId }) {
       const EditorBoxText = new fabric.Text("Place Your Product Here", {
         left: newEditorBox.left + 20, // center of the rectangle
         top: newEditorBox.top + 20, // center of the rectangle
-        fontSize: 44,
+        fontSize: 24,
         // originX: "center",
         // originY: "center",
         selectable: false,
@@ -305,12 +314,21 @@ export default function CanvasBox({ proid, userId }) {
         // If the object is a mask, add it to the mask objects array
         if (object.category === "mask") {
           positionBtn(object);
+          canvasInstance.current.bringToFront(imageGenRect);
+
+          canvasInstance.current.discardActiveObject();
+      canvasInstance.current.renderAll();
+
           // maskObjects.push(object);
         }
         // If the object is a subject, add it to the subject objects array
         if (object.category === "subject") {
           // subjectObjects.push(object);
           positionBtn(object);
+          canvasInstance.current.bringToFront(imageGenRect);
+
+          canvasInstance.current.discardActiveObject();
+      canvasInstance.current.renderAll();
         }
       });
 
