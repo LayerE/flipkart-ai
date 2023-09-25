@@ -161,7 +161,7 @@ export default function Home() {
         }
       );
       const data = await response.json();
-      // console.log(await data, "dfdd");
+      console.log(await data, "dfdd");
 
       if (data?.length) {
         setFilteredArray(data);
@@ -174,6 +174,7 @@ export default function Home() {
 
           console.log(filteredResults,"fddscvcvcvcgd",jobIdOne)
           setLoader(false);
+          setJobIdOne([])
         }
 
         
