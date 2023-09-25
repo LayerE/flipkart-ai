@@ -209,6 +209,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
   const [generatedImgList, setGeneratedImgList] = useState<string[]>([]);
   const [jobId, setJobId] = useState<string[]>([]);
+  const [jobIdOne, setJobIdOne] = useState<string[]>([]);
+
   const PosisionbtnRef = useRef(null);
   const regenerateRef = useRef(null);
   const generateBox = useRef(null);
@@ -446,8 +448,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         scaledWidth = scaledHeight * imageAspectRatio;
       }
 
-      img.scaleToWidth(activeSize.w /2);
-      img.scaleToHeight(activeSize.w /2);
+      img.scaleToWidth(activeSize.w / 2);
+      img.scaleToHeight(activeSize.w / 2);
       // img.scaleToHeight(150);
       // Scale the image to have the same width and height as the rectangle
       // const scaleX = downloadRect.width / img.width;
@@ -733,7 +735,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       // Set the position of the image
       img.set({
         left: activeSize.gl,
-        top: activeSize.gt ,
+        top: activeSize.gt,
 
         // scaleX: scaleX,
         // scaleY: scaleY,
@@ -1059,7 +1061,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
         if (generate_response?.error) {
           // alert(generate_response?.error);
-      toast.error(generate_response?.error);
+          toast.error(generate_response?.error);
 
           setLoader(false);
 
@@ -1088,7 +1090,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
             const datares = await response;
 
             if (datares.ok) {
-              setJobId((pre) => [...pre, generate_response?.job_id]);
+              // setJobId([ generate_response?.job_id]);
+               setJobIdOne([generate_response?.job_id])
               // setRegenratedImgsJobid(generate_response?.job_id);
               // localStorage.setItem("jobId", jobId);
 
@@ -1182,7 +1185,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       const generate_response = await response.json();
 
       if (generate_response?.error) {
-      toast.error(generate_response?.error);
+        toast.error(generate_response?.error);
 
         // alert(generate_response?.error);
         setLoader(false);
@@ -1249,7 +1252,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
         // setSelectedresult(1);
 
-        setLoader(false);
+        // setLoader(false);
       }, 30000);
     } catch (error) {
       console.error("Error generating image:", error);
@@ -1387,6 +1390,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setPopupImage,
         newassetonCanvas,
         setNewassetonCanvas,
+        jobIdOne, setJobIdOne,
         file,
         setFile,
         mainLoader,

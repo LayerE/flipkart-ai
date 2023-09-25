@@ -59,6 +59,7 @@ export default function Home() {
     setGeneratedImgList,
     saveCanvasToDatabase,
     filteredArray, setFilteredArray,
+    jobIdOne, setJobIdOne
  
   } = useAppState();
 
@@ -160,12 +161,22 @@ export default function Home() {
         }
       );
       const data = await response.json();
-      console.log(await data, "dfdd");
+      // console.log(await data, "dfdd");
 
       if (data?.length) {
         setFilteredArray(data);
+
+        const filteredResults = data.filter((obj) =>
+        jobIdOne?.includes(obj?.task_id)
+        )
+
+        if(filteredResults?.length){
+
+          console.log(filteredResults,"fddscvcvcvcgd",jobIdOne)
+          setLoader(false);
+        }
+
         
-        setLoader(false);
 
         
       }
