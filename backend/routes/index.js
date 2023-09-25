@@ -154,6 +154,16 @@ router.post("/recently", async function (req, res, next) {
       });
     }
     recently.date = new Date();
+    // const deleter = await Projects.findByIdAndRemove({recently:recently });
+    // const deleter = await Projects.findOneAndUpdate(
+    //   { userId: userId, _id: projectId },
+    //   {
+    //     $pop: {
+    //       recently: recently,
+    //     },
+    //   }
+    // );
+    // console.log(deleter);
     const updateDB = await Projects.findOneAndUpdate(
       { userId: userId, _id: projectId },
       {
