@@ -153,7 +153,7 @@ router.post("/recently", async function (req, res, next) {
         error: "product not found",
       });
     }
-    recently.date = new Date();
+    // recently.date = new Date();
     // const deleter = await Projects.findByIdAndRemove({recently:recently });
     // const deleter = await Projects.findOneAndUpdate(
     //   { userId: userId, _id: projectId },

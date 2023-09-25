@@ -246,6 +246,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
   const [mode, setMode] = useState("pen");
   const [magicLoader, setMagicloder] = useState(false);
+  const [crop, setCrop] = useState(false);
+
   const stageRef = useRef(null);
 
   const saveImage = () => {
@@ -392,6 +394,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         top: randomTop,
         // scaleX: scaleX,
         // scaleY: scaleY,
+        zIndex:10
       });
       img.on("selected", () => {
         const rebtn = regenerateRef.current;
@@ -405,6 +408,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       img.on("scaling", function () {
         positionBtn(img);
       });
+      img.set('zIndex', 10)
+
       img.set("category", "mask");
 
       canvasInstance?.current.add(img);
@@ -413,6 +418,76 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       saveCanvasToDatabase();
     });
   };
+
+  const addimgToCanvasCropped = async (url: string) => {
+    fabric.Image.fromURL(await getBase64FromUrl(url), function (img: any) {
+      // Set the image's dimensions
+
+      img.scaleToWidth(200);
+      const canvasWidth = activeSize.w;
+      const canvasHeight = activeSize.h;
+      const imageAspectRatio = img.width / img.height;
+
+      // Calculate the maximum width and height based on the canvas size
+      const maxWidth = canvasWidth;
+      const maxHeight = canvasHeight;
+      const getRandomPosition = (max) => Math.floor(Math.random() * max);
+
+      const randomLeft = getRandomPosition(
+        canvasInstance?.current?.width / 2 - img.width
+      );
+      const randomTop = getRandomPosition(300);
+      img.set({
+        left: 300,
+        top: 300,
+        // scaleX: scaleX,
+        // scaleY: scaleY,
+      });
+
+      // Calculate the scaled width and height while maintaining the aspect ratio
+      let scaledWidth = maxWidth;
+      let scaledHeight = scaledWidth / imageAspectRatio;
+
+      // If the scaled height exceeds the canvas height, scale it down
+      if (scaledHeight > maxHeight) {
+        scaledHeight = maxHeight;
+        scaledWidth = scaledHeight * imageAspectRatio;
+      }
+
+      img.scaleToWidth(activeSize.w / 2);
+      img.scaleToHeight(activeSize.w / 2);
+     
+      img.on("selected", () => {
+        const rebtn = regenerateRef.current;
+        rebtn.style.display = "none";
+
+        const btn = PosisionbtnRef.current;
+        btn.style.display = "flex";
+        positionBtn(img);
+        // RegeneratepositionBtn(img);
+      });
+
+      img.on("moving", () => {
+        const btn = PosisionbtnRef.current;
+        btn.style.display = "flex";
+        positionBtn(img);
+        console.log(zoom);
+        // RegeneratepositionBtn(img);
+      });
+
+      img.on("scaling", () => {
+        positionBtn(img);
+      });
+    
+      img.set({ category: "subject" });
+      // canvasInstance.current.clear();
+      canvasInstance?.current?.add(img);
+      canvasInstance?.current?.setActiveObject(img);
+      canvasInstance?.current?.renderAll();
+      saveCanvasState();
+    });
+  };
+
   const addimgToCanvasSubject = async (url: string) => {
     fabric.Image.fromURL(await getBase64FromUrl(url), function (img: any) {
       // Set the image's dimensions
@@ -505,6 +580,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       //     setBtnVisible(true);
       //   }
       // });
+      img.set('zIndex', 10)
+
       img.set({ category: "subject" });
       // canvasInstance.current.clear();
       canvasInstance?.current?.add(img);
@@ -557,6 +634,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   };
 
   const saveCanvasToDatabase = async () => {
+    console.log("sdsdfs","dsffff");
+
     const canvasData = canvasInstance.current.toJSON(["category"]);
     if (canvasData.objects.length > 1 && !loadercarna) {
       console.log("sdsdfs,", userId, projectId, canvasData, "dsffff");
@@ -740,6 +819,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         // scaleX: scaleX,
         // scaleY: scaleY,
       });
+      img.set('zIndex', 10)
       setIncremetPosition(incremetPosition + 25);
       img.set("category", "generated");
 
@@ -997,11 +1077,11 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
         maskObjects.forEach((object) => {
           // You can adjust the object's position relative to the canvas as needed
-          object.set({
-            left: object.left - newEditorBox.left,
-            top: object.top - newEditorBox.top,
-          });
-          maskCanvas.add(object);
+          // object.set({
+          //   left: object.left - newEditorBox.left,
+          //   top: object.top - newEditorBox.top,
+          // });
+          // maskCanvas.add(object);
         });
         const maskDataUrl = maskCanvas.toDataURL("image/png");
 
@@ -1023,27 +1103,42 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           object.set({
             left: object.left - newEditorBox.left,
             top: object.top - newEditorBox.top,
+       
           });
           subjectCanvas.add(object);
+
+            object.set({
+            left: object.left + newEditorBox.left,
+            top: object.top + newEditorBox.top,
+   
+
+            
+
+          });
+
+
         });
 
         const subjectDataUrl = subjectCanvas.toDataURL("image/png");
+        // maskCanvas.clear()
+        // maskObjects.forEach((object) => {
+        //   // You can adjust the object's position relative to the canvas as needed
+        //   // object.set({
+        //   //   left: object.left + newEditorBox.left,
+        //   //   top: object.top + newEditorBox.top,
+        //   // });
+        //   // maskCanvas.remove(object);
 
-        maskObjects.forEach((object) => {
-          // You can adjust the object's position relative to the canvas as needed
-          object.set({
-            left: object.left + newEditorBox.left,
-            top: object.top + newEditorBox.top,
-          });
-          // maskCanvas.remove(object);
-        });
-        subjectObjects.forEach((object) => {
-          object.set({
-            left: object.left + newEditorBox.left,
-            top: object.top + newEditorBox.top,
-          });
-          // subjectCanvas.remove(object);
-        });
+        // });
+        // subjectObjects.forEach((object) => {
+        //   // object.set({
+        //   //   left: object.left + newEditorBox.left,
+        //   //   top: object.top + newEditorBox.top,
+        //   // });
+        //   // subjectCanvas.remove(object);
+        //   // subjectCanvas.add(object);
+
+        // });
         // subjectCanvas?.dispose();
 
         // subjectCanvas.clear()
@@ -1316,7 +1411,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   return (
     <AppContext.Provider
       value={{
+        addimgToCanvasCropped,
         changeRectangleSize,
+        crop, setCrop,
         stageRef,
         mode,
         setMode,

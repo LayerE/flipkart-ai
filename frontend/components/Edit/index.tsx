@@ -56,6 +56,7 @@ const Edit = () => {
     magicLoader,
     setMagicloder,
     HandleInpainting,
+    crop, setCrop
   } = useAppState();
 
   const { userId } = useAuth();
@@ -153,6 +154,8 @@ const Edit = () => {
   /* eslint-disable */
 
   const HandelBG = async () => {
+    setIsMagic(false);
+
     setLoader(true);
     const response = await fetch("/api/removebg", {
       method: "POST",
@@ -213,11 +216,24 @@ const Edit = () => {
     const dataURL = await arrayBufferToDataURL(buffer);
     localStorage.setItem("m-images", JSON.stringify(dataURL));
     console.log(buffer, response, dataURL, "imgs");
+    // const response = await fetch("/api/upscale", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     image_url: photo,
+    //     user_id: userId,
+      
+    //   }),
+    // });
 
     return dataURL;
   };
 
   const UpscaleBG = async () => {
+    setIsMagic(false);
+
     setLoader(true);
 
     // const datatacke = {
@@ -331,6 +347,12 @@ const Edit = () => {
     setLinesHistory(linesHistory.slice(0, linesHistory.length - 1));
   };
 
+  const HandelCrop = ()=>{
+    setCrop(true)
+    setIsMagic(false)
+
+  }
+
   return (
     <motion.div
       initial="hidden"
@@ -386,7 +408,10 @@ const Edit = () => {
           <Label>Tools</Label>
 
           <div className="gaps">
-            <div className={isMagic ?  "selectTool activeTool" :"selectTool"} onClick={() => setIsMagic(true)}>
+            <div className={isMagic ?  "selectTool activeTool" :"selectTool"} onClick={() => {setIsMagic(true); 
+    setCrop(false)
+            
+            }}>
               <div className="mageic">
                 <div className="gaps">
                   <Label>Magic Erase</Label>
@@ -398,7 +423,7 @@ const Edit = () => {
                 <div className="gaps">
                   <div className="flex">
                     <Label>Mode</Label>
-                    {linesHistory.length === 0 ? null : (
+                    {/* {linesHistory.length === 0 ? null : (
                       <div onClick={undoLastDrawing}>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -415,7 +440,7 @@ const Edit = () => {
                           ></path>
                         </svg>
                       </div>
-                    )}
+                    )} */}
                   </div>
                   <div className="modeBtns">
                     <div
@@ -430,6 +455,7 @@ const Edit = () => {
                     <div
                       className={`btn ${mode === "eraser" ? "activBtn" : ""}`}
                       onClick={() => {
+                        undoLastDrawing()
                         setMode("eraser");
                         // clearDrawing();
                       }}
@@ -453,7 +479,7 @@ const Edit = () => {
                     />
                   </div>
                 </div>
-                <Row>
+                {/* <Row>
                   {magicLoader ? (
                     <TextLoader />
                   ) : (
@@ -464,7 +490,7 @@ const Edit = () => {
                       Generate
                     </Button>
                   )}
-                </Row>
+                </Row> */}
               </div>
             </div>
             {/* <div className={"selectTool"} onClick={() => setIsMagic(true)}>
@@ -498,12 +524,25 @@ const Edit = () => {
                 <p>Remove the background of your image in one click</p>
               </div>
             </div>
+            <div
+        
+            className={crop ?  "selectTool activeTool" :"selectTool"} 
+
+              onClick={() => {
+                HandelCrop();
+              }}
+            >
+              <Label>Crop Images</Label>
+              <div>
+                <p>Remove the background of your image in one click</p>
+              </div>
+            </div>
           </div>
         </div>
 
         <div className="gaps">
           <div className="rowwothtwo">
-            <Label>Select image formate</Label>
+            <Label>Select image file formats</Label>
             <div className="two-side">
               <DropdownNOBorder
                 data={{

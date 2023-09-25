@@ -7,6 +7,7 @@ import { useAppState } from "@/context/app.context";
 import Loader from "@/components/Loader";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Script from 'next/script'
 const LayoutContentWrapper = styled.div`
   width: 100%;
   height: 100%;
@@ -36,6 +37,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           </>
         {/* )} */}
       </LayoutContentWrapper>
+      <>
+      <Script src="https://unpkg.com/fabric@latest/dist/fabric.js" strategy="worker" />
+      <Script src="https://unpkg.com/fabric@latest/src/mixins/eraser_brush.mixin.js" strategy="worker" />
+
+      </>
     </>
   );
 };

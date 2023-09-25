@@ -12,6 +12,7 @@ import Loader from "../Loader";
 import { setInterval } from "timers";
 import { saveAs } from "file-saver";
 import PopupCanvas from "./popupCanvas";
+import CropperBox from "./Cropper";
 
 // import { useBeforeUnload } from "react-router-dom";
 
@@ -67,6 +68,7 @@ export default function CanvasBox({ proid, userId }) {
     activeSize,
     downloadeImgFormate,
     setActiveSize,
+    crop, setCrop
 
     // canvasRef
   } = useAppState();
@@ -110,6 +112,8 @@ export default function CanvasBox({ proid, userId }) {
       // Perform operations on canvasInstanceRef
       // canvasInstanceRef.clear();
       // Other canvas operations...
+
+     
     }
 
     // getCanvs(project);
@@ -121,6 +125,8 @@ export default function CanvasBox({ proid, userId }) {
         height: window?.innerHeight,
       });
     });
+
+  
 
     setTimeout(() => {
       setStar(true);
@@ -180,9 +186,10 @@ export default function CanvasBox({ proid, userId }) {
       // const genBox = generateBox.current;
       const preBox = previewBox.current;
 
+     
+
       canvasInstanceRef.add(newEditorBox);
       canvasInstanceRef.add(imageGenRect);
-
 
       newEditorBox.set({
         width: activeSize.w,
@@ -195,13 +202,18 @@ export default function CanvasBox({ proid, userId }) {
         height: activeSize.h,
         left: activeSize.gl,
         top: activeSize.gt,
+        zIndex: 0
         
       });
+      newEditorBox.set('zIndex', 0)
+      imageGenRect.set('zIndex', 0)
+
+
       canvasInstance.current.sendBackwards(newEditorBox);
       canvasInstance.current.sendBackwards(imageGenRect);
 
-      canvasInstance.current.discardActiveObject();
-      // canvas.requestRenderAll();
+      // canvasInstance.current.discardActiveObject();
+      // // canvas.requestRenderAll();
 
 
       canvasInstance?.current.renderAll();
@@ -601,7 +613,7 @@ export default function CanvasBox({ proid, userId }) {
     };
   }, []);
 
-  const saveCanvasToDatabasea = () => {};
+  // const saveCanvasToDatabasea = () => {};
 
   const saveCanvasDataToLocal = () => {
     // if(isReady){
@@ -658,6 +670,13 @@ export default function CanvasBox({ proid, userId }) {
       {loadercarna ? <Loader /> : null}
 
       {isMagic ? <PopupCanvas /> : null}
+      {
+        crop?  
+        <CropperBox/>
+        
+        :null
+      }
+
       <div className="convas-continer">
         <div className="generationBox">
           {/* <div
@@ -726,7 +745,7 @@ export default function CanvasBox({ proid, userId }) {
         <div className="ss">
           <picture>
             <img
-              onClick={() => saveCanvasToDatabase(300, 200)}
+              onClick={() => saveCanvasToDatabase()}
               src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAYFBMVEX///8AAAD4+Pjv7+8aGhoTExOYmJiTk5P09PQICAiQkJD6+vp/f39WVlbGxsaurq5ubm6FhYUnJye8vLwfHx9oaGjR0dHq6urg4OB1dXWkpKS2trY0NDQpKSlNTU1fX19H7sBTAAADJUlEQVR4nO3d224iMRBFUbo7QLhDrkwyM/n/vxwhTR5AUDbUsV1Ee78iFSw5pIliN6MRERERERERERERERERxWvRn29xy7CTGVc9WqR+vVu9dOeb3jLwZMYx4vHk0YnEYNVPni7o6gi7uYRxuWeDpxHOEsLbniO7pQ2sIixK3CaAdYQFiakVrCUsRky8BysKC/266dPAasIyqziNJCyxir11HawvLLCK6wxgTaF+FXfRhPJVXIUTildxcenDdkOhdhVzrhXVhdJVjClUEoMKhcSoQh0xrFBGjCtUEQMLRReNyELNKoYWSoixhQpicKGAGF3oJ4YXuonxhd6Lxh0Inat4D0LfKt6FsPP88w0hQoQIf5Aw9V/uexTOp0cd7+f4EUIzhAjzQ4jw1hDWFur3D0QT/pLJvnsPJny4aYOp1UcwYfcpo/0vZ49LVaHrOc40vwpYRfh7kOlG1/6M1hF240/Ze3Gf3O3ZRNh1f17nE0HLv9f6qgkbhhBh/BAijB9ChPFDiDB+CBHGDyHC+CFEGD+ECOOHEGH8ECKMH0KE8UOIMH5VhF+bN+mWmtHwtvmKIxxPtbrvhsk4hnBbxndoyNo9VFq4kXnOtWkvfJZhzpdxv7iywrIreCi9ikWFWxnkcsn3YlFhjbvDFn0RqeHl7w17aNJQ+ChTWKV27hcUvsoQdq/NhB8yg11iW3RB4V5msNs3E77LDHaJAyblhLNyH0iPG1oJx9WE9t8YCK0Qygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxPC/VCnfSth91Ar+2V4hHnf6dy4F9ctjLO+l7txKw8w77vVG7dzCdetX35Ga5ewv+7+7y16cp7bmbYGJPOe2wl/EnjmXMKs839NE5x/XLY2mC39wIzzfw0TnX+Me1GUrOCh51lryvmEZ5D7Sbzr4tNUe4C1X+9WcT6Gv6x26xIHdBd9lORfTkRERERERERERERERESC/gF2IVePB+evpwAAAABJRU5ErkJggg=="
               alt=""
             />

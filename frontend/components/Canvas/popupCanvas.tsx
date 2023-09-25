@@ -43,7 +43,8 @@ const PopupCanvas = () => {
     setMode,
     Inpainting,
     stageRef,
-    HandleInpainting
+    HandleInpainting,
+    addimgToCanvasSubject
 
     // canvasRef
   } = useAppState();
@@ -133,6 +134,21 @@ const PopupCanvas = () => {
 
     setIsMagic(false);
   };
+
+  const saveImage = () => {
+    const stage = stageRef.current;
+
+    const dataURL = stage.toDataURL();
+  
+    addimgToCanvasSubject(dataURL)
+    setLinesHistory([]);
+    setLines([]);
+
+    setIsMagic(false);
+
+
+    // return dataURL;
+  };
   return (
     <Wrapper>
       {/* <div className="popuCanvas">
@@ -202,7 +218,7 @@ const PopupCanvas = () => {
                   tension={0.5}
                   lineCap="round"
                   globalCompositeOperation={
-                    line.mode === "pen" ? "source-over" : "destination-out"
+                    line.mode === "pen" ? "destination-out" : "destination-out"
                   }
                 />
               ))}
@@ -215,7 +231,22 @@ const PopupCanvas = () => {
                   style={{ display: "none" }}
                 /> */}
         </div>
+
       </div>
+        <div className="bvtns">
+        <Button
+                      onClick={() => saveImage()}
+                    //   disabled={linesHistory.length === 0 ? true : false}
+                    >
+                     Done
+                    </Button>
+                    {/* <Button
+                      onClick={() => saveImage()}
+                    //   disabled={linesHistory.length === 0 ? true : false}
+                    >
+                     Close
+                    </Button> */}
+        </div>
       {/* ) : null} */}
     </Wrapper>
   );
@@ -223,8 +254,13 @@ const PopupCanvas = () => {
 
 export default PopupCanvas;
 const Wrapper = styled.div`
+.bvtns{
+    display: flex;
+}
 border: 1px solid black;
   display: flex;
+  flex-direction: column;
+  gap: 1.5em;
   justify-content: center;
   align-items: center;
   position: absolute;
