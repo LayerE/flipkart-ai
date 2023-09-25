@@ -925,9 +925,32 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     console.log("dfd", newEditorBox);
   };
   const generateImageHandeler = async (ueserId, proid) => {
+
+    var subjectCount = 0;
+
+    // Iterate through the canvas objects
+    canvasInstance?.current.forEachObject(function (obj) {
+        // Check if the object has a 'category' property and if it's equal to 'subject'
+        if (obj.category === 'subject') {
+            // Check if the object intersects with the rectangular area
+            if (newEditorBox.intersectsWithObject(obj)) {
+                // Increment the count if the condition is met
+                subjectCount++;
+            }
+            else {
+              // If the object is not inside the rectangular area, remove it from the canvas
+              // canvasInstance?.current.remove(obj);
+          }
+        }
+    });
+    
     if (category === null) {
       toast("Select your product category first !");
-    } else {
+    } else if(subjectCount === 0 ){
+      toast("Add product first");
+
+
+    }else {
       // console.log(promt);
       setLoader(true);
       setGenerationLoader(true);
