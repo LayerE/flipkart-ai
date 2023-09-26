@@ -178,16 +178,16 @@ export default function Home() {
         const filteredResults = await data?.filter((obj) =>
         jobIdOne?.includes(obj?.task_id)
         )
-        console.log(data?.length);
+        // console.log(data?.length);
 
         const filteredResultss = data?.map((obj) =>
           obj?.task_id === jobIdOne[0]
         )
-        console.log(filteredResults,"dfd", filteredResultss)
+        // console.log(filteredResults,"dfd", filteredResultss)
 
         if(filteredResults?.length){
 
-          console.log(filteredResults,"fddscvcvcvcgd",jobIdOne)
+          // console.log(filteredResults,"fddscvcvcvcgd",jobIdOne)
           setLoader(false);
       setCanvasDisable(true)
 
