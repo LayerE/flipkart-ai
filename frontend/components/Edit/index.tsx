@@ -534,7 +534,7 @@ const Edit = () => {
             >
               <Label>Crop Images</Label>
               <div>
-                <p>Remove the background of your image in one click</p>
+                <p>Crop your image </p>
               </div>
             </div>
           </div>
