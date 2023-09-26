@@ -66,7 +66,7 @@ const PopupCanvas = () => {
     const pos = stageRef.current.getPointerPosition();
     setLinesHistory([...linesHistory, lines]);
 
-    setLines([...lines, { mode, points: [pos.x, pos.y] }]);
+    setLines([...lines, { mode, points: [pos.x, pos.y],brushSize: brushSize }]);
   };
   const handleMouseMove = (e) => {
     if (!drawing) return;
@@ -214,7 +214,7 @@ const PopupCanvas = () => {
                   key={i}
                   points={line.points}
                   stroke={line.mode !== "pen" ? "white" : "white"}
-                  strokeWidth={brushSize}
+                  strokeWidth={line.brushSize}
                   tension={0.5}
                   lineCap="round"
                   globalCompositeOperation={
