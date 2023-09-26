@@ -70,6 +70,7 @@ const EditorSection = () => {
     changeRectangleSize,
     setGenerationLoader,
     loader
+    
   } = useAppState();
 
   // const imageArrays = JSON.parse(localStorage.getItem("g-images")) || [];
@@ -116,56 +117,56 @@ const EditorSection = () => {
     {
       id: 2,
       title: "Instagram Post",
-      subTittle: "580✕580",
-      h: 580,
-      w: 580,
+      subTittle: "560✕560",
+      h: 560,
+      w: 560,
       l: 100,
       t: 160,
-      gl: 730,
+      gl: 690,
       gt: 160
     },
     {
       id: 3,
       title: "Instagram Story",
-      subTittle: "580✕712",
-      h: 712,
-      w: 580,
+      subTittle: "560✕720",
+      h: 720,
+      w: 560,
       l: 100,
       t: 160,
-      gl: 742,
+      gl: 690,
       gt: 160
     },
     {
       id: 4,
       title: "Facebook Post",
-      subTittle: "440✕512",
-      h: 512,
+      subTittle: "440✕520",
+      h: 520,
       w: 440,
       l: 100,
       t: 160,
-      gl: 582,
+      gl: 570,
       gt: 160
     },
     {
       id: 5,
       title: "16:9",
-      subTittle: "712✕580",
-      h: 580,
+      subTittle: "712✕560",
+      h: 560,
       w: 712,
       l: 100,
       t: 160,
-      gl: 852,
+      gl: 842,
       gt: 160
     },
     {
       id: 6,
       title: "9:16",
-      subTittle: "580✕712",
-      h: 712,
-      w: 580,
+      subTittle: "520✕720",
+      h: 720,
+      w: 520,
       l: 100,
       t: 160,
-      gl: 730,
+      gl: 650,
       gt: 160
     },
     // {

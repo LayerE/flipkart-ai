@@ -442,7 +442,7 @@ export default function CanvasBox({ proid, userId }) {
       // canvasInstance?.current.remove(newEditorBox);
       // canvasInstance?.current.remove(imageGenRect);
     };
-  }, [canvasInstance.current, state]);
+  }, [canvasInstance.current, state,activeSize]);
   // , activeSize, setActiveSize, re, state
 
   const DeletIrem = () => {
