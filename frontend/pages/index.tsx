@@ -47,7 +47,8 @@ export default function Home() {
     setcategory,
     setDownloadeImgFormate,
     setProduct,
-    setpromt
+    setpromt,
+    setLoader
 
   } = useAppState();
 
@@ -73,6 +74,7 @@ setActiveTemplet(null)
 setDownloadeImgFormate("png")
 setProduct("")
 setpromt("")
+setLoader(false)
 
 
       // 

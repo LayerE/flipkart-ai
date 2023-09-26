@@ -56,7 +56,8 @@ const Edit = () => {
     magicLoader,
     setMagicloder,
     HandleInpainting,
-    crop, setCrop
+    crop, setCrop,
+    loader
   } = useAppState();
 
   const { userId } = useAuth();
@@ -358,7 +359,7 @@ const Edit = () => {
       initial="hidden"
       animate="visible"
       variants={fadeIn}
-      className={downloadImg ? "accest" : "accest blure"}
+      className={downloadImg && !loader ? "accest" : "accest blure"}
       style={{ paddingBottom: "50px" }}
     >
       <WrapperEdit>

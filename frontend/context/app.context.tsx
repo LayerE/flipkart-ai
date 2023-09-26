@@ -201,6 +201,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [editorBox, setEditorBox] = useState<fabric.Rect | null>(null);
   const [zoom, setZoomCanvas] = useState<number>(0.6);
 
+  const [canvasDisable, setCanvasDisable] = useState<boolean>(false);
+
+
   const [popup, setPopup] = useState<object>({});
   const [popupImage, setPopupImage] = useState<object>({});
   const [regeneratePopup, setRegeneratePopup] = useState<object>({});
@@ -1033,6 +1036,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     }else {
       // console.log(promt);
       setLoader(true);
+      setCanvasDisable(true)
       setGenerationLoader(true);
       const canvas1 = canvasInstance.current;
       try {
@@ -1422,6 +1426,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   return (
     <AppContext.Provider
       value={{
+        canvasDisable, setCanvasDisable,
         addimgToCanvasCropped,
         changeRectangleSize,
         crop, setCrop,

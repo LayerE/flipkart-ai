@@ -59,7 +59,8 @@ export default function Home() {
     setGeneratedImgList,
     saveCanvasToDatabase,
     filteredArray, setFilteredArray,
-    jobIdOne, setJobIdOne
+    jobIdOne, setJobIdOne,
+    setCanvasDisable
  
   } = useAppState();
 
@@ -91,12 +92,17 @@ export default function Home() {
 
 
   const upateImage = (url) => {
+    if(!loader){
+
+ 
     addimgToCanvasGen(url);
     setSelectedImg({ status: true, image: url });
     setModifidImageArray((pre) => [
       ...pre,
       { url: url, tool: "generated-selected" },
     ]);
+
+  }
   };
 
   useEffect(() => {
@@ -183,6 +189,8 @@ export default function Home() {
 
           console.log(filteredResults,"fddscvcvcvcgd",jobIdOne)
           setLoader(false);
+      setCanvasDisable(true)
+
           setJobIdOne([])
         }
 

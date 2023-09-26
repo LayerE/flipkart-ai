@@ -26,7 +26,8 @@ const Assets: React.FC = () => {
     listofassetsById, setListOfAssetsById,
     addimgToCanvasSubject,
     getBase64FromUrl,
-    assetLoader
+    assetLoader,
+    loader
   } = useAppState();
   const { query, isReady } = useRouter();
   // const { id } = query;
@@ -70,7 +71,7 @@ const Assets: React.FC = () => {
               className={"imageBox"}
               onClick={() => {
 
-                if(!assetLoader){
+                if(!assetLoader && !loader){
                 addimgToCanvasSubject(test.img);
                 setProduct(test.title)
                 }
@@ -100,7 +101,7 @@ const Assets: React.FC = () => {
                 "imageBox"
               }
               onClick={() => {
-                if(!assetLoader){
+                if(!assetLoader && !loader){
 
                 addimgToCanvasSubject(test?.url.url);
                 setProduct(test.url.product)

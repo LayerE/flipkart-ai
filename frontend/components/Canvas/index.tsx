@@ -70,6 +70,9 @@ export default function CanvasBox({ proid, userId }) {
     setActiveSize,
     crop,
     setCrop,
+    canvasDisable, setCanvasDisable,
+    loader
+
 
     // canvasRef
   } = useAppState();
@@ -517,7 +520,12 @@ export default function CanvasBox({ proid, userId }) {
       };
       setZoomCanvas(zooms);
     }
-  }, [canvasInstance.current]);
+  }, [canvasInstance.current,]);
+
+ 
+
+
+
 
   useEffect(() => {
     // Fetch canvas data from your API and load it into the canvas
@@ -601,6 +609,7 @@ export default function CanvasBox({ proid, userId }) {
     };
   }, []);
 
+
   // const saveCanvasToDatabasea = () => {};
 
   const saveCanvasDataToLocal = () => {
@@ -654,7 +663,7 @@ export default function CanvasBox({ proid, userId }) {
   };
 
   return (
-    <Wrapper>
+    <Wrapper canvasDisable={loader}>
       {loadercarna ? <Loader /> : null}
 
       {isMagic ? <PopupCanvas /> : null}
@@ -728,6 +737,7 @@ export default function CanvasBox({ proid, userId }) {
         </div>
 
         {/* <div className="ss">
+            <button onClick={handleButtonClick}>,/fdvd</button>
           <picture>
             <img
               onClick={() => saveCanvasToDatabase()}
@@ -737,13 +747,18 @@ export default function CanvasBox({ proid, userId }) {
           </picture>
         </div> */}
 
-        <canvas ref={canvasRef} />
+        <canvas  ref={canvasRef}   />
       </div>
     </Wrapper>
   );
 }
 
 const Wrapper = styled.div`
+canvas {
+
+  pointer-events:${(props) => props.canvasDisable ? "none" : "auto"}
+  
+}
   .convas-continer {
     /* width: 1800px;
   height: 1800px;
