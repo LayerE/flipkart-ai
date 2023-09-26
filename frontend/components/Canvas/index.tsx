@@ -68,7 +68,8 @@ export default function CanvasBox({ proid, userId }) {
     activeSize,
     downloadeImgFormate,
     setActiveSize,
-    crop, setCrop
+    crop,
+    setCrop,
 
     // canvasRef
   } = useAppState();
@@ -87,7 +88,7 @@ export default function CanvasBox({ proid, userId }) {
     canvasInstance.current = new fabric.Canvas(canvasRef?.current, {
       width: window.innerWidth,
       height: window.innerHeight,
-      preserveObjectStacking:true
+      preserveObjectStacking: true,
       // selectionLineWidth: 2,
       // transparentCorners: false,
       // originX: "center",
@@ -112,8 +113,6 @@ export default function CanvasBox({ proid, userId }) {
       // Perform operations on canvasInstanceRef
       // canvasInstanceRef.clear();
       // Other canvas operations...
-
-     
     }
 
     // getCanvs(project);
@@ -125,8 +124,6 @@ export default function CanvasBox({ proid, userId }) {
         height: window?.innerHeight,
       });
     });
-
-  
 
     setTimeout(() => {
       setStar(true);
@@ -169,9 +166,7 @@ export default function CanvasBox({ proid, userId }) {
   //   };
   // }, [activeSize, re]);
 
-
   useEffect(() => {
-   
     if (canvasInstance?.current && state && isReady) {
       // if (re <= 2) {
       //   setRe(re + 1);
@@ -186,35 +181,30 @@ export default function CanvasBox({ proid, userId }) {
       // const genBox = generateBox.current;
       const preBox = previewBox.current;
 
-     
+      // canvasInstanceRef.add(newEditorBox);
+      // canvasInstanceRef.add(imageGenRect);
 
-      canvasInstanceRef.add(newEditorBox);
-      canvasInstanceRef.add(imageGenRect);
+      // newEditorBox.set({
+      //   width: activeSize.w,
+      //   height: activeSize.h,
+      //   left: activeSize.l,
+      //   top: activeSize.t,
+      // });
+      // imageGenRect.set({
+      //   width: activeSize.w,
+      //   height: activeSize.h,
+      //   left: activeSize.gl,
+      //   top: activeSize.gt,
+      //   zIndex: 0,
+      // });
+      // newEditorBox.set("zIndex", 0);
+      // imageGenRect.set("zIndex", 0);
 
-      newEditorBox.set({
-        width: activeSize.w,
-        height: activeSize.h,
-        left: activeSize.l,
-        top: activeSize.t,
-      });
-      imageGenRect.set({
-        width: activeSize.w,
-        height: activeSize.h,
-        left: activeSize.gl,
-        top: activeSize.gt,
-        zIndex: 0
-        
-      });
-      newEditorBox.set('zIndex', 0)
-      imageGenRect.set('zIndex', 0)
-
-
-      canvasInstance.current.sendBackwards(newEditorBox);
-      canvasInstance.current.sendBackwards(imageGenRect);
+      // canvasInstance.current.sendBackwards(newEditorBox);
+      // canvasInstance.current.sendBackwards(imageGenRect);
 
       // canvasInstance.current.discardActiveObject();
       // // canvas.requestRenderAll();
-
 
       canvasInstance?.current.renderAll();
 
@@ -326,21 +316,18 @@ export default function CanvasBox({ proid, userId }) {
         // If the object is a mask, add it to the mask objects array
         if (object.category === "mask") {
           positionBtn(object);
-          canvasInstance.current.bringToFront(imageGenRect);
-
-          canvasInstance.current.discardActiveObject();
-      canvasInstance.current.renderAll();
-
+          // canvasInstance.current.bringToFront(imageGenRect);
+          // canvasInstance.current.discardActiveObject();
+          // canvasInstance.current.renderAll();
           // maskObjects.push(object);
         }
         // If the object is a subject, add it to the subject objects array
         if (object.category === "subject") {
           // subjectObjects.push(object);
           positionBtn(object);
-          canvasInstance.current.bringToFront(imageGenRect);
-
-          canvasInstance.current.discardActiveObject();
-      canvasInstance.current.renderAll();
+          // canvasInstance.current.bringToFront(imageGenRect);
+          // canvasInstance.current.discardActiveObject();
+          // canvasInstance.current.renderAll();
         }
       });
 
@@ -449,10 +436,11 @@ export default function CanvasBox({ proid, userId }) {
       // saveCanvasToDatabase();
       // setTimeout(() => {
       // }, 300);
-      canvasInstance?.current.remove(newEditorBox);
-      canvasInstance?.current.remove(imageGenRect);
+      // canvasInstance?.current.remove(newEditorBox);
+      // canvasInstance?.current.remove(imageGenRect);
     };
-  }, [canvasInstance.current, activeSize, setActiveSize, re,state]);
+  }, [canvasInstance.current, state]);
+  // , activeSize, setActiveSize, re, state
 
   const DeletIrem = () => {
     const activeObject = canvasInstance?.current?.getActiveObject();
@@ -627,16 +615,16 @@ export default function CanvasBox({ proid, userId }) {
   };
 
   const generationBoxStyle = {
-    left: `${30}px`,
-    top: `${120}px`,
-    width: `${380}px`, // Adjust the width based on canvas zoom
-    height: `${380}px`, // Adjust the height based on canvas zoom
+    left: `${activeSize.l * zoom}px`,
+    top: `${activeSize.t* zoom}px`,
+    width: `${activeSize.w *zoom}px`, // Adjust the width based on canvas zoom
+    height: `${activeSize.h*zoom}px`, // Adjust the height based on canvas zoom
   };
   const PreviewBoxStyle = {
-    left: `${430}px`,
-    top: `${120}px`,
-    width: `${380}px`, // Adjust the width based on canvas zoom
-    height: `${380}px`, // Adjust the height based on canvas zoom
+    left: `${activeSize.gl  * zoom}px`,
+    top: `${activeSize.gt  * zoom}px`,
+    width: `${activeSize.w  * zoom}px`, // Adjust the width based on canvas zoom
+    height: `${activeSize.h  * zoom}px`, // Adjust the height based on canvas zoom
     backgroundColor: "rgba(249, 208, 13, 0.23)",
   };
 
@@ -670,25 +658,22 @@ export default function CanvasBox({ proid, userId }) {
       {loadercarna ? <Loader /> : null}
 
       {isMagic ? <PopupCanvas /> : null}
-      {
-        crop?  
-        <CropperBox/>
-        
-        :null
-      }
+      {crop ? <CropperBox /> : null}
 
       <div className="convas-continer">
         <div className="generationBox">
-          {/* <div
+          <div
             className="leftbox"
             ref={generateBox}
             style={generationBoxStyle}
-          ></div> */}
-          {/* <div
+          >
+            
+          </div>
+          <div
             className="rightbox"
             ref={previewBox}
             style={PreviewBoxStyle}
-          ></div> */}
+          ></div>
         </div>
         <div id="inline-btn" ref={PosisionbtnRef}>
           <button className="selectone" onClick={() => bringImageToFront()}>

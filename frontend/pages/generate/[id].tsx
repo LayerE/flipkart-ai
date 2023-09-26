@@ -135,6 +135,8 @@ export default function Home() {
 
     
             fetchAssetsImages();
+           
+
 
       }
     }, 5000);
@@ -161,14 +163,21 @@ export default function Home() {
         }
       );
       const data = await response.json();
-      console.log(await data, "dfdd");
+      // console.log(await data, "dfdd");
+      console.log(jobIdOne,"JOB")
+      console.log(jobId,"JOBS")
 
       if (data?.length) {
-        setFilteredArray(data);
 
-        const filteredResults = data.filter((obj) =>
+        const filteredResults = await data?.filter((obj) =>
         jobIdOne?.includes(obj?.task_id)
         )
+        console.log(data?.length);
+
+        const filteredResultss = data?.map((obj) =>
+          obj?.task_id === jobIdOne[0]
+        )
+        console.log(filteredResults,"dfd", filteredResultss)
 
         if(filteredResults?.length){
 
@@ -177,6 +186,7 @@ export default function Home() {
           setJobIdOne([])
         }
 
+        setFilteredArray(data);
         
 
         

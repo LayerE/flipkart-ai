@@ -69,6 +69,7 @@ const EditorSection = () => {
     generationLoader,
     changeRectangleSize,
     setGenerationLoader,
+    loader
   } = useAppState();
 
   // const imageArrays = JSON.parse(localStorage.getItem("g-images")) || [];
@@ -189,6 +190,10 @@ const EditorSection = () => {
       className="accest"
     >
       <BoxOff className="boxof">
+        {loader ?  
+        
+        <div className="dis"></div>
+      :null}
       <div className="gaps">
           <div className="two">
             <Label>No. of images to generate</Label>
@@ -377,6 +382,13 @@ export default EditorSection;
 export const BoxOff = styled.div`
   /* height: 100%; */
   /* overflow: hidden; */
+  position: relative;
+  .dis{
+    background: transparent !important;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
   .gaps{
     margin-top: 20px;
   }

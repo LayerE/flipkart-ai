@@ -1089,32 +1089,27 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
         // Make image with only the subject objects
         const subjectCanvas = new fabric.StaticCanvas(null, {
-          width: newEditorBox.width,
-          height: newEditorBox.height,
-          top: newEditorBox.top,
-          left: newEditorBox.left,
-          // left: parseInt(genBox.style.left),
-          // top: parseInt(genBox.style.top),
-          // width: parseInt(genBox.style.width),
-          // height: parseInt(genBox.style.height),
+          // width: newEditorBox.width,
+          // height: newEditorBox.height,
+          // top: newEditorBox.top,
+          // left: newEditorBox.left,
+          left: activeSize.l,
+          top: activeSize.t,
+          width: activeSize.w,
+          height:activeSize.h,
         });
 
         subjectObjects.forEach((object) => {
-          object.set({
-            left: object.left - newEditorBox.left,
-            top: object.top - newEditorBox.top,
+        
+          const gg = object
+          gg.set({
+            left: object.left -activeSize.l ,
+            top: object.top - activeSize.t ,
+       
        
           });
-          subjectCanvas.add(object);
-
-            object.set({
-            left: object.left + newEditorBox.left,
-            top: object.top + newEditorBox.top,
-   
-
-            
-
-          });
+          subjectCanvas.add(gg);
+         
 
 
         });
@@ -1123,26 +1118,42 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         // maskCanvas.clear()
         // maskObjects.forEach((object) => {
         //   // You can adjust the object's position relative to the canvas as needed
-        //   // object.set({
-        //   //   left: object.left + newEditorBox.left,
-        //   //   top: object.top + newEditorBox.top,
-        //   // });
+        //   object.set({
+        //     left: object.left +activeSize.l ,
+        //     top: object.top + activeSize.t ,
+        //   });
+        //   canvasInstance.current.remove(object);
+          
         //   // maskCanvas.remove(object);
+        //   canvasInstance.current.add(object);
+        //   // canvas.requestRenderAll();
+        //   canvasInstance.current.renderAll();
 
         // });
-        // subjectObjects.forEach((object) => {
-        //   // object.set({
-        //   //   left: object.left + newEditorBox.left,
-        //   //   top: object.top + newEditorBox.top,
-        //   // });
-        //   // subjectCanvas.remove(object);
-        //   // subjectCanvas.add(object);
+        subjectObjects.forEach((object) => {
+          object.set({
+            left: object.left +activeSize.l ,
+            top: object.top + activeSize.t ,
+          });
+          subjectCanvas.remove(object);
+          // subjectCanvas.add(object);
 
-        // });
+             canvasInstance.current.remove(object);
+          
+          // maskCanvas.remove(object);
+          canvasInstance.current.add(object);
+          // canvas.requestRenderAll();
+          canvasInstance.current.renderAll();
+
+        });
         // subjectCanvas?.dispose();
 
         // subjectCanvas.clear()
         // maskCanvas.clear()
+
+        console.log(subjectDataUrl,"subject")
+        console.log(maskDataUrl,"mask")
+
 
         const promtText = promtFull;
         // product +

@@ -105,6 +105,14 @@ const Generate = () => {
     >
        <div className="gap">
         <DisabledLabel> Select your product category </DisabledLabel>
+      
+        <Box className="disBox">
+{
+    loader?  
+    <div className="dis"></div>
+
+    :null
+}
         <DropdownInput
             data={{
               list: categoryList,
@@ -113,8 +121,11 @@ const Generate = () => {
 
               activeTab: category,
             }}
-            style={{width: "100%"}}
+            style={{width: "100%", pointerEvents:"none"}}
           ></DropdownInput>
+          
+        </Box>
+       
         
       </div>
       <div className="gap">
@@ -246,8 +257,23 @@ const Generate = () => {
 };
 
 export default Generate;
+export const Box= styled.div`
+
+  position: relative;
+
+.dis{
+  position: absolute;
+  width: 100%;
+height: 100%;
+background-color: transparent;
+z-index: 100;
+}
+
+`
 
 export const PromtGeneratePreview = styled.div`
+
+
   border: 2px solid #d9d9d9;
   padding: 10px;
   border-radius: 8px;
