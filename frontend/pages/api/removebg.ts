@@ -3,6 +3,14 @@ import axios from "axios";
 import FormData from "form-data";
 const { createCanvas, loadImage } = require("canvas");
 
+export const config = {
+  api: {
+      bodyParser: {
+          sizeLimit: '4mb' // Set desired value here
+      }
+  }
+}
+
 async function getImageDimensions(base64Url: string) {
   const canvas = createCanvas();
   const ctx = canvas.getContext("2d");

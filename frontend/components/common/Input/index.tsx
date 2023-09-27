@@ -231,7 +231,7 @@ export const FileUpload: React.FC = ({ type, title, uerId }) => {
             });
             console.log(response);
             if (response?.status === 413) {
-              toast.error("Image exceeded 1mb limit");
+              toast.error("Image exceeded 4mb limit");
 
               setassetLoader(false);
             } else if (response?.status === 400) {
