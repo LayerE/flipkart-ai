@@ -4,6 +4,8 @@ import { BgRemover } from "@/store/api";
 import React, { useState, useEffect, useRef } from "react";
 import { styled } from "styled-components";
 import { uid } from "uid";
+import { toast } from "react-toastify";
+
 export const Input = styled.input`
   padding: 0.5rem 0.75rem;
   border: 2px solid #d9d9d9;
@@ -76,9 +78,8 @@ export const TestArea = styled.textarea`
 
   cursor: auto;
 
-  &:focus-visible{
+  &:focus-visible {
     border: 2px solid ${(props) => props.theme.btnPrimary};
-
   }
 
   &:disabled {
@@ -196,12 +197,12 @@ export const FileUpload: React.FC = ({ type, title, uerId }) => {
     projectId,
     // uerId,
     setloadercarna,
-    assetLoader, setassetLoader,
-
+    assetLoader,
+    setassetLoader,
   } = useAppState();
 
   const handleFileChange = (event) => {
-    setassetLoader(true)
+    setassetLoader(true);
 
     const selectedFile = event.target.files?.[0] || null;
     setFile(selectedFile);
@@ -209,57 +210,73 @@ export const FileUpload: React.FC = ({ type, title, uerId }) => {
     const idG = uploadedProductlist.length;
     // setloadercarna(true);
     console.log(event.target.result, "fdsfsdg");
-
-    if (selectedFile) {
-      const reader = new FileReader();
-      reader.onloadend = async () => {
-        if (type === "element") {
-          // addimgToCanvas(reader.result);
-        } else {
-          const filename = `img${Date.now()}`;
-          // setLoader(true);
-
-          const response = await fetch("/api/removebg", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              dataUrl: reader.result,
-              user_id: uerId,
-              project_id: projectId,
-            }),
-          });
-          const data = await response.json();
-          console.log(data, "sfdfds");
-
-          // BgRemover(reader.result, filename);
-          if (data?.data) {
-            setPopup({
-              status: true,
-              data: data?.data.data[0],
-              dataArray: data,
-            });
-            setassetLoader(false)
-            // setLoader(false);
-            // setloadercarna(false);
+    try {
+      if (selectedFile) {
+        const reader = new FileReader();
+        reader.onloadend = async () => {
+          if (type === "element") {
+            // addimgToCanvas(reader.result);
           } else {
-            console.log("bg not removed");
-            // setLoader(false);
-            // setloadercarna(false);
-            setassetLoader(false)
+            const filename = `img${Date.now()}`;
+            // setLoader(true);
 
+            const response = await fetch("/api/removebg", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                dataUrl: reader.result,
+                user_id: uerId,
+                project_id: projectId,
+              }),
+            });
+            console.log(response);
+            if (response?.status === 413) {
+              toast.error("Image exceeded 1mb limit");
+
+              setassetLoader(false);
+            } else if (response?.status === 400) {
+              toast.error(response.statusText);
+
+              setassetLoader(false);
+            }
+           else if (response?.status !== 200 && response?.status !== 413) {
+              toast.error("Unsupported Image Format");
+
+              setassetLoader(false);
+            }
+            const data = await response.json();
+
+            // BgRemover(reader.result, filename);
+            if (data?.data) {
+              setPopup({
+                status: true,
+                data: data?.data.data[0],
+                dataArray: data,
+              });
+              setassetLoader(false);
+              // setLoader(false);
+              // setloadercarna(false);
+            } else {
+              console.log("bg not removed");
+              // setLoader(false);
+              // setloadercarna(false);
+              setassetLoader(false);
+            }
+
+            // setUploadedProductlist((prev) => [
+            //   ...prev,
+            //   { url: blobUrl, baseUrl: reader.result },
+            // ]);
           }
-
-          // setUploadedProductlist((prev) => [
+          // setUpladedArray((prev) => [
           //   ...prev,
           //   { url: blobUrl, baseUrl: reader.result },
           // ]);
-        }
-        // setUpladedArray((prev) => [
-        //   ...prev,
-        //   { url: blobUrl, baseUrl: reader.result },
-        // ]);
-      };
-      reader.readAsDataURL(selectedFile);
+        };
+        reader.readAsDataURL(selectedFile);
+      }
+    } catch (e) {
+      console.log("cvff", e);
     }
   };
   const handleRemoveFile = () => {
@@ -283,48 +300,40 @@ export const FileUpload: React.FC = ({ type, title, uerId }) => {
   return (
     <InputFile1>
       <div>
-        {
-          assetLoader? 
-
+        {assetLoader ? (
           <label htmlFor="fileInput" style={{ cursor: "pointer" }}>
-            <TextLoaderNo/>
-         
-        
-        </label>
-        
-
-
-          :
+            <TextLoaderNo />
+          </label>
+        ) : (
           <>
-          
-          <label htmlFor="fileInput" style={{ cursor: "pointer" }}>
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 14 14"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              id="Vector"
-              d="M4.33791 10.3325C3.50597 10.3331 2.70384 10.0228 2.08892 9.4627C1.474 8.90257 1.09067 8.13295 1.01415 7.30486C0.937623 6.47677 1.17343 5.64998 1.67529 4.98672C2.17715 4.32346 2.90885 3.8716 3.72681 3.7198C3.87049 2.95535 4.2769 2.26511 4.87577 1.76847C5.47464 1.27183 6.22831 1 7.00644 1C7.78458 1 8.53825 1.27183 9.13712 1.76847C9.73599 2.26511 10.1424 2.95535 10.2861 3.7198C11.1013 3.87469 11.8296 4.32764 12.3287 4.99027C12.8279 5.65291 13.0622 6.47769 12.9858 7.30367C12.9095 8.12965 12.5281 8.89757 11.9159 9.45759C11.3037 10.0176 10.5048 10.3295 9.67498 10.3325M5.00504 6.99815L7.00644 4.99753M7.00644 4.99753L9.00784 6.99815M7.00644 4.99753V13"
-              stroke="#888888"
-              strokeWidth="1.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+            <label htmlFor="fileInput" style={{ cursor: "pointer" }}>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 14 14"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  id="Vector"
+                  d="M4.33791 10.3325C3.50597 10.3331 2.70384 10.0228 2.08892 9.4627C1.474 8.90257 1.09067 8.13295 1.01415 7.30486C0.937623 6.47677 1.17343 5.64998 1.67529 4.98672C2.17715 4.32346 2.90885 3.8716 3.72681 3.7198C3.87049 2.95535 4.2769 2.26511 4.87577 1.76847C5.47464 1.27183 6.22831 1 7.00644 1C7.78458 1 8.53825 1.27183 9.13712 1.76847C9.73599 2.26511 10.1424 2.95535 10.2861 3.7198C11.1013 3.87469 11.8296 4.32764 12.3287 4.99027C12.8279 5.65291 13.0622 6.47769 12.9858 7.30367C12.9095 8.12965 12.5281 8.89757 11.9159 9.45759C11.3037 10.0176 10.5048 10.3295 9.67498 10.3325M5.00504 6.99815L7.00644 4.99753M7.00644 4.99753L9.00784 6.99815M7.00644 4.99753V13"
+                  stroke="#888888"
+                  strokeWidth="1.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              {title}
+            </label>
+            <input
+              type="file"
+              id="fileInput"
+              style={{ display: "none" }}
+              onChange={handleFileChange}
+              accept=".webp, .png, .jpeg"
             />
-          </svg>
-          {title}
-        </label>
-        <input
-          type="file"
-          id="fileInput"
-          style={{ display: "none" }}
-          onChange={handleFileChange}
-        />
           </>
-        }
-       
+        )}
       </div>
       {/* )} */}
     </InputFile1>
