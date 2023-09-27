@@ -330,7 +330,7 @@ export const FileUpload: React.FC = ({ type, title, uerId }) => {
               id="fileInput"
               style={{ display: "none" }}
               onChange={handleFileChange}
-              accept=".webp, .png, .jpeg"
+              accept=".webp, .png, .jpeg, .jpg"
             />
           </>
         )}
