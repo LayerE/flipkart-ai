@@ -235,12 +235,12 @@ export const FileUpload: React.FC = ({ type, title, uerId }) => {
 
               setassetLoader(false);
             } else if (response?.status === 400) {
-              toast.error(response?.statusText);
+              toast.error("Image is corrupted or unsupported dimensions");
 
               setassetLoader(false);
             }
            else if (response?.status !== 200 && response?.status !== 413) {
-              toast.error("Unsupported Image Format");
+              toast.error(response?.statusText);
 
               setassetLoader(false);
             }
