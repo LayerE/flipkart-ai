@@ -235,7 +235,7 @@ export const FileUpload: React.FC = ({ type, title, uerId }) => {
 
               setassetLoader(false);
             } else if (response?.status === 400) {
-              toast.error(response.statusText);
+              toast.error(response?.statusText);
 
               setassetLoader(false);
             }
