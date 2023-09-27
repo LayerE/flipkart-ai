@@ -229,13 +229,17 @@ export const FileUpload: React.FC = ({ type, title, uerId }) => {
                 project_id: projectId,
               }),
             });
-       
+            console.log(response);
             if (response?.status === 413) {
               toast.error("Image exceeded 1mb limit");
 
               setassetLoader(false);
+            } else if (response?.status === 400) {
+              toast.error(response.statusText);
+
+              setassetLoader(false);
             }
-            if (response?.status !== 200 && response?.status !== 413) {
+           else if (response?.status !== 200 && response?.status !== 413) {
               toast.error("Unsupported Image Format");
 
               setassetLoader(false);
