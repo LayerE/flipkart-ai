@@ -1,6 +1,27 @@
 import { NextResponse, NextRequest } from "next/server";
 import axios from "axios";
 import FormData from "form-data";
+const { createCanvas, loadImage } = require("canvas");
+
+async function getImageDimensions(base64Url: string) {
+  const canvas = createCanvas();
+  const ctx = canvas.getContext("2d");
+
+  try {
+    const image = await loadImage(base64Url);
+    canvas.width = image.width;
+    canvas.height = image.height;
+    ctx.drawImage(image, 0, 0);
+    const dimensions = {
+      width: canvas.width,
+      height: canvas.height,
+    };
+    return dimensions;
+  } catch (error) {
+    console.error("Error:", error.message);
+    return { error: error.message };
+  }
+}
 
 const uploadImage = async (dataUrl: string) => {
   const formdata = new FormData();
@@ -33,7 +54,6 @@ const uploadImage = async (dataUrl: string) => {
 export default async function handler(req: NextRequest, res: NextResponse) {
   try {
     if (req.method !== "POST") {
-      // return NextResponse.json({ error: "Method not allowed" });
       res.status(405).send("Method not allowed");
       return;
     }
@@ -45,12 +65,25 @@ export default async function handler(req: NextRequest, res: NextResponse) {
     console.log(dataUrl);
 
     if (!user_id) {
-      // return NextResponse.json({ error: "Missing user_id" });
       res.status(400).send("Missing user_id");
       return;
     }
 
     const inputBase64Url = dataUrl;
+
+    // Get the image dimensions of the image from its base64Url
+    const { width: img_width, height: img_height } = await getImageDimensions(inputBase64Url);
+
+    if (!img_width || !img_height) {
+      res.status(400).send("Image is corrupted or unsupported dimensions");
+      return;
+    }
+
+    // Check if image is less than 25MP
+    if (img_width * img_height > 25000000) {
+      res.status(400).send("Image is too big");
+      return;
+    }
 
     // Encode the base64 data as a buffer
     const inputBuffer = Buffer.from(
@@ -112,7 +145,6 @@ export default async function handler(req: NextRequest, res: NextResponse) {
     return;
   } catch (error) {
     console.log(error);
-    // return NextResponse.json({ error: "Error removing background" });
     res.status(500).send("Error removing background");
     return;
   }
