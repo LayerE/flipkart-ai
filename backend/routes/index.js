@@ -181,8 +181,8 @@ router.post("/recently", async function (req, res, next) {
 
 router.post("/assets", async function (req, res, next) {
   try {
-    const { userId, projectId, asset } = req.body;
-    console.log(userId, projectId, asset);
+    const { userId, projectId, asset, assetType } = req.body;
+    console.log(userId, projectId, asset, assetType);
 
     const user = await Users.findOne({ userId: userId });
     if (!user) {
@@ -190,32 +190,45 @@ router.post("/assets", async function (req, res, next) {
         error: "user not found",
       });
     }
-    // const product = await Projects.findOne({ _id: projectId });
-    // if (!product) {
-    //   return res.json({
-    //     error: "product not found",
-    //   });
-    // }
-    // recently.date = new Date
-    // const updateDB = await Projects.findOneAndUpdate(
-    //   { userId: userId, _id: projectId },
-    //   {
-    //     $push: {
-    //       recently: asset,
-    //     },
-    //   }
-    //   )
-    console.log(userId, projectId, asset);
+ 
+    console.log(userId, projectId, asset, assetType);
 
     const creatdUserrAssets = new Assets({
       userId: userId,
       projectId: projectId,
       url: asset,
+      AssetType: assetType,
     });
 
     await creatdUserrAssets.save();
     console.log(creatdUserrAssets);
     return res.json(creatdUserrAssets);
+  } catch (error) {
+    return res.json({ error: "Server error" });
+  }
+});
+
+router.delete("/assets", async function (req, res, next) {
+  try {
+    const { id } = req.query;
+
+    if (!id) {
+      return res.json({
+        error: "Missing _id query parameter",
+      });
+    }
+    console.log(id);
+    const deletedAssets = await Assets.findOneAndDelete({ _id: id });
+
+    if (!deletedAssets) {
+      return res.json({
+        error: "Assets not found",
+      });
+    }
+
+    return res.json({
+      message: "Assets deleted successfully",
+    });
   } catch (error) {
     return res.json({ error: "Server error" });
   }
@@ -263,18 +276,19 @@ router.post("/jobId", async function (req, res, next) {
 });
 router.post("/upload/asset", async function (req, res, next) {
   try {
-    const { userId, projectId, url } = req.body;
+    const { userId, projectId, url, assetType } = req.body;
     const user = await Users.findOne({ userId: userId });
     if (!user) {
       return res.json({
         error: "user not found",
       });
     }
-    console.log(userId, projectId, url);
+    console.log(assetType);
     const assertsData = new Assets({
       userId: userId,
       projectId: projectId,
       url: url,
+      AssetType: assetType,
     });
 
     await assertsData.save();
@@ -303,11 +317,10 @@ router.get("/assets", async function (req, res, next) {
       assetsList = await Assets.find({ userId: userId });
       console.log(userId, assetsList);
 
-      return res.json(assetsList);
+      return res.json(assetsList.reverse());
     } else {
       assetsList = await Assets.find({ userId: userId, projectId: projectId });
-      console.log(userId, assetsList);
-      return res.json(assetsList);
+      return res.json(assetsList.reverse());
     }
   } catch (error) {
     return res.json({ error: "Server error" });
@@ -443,12 +456,12 @@ router.get("/generatedImg", async function (req, res, next) {
       {
         method: "GET",
         headers: {
-          apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2amp2aGpodnh3cGtvaGpxeGxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTI4Njg5NDQsImV4cCI6MjAwODQ0NDk0NH0.dwKxNDrr7Jw5OjeHgIbk8RLyvJuQVwZ_48Bv71P1n3Y",
+          apikey:
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2amp2aGpodnh3cGtvaGpxeGxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTI4Njg5NDQsImV4cCI6MjAwODQ0NDk0NH0.dwKxNDrr7Jw5OjeHgIbk8RLyvJuQVwZ_48Bv71P1n3Y",
         },
       }
     );
     const data = await response.json();
-
 
     if (projectId) {
       const product = await Projects.findOne({ _id: projectId });
@@ -461,12 +474,10 @@ router.get("/generatedImg", async function (req, res, next) {
     const filteredResult = data.filter((obj) =>
       user.jobIds?.includes(obj?.task_id)
     );
-  
-
 
     return res.json(filteredResult);
   } catch (error) {
-    console.error("Error:", error); 
+    console.error("Error:", error);
     return res.json({ error: "Server error" });
   }
 });

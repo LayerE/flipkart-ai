@@ -4,6 +4,8 @@ const assetsSchema = new Schema({
   userId: String,
   url: Object,
   projectId: String,
+  AssetType: String,
+
   
 },
 {

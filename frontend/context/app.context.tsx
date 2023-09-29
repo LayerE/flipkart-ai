@@ -232,6 +232,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
   const [genRect, setgenRect] = useState();
   const [assetLoader, setassetLoader] = useState(false);
+  const [brandassetLoader, setbrandassetLoader] = useState(false);
+
 
   const canvasHistory = useRef([]);
   const currentCanvasIndex = useRef(-1);
@@ -243,6 +245,11 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [magickErase, setmagickErase] = useState(false);
   // maig
   const [brushSize, setBrushSize] = useState(5);
+
+  const [AssetsActivTab, setassetsActiveTab] = useState("product")
+  const [re, setRe] = useState(1);
+
+
 
   const [linesHistory, setLinesHistory] = useState([]);
   const [lines, setLines] = useState([]);
@@ -880,6 +887,11 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
       if (data?.length) {
         setListOfAssets(await data);
+      
+          // setRe(0)
+
+        
+
       }
 
       // setImages(data); // Update the state with the fetched images
@@ -1429,6 +1441,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         canvasDisable, setCanvasDisable,
         addimgToCanvasCropped,
         changeRectangleSize,
+        AssetsActivTab, setassetsActiveTab,
         crop, setCrop,
         stageRef,
         mode,
@@ -1586,6 +1599,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         promt,
         assetLoader,
         setassetLoader,
+        brandassetLoader, setbrandassetLoader,
         setpromt,
         undoArray,
         setUndoArray,
@@ -1596,6 +1610,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setFilteredArray,
         category,
         setcategory,
+        re, setRe,
       }}
     >
       {children}

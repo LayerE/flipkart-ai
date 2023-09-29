@@ -33,6 +33,7 @@ const PopupCardGenerate = () => {
           />
         </picture>
         <div className="btns">
+          
           <Button onClick={()=> handileDownload(popupImage?.url)}>{popupImage.btn} </Button>
         </div>
       </div>

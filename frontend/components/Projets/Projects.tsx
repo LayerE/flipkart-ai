@@ -7,7 +7,7 @@ import ProjectCard from "./ProjectCard";
 import { useAppState } from "@/context/app.context";
 import { useAuth } from "@clerk/nextjs";
 import { setTimeout } from "timers";
-import { useRouter } from 'next/router'
+import { useRouter } from "next/router";
 import MainLoader from "../Loader/main";
 const fadeIn = {
   hidden: { opacity: 0 },
@@ -15,10 +15,17 @@ const fadeIn = {
 };
 
 const Projects = ({ onDelet }) => {
-  const router = useRouter()
+  const router = useRouter();
   const [projects, setProjects] = useState([]);
   const { userId } = useAuth();
-  const { activeTab, setprojectlist,setFilteredArray, projectlist, GetProjexts,renameProject } = useAppState();
+  const {
+    activeTab,
+    setprojectlist,
+    setFilteredArray,
+    projectlist,
+    GetProjexts,
+    renameProject,
+  } = useAppState();
   const [projectsLoader, setprojectsLoader] = useState(false);
 
   const handleCreate = async () => {
@@ -26,44 +33,40 @@ const Projects = ({ onDelet }) => {
       // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
       setprojectsLoader(true);
       console.log(userId);
-      if(userId){
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API}/project?id=${userId}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            title: "Untitled",
-            id: userId,
-          }),
+      if (userId) {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API}/project?id=${userId}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              title: "Untitled",
+              id: userId,
+            }),
+          }
+        );
+        // console.log(await response.json(), "dfvcvdfvdvcdsd");
+        const datares = await response.json();
+        if (datares?._id) {
+          setFilteredArray([]);
+
+          router.push(`/generate/${datares?._id}`);
+          // console.log(datares,"sdcdrfc")
+          // GetProjexts(userId);
+          // window.open(`/generate/${datares?._id}`, "_self");
         }
-      );
-      // console.log(await response.json(), "dfvcvdfvdvcdsd");
-      const datares = await response.json();
-      if(datares?._id){
-        setFilteredArray([])
-        
-        router.push(`/generate/${datares?._id}`)
-        // console.log(datares,"sdcdrfc")
-        // GetProjexts(userId);
-        // window.open(`/generate/${datares?._id}`, "_self");
-        
-        
-        
-      }
-      // setprojectsLoader(false);
-     
+        // setprojectsLoader(false);
       }
     } catch (error) {
       // Handle error
     }
   };
-  const handleEdite= async (id: string,name:string) => {
+  const handleEdite = async (id: string, name: string) => {
     try {
       // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
-      renameProject(userId, id, name)
+      renameProject(userId, id, name);
 
       GetProjexts(userId);
     } catch (error) {
@@ -82,8 +85,6 @@ const Projects = ({ onDelet }) => {
         }
       );
 
-
-
       GetProjexts(userId);
     } catch (error) {
       // Handle error
@@ -91,62 +92,62 @@ const Projects = ({ onDelet }) => {
   };
 
   return (
-    < >
-      {projectsLoader ? <DaoderWarpper>
-      <div className="jumping-dots-loader">
-        {" "}
-        <span></span> <span></span> <span></span>{" "}
-      </div>
-      <div className="moving-gradient"></div>
-    </DaoderWarpper> : null}
+    <>
+      {projectsLoader ? (
+        <DaoderWarpper>
+          <div className="jumping-dots-loader">
+            {" "}
+            <span></span> <span></span> <span></span>{" "}
+          </div>
+          <div className="moving-gradient"></div>
+        </DaoderWarpper>
+      ) : null}
 
-    <motion.div
-      initial="hidden"
-      animate="visible"
-      variants={fadeIn}
-      className="new"
-    >
-      <ProjectWrapper className="gridebox">
-        <div className="createbox" onClick={handleCreate}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="14"
-            height="14"
-            viewBox="0 0 14 14"
-            fill="none"
-          >
-            <path
-              fillRule="evenodd"
-              clipRule="evenodd"
-              d="M7 0C7.26522 0 7.51957 0.105357 7.70711 0.292893C7.89464 0.48043 8 0.734784 8 1V6H13C13.2652 6 13.5196 6.10536 13.7071 6.29289C13.8946 6.48043 14 6.73478 14 7C14 7.26522 13.8946 7.51957 13.7071 7.70711C13.5196 7.89464 13.2652 8 13 8H8V13C8 13.2652 7.89464 13.5196 7.70711 13.7071C7.51957 13.8946 7.26522 14 7 14C6.73478 14 6.48043 13.8946 6.29289 13.7071C6.10536 13.5196 6 13.2652 6 13V8H1C0.734784 8 0.48043 7.89464 0.292893 7.70711C0.105357 7.51957 0 7.26522 0 7C0 6.73478 0.105357 6.48043 0.292893 6.29289C0.48043 6.10536 0.734784 6 1 6H6V1C6 0.734784 6.10536 0.48043 6.29289 0.292893C6.48043 0.105357 6.73478 0 7 0Z"
-              fill="#585858"
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        variants={fadeIn}
+        className="new"
+      >
+        <ProjectWrapper className="gridebox">
+          <div className="createbox" onClick={handleCreate}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+            >
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M7 0C7.26522 0 7.51957 0.105357 7.70711 0.292893C7.89464 0.48043 8 0.734784 8 1V6H13C13.2652 6 13.5196 6.10536 13.7071 6.29289C13.8946 6.48043 14 6.73478 14 7C14 7.26522 13.8946 7.51957 13.7071 7.70711C13.5196 7.89464 13.2652 8 13 8H8V13C8 13.2652 7.89464 13.5196 7.70711 13.7071C7.51957 13.8946 7.26522 14 7 14C6.73478 14 6.48043 13.8946 6.29289 13.7071C6.10536 13.5196 6 13.2652 6 13V8H1C0.734784 8 0.48043 7.89464 0.292893 7.70711C0.105357 7.51957 0 7.26522 0 7C0 6.73478 0.105357 6.48043 0.292893 6.29289C0.48043 6.10536 0.734784 6 1 6H6V1C6 0.734784 6.10536 0.48043 6.29289 0.292893C6.48043 0.105357 6.73478 0 7 0Z"
+                fill="#585858"
+              />
+            </svg>
+
+            <div className="testcreat">Create new project</div>
+          </div>
+
+          {/* <Link href={"/"}> */}
+          {projectlist?.map((item: any, i: number) => (
+            <ProjectCard
+              key={item._id}
+              data={item}
+              setProjects={setProjects}
+              handleDelet={handleDelet}
+              handleEdite={handleEdite}
+              setprojectsLoader={setprojectsLoader}
             />
-          </svg>
-
-          <div className="testcreat">Create new project</div>
-        </div>
-
-        {/* <Link href={"/"}> */}
-        {projectlist?.map((item: any, i: number) => (
-          <ProjectCard
-            key={item._id}
-            data={item}
-            setProjects={setProjects}
-            handleDelet={handleDelet}
-            handleEdite={handleEdite}
-            setprojectsLoader={setprojectsLoader}
-          />
-        ))}
-        {/* </Link> */}
-      </ProjectWrapper>
-    </motion.div>
-
+          ))}
+          {/* </Link> */}
+        </ProjectWrapper>
+      </motion.div>
     </>
   );
 };
 
 export default Projects;
-
 
 const DaoderWarpper = styled.div`
   position: absolute;
@@ -216,7 +217,6 @@ const DaoderWarpper = styled.div`
     }
   }
 `;
-
 
 const ProjectWrapper = styled.div`
   width: 100%;

@@ -23,6 +23,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import Loader from "@/components/Loader";
 import MainLoader from "@/components/Loader/main";
+import PopupUpload from "@/components/Popup";
 
 export default function Home() {
   const { userId } = useAuth();
@@ -48,7 +49,9 @@ export default function Home() {
     setDownloadeImgFormate,
     setProduct,
     setpromt,
-    setLoader
+    setLoader,
+    fetchAssetsImages,
+    popup
 
   } = useAppState();
 
@@ -75,6 +78,8 @@ setDownloadeImgFormate("png")
 setProduct("")
 setpromt("")
 setLoader(false)
+
+fetchAssetsImages(userId, null)
 
 
       // 
@@ -122,6 +127,8 @@ setLoader(false)
 
   return (
     <MainPage>
+        {popup?.status ? <PopupUpload /> : null}
+
       {mainLoader ? <MainLoader /> : null}
 
       <motion.div

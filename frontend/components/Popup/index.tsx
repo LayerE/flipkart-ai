@@ -15,6 +15,9 @@ const PopupUpload = () => {
     setProduct,
     addimgToCanvasSubject,
     fetchAssetsImagesWithProjectId,
+    AssetsActivTab, setassetsActiveTab,
+    fetchAssetsImages
+
   } = useAppState();
   const [productnew, setProductnew] = useState("");
   const { userId } = useAuth();
@@ -22,6 +25,7 @@ const PopupUpload = () => {
   const { id } = query;
 
   const HandileUpload = async () => {
+ 
     if (productnew !== "") {
       console.log(popup.dataArray);
 
@@ -36,6 +40,8 @@ const PopupUpload = () => {
           body: JSON.stringify({
             userId: userId,
             projectId: id,
+            assetType: AssetsActivTab,
+
             asset: { url: popup.dataArray.imageUrl, product: productnew },
           }),
         });
@@ -44,12 +50,17 @@ const PopupUpload = () => {
         console.log(datares);
 
         if (datares) {
+          fetchAssetsImages(userId, null);
           addimgToCanvasSubject(popup?.data);
           fetchAssetsImagesWithProjectId(userId, id);
-          setUploadedProductlist((prev) => [
-            ...prev,
-            { url: popup?.data, tittle: productnew },
-          ]);
+          // setTimeout(() => {
+            
+          // }, 500);
+
+          // setUploadedProductlist((prev) => [
+          //   ...prev,
+          //   { url: popup?.data, tittle: productnew },
+          // ]);
           setProduct(productnew);
           setPopup({ status: false, data: null });
         }

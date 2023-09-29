@@ -58,10 +58,12 @@ export default function Home() {
     setUserId,
     setGeneratedImgList,
     saveCanvasToDatabase,
-    filteredArray, setFilteredArray,
-    jobIdOne, setJobIdOne,
-    setCanvasDisable
- 
+    filteredArray,
+    setFilteredArray,
+    jobIdOne,
+    setJobIdOne,
+    setCanvasDisable,
+    setassetsActiveTab,
   } = useAppState();
 
   useEffect(() => {
@@ -72,42 +74,38 @@ export default function Home() {
     if (isReady) {
       // setFilteredArray([])
       GetProjextById(id);
+  //  fetchAssetsImages(userId, null);
+
     }
   }, [id, isReady]);
 
   useEffect(() => {
-  
-   const times = setInterval(() => {
-      if (isReady && userId ) {
-
-    
-      fetchGeneratedImages(userId);
+    const times = setInterval(() => {
+      if (isReady && userId) {
+        fetchGeneratedImages(userId);
       }
     }, 5000);
 
-    return(() => {
-      clearInterval(times)
-  })
+    return () => {
+      clearInterval(times);
+    };
   }, []);
 
-
   const upateImage = (url) => {
-    if(!loader){
-
- 
-    addimgToCanvasGen(url);
-    setSelectedImg({ status: true, image: url });
-    setModifidImageArray((pre) => [
-      ...pre,
-      { url: url, tool: "generated-selected" },
-    ]);
-
-  }
+    if (!loader) {
+      addimgToCanvasGen(url);
+      setSelectedImg({ status: true, image: url });
+      setModifidImageArray((pre) => [
+        ...pre,
+        { url: url, tool: "generated-selected" },
+      ]);
+    }
   };
 
   useEffect(() => {
     setprojectId(id);
     setUserId(userId);
+    setassetsActiveTab("product")
     // let filteredResult;
 
     // filteredResult = generatedImgList.filter((obj) =>
@@ -137,27 +135,20 @@ export default function Home() {
 
   useEffect(() => {
     let time = setInterval(() => {
-      if (isReady && userId ) {
-
-    
-            fetchAssetsImages();
-           
-
+      if (isReady && userId) {
+        fetchAssetsImages();
 
       }
     }, 5000);
-    return(() => {
-      clearInterval(time)
-  })
- 
-  }, [isReady,userId, jobId]);
+    return () => {
+      clearInterval(time);
+    };
+  }, [isReady, userId, jobId]);
 
   useEffect(() => {
-    
     return () => {
       // setFilteredArray([]);
-
-    }
+    };
   }, []);
 
   const fetchAssetsImages = async () => {
@@ -170,34 +161,29 @@ export default function Home() {
       );
       const data = await response.json();
       // console.log(await data, "dfdd");
-      console.log(jobIdOne,"JOB")
-      console.log(jobId,"JOBS")
+      console.log(jobIdOne, "JOB");
+      console.log(jobId, "JOBS");
 
       if (data?.length) {
-
         const filteredResults = await data?.filter((obj) =>
-        jobIdOne?.includes(obj?.task_id)
-        )
+          jobIdOne?.includes(obj?.task_id)
+        );
         // console.log(data?.length);
 
-        const filteredResultss = data?.map((obj) =>
-          obj?.task_id === jobIdOne[0]
-        )
+        const filteredResultss = data?.map(
+          (obj) => obj?.task_id === jobIdOne[0]
+        );
         // console.log(filteredResults,"dfd", filteredResultss)
 
-        if(filteredResults?.length){
-
+        if (filteredResults?.length) {
           // console.log(filteredResults,"fddscvcvcvcgd",jobIdOne)
           setLoader(false);
-      setCanvasDisable(true)
+          setCanvasDisable(true);
 
-          setJobIdOne([])
+          setJobIdOne([]);
         }
 
         setFilteredArray(data);
-        
-
-        
       }
 
       // setImages(data); // Update the state with the fetched images
@@ -249,7 +235,8 @@ export default function Home() {
       {/* {loader ? <Loader /> : null} */}
 
       <div className="news">
-        {popup?.status ? <PopupUpload /> : null}
+      {popup?.status ? <PopupUpload /> : null}
+
         <Sidebar />
         <div
           className="Editor"

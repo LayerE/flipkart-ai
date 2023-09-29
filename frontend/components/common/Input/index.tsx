@@ -25,7 +25,6 @@ export const Input = styled.input`
   }
 
   &:hover {
-    /* border: 2px solid #d9d9d9; */
     border: 2px solid ${(props) => props.theme.btnPrimary};
   }
 `;
@@ -43,9 +42,6 @@ export const Suggestion1 = styled.div`
   border-radius: 8px;
   width: 200px;
   margin-bottom: 20px;
-  /* overflow: hidden; */
-  /* white-space: nowrap; */
-
   &::-webkit-scrollbar {
     display: none;
   }
@@ -227,6 +223,8 @@ export const FileUpload: React.FC = ({ type, title, uerId }) => {
                 dataUrl: reader.result,
                 user_id: uerId,
                 project_id: projectId,
+                // type: "product",
+
               }),
             });
             console.log(response);
