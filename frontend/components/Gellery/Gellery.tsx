@@ -19,7 +19,7 @@ const Gellery = () => {
 
   const [gallery, setGallery] = useState()
 
-  const { fetchGeneratedImages, generatedImgList,setPopupImage, setGeneratedImgList } =
+  const { fetchGeneratedImages, generatedImgList,setPopupImage, setGeneratedImgList,    galleryActivTab, setgalleryActiveTab} =
     useAppState();
 
 const [laoder, setlaoder] = useState(true)
@@ -58,7 +58,7 @@ const [laoder, setlaoder] = useState(true)
     if ( userId) {
       fetchAssetsImages();
     }
-  }, [userId]);
+  }, [userId, galleryActivTab]);
 
   const fetchAssetsImages = async () => {
     setlaoder(true)
@@ -72,8 +72,14 @@ const [laoder, setlaoder] = useState(true)
       const data = await response.json();
 
       if (data?.length) {
-        setGallery(data)
-    setlaoder(false)
+        if(galleryActivTab === "ai"){
+
+          setGallery(data)
+      setlaoder(false)
+        }else{
+          setGallery([])
+
+        }
 
 
       }
@@ -89,19 +95,34 @@ const [laoder, setlaoder] = useState(true)
 
   return (
     <motion.div initial="hidden" animate="visible" variants={fadeIn}>
-      {
-        laoder? 
-        <Loader></Loader>:
+   
         <GelleryWrapper>
         <div className="hederbox">
           <div className="headerText">Gallery</div>
-          {/* <div className="small-tabs">
-          <div className="tab">Product Images </div>
-          <div className="tab">Al Model Images </div>
-        </div> */}
+          <div className="small-tabs">
+            <div
+              className={galleryActivTab === "ai" ? "tab activeTAb" : "tab"}
+              onClick={() => {
+                setgalleryActiveTab("ai");
+              }}
+            >
+              AI Generation  {" "}
+            </div>
+            <div
+              className={galleryActivTab === "banner" ? "tab activeTAb" : "tab"}
+              onClick={() => {
+                setgalleryActiveTab("banner");
+              }}
+            >
+              Banner Generation{" "}
+            </div>
+          </div>
         </div>
 
         <div className="imageBox">
+        {
+        laoder? 
+        <Loader h={true}></Loader>:
           <div className="grid-img">
             {gallery?.map((image, i) => (
               <div key={i} className="img" onClick={()=> setPopupImage({url:image?.modified_image_url, status: true,userId:userId, btn:"Download ",generat:false, index: i, list: gallery })}>
@@ -111,12 +132,14 @@ const [laoder, setlaoder] = useState(true)
               </div>
             ))}
           </div>
+}
         </div>
+          
       </GelleryWrapper>
 
 
 
-      }
+  
       
     </motion.div>
   );
@@ -148,6 +171,10 @@ const GelleryWrapper = styled.div`
       padding: 4px 15px;
       border-radius: 7px;
     }
+    .activeTAb {
+      background-color: ${({ theme }) => theme.btnPrimary};
+    }
+    
   }
   .imageBox {
     margin-top: 20px;
@@ -155,6 +182,7 @@ const GelleryWrapper = styled.div`
     border: 1px solid #d9d9d9;
     min-height: 75vh;
 
+    position: relative;
     .grid-img {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr 1fr 1fr;

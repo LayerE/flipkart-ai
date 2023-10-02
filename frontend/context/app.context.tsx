@@ -247,6 +247,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [brushSize, setBrushSize] = useState(5);
 
   const [AssetsActivTab, setassetsActiveTab] = useState("product")
+  const [galleryActivTab, setgalleryActiveTab] = useState("banner")
+
   const [re, setRe] = useState(1);
 
 
@@ -1439,6 +1441,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     <AppContext.Provider
       value={{
         canvasDisable, setCanvasDisable,
+        galleryActivTab, setgalleryActiveTab,
         addimgToCanvasCropped,
         changeRectangleSize,
         AssetsActivTab, setassetsActiveTab,
