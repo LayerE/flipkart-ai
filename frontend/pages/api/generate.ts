@@ -69,6 +69,7 @@ export default async (req: NextRequest) => {
         num_images: num_images,
         lora_type: lora_type,
         category: category,
+        is_dev_site: true,
       }),
     });
 
