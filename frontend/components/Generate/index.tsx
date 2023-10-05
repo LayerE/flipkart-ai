@@ -62,7 +62,9 @@ const Generate = () => {
     promtFull,
     setpromtFull,
     category, setcategory,
-    filteredArray
+    filteredArray,
+    genrateeRef,
+    TDMode
   } = useAppState();
 
   const { query, isReady } = useRouter();
@@ -207,6 +209,7 @@ const Generate = () => {
             <TextLoader />
           ) : (
             <Button
+            ref={genrateeRef}
               onClick={() => generateImageHandeler(userId, id)}
               disabled={promtFull === " " ? true : false}
             >
@@ -243,8 +246,8 @@ const Generate = () => {
           Templates
         </div>
         <div
-          className={changeTab ? "btnswitch activeSwitch" : "btnswitch "}
-          onClick={() => setChangeTab(true)}
+          className={changeTab ? "btnswitch activeSwitch" : TDMode ?"disavle btnswitch" : "btnswitch "}
+          onClick={() =>{ TDMode? null : setChangeTab(true)}}
         >
           Settings
         </div>
@@ -315,7 +318,9 @@ export const SwchichBtn = styled(Row)`
     border-bottom: 5px solid rgba(249, 208, 13, 1);
   }
 
-
+  .disavle{
+  cursor: not-allowed;
+}
   
 `;
 export const Wrapper = styled.div`

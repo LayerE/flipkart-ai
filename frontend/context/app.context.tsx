@@ -172,6 +172,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [activeTab, setActiveTab] = useState<number | null>(1);
   const [activeTabHome, setActiveTabHome] = useState<number | null>(1);
   const [file, setFile] = useState<File | null>(null);
+  const [file3d, setFile3d] = useState<File | null>(null);
+
   const [viewMore, setViewMore] = useState<object>({});
   const [selectPlacement, setSelectedPlacement] = useState<string>("");
   const [selectSurrounding, setSelectedSurrounding] = useState<string>("");
@@ -203,7 +205,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
   const [canvasDisable, setCanvasDisable] = useState<boolean>(false);
 
-
   const [popup, setPopup] = useState<object>({});
   const [popupImage, setPopupImage] = useState<object>({});
   const [regeneratePopup, setRegeneratePopup] = useState<object>({});
@@ -216,6 +217,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
   const PosisionbtnRef = useRef(null);
   const regenerateRef = useRef(null);
+  const genrateeRef = useRef(null);
+
   const generateBox = useRef(null);
   const previewBox = useRef(null);
 
@@ -232,8 +235,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
   const [genRect, setgenRect] = useState();
   const [assetLoader, setassetLoader] = useState(false);
-  const [brandassetLoader, setbrandassetLoader] = useState(false);
+  const [assetL3doader, setasset3dLoader] = useState(false);
 
+  const [brandassetLoader, setbrandassetLoader] = useState(false);
 
   const canvasHistory = useRef([]);
   const currentCanvasIndex = useRef(-1);
@@ -246,12 +250,15 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   // maig
   const [brushSize, setBrushSize] = useState(5);
 
-  const [AssetsActivTab, setassetsActiveTab] = useState("product")
-  const [galleryActivTab, setgalleryActiveTab] = useState("banner")
+  const [AssetsActivTab, setassetsActiveTab] = useState("product");
+  const [galleryActivTab, setgalleryActiveTab] = useState("banner");
+  const [TdImage, set3DImage] = useState(null);
+  const [renderer, setRenderer] = useState(null);
+
+
+  const [TDMode, set3dMode] = useState(false);
 
   const [re, setRe] = useState(1);
-
-
 
   const [linesHistory, setLinesHistory] = useState([]);
   const [lines, setLines] = useState([]);
@@ -406,7 +413,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         top: randomTop,
         // scaleX: scaleX,
         // scaleY: scaleY,
-        zIndex:10
+        zIndex: 10,
       });
       img.on("selected", () => {
         const rebtn = regenerateRef.current;
@@ -420,7 +427,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       img.on("scaling", function () {
         positionBtn(img);
       });
-      img.set('zIndex', 10)
+      img.set("zIndex", 10);
 
       img.set("category", "mask");
 
@@ -468,7 +475,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
       img.scaleToWidth(activeSize.w / 2);
       img.scaleToHeight(activeSize.w / 2);
-     
+
       img.on("selected", () => {
         const rebtn = regenerateRef.current;
         rebtn.style.display = "none";
@@ -490,7 +497,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       img.on("scaling", () => {
         positionBtn(img);
       });
-    
+
       img.set({ category: "subject" });
       // canvasInstance.current.clear();
       canvasInstance?.current?.add(img);
@@ -592,7 +599,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       //     setBtnVisible(true);
       //   }
       // });
-      img.set('zIndex', 10)
+      img.set("zIndex", 10);
 
       img.set({ category: "subject" });
       // canvasInstance.current.clear();
@@ -646,7 +653,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   };
 
   const saveCanvasToDatabase = async () => {
-    console.log("sdsdfs","dsffff");
+    console.log("sdsdfs", "dsffff");
 
     const canvasData = canvasInstance.current.toJSON(["category"]);
     if (canvasData.objects.length > 1 && !loadercarna) {
@@ -831,7 +838,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         // scaleX: scaleX,
         // scaleY: scaleY,
       });
-      img.set('zIndex', 10)
+      img.set("zIndex", 10);
       setIncremetPosition(incremetPosition + 25);
       img.set("category", "generated");
 
@@ -889,11 +896,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
       if (data?.length) {
         setListOfAssets(await data);
-      
-          // setRe(0)
 
-        
-
+        // setRe(0)
       }
 
       // setImages(data); // Update the state with the fetched images
@@ -1022,35 +1026,25 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     console.log("dfd", newEditorBox);
   };
   const generateImageHandeler = async (ueserId, proid) => {
-
     var subjectCount = 0;
 
-    // Iterate through the canvas objects
     canvasInstance?.current.forEachObject(function (obj) {
-        // Check if the object has a 'category' property and if it's equal to 'subject'
-        if (obj.category === 'subject') {
-            // Check if the object intersects with the rectangular area
-            if (newEditorBox.intersectsWithObject(obj)) {
-                // Increment the count if the condition is met
-                subjectCount++;
-            }
-            else {
-              // If the object is not inside the rectangular area, remove it from the canvas
-              // canvasInstance?.current.remove(obj);
-          }
+      if (obj.category === "subject") {
+        if (newEditorBox.intersectsWithObject(obj)) {
+          subjectCount++;
+        } else {
         }
+      }
     });
-    
+
     if (category === null) {
       toast("Select your product category first !");
-    } else if(subjectCount === 0 ){
+    } else if (subjectCount === 0 && !TDMode) {
       toast("Add product first");
-
-
-    }else {
+    } else if (!TDMode) {
       // console.log(promt);
       setLoader(true);
-      setCanvasDisable(true)
+      setCanvasDisable(true);
       setGenerationLoader(true);
       const canvas1 = canvasInstance.current;
       try {
@@ -1058,39 +1052,24 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         const preBox = previewBox.current;
 
         addtoRecntly(ueserId, proid);
-        // canvas1.set({
-        //   left: 30,
-        //   top:200
-        // });
-        // canvas1.renderAll();
-
-        // selectedImg // img url to generate images for the canvas
 
         const objects = canvas1.getObjects();
-
         const maskObjects = [];
         const subjectObjects = [];
         objects.forEach((object) => {
-          // If the object is a mask, add it to the mask objects array
           if (object.category === "mask") {
             maskObjects.push(object);
           }
-          // If the object is a subject, add it to the subject objects array
           if (object.category === "subject") {
             subjectObjects.push(object);
           }
         });
 
-        // Make image with only the mask objects
         const maskCanvas = new fabric.StaticCanvas(null, {
           width: newEditorBox.width,
           height: newEditorBox.height,
           top: newEditorBox.top,
           left: newEditorBox.left,
-          // left: parseInt(genBox.style.left),
-          // top: parseInt(genBox.style.top),
-          // width: parseInt(genBox.style.width),
-          // height: parseInt(genBox.style.height),
         });
 
         maskObjects.forEach((object) => {
@@ -1114,79 +1093,39 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           left: activeSize.l,
           top: activeSize.t,
           width: activeSize.w,
-          height:activeSize.h,
+          height: activeSize.h,
         });
 
         subjectObjects.forEach((object) => {
-        
-          const gg = object
+          const gg = object;
           gg.set({
-            left: object.left -activeSize.l ,
-            top: object.top - activeSize.t ,
-       
-       
+            left: object.left - activeSize.l,
+            top: object.top - activeSize.t,
           });
           subjectCanvas.add(gg);
-         
-
-
         });
 
         const subjectDataUrl = subjectCanvas.toDataURL("image/png");
-        // maskCanvas.clear()
-        // maskObjects.forEach((object) => {
-        //   // You can adjust the object's position relative to the canvas as needed
-        //   object.set({
-        //     left: object.left +activeSize.l ,
-        //     top: object.top + activeSize.t ,
-        //   });
-        //   canvasInstance.current.remove(object);
-          
-        //   // maskCanvas.remove(object);
-        //   canvasInstance.current.add(object);
-        //   // canvas.requestRenderAll();
-        //   canvasInstance.current.renderAll();
-
-        // });
         subjectObjects.forEach((object) => {
           object.set({
-            left: object.left +activeSize.l ,
-            top: object.top + activeSize.t ,
+            left: object.left + activeSize.l,
+            top: object.top + activeSize.t,
           });
           subjectCanvas.remove(object);
           // subjectCanvas.add(object);
 
-             canvasInstance.current.remove(object);
-          
+          canvasInstance.current.remove(object);
+
           // maskCanvas.remove(object);
           canvasInstance.current.add(object);
           // canvas.requestRenderAll();
           canvasInstance.current.renderAll();
-
         });
-        // subjectCanvas?.dispose();
 
-        // subjectCanvas.clear()
-        // maskCanvas.clear()
-
-        console.log(subjectDataUrl,"subject")
-        console.log(maskDataUrl,"mask")
-
+        console.log(subjectDataUrl, "subject");
+        console.log(maskDataUrl, "mask");
 
         const promtText = promtFull;
-        // product +
-        // ", " +
-        // selectPlacement +
-        // " " +
-        // placementTest +
-        // ", " +
-        // selectSurrounding +
-        // " " +
-        // surroundingTest +
-        // ", " +
-        // selectBackground +
-        // " " +
-        // backgroundTest;
 
         const response = await fetch("/api/generate", {
           method: "POST",
@@ -1215,10 +1154,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           return false;
         } else {
           try {
-            // setSelectedresult(1);
-
-            // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
-
             const response = await fetch(
               `${process.env.NEXT_PUBLIC_API}/jobId`,
               {
@@ -1233,55 +1168,90 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
                 }),
               }
             );
-            // console.log(await response.json(), "dfvcvdfvdvcdsd");
             const datares = await response;
 
             if (datares.ok) {
-              // setJobId([ generate_response?.job_id]);
-               setJobIdOne([generate_response?.job_id])
-              // setRegenratedImgsJobid(generate_response?.job_id);
-              // localStorage.setItem("jobId", jobId);
+              setJobIdOne([generate_response?.job_id]);
 
               GetProjextById(proid);
             }
             // window.open(`/generate/${datares?._id}`, "_self");
-          } catch (error) {
-            // Handle error
-          }
+          } catch (error) {}
         }
-
-        // setTimeout(async function () {
-        //   const loadeImge = await fetchGeneratedImages(ueserId);
-
-        //   setSelectedImg({
-        //     status: true,
-        //     image: loadeImge[0]?.modified_image_url,
-        //     modifiedImage: loadeImge[0]?.modified_image_url,
-        //   });
-
-        //   setModifidImageArray((pre) => [
-        //     ...pre,
-        //     { url: loadeImge[0]?.modified_image_url, tool: "generated" },
-        //   ]);
-
-        //   addimgToCanvasGen(loadeImge[0]?.modified_image_url);
-        //   // canvas1.remove(editorBox).renderAll();
-
-        //   setGeneratedImgList(loadeImge.slice(0, 50));
-
-        //   // setSelectedresult(1);
-
-        //   setLoader(false);
-        // }, 50000);
       } catch (error) {
         console.error("Error generating image:", error);
       } finally {
         setGenerationLoader(false);
-        // canvas1.set({
-        //   top: 0,
-        //   left: 0
-        // });
-        // canvas1.renderAll();
+      }
+    } else {
+      if (renderer === null) {
+      } else {
+        console.log("dsfdfgdg")
+        setLoader(true);
+
+        const promtText = promtFull;
+        const screenshot = renderer.domElement.toDataURL("image/png");
+        console.log(screenshot);
+
+        const response = await fetch("/api/generate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            dataUrl: screenshot,
+            maskDataUrl: null,
+            prompt: promtText.trim(),
+            user_id: userId,
+            category: category,
+            lora_type: loara,
+            num_images: selectResult,
+          }),
+        });
+
+        const generate_response = await response.json();
+
+        if (generate_response?.error) {
+          // alert(generate_response?.error);
+          toast.error(generate_response?.error);
+
+          setLoader(false);
+
+          return false;
+        } else {
+          setLoader(true);
+
+          try {
+            const response = await fetch(
+              `${process.env.NEXT_PUBLIC_API}/jobId`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  userId: ueserId,
+                  projectId: proid,
+                  jobId: generate_response?.job_id,
+                }),
+              }
+            );
+            const datares = await response;
+
+            if (datares.ok) {
+              setJobIdOne([generate_response?.job_id]);
+
+              GetProjextById(proid);
+        
+
+            }
+            // window.open(`/generate/${datares?._id}`, "_self");
+          } catch (error) {
+
+          setLoader(false);
+
+          }
+        }
       }
     }
   };
@@ -1440,14 +1410,21 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   return (
     <AppContext.Provider
       value={{
-        canvasDisable, setCanvasDisable,
-        galleryActivTab, setgalleryActiveTab,
+        canvasDisable,
+        TdImage,
+        set3DImage,
+        setCanvasDisable,
+        galleryActivTab,
+        setgalleryActiveTab,
         addimgToCanvasCropped,
         changeRectangleSize,
-        AssetsActivTab, setassetsActiveTab,
-        crop, setCrop,
+        AssetsActivTab,
+        setassetsActiveTab,
+        crop,
+        setCrop,
         stageRef,
         mode,
+        genrateeRef,
         setMode,
         handleZoomIn,
         Inpainting,
@@ -1484,6 +1461,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setpromtFull,
         GetProjexts,
         canvasRef,
+        file3d,
+        setFile3d,
         projectId,
         downloadeImgFormate,
         setDownloadeImgFormate,
@@ -1542,7 +1521,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setPopupImage,
         newassetonCanvas,
         setNewassetonCanvas,
-        jobIdOne, setJobIdOne,
+        jobIdOne,
+        setJobIdOne,
         file,
         setFile,
         mainLoader,
@@ -1602,7 +1582,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         promt,
         assetLoader,
         setassetLoader,
-        brandassetLoader, setbrandassetLoader,
+        brandassetLoader,
+        setbrandassetLoader,
         setpromt,
         undoArray,
         setUndoArray,
@@ -1613,7 +1594,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setFilteredArray,
         category,
         setcategory,
-        re, setRe,
+        re,
+        setRe,
+        TDMode,
+        set3dMode,
+        renderer, setRenderer,
+        assetL3doader, setasset3dLoader
       }}
     >
       {children}

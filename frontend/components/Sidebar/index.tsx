@@ -19,6 +19,7 @@ import Element from "../Element";
 import ListOf from "../List OfProduct";
 import MagicEraser from "../MagicErase";
 import RegenratTab from "../RegenrateTab";
+import Assets3d from "../Assets/Assets3 d";
 const fadeIn = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 1 } },
@@ -30,6 +31,12 @@ const TabData = [
     image: assets.icons.assets_icon,
     tittle: "Assets",
   },
+  {
+    id: 7,
+    image: assets.icons.assets_icon,
+
+  tittle: "3D Assets",
+},
   {
     id: 2,
 
@@ -48,6 +55,7 @@ const TabData = [
   //   image: assets.icons.user_icon,
   //   tittle: "Humans",
   // },
+ 
   {
     id: 5,
 
@@ -66,6 +74,7 @@ const Sidebar: React.FC = () => {
     downloadImg,
     isMagic,
     setIsMagic,
+    TDMode, set3dMode
   } = useAppState();
 
   return (
@@ -85,9 +94,22 @@ const Sidebar: React.FC = () => {
                   activeTab === elemenmt.id ? "active tabBox " : "tabBox"
                 }
                 onClick={() => {
-                  setActiveTab(elemenmt.id);
+                  if(elemenmt.id == 7){
+                    set3dMode(true)
+                  
+
+                  }else if(elemenmt.id == 1){
+                    set3dMode(false)
+                 
+
+                  }  setActiveTab(elemenmt.id);
                   setViewMore({ status: false });
                   setIsMagic(false);
+                 
+
+                  
+                 
+                
                 }}
               >
                 <Image src={elemenmt.image} alt="" width={16} />
@@ -224,6 +246,10 @@ const Sidebar: React.FC = () => {
                   </svg>{" "}
                   {"Regenrate" }{" "}
                 </div>
+              ) :
+             activeTab === 7 ? (
+              "Product Assets"
+
               ) : null}
             </div>
             {activeTab === 1 ? (
@@ -244,6 +270,8 @@ const Sidebar: React.FC = () => {
               <Edit />
             ): activeTab === 6?(
               <RegenratTab/>
+            ): activeTab === 7?(
+              <Assets3d/>
             ): null
           
           }

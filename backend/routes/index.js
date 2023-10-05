@@ -274,6 +274,46 @@ router.post("/jobId", async function (req, res, next) {
     return res.json({ error: "Server error" });
   }
 });
+router.post("/jobId3d", async function (req, res, next) {
+  try {
+    const { userId, projectId, jobId } = req.body;
+    const user = await Users.findOne({ userId: userId });
+    if (!user) {
+      return res.json({
+        error: "user not found",
+      });
+    }
+
+    const product = await Projects.findOne({ _id: projectId });
+    if (!product) {
+      return res.json({
+        error: "product not found",
+      });
+    }
+
+    const updateUserDB = await Users.findOneAndUpdate(
+      { userId: userId },
+      {
+        $push: {
+          jobIds3D: jobId,
+        },
+      }
+    );
+
+    const updateDB = await Projects.findOneAndUpdate(
+      { userId: userId, _id: projectId },
+      {
+        $push: {
+          jobIds3D: jobId,
+        },
+      }
+    );
+    console.log(userId, projectId, jobId);
+    return res.json(updateDB);
+  } catch (error) {
+    return res.json({ error: "Server error" });
+  }
+});
 router.post("/upload/asset", async function (req, res, next) {
   try {
     const { userId, projectId, url, assetType } = req.body;

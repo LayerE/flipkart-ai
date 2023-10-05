@@ -71,7 +71,8 @@ export default function CanvasBox({ proid, userId }) {
     crop,
     setCrop,
     canvasDisable, setCanvasDisable,
-    loader
+    loader,
+    TDMode
 
 
     // canvasRef

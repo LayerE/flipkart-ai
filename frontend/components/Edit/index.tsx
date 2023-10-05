@@ -34,7 +34,7 @@ const Edit = () => {
     downloadImg,
     canvasInstance,
     addimgToCanvasGen,
-    addimgToCanvasSubject,
+    addimgToCanvasSubject,git ,
     modifidImageArray,
     isMagic,
     setIsMagic,

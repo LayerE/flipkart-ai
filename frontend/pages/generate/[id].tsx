@@ -17,6 +17,7 @@ import assert from "assert";
 import assets from "@/public/assets";
 import Regeneret from "@/components/Popup/Regeneret";
 import { useRouter } from "next/router";
+import Canvas3d from "@/components/Canvas/Canvas3d";
 
 const fadeIn = {
   hidden: { opacity: 0 },
@@ -64,6 +65,7 @@ export default function Home() {
     setJobIdOne,
     setCanvasDisable,
     setassetsActiveTab,
+    TDMode,
   } = useAppState();
 
   useEffect(() => {
@@ -74,10 +76,11 @@ export default function Home() {
     if (isReady) {
       // setFilteredArray([])
       GetProjextById(id);
-  //  fetchAssetsImages(userId, null);
-
+      //  fetchAssetsImages(userId, null);
+      console.log(TDMode,"dddddddddddddddddddddddddddddddd")
     }
-  }, [id, isReady]);
+
+  }, [id, isReady, TDMode]);
 
   useEffect(() => {
     const times = setInterval(() => {
@@ -105,7 +108,7 @@ export default function Home() {
   useEffect(() => {
     setprojectId(id);
     setUserId(userId);
-    setassetsActiveTab("product")
+    setassetsActiveTab("product");
     // let filteredResult;
 
     // filteredResult = generatedImgList.filter((obj) =>
@@ -131,13 +134,12 @@ export default function Home() {
     return () => {
       // setprojectId(null);
     };
-  }, [jobId, setGeneratedImgList, regeneratePopup]);
+  }, [jobId, setGeneratedImgList, regeneratePopup, ]);
 
   useEffect(() => {
     let time = setInterval(() => {
       if (isReady && userId) {
         fetchAssetsImages();
-
       }
     }, 5000);
     return () => {
@@ -161,7 +163,7 @@ export default function Home() {
       );
       const data = await response.json();
       // console.log(await data, "dfdd");
-      console.log(jobIdOne, "JOB");
+      console.log(data, "JOB");
       console.log(jobId, "JOBS");
 
       if (data?.length) {
@@ -228,6 +230,7 @@ export default function Home() {
         setNewassetonCanvas(null);
       }
     }, 1000);
+
   }, []);
 
   return (
@@ -235,7 +238,7 @@ export default function Home() {
       {/* {loader ? <Loader /> : null} */}
 
       <div className="news">
-      {popup?.status ? <PopupUpload /> : null}
+        {popup?.status ? <PopupUpload /> : null}
 
         <Sidebar />
         <div
@@ -306,8 +309,7 @@ export default function Home() {
             </div>
             
           </div> */}
-
-          <CanvasBox proid={id} userId={userId} />
+          {TDMode ? <Canvas3d /> : <CanvasBox proid={id} userId={userId} />}
         </div>
       </div>
     </MainPages>
@@ -317,13 +319,10 @@ export default function Home() {
 const MainPages = styled.div`
   position: relative;
   .generated {
-    /* width: 400px;
-    height: 440px; */
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    /* padding: 20px; */
     border: 2px solid rgba(249, 208, 13, 1);
     border-radius: 16px;
 
@@ -334,20 +333,13 @@ const MainPages = styled.div`
       height: 100%;
       border-radius: 6px;
       transition: all 0.3s ease;
-
-      /* &:hover{
-      transform: scale(1.01);
-    } */
     }
   }
   .canvase {
     display: grid;
     padding-right: 100px !important;
     grid-template-columns: 1fr 1fr;
-    /* justify-content: center; */
-    /* align-items: center; */
     height: 75%;
-    /* background-color: #13bba4; */
     gap: 2rem;
     padding: 20px;
     padding-top: 100px;

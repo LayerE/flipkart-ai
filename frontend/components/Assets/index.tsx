@@ -23,31 +23,31 @@ const Assets: React.FC = () => {
     setListOfAssets,
     fetchAssetsImages,
     fetchAssetsImagesWithProjectId,
-    listofassetsById, setListOfAssetsById,
+    listofassetsById,
+    setListOfAssetsById,
     addimgToCanvasSubject,
     getBase64FromUrl,
     assetLoader,
-    loader
+    loader,
   } = useAppState();
   const { query, isReady } = useRouter();
   // const { id } = query;
   const id = (query.id as string[]) || [];
 
-  const [filter, setFilter] = useState()
-  const [re, setRe] = useState(1)
+  const [filter, setFilter] = useState();
+  const [re, setRe] = useState(1);
   useEffect(() => {
-    if(re <=10){
-      setRe(re+1)
+    if (re <= 10) {
+      setRe(re + 1);
     }
     if (userId && isReady) {
-       fetchAssetsImagesWithProjectId(userId, id);
-    
-      const filer = listofassetsById?.filter((item)=> item.project_id === id )
-      setFilter(filer)
-      console.log(listofassetsById,"dfdf")
+      fetchAssetsImagesWithProjectId(userId, id);
+
+      const filer = listofassetsById?.filter((item) => item.project_id === id);
+      setFilter(filer);
+      console.log(listofassetsById, "dfdf");
     }
-  }, [isReady,userId,re]);
-  
+  }, [isReady, userId, re]);
 
   // listofassets
 
@@ -59,7 +59,11 @@ const Assets: React.FC = () => {
         </Row>
 
         <Row>
-          <FileUpload  type={"product"}  title={"Upload Product Photo"} uerId={userId} />
+          <FileUpload
+            type={"product"}
+            title={"Upload Product Photo"}
+            uerId={userId}
+          />
         </Row>
         <Row>
           <Label>Or use sample products</Label>
@@ -70,13 +74,10 @@ const Assets: React.FC = () => {
               key={i}
               className={"imageBox"}
               onClick={() => {
-
-                if(!assetLoader && !loader){
-                addimgToCanvasSubject(test.img);
-                setProduct(test.title)
+                if (!assetLoader && !loader) {
+                  addimgToCanvasSubject(test.img);
+                  setProduct(test.title);
                 }
-                
-               
               }}
             >
               <picture>
@@ -97,19 +98,12 @@ const Assets: React.FC = () => {
           {listofassetsById?.map((test, i) => (
             <div
               key={i}
-              className={
-                "imageBox"
-              }
+              className={"imageBox"}
               onClick={() => {
-                if(!assetLoader && !loader){
-
-                addimgToCanvasSubject(test?.url.url);
-                setProduct(test.url.product)
-
+                if (!assetLoader && !loader) {
+                  addimgToCanvasSubject(test?.url.url);
+                  setProduct(test.url.product);
                 }
-
-
-               
               }}
             >
               <picture>
@@ -119,7 +113,6 @@ const Assets: React.FC = () => {
           ))}
         </ResponsiveRowWraptwo>
       </div>
-     
     </div>
   );
 };
