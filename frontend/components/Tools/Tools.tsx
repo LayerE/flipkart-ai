@@ -2,59 +2,62 @@ import React from "react";
 import { styled } from "styled-components";
 
 const fadeIn = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 0.5 } },
-  };
-  
-  import { motion } from "framer-motion";
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.5 } },
+};
+
+import { motion } from "framer-motion";
+import { useAuth } from "@clerk/nextjs";
 
 const Tools = () => {
+  const { userId } = useAuth();
+
   const toolslist = [
     {
-      name: "Tool Name",
-      discription: "Discription about this tool",
+      name: "Banner Generator",
+      discription: "create a banner ",
+      url: "https://banner-kappa.vercel.app/?userId="
     },
-    {
-      name: "Tool Name",
-      discription: "Discription about this tool",
-    },
-    {
-      name: "Tool Name",
-      discription: "Discription about this tool",
-    },
-    {
-      name: "Tool Name",
-      discription: "Discription about this tool",
-    },
-    {
-      name: "Tool Name",
-      discription: "Discription about this tool",
-    },
+    // {
+    //   name: "Tool Name",
+    //   discription: "Discription about this tool",
+    // },
+    // {
+    //   name: "Tool Name",
+    //   discription: "Discription about this tool",
+    // },
+    // {
+    //   name: "Tool Name",
+    //   discription: "Discription about this tool",
+    // },
+    // {
+    //   name: "Tool Name",
+    //   discription: "Discription about this tool",
+    // },
   ];
-  return (
-    <motion.div
-    initial="hidden"
-    animate="visible"
-    variants={fadeIn}
-   
-  >
-    <ToolsWrapper>
-      <div className="headerText">Tools</div>
 
-      <div className="gridbox">
-        {toolslist?.map((tool: object[]) => (
-          <div className="tool-cards">
-            <div className="imgeWrapper">
-              <div className="imgbox"></div>
+  const Redirect = (url)=>{
+    window.location.href = url + userId;
+  }
+  return (
+    <motion.div initial="hidden" animate="visible" variants={fadeIn}>
+      <ToolsWrapper>
+        <div className="headerText">Tools</div>
+
+        <div className="gridbox">
+          {toolslist?.map((tool: object[]) => (
+            <div className="tool-cards" onClick={()=> Redirect(tool.url)} >
+              <div className="imgeWrapper">
+                <div className="imgbox"></div>
+              </div>
+              <div className="tool-details">
+                <div className="name">{tool.name}</div>
+                <div className="discription">{tool.discription}</div>
+              </div>
             </div>
-            <div className="tool-details">
-              <div className="name">{tool.name}</div>
-              <div className="discription">{tool.discription}l</div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </ToolsWrapper>
+          ))}
+        </div>
+      </ToolsWrapper>
     </motion.div>
   );
 };

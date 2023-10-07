@@ -12,6 +12,8 @@ export default authMiddleware({
     "/api/user",
     "/api/canvasdata",
     "/api/upscale",
+    "/api/upload",
+
   ],
 });
 

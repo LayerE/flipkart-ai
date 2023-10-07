@@ -3,6 +3,7 @@ import assets from "@/public/assets";
 import Image from "next/image";
 import React from "react";
 import { styled } from "styled-components";
+import { useRouter } from "next/router";
 
 const HomeSidebar = () => {
 
@@ -11,6 +12,7 @@ const HomeSidebar = () => {
         setActiveTabHome
       } = useAppState();
 
+  const router = useRouter();
    
   const TabData = [
     {
@@ -32,10 +34,11 @@ const HomeSidebar = () => {
     },
     {
       id: 4,
-      disable:true,
+      // disable:true,
 
       image: assets.icons.user_icon,
       tittle: "Tools",
+      url: "/tools"
     },
   ];
   return (
@@ -49,7 +52,14 @@ const HomeSidebar = () => {
       </div>
 
         :
-        <div key={tab.id} className={ activeTabHome === tab.id ? "tab active-tab" :"tab" } onClick={()=> setActiveTabHome(tab.id)}>
+        tab?.url ?
+        <div key={tab.id} className={ activeTabHome === tab.id ? "tab active-tab" :"tab" } onClick={()=>     {setActiveTabHome(tab.id); router.push(tab?.url)   }   }>
+        <Image src={tab.image} alt="" />
+        {tab.tittle}
+      </div>
+
+        :
+        <div key={tab.id} className={ activeTabHome === tab.id ? "tab active-tab" :"tab" } onClick={()=>   {setActiveTabHome(tab.id); router.push("/")   }}>
           <Image src={tab.image} alt="" />
           {tab.tittle}
         </div>

@@ -79,7 +79,7 @@ const AssetsDir = () => {
           // const filename = `img${Date.now()}`;
           // setLoader(true);
 
-          const response = await fetch("/api/removebg", {
+          const response = await fetch("/api/upload", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
