@@ -16,7 +16,7 @@ const Tools = () => {
     {
       name: "Banner Generator",
       discription: "create a banner ",
-      url: "https://banner-kappa.vercel.app/?userId="
+      url: "https://banner-production.up.railway.app/?userId="
     },
     // {
     //   name: "Tool Name",

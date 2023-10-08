@@ -62,10 +62,8 @@ const Canvas3d = () => {
             child.material = child.material.clone();
           }
         });
-
         object.position.y = -0.5;
         //   object.position.x = 1;
-
         object.scale.setScalar(0.07);
         scene.add(object);
         // render();
