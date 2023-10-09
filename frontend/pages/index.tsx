@@ -51,7 +51,9 @@ export default function Home() {
     setpromt,
     setLoader,
     fetchAssetsImages,
-    popup
+    popup,
+    setSelectedImg
+
 
   } = useAppState();
 
@@ -62,6 +64,8 @@ export default function Home() {
     if (rerenter <= 6) {
       setre(rerenter + 1);
     }
+    setSelectedImg(null);
+
     if (isReady && userId) {
       // const getUser = localStorage.getItem("userId");
       // if (!getUser) {
