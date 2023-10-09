@@ -64,7 +64,13 @@ const PopupCard = () => {
         // Handle error
       }
     } else {
-      handileDownload(popupImage?.list[currentIndex]?.modified_image_url);
+      if(popupImage?.list[currentIndex]?.modified_image_url){
+
+        handileDownload(popupImage?.list[currentIndex]?.modified_image_url);
+      }else{
+        handileDownload(popupImage?.list[currentIndex]?.image_url);
+
+      }
     }
   };
 
