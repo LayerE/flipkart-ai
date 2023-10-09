@@ -355,19 +355,22 @@ export const FileUpload3D: React.FC = ({ type, title, uerId }) => {
     setloadercarna,
     assetLoader,
     setassetLoader,
-    assetL3doader, setasset3dLoader
+    assetL3doader, setasset3dLoader,
+    file3dUrl, setFile3dUrl
+
   } = useAppState();
   const [file, setFile] = useState(null);
 
   const handleFileChange = (event) => {
     setasset3dLoader(true);
 
+    setFile3dUrl(null)
 
     const selectedFile = event.target.files[0];
     const url = URL.createObjectURL(selectedFile)
     if(url){
-
       setFile3d(url);
+      setFile3dUrl(null)
       
       // setasset3dLoader(false);
       

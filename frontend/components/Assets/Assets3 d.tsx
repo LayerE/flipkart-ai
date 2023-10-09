@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Row } from "../common/Row";
 import Label from "../common/Label";
-import { FileUpload, FileUpload3D } from "../common/Input";
+import { FileUpload, FileUpload3D, Input } from "../common/Input";
 import DropdownInput from "../common/Dropdown";
 import { styled } from "styled-components";
 // import { category, test } from "@/store/dropdown";
@@ -9,6 +9,7 @@ import { useAppState } from "@/context/app.context";
 import { productList } from "@/store/listOfElement";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/router";
+import Button from "../common/Button";
 // import { fabric } from "fabric";
 
 const Assets3d: React.FC = () => {
@@ -28,7 +29,9 @@ const Assets3d: React.FC = () => {
     addimgToCanvasSubject,
     getBase64FromUrl,
     assetLoader,
+    file3dUrl, setFile3dUrl,
     loader,
+    setFile3d,
   } = useAppState();
   const { query, isReady } = useRouter();
   // const { id } = query;
@@ -47,10 +50,20 @@ const Assets3d: React.FC = () => {
       setFilter(filer);
       console.log(listofassetsById, "dfdf");
     }
-  }, [isReady, userId, re]);
+  }, [isReady, userId, re,file3dUrl]);
 
   // listofassets
+const [url, setUrl] = useState(null)
+  const addUrl = (e)=>{
+    setUrl(e.target.value);
 
+  }
+const HandileUrl = ()=>{
+  setUrl(null)
+  setFile3d(null)
+  setFile3dUrl(url)
+
+}
   return (
     <div className="accest">
       <div className="gap">
@@ -64,6 +77,29 @@ const Assets3d: React.FC = () => {
             title={"Upload 3D Object"}
             uerId={userId}
           />
+        </Row>
+        <div style={{textAlign:"center", width:"100%", display:"flex", justifyContent:"center"}}>
+
+
+        <Label >Or</Label>
+        
+        
+
+        </div>
+        <Row>
+        <Input
+              type="text"
+              value={url ? url : " "}
+              onChange={(e) => addUrl(e)}
+              placeholder=" 3D Object  URL"
+            />
+        
+
+        </Row>
+        <Row>
+    
+          <Button onClick={HandileUrl} disabled={url ? false : true}>Add 3D Object </Button>
+
         </Row>
       </div>
     </div>

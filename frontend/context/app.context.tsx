@@ -171,6 +171,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [activeTabHome, setActiveTabHome] = useState<number | null>(1);
   const [file, setFile] = useState<File | null>(null);
   const [file3d, setFile3d] = useState<File | null>(null);
+  const [file3dUrl, setFile3dUrl] = useState<string | null>(null);
+
 
   const [viewMore, setViewMore] = useState<object>({});
   const [selectPlacement, setSelectedPlacement] = useState<string>("");
@@ -1386,6 +1388,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       value={{
         canvasDisable,
         TdImage,
+        file3dUrl, setFile3dUrl,
         set3DImage,
         setCanvasDisable,
         galleryActivTab,

@@ -26,9 +26,12 @@ const Canvas3d = () => {
     setSelectedImg,
     selectedImg,
     setasset3dLoader,
+    file3dUrl,
+    setFile3dUrl,
   } = useAppState();
 
   let camera, scene, object, controls, renderNew;
+  const [showText, setshowText] = useState(false)
 
   const [re, setRe] = useState(1);
   useEffect(() => {
@@ -116,16 +119,36 @@ const Canvas3d = () => {
       //   const loader =   new GLTFLoader()
 
       console.log(file3d);
-      loader.load(
-        file3d,
-        (obj) => {
-          object = obj;
-          loadModel();
-          // scene.add( obj );
-        },
-        onProgress,
-        onError
-      );
+      if (file3dUrl != null) {
+setshowText(true)
+
+        loader.load(
+          file3dUrl,
+          (obj) => {
+            object = obj;
+            loadModel();
+            
+            // scene.add( obj );
+          },
+          onProgress,
+          onError
+        )
+      } else {
+        if(file3d){
+setshowText(true)
+
+        }
+        loader.load(
+          file3d,
+          (obj) => {
+            object = obj;
+            loadModel();
+            // scene.add( obj );
+          },
+          onProgress,
+          onError
+        );
+      }
 
       console.log(renderer, "sfdedf");
 
@@ -183,7 +206,7 @@ const Canvas3d = () => {
         containerRef.current.removeChild(renderer.domElement);
       }
     };
-  }, [file3d]);
+  }, [file3d, file3dUrl]);
 
   const captureScreenshot = () => {
     console.log(renderer, "dsedfdegfdjjh");
@@ -220,7 +243,7 @@ const Canvas3d = () => {
   return (
     <Cnavas3d>
       <div ref={containerRef} className="boxs">
-        {!file3d ? <div className="tesxt">3D model viewer</div> : null}
+        {!showText  ? <div className="tesxt">3D model viewer</div> : null}
       </div>
       <div ref={outputBox} className="outboxs">
         {selectedImg?.image ? (
