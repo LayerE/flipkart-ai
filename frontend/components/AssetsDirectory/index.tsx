@@ -34,16 +34,13 @@ const AssetsDir = () => {
     brandassetLoader,
     setbrandassetLoader,
     fetchAssetsImagesWithProjectId,
-     
-  
+
     setPopup,
-    
+
     setUploadedProductlist,
     setProduct,
     addimgToCanvasSubject,
     // re, setRe,
-
-  
   } = useAppState();
   const [assers, setAssets] = useState();
   // const [re, setRe] = useState(1);
@@ -71,7 +68,6 @@ const AssetsDir = () => {
     }
   }, [isReady, userId, AssetsActivTab, listofassets]);
 
-
   const handleFileChange = (event) => {
     // setassetLoader(true);
     setbrandassetLoader(true);
@@ -84,9 +80,9 @@ const AssetsDir = () => {
         reader.onloadend = async () => {
           // const filename = `img${Date.now()}`;
           // setLoader(true);
-          console.log(reader.result,"imge");
+          console.log(reader.result, "imge");
 
-          const response = await fetch("/api/upload", {
+          const response = await fetch("/api/uploadbrandasset", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -104,52 +100,60 @@ const AssetsDir = () => {
             toast.error("Image is corrupted or unsupported dimensions");
 
             setbrandassetLoader(false);
-          } else if (response?.status !== 200 && response?.status !== 413) {
+          } else if (
+            response?.status !== 200 &&
+            response?.status !== 413 &&
+            response?.status !== 201
+          ) {
             toast.error(response?.statusText);
 
             setbrandassetLoader(false);
           }
           const data = await response.json();
+          console.log(data, "ddsfvd");
 
-          if (data?.data) {
+          if (data?.image_url) {
             // setPopup({
             //   status: true,
             //   data: data?.data.data[0],
             //   dataArray: data,
             // });
 
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API}/assets`, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                userId: userId,
-                projectId: id,
-                assetType: AssetsActivTab,
-    
-                asset: { url: data.imageUrl, product: null },
-              }),
-            });
-    
+            const response = await fetch(
+              `${process.env.NEXT_PUBLIC_API}/assets`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  userId: userId,
+                  projectId: id,
+                  assetType: AssetsActivTab,
+
+                  asset: { url: data.image_url, product: null },
+                }),
+              }
+            );
+
             const datares = await response;
             console.log(datares);
-    
+
             if (datares) {
               fetchAssetsImages(userId, null);
-              addimgToCanvasSubject(data?.data.data[0]);
+              // addimgToCanvasSubject(data?.data.data[0]);
               fetchAssetsImagesWithProjectId(userId, id);
               // setTimeout(() => {
-                
+
               // }, 500);
-    
+
               // setUploadedProductlist((prev) => [
               //   ...prev,
               //   { url: popup?.data, tittle: productnew },
               // ]);
               // setProduct(productnew);
               // setPopup({ status: false, data: null });
-            setbrandassetLoader(false);
+              setbrandassetLoader(false);
             }
           } else {
             console.log("bg not removed");

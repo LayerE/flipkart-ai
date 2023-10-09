@@ -18,6 +18,10 @@ import assets from "@/public/assets";
 import Regeneret from "@/components/Popup/Regeneret";
 import { useRouter } from "next/router";
 import Canvas3d from "@/components/Canvas/Canvas3d";
+import Sidebar3d from "@/components/Sidebar/Generate3d";
+import ThreeScene from "@/components/Canvas/3d/gltf";
+import TDS from "@/components/Canvas/3d/tds";
+import GLTF from "@/components/Canvas/3d/gltf";
 
 const fadeIn = {
   hidden: { opacity: 0 },
@@ -29,6 +33,8 @@ export default function Home() {
   const { query, isReady } = useRouter();
   // const { id } = query;
   const id = (query.id as string[]) || [];
+
+//   const [tdFormate, setTdFormate] = useState("obj");
 
   const {
     outerDivRef,
@@ -66,7 +72,9 @@ export default function Home() {
     setCanvasDisable,
     setassetsActiveTab,
     TDMode,
-     set3dMode
+    set3dMode
+    // tdFormate, setTdFormate
+
   } = useAppState();
 
   useEffect(() => {
@@ -78,9 +86,9 @@ export default function Home() {
       // setFilteredArray([])
       GetProjextById(id);
       //  fetchAssetsImages(userId, null);
-      console.log(TDMode,"dddddddddddddddddddddddddddddddd")
+      console.log(TDMode, "dddddddddddddddddddddddddddddddd");
     }
-    set3dMode(false)
+    set3dMode(true)
 
   }, [id, isReady, TDMode]);
 
@@ -136,7 +144,7 @@ export default function Home() {
     return () => {
       // setprojectId(null);
     };
-  }, [jobId, setGeneratedImgList, regeneratePopup, ]);
+  }, [jobId, setGeneratedImgList, regeneratePopup]);
 
   useEffect(() => {
     let time = setInterval(() => {
@@ -158,7 +166,7 @@ export default function Home() {
   const fetchAssetsImages = async () => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API}/generatedImg?userId=${userId}&projectId=${id}`,
+        `${process.env.NEXT_PUBLIC_API}/generated3dImg?userId=${userId}`,
         {
           method: "GET",
         }
@@ -177,7 +185,7 @@ export default function Home() {
         const filteredResultss = data?.map(
           (obj) => obj?.task_id === jobIdOne[0]
         );
-        // console.log(filteredResults,"dfd", filteredResultss)
+        console.log(filteredResults,"dfd", filteredResultss)
 
         if (filteredResults?.length) {
           // console.log(filteredResults,"fddscvcvcvcgd",jobIdOne)
@@ -232,7 +240,6 @@ export default function Home() {
         setNewassetonCanvas(null);
       }
     }, 1000);
-
   }, []);
 
   return (
@@ -242,7 +249,7 @@ export default function Home() {
       <div className="news">
         {popup?.status ? <PopupUpload /> : null}
 
-        <Sidebar />
+        <Sidebar3d />
         <div
           className="Editor"
           ref={outerDivRef}
@@ -311,7 +318,13 @@ export default function Home() {
             </div>
             
           </div> */}
-          {TDMode ? <Canvas3d /> : <CanvasBox proid={id} userId={userId} />}
+            <Canvas3d />
+          {/* {tdFormate === "obj" ? (
+          ) : tdFormate === "tds" ? (
+            <TDS />
+          ) : tdFormate === "gltf" ? (
+            <GLTF />
+          ) : null} */}
         </div>
       </div>
     </MainPages>

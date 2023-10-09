@@ -29,43 +29,26 @@ const TabData = [
   {
     id: 1,
     image: assets.icons.assets_icon,
-    tittle: "Assets",
-  },
-  // {
-  //   id: 7,
-  //   image: assets.icons.assets_icon,
 
-  //   tittle: "3D Assets",
-  // },
+    tittle: "3D Assets",
+  },
   {
     id: 2,
 
     image: assets.icons.generate_icon,
     tittle: "Generate",
   },
-  // {
-  //   id: 3,
 
-  //   image: assets.icons.element_icon,
-  //   tittle: "Elements",
-  // },
-  // {
-  //   id: 4,
+//   {
+//     id: 3,
 
-  //   image: assets.icons.user_icon,
-  //   tittle: "Humans",
-  // },
-
-  {
-    id: 5,
-
-    image: assets.icons.edit_icon,
-    tittle: "Edit",
-    disable: assets.icons.edit_icon_diable,
-  },
+//     image: assets.icons.edit_icon,
+//     tittle: "Edit",
+//     disable: assets.icons.edit_icon_diable,
+//   },
 ];
 
-const Sidebar: React.FC = () => {
+const Sidebar3d: React.FC = () => {
   const {
     activeTab,
     setActiveTab,
@@ -74,8 +57,6 @@ const Sidebar: React.FC = () => {
     downloadImg,
     isMagic,
     setIsMagic,
-    TDMode,
-    set3dMode,
   } = useAppState();
 
   return (
@@ -95,11 +76,11 @@ const Sidebar: React.FC = () => {
                   activeTab === elemenmt.id ? "active tabBox " : "tabBox"
                 }
                 onClick={() => {
-                  if (elemenmt.id == 7) {
-                    set3dMode(true);
-                  } else if (elemenmt.id == 1) {
-                    set3dMode(false);
-                  }
+                  //   if (elemenmt.id == 7) {
+                  //     set3dMode(true);
+                  //   } else if (elemenmt.id == 1) {
+                  //     set3dMode(false);
+                  //   }
                   setActiveTab(elemenmt.id);
                   setViewMore({ status: false });
                   setIsMagic(false);
@@ -152,117 +133,18 @@ const Sidebar: React.FC = () => {
                 </div>
               ) : activeTab === 2 ? (
                 "Create Product Photoshoot "
-              ) : activeTab === 3 && viewMore?.status == true ? (
-                <div
-                  style={{
-                    cursor: "pointer",
-                    display: "flex",
-                    gap: "0px",
-                    justifyContent: "start",
-                    alignItems: "center",
-                  }}
-                  onClick={() => setViewMore({ status: false })}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="3"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="lucide lucide-chevron-left"
-                  >
-                    <polyline points="15 18 9 12 15 6"></polyline>
-                  </svg>{" "}
-                  {viewMore.title}{" "}
-                </div>
               ) : activeTab === 3 ? (
-                "Add Element"
-              ) : activeTab === 4 ? (
-                "Add Humans"
-              ) : activeTab === 5 && isMagic == true ? (
-                <div
-                  style={{
-                    cursor: "pointer",
-                    display: "flex",
-                    gap: "0px",
-                    justifyContent: "start",
-                    alignItems: "center",
-                  }}
-                  onClick={() => setIsMagic(false)}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="3"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="lucide lucide-chevron-left"
-                  >
-                    <polyline points="15 18 9 12 15 6"></polyline>
-                  </svg>{" "}
-                  Magic Erase{" "}
-                </div>
-              ) : activeTab === 5 ? (
                 "Edit Image"
-              ) : activeTab === 6 ? (
-                <div
-                  style={{
-                    cursor: "pointer",
-                    display: "flex",
-                    gap: "0px",
-                    justifyContent: "start",
-                    alignItems: "center",
-                  }}
-                  onClick={() => setViewMore({ status: false })}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="3"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    className="lucide lucide-chevron-left"
-                  >
-                    <polyline points="15 18 9 12 15 6"></polyline>
-                  </svg>{" "}
-                  {"Regenrate"}{" "}
-                </div>
-              ) : activeTab === 7 ? (
-                "Product Assets"
               ) : null}
             </div>
             {activeTab === 1 ? (
-              <Assets />
+              <Assets3d />
             ) : activeTab === 2 && viewMore?.status == true ? (
               <ListOf />
             ) : activeTab === 2 ? (
               <Generate />
-            ) : activeTab === 3 && viewMore?.status == true ? (
-              <ListOf />
             ) : activeTab === 3 ? (
-              <Element />
-            ) : activeTab === 4 ? (
-              <Humans />
-            ) : activeTab === 5 && isMagic === "true" ? (
-              <MagicEraser />
-            ) : activeTab === 5 ? (
               <Edit />
-            ) : activeTab === 6 ? (
-              <RegenratTab />
-            ) : activeTab === 7 ? (
-              <Assets3d />
             ) : null}
           </motion.div>
         </div>
@@ -511,4 +393,4 @@ const SideBar = styled.div`
     border-color: ${({ theme }) => theme.btnPrimary};
   }
 `;
-export default Sidebar;
+export default Sidebar3d;

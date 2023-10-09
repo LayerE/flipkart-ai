@@ -224,7 +224,6 @@ export const FileUpload: React.FC = ({ type, title, uerId }) => {
                 user_id: uerId,
                 project_id: projectId,
                 // type: "product",
-
               }),
             });
             console.log(response);
@@ -236,8 +235,7 @@ export const FileUpload: React.FC = ({ type, title, uerId }) => {
               toast.error("Image is corrupted or unsupported dimensions");
 
               setassetLoader(false);
-            }
-           else if (response?.status !== 200 && response?.status !== 413) {
+            } else if (response?.status !== 200 && response?.status !== 413) {
               toast.error(response?.statusText);
 
               setassetLoader(false);
@@ -342,7 +340,8 @@ export const FileUpload3D: React.FC = ({ type, title, uerId }) => {
   const {
     // file,
     // setFile,
-    file3d, setFile3d,
+    file3d,
+    setFile3d,
     uploadedProductlist,
     setUploadedProductlist,
     upladedArray,
@@ -355,31 +354,31 @@ export const FileUpload3D: React.FC = ({ type, title, uerId }) => {
     setloadercarna,
     assetLoader,
     setassetLoader,
-    assetL3doader, setasset3dLoader,
-    file3dUrl, setFile3dUrl
-
+    assetL3doader,
+    setasset3dLoader,
+    file3dUrl,
+    setFile3dUrl,
+    tdFormate
   } = useAppState();
   const [file, setFile] = useState(null);
 
   const handleFileChange = (event) => {
     setasset3dLoader(true);
 
-    setFile3dUrl(null)
+    setFile3dUrl(null);
 
     const selectedFile = event.target.files[0];
-    const url = URL.createObjectURL(selectedFile)
-    if(url){
+    const url = URL.createObjectURL(selectedFile);
+    if (url) {
       setFile3d(url);
-      setFile3dUrl(null)
-      
-      // setasset3dLoader(false);
-      
-      console.log(file3d, "fdsfsdg");
-    }else{
-      setasset3dLoader(false);
+      setFile3dUrl(null);
 
+      // setasset3dLoader(false);
+
+      console.log(file3d, "fdsfsdg");
+    } else {
+      setasset3dLoader(false);
     }
-   
   };
   const handleRemoveFile = () => {
     setFile(null);
@@ -432,7 +431,7 @@ export const FileUpload3D: React.FC = ({ type, title, uerId }) => {
               id="fileInput"
               style={{ display: "none" }}
               onChange={handleFileChange}
-              accept=".obj"
+              accept={tdFormate}
             />
           </>
         )}
@@ -441,4 +440,3 @@ export const FileUpload3D: React.FC = ({ type, title, uerId }) => {
     </InputFile1>
   );
 };
-

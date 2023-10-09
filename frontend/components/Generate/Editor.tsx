@@ -69,8 +69,7 @@ const EditorSection = () => {
     generationLoader,
     changeRectangleSize,
     setGenerationLoader,
-    loader
-    
+    loader,
   } = useAppState();
 
   // const imageArrays = JSON.parse(localStorage.getItem("g-images")) || [];
@@ -123,7 +122,7 @@ const EditorSection = () => {
       l: 100,
       t: 160,
       gl: 690,
-      gt: 160
+      gt: 160,
     },
     {
       id: 3,
@@ -134,7 +133,7 @@ const EditorSection = () => {
       l: 100,
       t: 160,
       gl: 690,
-      gt: 160
+      gt: 160,
     },
     {
       id: 4,
@@ -145,7 +144,7 @@ const EditorSection = () => {
       l: 100,
       t: 160,
       gl: 570,
-      gt: 160
+      gt: 160,
     },
     {
       id: 5,
@@ -156,7 +155,7 @@ const EditorSection = () => {
       l: 100,
       t: 160,
       gl: 842,
-      gt: 160
+      gt: 160,
     },
     {
       id: 6,
@@ -167,7 +166,7 @@ const EditorSection = () => {
       l: 100,
       t: 160,
       gl: 650,
-      gt: 160
+      gt: 160,
     },
     // {
     //   id: 7,
@@ -191,11 +190,8 @@ const EditorSection = () => {
       className="accest"
     >
       <BoxOff className="boxof">
-        {loader ?  
-        
-        <div className="dis"></div>
-      :null}
-      <div className="gaps">
+        {loader ? <div className="dis"></div> : null}
+        <div className="gaps">
           <div className="two">
             <Label>No. of images to generate</Label>
             <div className="rangeValue">
@@ -225,7 +221,7 @@ const EditorSection = () => {
                 }`}
                 onClick={() => {
                   setActiveSize(item);
-                  changeRectangleSize()
+                  changeRectangleSize();
                 }}
               >
                 <div className="tittl">{item.title}</div>
@@ -255,8 +251,6 @@ const EditorSection = () => {
             ))}
           </div>
         </div>
-
-      
 
         {/* <div className="filde gap">
         <DisabledLabel>Product</DisabledLabel>
@@ -384,13 +378,13 @@ export const BoxOff = styled.div`
   /* height: 100%; */
   /* overflow: hidden; */
   position: relative;
-  .dis{
+  .dis {
     background: transparent !important;
     position: absolute;
     width: 100%;
     height: 100%;
   }
-  .gaps{
+  .gaps {
     margin-top: 20px;
   }
   .two {

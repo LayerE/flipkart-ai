@@ -10,6 +10,7 @@ import { productList } from "@/store/listOfElement";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/router";
 import Button from "../common/Button";
+import { formate3d } from "@/store/format";
 // import { fabric } from "fabric";
 
 const Assets3d: React.FC = () => {
@@ -29,9 +30,13 @@ const Assets3d: React.FC = () => {
     addimgToCanvasSubject,
     getBase64FromUrl,
     assetLoader,
-    file3dUrl, setFile3dUrl,
+    file3dUrl,
+    setFile3dUrl,
     loader,
     setFile3d,
+
+    tdFormate,
+    setTdFormate,
   } = useAppState();
   const { query, isReady } = useRouter();
   // const { id } = query;
@@ -50,61 +55,102 @@ const Assets3d: React.FC = () => {
       setFilter(filer);
       console.log(listofassetsById, "dfdf");
     }
-  }, [isReady, userId, re,file3dUrl]);
+  }, [isReady, userId, re, file3dUrl]);
 
   // listofassets
-const [url, setUrl] = useState(null)
-  const addUrl = (e)=>{
+  const [url, setUrl] = useState(null);
+  const addUrl = (e) => {
     setUrl(e.target.value);
-
-  }
-const HandileUrl = ()=>{
-  setUrl(null)
-  setFile3d(null)
-  setFile3dUrl(url)
-
-}
+  };
+  const HandileUrl = () => {
+    setUrl(null);
+    setFile3d(null);
+    setFile3dUrl(url);
+  };
   return (
     <div className="accest">
       <div className="gap">
         <Row>
-          <Label>Product</Label>
+          <Label>3D Formate</Label>
         </Row>
+        <FormateBtnBox>
+          <div className="formatfox">
+            {formate3d.map((formate) => (
+              <div
+                className={
+                  tdFormate === formate.formate
+                    ? "formatebtn activFormate"
+                    : "formatebtn"
+                }
+                onClick={() => {
+                  setTdFormate(formate.formate);
+                  setFile3d(null);
+                  setFile3dUrl(null);
+                }}
+              >
+                {formate.tittle}
+              </div>
+            ))}
+          </div>
+        </FormateBtnBox>
 
         <Row>
           <FileUpload3D
             type={"product"}
-            title={"Upload 3D Object"}
+            title={` Upload 3D Object (eg: tree${tdFormate})`}
             uerId={userId}
           />
         </Row>
-        <div style={{textAlign:"center", width:"100%", display:"flex", justifyContent:"center"}}>
-
-
-        <Label >Or</Label>
-        
-        
-
+        <div
+          style={{
+            textAlign: "center",
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <Label>Or</Label>
         </div>
         <Row>
-        <Input
-              type="text"
-              value={url ? url : " "}
-              onChange={(e) => addUrl(e)}
-              placeholder=" 3D Object  URL"
-            />
-        
-
+          <Input
+            type="text"
+            value={url ? url : ""}
+            onChange={(e) => addUrl(e)}
+            placeholder={` 3D Object  URL (file type should be ${tdFormate})`}
+          />
         </Row>
         <Row>
-    
-          <Button onClick={HandileUrl} disabled={url ? false : true}>Add 3D Object </Button>
-
+          <Button onClick={HandileUrl} disabled={url ? false : true}>
+            Add 3D Object{" "}
+          </Button>
         </Row>
       </div>
     </div>
   );
 };
+export const FormateBtnBox = styled.div`
+  .formatfox {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .formatebtn {
+    border: 2px solid rgba(249, 208, 13, 1);
+    padding: 3px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3 ease;
+    background: #ffffff !important;
+
+    &:hover {
+      background: rgba(249, 208, 13, 1) !important;
+    }
+  }
+  .activFormate {
+    background: rgba(249, 208, 13, 1) !important;
+  }
+`;
 
 export const ResponsiveRowWraptwo = styled(Row)`
   display: grid !important;

@@ -157,10 +157,17 @@ const PopupCard = () => {
           </picture>
         ) : (
           <picture>
-            <img
-              src={popupImage?.list[currentIndex]?.modified_image_url}
-              alt="image"
-            />
+          {
+            popupImage?.list[currentIndex]?.modified_image_url ?    <img
+            src={popupImage?.list[currentIndex]?.modified_image_url}
+            alt="image"
+          /> :  <img
+          src={popupImage?.list[currentIndex]?.image_url}
+          alt="image"
+        />
+
+          }
+          
           </picture>
         )}
 

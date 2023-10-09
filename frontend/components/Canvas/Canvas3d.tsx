@@ -3,6 +3,10 @@ import * as THREE from "three";
 import { OBJLoader } from "three/addons/loaders/OBJLoader.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { MTLLoader } from "three/addons/loaders/MTLLoader.js";
+import { TDSLoader } from "three/addons/loaders/TDSLoader.js";
+import { FBXLoader } from "three/addons/loaders/FBXLoader.js";
+import { STLLoader } from "three/addons/loaders/STLLoader.js";
+import { PLYLoader } from "three/addons/loaders/PLYLoader.js";
 
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import assets from "@/public/assets";
@@ -28,10 +32,13 @@ const Canvas3d = () => {
     setasset3dLoader,
     file3dUrl,
     setFile3dUrl,
+    tdFormate,
+    setTdFormate,
   } = useAppState();
 
   let camera, scene, object, controls, renderNew;
-  const [showText, setshowText] = useState(false)
+  const [showText, setshowText] = useState(false);
+  // const [tdFormate, setTdFormate] = useState("tds");
 
   const [re, setRe] = useState(1);
   useEffect(() => {
@@ -39,20 +46,17 @@ const Canvas3d = () => {
     containerRef.current.style.height = "400px";
     let renderer;
     const init = () => {
-      camera = new THREE.PerspectiveCamera(60, 400 / 400, 1, 2000);
+      camera = new THREE.PerspectiveCamera(75, 400 / 400, 0.1, 1000);
       camera.position.z = 0;
-      //   camera.position.z = 250;
-
       scene = new THREE.Scene();
 
       const ambientLight = new THREE.AmbientLight(0x404040);
       scene.add(ambientLight);
-
       const pointLight = new THREE.PointLight(0xff0000, 1, 100);
       pointLight.position.set(50, 50, 50);
-      //   pointLight.position.set(2, 2, 2); // Adjust the position according to your scene
+      pointLight.position.set(2, 2, 2); // Adjust the position according to your scene
       camera.add(pointLight);
-      //   scene.add(camera);
+      scene.add(camera);
       const light = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
       scene.add(light);
 
@@ -66,10 +70,8 @@ const Canvas3d = () => {
           }
         });
         object.position.y = -0.5;
-        //   object.position.x = 1;
         object.scale.setScalar(0.07);
         scene.add(object);
-        // render();
         // Adjust the camera position and rotation to focus on the loaded object
         const boundingBox = new THREE.Box3().setFromObject(object);
         const center = boundingBox.getCenter(new THREE.Vector3());
@@ -85,17 +87,8 @@ const Canvas3d = () => {
         camera.position.z += distance;
         camera.lookAt(center);
         setasset3dLoader(false);
-
-        //   renderer.render(scene, camera);
       }
 
-      //   const manager = new THREE.LoadingManager(loadModel);
-
-      //   const textureLoader = new THREE.TextureLoader(manager);
-      //   const texture = textureLoader.load(
-      //     "https://threejs.org/examples/textures/uv_grid_opengl.jpg"
-      //   );
-      //   texture.colorSpace = THREE.SRGBColorSpace;
       function onProgress(xhr) {
         if (xhr.lengthComputable) {
           const percentComplete = (xhr.loaded / xhr.total) * 100;
@@ -114,41 +107,217 @@ const Canvas3d = () => {
         // antialias: true,
         preserveDrawingBuffer: true,
       });
-
-      const loader = new OBJLoader();
-      //   const loader =   new GLTFLoader()
-
-      console.log(file3d);
-      if (file3dUrl != null) {
-setshowText(true)
-
-        loader.load(
-          file3dUrl,
-          (obj) => {
-            object = obj;
-            loadModel();
-            
-            // scene.add( obj );
-          },
-          onProgress,
-          onError
-        )
-      } else {
-        if(file3d){
-setshowText(true)
-
-        }
-        loader.load(
-          file3d,
-          (obj) => {
-            object = obj;
-            loadModel();
-            // scene.add( obj );
-          },
-          onProgress,
-          onError
-        );
+      let loader;
+      if (tdFormate === ".obj") {
+        loader = new OBJLoader();
+      } else if (tdFormate === ".3ds") {
+        loader = new TDSLoader();
+      } else if (tdFormate === ".gltf") {
+        loader = new GLTFLoader();
+      } else if (tdFormate === ".fbx") {
+        loader = new FBXLoader();
+      } else if (tdFormate === ".mtl") {
+        loader = new MTLLoader();
+      } else if (tdFormate === ".stl") {
+        loader = new STLLoader();
+      } else if (tdFormate === ".ply") {
+        loader = new STLLoader();
       }
+
+      console.log(file3d, "dsfdsfds", file3dUrl);
+      if (file3dUrl != null) {
+        setshowText(true);
+
+        if (tdFormate === ".obj") {
+          loader.load(
+            file3dUrl,
+            (obj) => {
+              object = obj;
+              loadModel();
+
+              // scene.add( obj );
+            },
+            onProgress,
+            onError
+          );
+        } else if (tdFormate === ".3ds") {
+          // console.log(file3d,"dsfggggggggggggggggggggggggdsfds",file3dUrl);
+
+          loader.load(
+            file3dUrl,
+            // "https://ik.imagekit.io/7urmiszfde/Bottle%20Coca-Cola%20N080710.3ds?updatedAt=1696856138699",
+            (object) => {
+              scene.add(object);
+              setasset3dLoader(false);
+            },
+            onProgress,
+            onError
+          );
+        } else if (tdFormate === ".gltf") {
+          loader.load(
+            file3dUrl,
+            // "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
+            (gltf) => {
+              const model = gltf.scene;
+              scene.add(model);
+              setasset3dLoader(false);
+            },
+            onProgress,
+            onError
+          );
+        } else if (tdFormate === ".fbx") {
+          loader.load(
+            file3dUrl,
+            // "https://ik.imagekit.io/7urmiszfde/indoor%20plant_02_+2.fbx?updatedAt=1696879483866",
+            (object) => {
+              scene.add(object);
+              setasset3dLoader(false);
+            },
+            onProgress,
+            onError
+          );
+        } else if (tdFormate === ".mtl") {
+          loader.load(
+            file3dUrl,
+            // "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
+            (gltf) => {
+              const model = gltf.scene;
+              scene.add(model);
+              setasset3dLoader(false);
+            },
+            onProgress,
+            onError
+          );
+        } else if (tdFormate === ".stl") {
+          loader.load(
+            file3dUrl,
+            // "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
+            (geometry) => {
+              const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+              const mesh = new THREE.Mesh(geometry, material);
+              scene.add(mesh);
+              setasset3dLoader(false);
+            },
+            onProgress,
+            onError
+          );
+        } else if (tdFormate === ".ply") {
+          loader.load(
+            file3dUrl,
+            // "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
+            (geometry) => {
+              const material = new THREE.MeshNormalMaterial();
+              const mesh = new THREE.Mesh(geometry, material);
+              scene.add(mesh);
+              setasset3dLoader(false);
+            },
+            onProgress,
+            onError
+          );
+        }
+      } else if (file3d) {
+        if (file3d) {
+          setshowText(true);
+        }
+
+        if (tdFormate === ".obj") {
+          loader.load(
+            file3d,
+            (obj) => {
+              object = obj;
+              loadModel();
+              // scene.add( obj );
+            },
+            onProgress,
+            onError
+          );
+        } else if (tdFormate === ".3ds") {
+          loader.load(
+            // "https://ik.imagekit.io/7urmiszfde/Bottle%20Coca-Cola%20N080710.3ds?updatedAt=1696856138699",
+            file3d,
+            (object) => {
+              scene.add(object);
+              setasset3dLoader(false);
+            }
+            // onProgress,
+            // onError
+          );
+        } else if (tdFormate === ".gltf") {
+          loader.load(
+            file3d,
+            // "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
+            (gltf) => {
+              const model = gltf.scene;
+              scene.add(model);
+              setasset3dLoader(false);
+            },
+            onProgress,
+            onError
+          );
+        } else if (tdFormate === ".mtl") {
+          loader.load(
+            file3d,
+            // "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
+            (gltf) => {
+              const model = gltf.scene;
+              scene.add(model);
+              setasset3dLoader(false);
+            },
+            onProgress,
+            onError
+          );
+        } else if (tdFormate === ".fbx") {
+          loader.load(
+            file3d,
+            // "https://ik.imagekit.io/7urmiszfde/rp_nathan_animated_003_walking.fbx?updatedAt=1696878521110",
+            (object) => {
+              scene.add(object);
+              setasset3dLoader(false);
+            },
+            onProgress,
+            onError
+          );
+        } else if (tdFormate === ".stl") {
+          loader.load(
+            file3d,
+            // "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
+            (geometry) => {
+              const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+              const mesh = new THREE.Mesh(geometry, material);
+              scene.add(mesh);
+              setasset3dLoader(false);
+            },
+            onProgress,
+            onError
+          );
+        } else if (tdFormate === ".ply") {
+          loader.load(
+            file3d,
+            // "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
+            (geometry) => {
+              const material = new THREE.MeshNormalMaterial();
+              const mesh = new THREE.Mesh(geometry, material);
+              scene.add(mesh);
+              setasset3dLoader(false);
+            },
+            onProgress,
+            onError
+          );
+        }
+      }
+
+      // loader.load(
+      //   "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
+      //   (obj) => {
+      //     object = obj;
+      //     const model = obj.scene;
+
+      //     // loadModel();
+      //     scene.add(model);
+      //   },
+      //   onProgress,
+      //   onError
+      // );
 
       console.log(renderer, "sfdedf");
 
@@ -159,7 +328,7 @@ setshowText(true)
 
       controls = new OrbitControls(camera, renderer.domElement);
       controls.minDistance = 2;
-      controls.maxDistance = 7;
+      // controls.maxDistance = 17;
       controls.addEventListener("change", render);
 
       //   renderNew = renderer;
@@ -206,7 +375,7 @@ setshowText(true)
         containerRef.current.removeChild(renderer.domElement);
       }
     };
-  }, [file3d, file3dUrl]);
+  }, [file3d, file3dUrl, tdFormate]);
 
   const captureScreenshot = () => {
     console.log(renderer, "dsedfdegfdjjh");
@@ -243,7 +412,7 @@ setshowText(true)
   return (
     <Cnavas3d>
       <div ref={containerRef} className="boxs">
-        {!showText  ? <div className="tesxt">3D model viewer</div> : null}
+        {!showText ? <div className="tesxt">3D model viewer</div> : null}
       </div>
       <div ref={outputBox} className="outboxs">
         {selectedImg?.image ? (

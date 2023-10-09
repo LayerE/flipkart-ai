@@ -173,7 +173,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [file3d, setFile3d] = useState<File | null>(null);
   const [file3dUrl, setFile3dUrl] = useState<string | null>(null);
 
-
   const [viewMore, setViewMore] = useState<object>({});
   const [selectPlacement, setSelectedPlacement] = useState<string>("");
   const [selectSurrounding, setSelectedSurrounding] = useState<string>("");
@@ -214,6 +213,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [generatedImgList, setGeneratedImgList] = useState<string[]>([]);
   const [jobId, setJobId] = useState<string[]>([]);
   const [jobIdOne, setJobIdOne] = useState<string[]>([]);
+  const [tdFormate, setTdFormate] = useState(".obj");
 
   const PosisionbtnRef = useRef(null);
   const regenerateRef = useRef(null);
@@ -354,7 +354,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     saveAs(url, `image${Date.now()}.${downloadeImgFormate}`);
   };
 
-  const getBase64FromUrl = async (url: string): Promise<string>=> {
+  const getBase64FromUrl = async (url: string): Promise<string> => {
     const data = await fetch(url);
     const blob = await data.blob();
     return new Promise((resolve) => {
@@ -362,7 +362,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       reader.readAsDataURL(blob);
       reader.onloadend = () => {
         // const base64data = reader.result
-        const base64data = reader.result  as string;;
+        const base64data = reader.result as string;
         resolve(base64data);
       };
     });
@@ -375,15 +375,13 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     }
   };
 
- 
-
   const addimgToCanvas = async (url: string) => {
     fabric.Image.fromURL(await getBase64FromUrl(url), function (img: any) {
-
       img.scaleToWidth(150);
       // img.scaleToHeight(150);
 
-      const getRandomPosition = (max:number) => Math.floor(Math.random() * max);
+      const getRandomPosition = (max: number) =>
+        Math.floor(Math.random() * max);
       const randomLeft = getRandomPosition(
         canvasInstance?.current.width / 2 - img.width
       );
@@ -1232,6 +1230,94 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     }
   };
 
+  const generate3dHandeler = async (ueserId, proid) => {
+    if (category === null) {
+      toast("Select your product category first !");
+    } else if ( !file3dUrl && !file3d) {
+      toast("Add a 3d model");
+    }else{
+
+  
+
+    if (renderer === null) {
+      toast("Add a 3d model");
+
+    } else {
+      console.log("dsfdfgdg");
+      setLoader(true);
+
+      const promtText = promtFull;
+      const screenshot = renderer.domElement.toDataURL("image/png");
+      console.log(screenshot);
+
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          dataUrl: screenshot,
+          maskDataUrl: null,
+          prompt: promtText.trim(),
+          user_id: userId,
+          category: category,
+          lora_type: loara,
+          num_images: selectResult,
+        }),
+      });
+
+      const generate_response = await response.json();
+
+      if (generate_response?.error) {
+        // alert(generate_response?.error);
+        toast.error(generate_response?.error);
+
+        setLoader(false);
+
+        return false;
+      } else {
+        setLoader(true);
+
+        try {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API}/jobId3d`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userId: ueserId,
+              // projectId: proid,
+              jobId: generate_response?.job_id,
+            }),
+          });
+          const datares = await response;
+
+          if (datares.ok) {
+            setJobIdOne([generate_response?.job_id]);
+
+            // GetProjextById(proid);
+            axios
+            .get(`${process.env.NEXT_PUBLIC_API}/user?id=${ueserId}`)
+            .then((response) => {
+              console.log(response?.data?.jobIds3D, "dsfgdgfd")
+              setproject(response.data);
+              setJobId(response?.data?.jobIds3D);
+              // return response.data;
+            })
+            .catch((error) => {
+              console.error(error);
+              return error;
+            });
+          }
+          // window.open(`/generate/${datares?._id}`, "_self");
+        } catch (error) {
+          setLoader(false);
+        }
+      }
+    }
+  }
+  };
+
   const [reloder, setreLoader] = useState(true);
 
   // regenrate
@@ -1388,7 +1474,10 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       value={{
         canvasDisable,
         TdImage,
-        file3dUrl, setFile3dUrl,
+        tdFormate,
+        setTdFormate,
+        file3dUrl,
+        setFile3dUrl,
         set3DImage,
         setCanvasDisable,
         galleryActivTab,
@@ -1398,6 +1487,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         AssetsActivTab,
         setassetsActiveTab,
         crop,
+        generate3dHandeler,
         setCrop,
         stageRef,
         mode,

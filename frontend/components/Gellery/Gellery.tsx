@@ -17,37 +17,38 @@ const fadeIn = {
 const Gellery = () => {
   const { userId } = useAuth();
 
-  const [gallery, setGallery] = useState()
+  const [gallery, setGallery] = useState();
 
-  const { fetchGeneratedImages, generatedImgList,setPopupImage, setGeneratedImgList,    galleryActivTab, setgalleryActiveTab} =
-    useAppState();
+  const {
+    fetchGeneratedImages,
+    generatedImgList,
+    setPopupImage,
+    setGeneratedImgList,
+    galleryActivTab,
+    setgalleryActiveTab,
+  } = useAppState();
 
-const [laoder, setlaoder] = useState(true)
+  const [laoder, setlaoder] = useState(true);
 
   // useEffect(() => {
   //   if (userId) {
   //     fetchGeneratedImages(userId);
-
 
   //     axios
   //     .get(`${process.env.NEXT_PUBLIC_API}/user?id=${userId}`)
   //     .then((response) => {
   //       console.log(response.data.jobIds);
   //       console.log(response, "adsfnbdhjskgvyuifdsgh");
-        
+
   //       const  filteredResult = generatedImgList.filter((obj) =>
   //       response.data.jobIds?.includes(obj?.task_id)
   //       )
   //       // setGallery(filteredResult)
- 
-       
+
   //     })
-
-
 
   //     .catch((error) => {
   //       console.error(error);
-
 
   //       return error;
   //     });
@@ -55,39 +56,57 @@ const [laoder, setlaoder] = useState(true)
   // }, []);
 
   useEffect(() => {
-    if ( userId) {
+    if (userId) {
       fetchAssetsImages();
     }
   }, [userId, galleryActivTab]);
 
   const fetchAssetsImages = async () => {
-    setlaoder(true)
+    setlaoder(true);
+
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API}/generatedImg?userId=${userId}`,
-        {
-          method: "GET",
+      if (galleryActivTab === "ai") {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API}/generatedImg?userId=${userId}`,
+          {
+            method: "GET",
+          }
+        );
+        const data = await response.json();
+        console.log(data, "dd");
+
+        if (data?.length) {
+          if (galleryActivTab === "ai") {
+            setGallery(data);
+            setlaoder(false);
+          } else {
+          }
         }
-      );
-      const data = await response.json();
+        setlaoder(false);
+      } else {
+        const response = await fetch(`/api/getbanner`, {
+          method: "POST",
+          body: JSON.stringify({
+            user_id: userId,
+          }),
+        });
+        const data = await response.json();
+        console.log(data, "gelery");
 
-      if (data?.length) {
-        if(galleryActivTab === "ai"){
+        if (data?.length) {
+          //   if (galleryActivTab === "ai") {
+          //     setGallery(data);
+          //     setlaoder(false);
+          //   } else {
+          //   }
 
-          setGallery(data)
-      setlaoder(false)
-        }else{
-          setGallery([])
-
+          setGallery(data);
         }
 
-
+        setlaoder(false);
       }
-    setlaoder(false)
-
-
     } catch (error) {
-    setlaoder(false)
+      setlaoder(false);
 
       console.error("Error fetching images:", error);
     }
@@ -95,8 +114,7 @@ const [laoder, setlaoder] = useState(true)
 
   return (
     <motion.div initial="hidden" animate="visible" variants={fadeIn}>
-   
-        <GelleryWrapper>
+      <GelleryWrapper>
         <div className="hederbox">
           <div className="headerText">Gallery</div>
           <div className="small-tabs">
@@ -106,7 +124,7 @@ const [laoder, setlaoder] = useState(true)
                 setgalleryActiveTab("ai");
               }}
             >
-              AI Generation  {" "}
+              AI Generation{" "}
             </div>
             <div
               className={galleryActivTab === "banner" ? "tab activeTAb" : "tab"}
@@ -120,27 +138,58 @@ const [laoder, setlaoder] = useState(true)
         </div>
 
         <div className="imageBox">
-        {
-        laoder? 
-        <Loader h={true}></Loader>:
-          <div className="grid-img">
-            {gallery?.map((image, i) => (
-              <div key={i} className="img" onClick={()=> setPopupImage({url:image?.modified_image_url, status: true,userId:userId, btn:"Download ",generat:false, index: i, list: gallery })}>
-                <picture>
-                  <img src={image?.modified_image_url} alt="" />
-                </picture>
-              </div>
-            ))}
-          </div>
-}
+          {laoder ? (
+            <Loader h={true}></Loader>
+          ) : (
+            <div className="grid-img">
+              {galleryActivTab === "ai"
+                ? gallery?.map((image, i) => (
+                    <div
+                      key={i}
+                      className="img"
+                      onClick={() =>
+                        setPopupImage({
+                          url: image?.modified_image_url,
+                          status: true,
+                          userId: userId,
+                          btn: "Download ",
+                          generat: false,
+                          index: i,
+                          list: gallery,
+                        })
+                      }
+                    >
+                      <picture>
+                        <img src={image?.modified_image_url} alt="" />
+                      </picture>
+                    </div>
+                  ))
+                : gallery?.map((image, i) => (
+                    <div
+                      key={i}
+                      className="img"
+                      onClick={() =>
+                        setPopupImage({
+                          url: image?.image_url,
+                          status: true,
+                          userId: userId,
+                          btn: "Download ",
+                          generat: false,
+                          index: i,
+                          list: gallery,
+                        })
+                      }
+                    >
+                      <picture>
+                        <img src={image?.image_url} alt="" />
+                      </picture>
+                    </div>
+                  ))}
+              {/* {} */}
+            </div>
+          )}
         </div>
-          
       </GelleryWrapper>
-
-
-
-  
-      
     </motion.div>
   );
 };
@@ -169,12 +218,12 @@ const GelleryWrapper = styled.div`
       background: #ececec;
       height: max-content;
       padding: 4px 15px;
+      cursor: pointer;
       border-radius: 7px;
     }
     .activeTAb {
       background-color: ${({ theme }) => theme.btnPrimary};
     }
-    
   }
   .imageBox {
     margin-top: 20px;
