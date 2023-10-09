@@ -48,7 +48,11 @@ const Tools = () => {
           {toolslist?.map((tool: object[]) => (
             <div className="tool-cards" onClick={()=> Redirect(tool.url)} >
               <div className="imgeWrapper">
-                <div className="imgbox"></div>
+                <div className="imgbox">
+                  <picture>
+                    <img src="https://www.notion.so/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2Fa4336ca6-f4ed-458c-b743-2a86cc9620a1%2Fb9317de9-c1b7-4f6e-b553-c2c44f2577f3%2FUntitled.png?table=block&id=1ce4a0a1-78eb-4cba-96c9-e971ae054f63&spaceId=a4336ca6-f4ed-458c-b743-2a86cc9620a1&width=860&userId=4a875d3f-c33d-4324-9807-2fb21ead789e&cache=v2" alt="" />
+                  </picture>
+                </div>
               </div>
               <div className="tool-details">
                 <div className="name">{tool.name}</div>
@@ -79,16 +83,27 @@ const ToolsWrapper = styled.div`
       border: 1px solid #d9d9d9;
 
       .imgeWrapper {
-        height: 150px;
-        padding: 5px;
+        height: 190px;
+        /* padding: 5px; */
         width: 100%;
-        border-radius: 7px;
+        border-top-left-radius: 7px;
+        border-top-right-radius: 7px;
+
         overflow: hidden;
         .imgbox {
           width: 100%;
           height: 100%;
           background-color: #d9d9d9;
-          border-radius: 7px;
+          /* border-radius: 7px; */
+          picture{
+            width: 100%;
+            height: 100%;
+          }
+          img{
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
         }
       }
 

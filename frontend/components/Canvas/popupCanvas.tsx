@@ -43,7 +43,7 @@ const PopupCanvas = () => {
     setMode,
     Inpainting,
     stageRef,
-    HandleInpainting,
+    // HandleInpainting,
     addimgToCanvasSubject
 
     // canvasRef

@@ -55,7 +55,7 @@ const Edit = () => {
     setLines,
     magicLoader,
     setMagicloder,
-    HandleInpainting,
+    // HandleInpainting,
     crop, setCrop,
     loader
   } = useAppState();

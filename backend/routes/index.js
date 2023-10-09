@@ -190,7 +190,7 @@ router.post("/assets", async function (req, res, next) {
         error: "user not found",
       });
     }
- 
+
     console.log(userId, projectId, asset, assetType);
 
     const creatdUserrAssets = new Assets({

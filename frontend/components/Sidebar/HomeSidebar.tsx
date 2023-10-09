@@ -34,7 +34,7 @@ const HomeSidebar = () => {
     },
     {
       id: 4,
-      // disable:true,
+      disable:false,
 
       image: assets.icons.user_icon,
       tittle: "Tools",

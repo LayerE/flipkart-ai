@@ -12,8 +12,8 @@ type ContextProviderProps = {
 };
 
 interface ContextITFC {
-  canvasInstance: React.MutableRefObject<any | null>;
-  outerDivRef: React.MutableRefObject<any | null>;
+  // canvasInstance: React.MutableRefObject< null>;
+  // outerDivRef: React.MutableRefObject<any | null>;
   addimgToCanvas: (url: string) => void;
   addimgToCanvasSubject: (url: string) => void;
   addimgToCanvasGen: (url: string) => void;
@@ -100,9 +100,8 @@ export const AppContext = createContext<ContextITFC>({
   EditorBox: null,
   editorBox: null,
   setEditorBox: () => {},
-
-  canvasInstance: null,
-  outerDivRef: null,
+  // canvasInstance: null,
+  // outerDivRef: null,
   addimgToCanvas: () => {},
   addimgToCanvasSubject: () => {},
   addimgToCanvasGen: () => {},
@@ -110,7 +109,6 @@ export const AppContext = createContext<ContextITFC>({
   setModifidImageArray: (modifidImageArray: string[]) => {},
   undoArray: [],
   setUndoArray: (undoArray: string[]) => {},
-
   getBase64FromUrl: () => {},
   file: null,
   setFile: () => {},
@@ -161,7 +159,7 @@ export const AppContext = createContext<ContextITFC>({
 });
 
 export const AppContextProvider = ({ children }: ContextProviderProps) => {
-  const canvasInstance = useRef(null);
+  const canvasInstance = useRef<any | null>(null);
   const [filteredArray, setFilteredArray] = useState([]);
 
   const outerDivRef = useRef(null);
@@ -255,7 +253,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [TdImage, set3DImage] = useState(null);
   const [renderer, setRenderer] = useState(null);
 
-
   const [TDMode, set3dMode] = useState(false);
 
   const [re, setRe] = useState(1);
@@ -267,23 +264,31 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [magicLoader, setMagicloder] = useState(false);
   const [crop, setCrop] = useState(false);
 
-  const stageRef = useRef(null);
+  const stageRef = useRef<fabric.Canvas | null>(null);
 
-  const saveImage = () => {
-    const stage = stageRef.current;
+  // const saveImage = () => {
+  //   const stage = stageRef.current;
+  //   if (stage) {
+  //     const dataURL = stage.toDataURL();
+  //     return dataURL;
+  //   }
+  // };
+  // const saveCanvasToBlobURL = () => {
+  //   const canvas = stageRef.current;
+  //   if (canvas) {
+  //     const imageObject = canvas.findOne("Image")
+  //     if (imageObject instanceof fabric.Object) {
+  //       // canvas.findOne("Image").hide();
+  //       // const base = canvas.toDataURL();
+  //       // canvas.findOne("Image").show();
+  //       imageObject.hide();
+  //       const base = canvas.toDataURL();
+  //       imageObject.show();
 
-    const dataURL = stage.toDataURL();
-
-    return dataURL;
-  };
-  const saveCanvasToBlobURL = () => {
-    const canvas = stageRef.current;
-    canvas.findOne("Image").hide();
-    const base = canvas.toDataURL();
-    canvas.findOne("Image").show();
-
-    return base;
-  };
+  //       return base;
+  //     }
+  //   }
+  // };
 
   const Inpainting = async (
     photo: string,
@@ -321,13 +326,13 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
     return dataURL;
   };
-  const HandleInpainting = async () => {
-    setMagicloder(true);
-    const mask = await saveCanvasToBlobURL();
-    const ogimage = await saveImage();
+  // const HandleInpainting = async () => {
+  //   setMagicloder(true);
+  //   const mask = await saveCanvasToBlobURL();
+  //   const ogimage = await saveImage();
 
-    await Inpainting(ogimage, "hero.png", mask);
-  };
+  //   await Inpainting(ogimage, "hero.png", mask);
+  // };
 
   const [activeSize, setActiveSize] = useState({
     id: 1,
@@ -347,14 +352,15 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     saveAs(url, `image${Date.now()}.${downloadeImgFormate}`);
   };
 
-  const getBase64FromUrl = async (url: string) => {
+  const getBase64FromUrl = async (url: string): Promise<string>=> {
     const data = await fetch(url);
     const blob = await data.blob();
     return new Promise((resolve) => {
       const reader = new FileReader();
       reader.readAsDataURL(blob);
       reader.onloadend = () => {
-        const base64data = reader.result;
+        // const base64data = reader.result
+        const base64data = reader.result  as string;;
         resolve(base64data);
       };
     });
@@ -367,41 +373,15 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     }
   };
 
-  // useEffect(() => {
-  //   if (!canvasInstance.current) {
-  //     canvasInstance.current = new fabric.Canvas(canvasRef.current, {
-  //       width: window.innerWidth,
-  //       height: window.innerHeight,
-  //       // transparentCorners: false,
-  //       // originX: "center",
-  //       // originY: "center",
-  //     });
-  //   }
-
-  //   // Resize canvas when the window is resized
-  //   window.addEventListener("resize", () => {
-  //     canvasInstance.current.setDimensions({
-  //       width: window.innerWidth,
-  //       height: window.innerHeight,
-  //     });
-  //   });
-  //   return () => {
-  //     window.removeEventListener("resize", null);
-  //     // Clean up resources (if needed) when the component unmounts
-  //     //  canvasInstanceRef.dispose();
-  //   };
-  // }, []);
+ 
 
   const addimgToCanvas = async (url: string) => {
     fabric.Image.fromURL(await getBase64FromUrl(url), function (img: any) {
-      // Set the image's dimensions
+
       img.scaleToWidth(150);
       // img.scaleToHeight(150);
-      // Scale the image to have the same width and height as the rectangle
-      // const scaleX = downloadRect.width / img.width;
-      // const scaleY = downloadRect.height / img.height;
-      // Position the image to be in the center of the rectangle
-      const getRandomPosition = (max) => Math.floor(Math.random() * max);
+
+      const getRandomPosition = (max:number) => Math.floor(Math.random() * max);
       const randomLeft = getRandomPosition(
         canvasInstance?.current.width / 2 - img.width
       );
@@ -411,8 +391,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       img.set({
         left: randomLeft,
         top: randomTop,
-        // scaleX: scaleX,
-        // scaleY: scaleY,
         zIndex: 10,
       });
       img.on("selected", () => {
@@ -892,7 +870,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         }
       );
       const data = await response.json();
-      console.log(await data);
+      // console.log(await data);
 
       if (data?.length) {
         setListOfAssets(await data);
@@ -1186,7 +1164,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     } else {
       if (renderer === null) {
       } else {
-        console.log("dsfdfgdg")
+        console.log("dsfdfgdg");
         setLoader(true);
 
         const promtText = promtFull;
@@ -1242,14 +1220,10 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
               setJobIdOne([generate_response?.job_id]);
 
               GetProjextById(proid);
-        
-
             }
             // window.open(`/generate/${datares?._id}`, "_self");
           } catch (error) {
-
-          setLoader(false);
-
+            setLoader(false);
           }
         }
       }
@@ -1428,7 +1402,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setMode,
         handleZoomIn,
         Inpainting,
-        HandleInpainting,
+        // HandleInpainting,
         magicLoader,
         setMagicloder,
         linesHistory,
@@ -1598,8 +1572,10 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setRe,
         TDMode,
         set3dMode,
-        renderer, setRenderer,
-        assetL3doader, setasset3dLoader
+        renderer,
+        setRenderer,
+        assetL3doader,
+        setasset3dLoader,
       }}
     >
       {children}

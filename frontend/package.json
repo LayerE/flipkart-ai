@@ -55,5 +55,9 @@
   },
   "resolutions": {
     "styled-components": "^6.0.5"
+  },
+  "devDependencies": {
+    "@types/fabric": "^5.3.4",
+    "@types/file-saver": "^2.0.5"
   }
 }

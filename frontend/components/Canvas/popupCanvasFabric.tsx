@@ -43,7 +43,7 @@ const PopupCanvasFabric = () => {
     setMode,
     Inpainting,
     stageRef,
-    HandleInpainting
+    // HandleInpainting
 
     // stageRef
   } = useAppState();

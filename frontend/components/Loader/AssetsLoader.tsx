@@ -69,7 +69,7 @@ export const AssetsLoader = () => {
         <div>
           <span className="words-wrapper">
             <b className="is-visible">Uploading...</b>
-            <b>Removing background...</b>
+            {/* <b>Removing background...</b> */}
 
             {/* <b>Refreshing objects...</b>
             <b>Refredsfsdfdsfsdfshing objects...</b> */}

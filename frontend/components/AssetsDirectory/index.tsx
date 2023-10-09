@@ -33,14 +33,23 @@ const AssetsDir = () => {
     uploadedProductlist,
     brandassetLoader,
     setbrandassetLoader,
+    fetchAssetsImagesWithProjectId,
+     
+  
+    setPopup,
+    
+    setUploadedProductlist,
+    setProduct,
+    addimgToCanvasSubject,
     // re, setRe,
 
-    setPopup,
+  
   } = useAppState();
   const [assers, setAssets] = useState();
   // const [re, setRe] = useState(1);
 
   const { query, isReady } = useRouter();
+  const { id } = query;
 
   useEffect(() => {
     if (userId) {
@@ -61,10 +70,7 @@ const AssetsDir = () => {
       // }
     }
   }, [isReady, userId, AssetsActivTab, listofassets]);
-  // useEffect(() => {
-  //   console.log("dcfdsfds");
-  // }, [AssetsActivTab, uploadedProductlist]);
-  // listofassets
+
 
   const handleFileChange = (event) => {
     // setassetLoader(true);
@@ -78,6 +84,7 @@ const AssetsDir = () => {
         reader.onloadend = async () => {
           // const filename = `img${Date.now()}`;
           // setLoader(true);
+          console.log(reader.result,"imge");
 
           const response = await fetch("/api/upload", {
             method: "POST",
@@ -88,7 +95,6 @@ const AssetsDir = () => {
               project_id: null,
             }),
           });
-          console.log(response);
 
           if (response?.status === 413) {
             toast.error("Image exceeded 4mb limit");
@@ -106,12 +112,45 @@ const AssetsDir = () => {
           const data = await response.json();
 
           if (data?.data) {
-            setPopup({
-              status: true,
-              data: data?.data.data[0],
-              dataArray: data,
+            // setPopup({
+            //   status: true,
+            //   data: data?.data.data[0],
+            //   dataArray: data,
+            // });
+
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API}/assets`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                userId: userId,
+                projectId: id,
+                assetType: AssetsActivTab,
+    
+                asset: { url: data.imageUrl, product: null },
+              }),
             });
+    
+            const datares = await response;
+            console.log(datares);
+    
+            if (datares) {
+              fetchAssetsImages(userId, null);
+              addimgToCanvasSubject(data?.data.data[0]);
+              fetchAssetsImagesWithProjectId(userId, id);
+              // setTimeout(() => {
+                
+              // }, 500);
+    
+              // setUploadedProductlist((prev) => [
+              //   ...prev,
+              //   { url: popup?.data, tittle: productnew },
+              // ]);
+              // setProduct(productnew);
+              // setPopup({ status: false, data: null });
             setbrandassetLoader(false);
+            }
           } else {
             console.log("bg not removed");
 
@@ -192,9 +231,7 @@ const AssetsDir = () => {
             ) : null}
 
             {assers?.map((image, i) => (
-              <div className="We"
-              key={i}
-              >
+              <div className="We" key={i}>
                 {/* <div className="btns">
                   <button className="selectone" onClick={() => DeletIrem()}>
                     <svg
@@ -233,7 +270,7 @@ const AssetsDir = () => {
                   className="img"
                   onClick={() =>
                     setPopupImage({
-                      id:image?._id,
+                      id: image?._id,
                       url: image?.url.url,
                       status: true,
                       userId: userId,

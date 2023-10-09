@@ -1,4 +1,4 @@
-import { TextLoaderNo } from "@/components/Loader/text";
+import { TextLoaderNo, TextLoaderNoRevove } from "@/components/Loader/text";
 import { useAppState } from "@/context/app.context";
 import { BgRemover } from "@/store/api";
 import React, { useState, useEffect, useRef } from "react";
@@ -300,7 +300,7 @@ export const FileUpload: React.FC = ({ type, title, uerId }) => {
       <div>
         {assetLoader ? (
           <label htmlFor="fileInput" style={{ cursor: "pointer" }}>
-            <TextLoaderNo />
+            <TextLoaderNoRevove />
           </label>
         ) : (
           <>
@@ -401,7 +401,7 @@ export const FileUpload3D: React.FC = ({ type, title, uerId }) => {
       <div>
         {assetL3doader ? (
           <label htmlFor="fileInput" style={{ cursor: "pointer" }}>
-            <TextLoaderNo />
+            <TextLoaderNoRevove />
           </label>
         ) : (
           <>

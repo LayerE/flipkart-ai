@@ -68,19 +68,19 @@ const Canvas3d = () => {
         scene.add(object);
         // render();
         // Adjust the camera position and rotation to focus on the loaded object
-        // const boundingBox = new THREE.Box3().setFromObject(object);
-        // const center = boundingBox.getCenter(new THREE.Vector3());
-        // const size = boundingBox.getSize(new THREE.Vector3());
+        const boundingBox = new THREE.Box3().setFromObject(object);
+        const center = boundingBox.getCenter(new THREE.Vector3());
+        const size = boundingBox.getSize(new THREE.Vector3());
 
         // Calculate the distance to fit the object in the view
-        // const maxDim = Math.max(size.x, size.y, size.z);
-        // const fov = camera.fov * (Math.PI / 180);
-        // const distance = Math.abs(maxDim / Math.sin(fov / 2));
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const fov = camera.fov * (Math.PI / 180);
+        const distance = Math.abs(maxDim / Math.sin(fov / 2));
 
         // Set the camera position and look at the object
-        // camera.position.copy(center);
-        // camera.position.z += distance;
-        // camera.lookAt(center);
+        camera.position.copy(center);
+        camera.position.z += distance;
+        camera.lookAt(center);
         setasset3dLoader(false);
 
         //   renderer.render(scene, camera);
