@@ -13,7 +13,7 @@ export default authMiddleware({
     "/api/canvasdata",
     "/api/upscale",
     "/api/upload",
-
+    "/api/uploadbrandasset",
   ],
 });
 
