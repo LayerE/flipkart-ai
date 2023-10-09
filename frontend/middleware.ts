@@ -14,6 +14,7 @@ export default authMiddleware({
     "/api/upscale",
     "/api/upload",
     "/api/uploadbrandasset",
+    "/api/getassets",
   ],
 });
 
