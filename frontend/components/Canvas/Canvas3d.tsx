@@ -74,7 +74,7 @@ const Canvas3d = () => {
             // child.material.map = texture;
             // child.material.color.setrgb(191, 14, 14)
             if (filsizeMorethan10) {
-              child.material.color.set(0xc8c8c8);
+              // child.material.color.set(0xc8c8c8);
 
               child.material = new THREE.MeshBasicMaterial({ color: 0xc8c8c8 });
             } else {
