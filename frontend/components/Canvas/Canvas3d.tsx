@@ -8,6 +8,8 @@ import { FBXLoader } from "three/addons/loaders/FBXLoader.js";
 import { STLLoader } from "three/addons/loaders/STLLoader.js";
 import { PLYLoader } from "three/addons/loaders/PLYLoader.js";
 
+import Stats from "three/examples/jsm/libs/stats.module";
+
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import assets from "@/public/assets";
 import { useAppState } from "@/context/app.context";
@@ -37,6 +39,8 @@ const Canvas3d = () => {
     setTdFormate,
     filsizeMorethan10,
     setfilsizeMorethan10,
+    setActiveSize,
+    activeSize,
   } = useAppState();
 
   let camera, scene, object, controls, renderNew;
@@ -45,46 +49,56 @@ const Canvas3d = () => {
 
   const [re, setRe] = useState(1);
   useEffect(() => {
-    containerRef.current.style.width = "400px";
-    containerRef.current.style.height = "400px";
+    containerRef.current.style.width = `${activeSize.w}px`;
+    containerRef.current.style.height = `${activeSize.h}px`;
     let renderer;
     const init = () => {
-      camera = new THREE.PerspectiveCamera(45, 400 / 400, 0.25, 2000);
-      camera.position.set(-1.8, 0.6, 2.7);
-      // camera.position.z = 0;
+      camera = new THREE.PerspectiveCamera(
+        75,
+        activeSize.w / activeSize.h,
+        0.1,
+        1000
+      );
+      // camera.position.set(-1.8, 0.6, 2.7);
+      camera.position.z = 2;
       // camera.position.set(-20.5, 0.5, 8.0);
       // camera.lookAt(new THREE.Vector3(0, 0, 0));
       scene = new THREE.Scene();
+      // const axesHelper = new THREE.AxesHelper(5)
+      // scene.add(axesHelper)
 
+      renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        preserveDrawingBuffer: true,
+      });
+      // renderer.useLegacyLights = false;
+      // renderer.shadowMap.enabled = true;
       const ambientLight = new THREE.AmbientLight(0x404040);
       scene.add(ambientLight);
-      const pointLight = new THREE.PointLight(0xff0000, 1, 100);
-      pointLight.position.set(50, 50, 50);
-      pointLight.position.set(2, 2, 2); // Adjust the position according to your scene
-      camera.add(pointLight);
-      scene.add(camera);
+      const pointLight = new THREE.PointLight(0xff0000, 100);
+      // pointLight.position.set(50, 50, 50);
+      pointLight.position.set(2.5, 4.5, 15);
+      // scene.add(pointLight);
+      // scene.add(camera);
       const light = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
+      light.position.set(2.5, 7.5, 15);
       scene.add(light);
 
       function loadModel() {
-        console.log("1111");
-
         object.traverse(function (child) {
           if (child.isMesh) {
             // child.material.map = texture;
             // child.material.color.setrgb(191, 14, 14)
             if (filsizeMorethan10) {
               // child.material.color.set(0xc8c8c8);
-
-              child.material = new THREE.MeshBasicMaterial({ color: 0xc8c8c8 });
+              // child.material = new THREE.MeshBasicMaterial({ color: 0xc8c8c8 });
             } else {
               child.material = child.material.clone();
             }
             // child.material = child.material.clone();
-            console.log("1111 indwe");
           } else {
             if (filsizeMorethan10) {
-              child.material = new THREE.MeshBasicMaterial({ color: 0xc8c8c8 });
+              // child.material = new THREE.MeshBasicMaterial({ color: 0xc8c8c8 });
             }
           }
         });
@@ -100,7 +114,6 @@ const Canvas3d = () => {
         const center = boundingBox.getCenter(new THREE.Vector3());
 
         const size = boundingBox.getSize(new THREE.Vector3());
-        console.log("111sssssssssssss1");
 
         // Calculate the distance to fit the object in the view
         const maxDim = Math.max(size.x, size.y, size.z);
@@ -116,53 +129,10 @@ const Canvas3d = () => {
         setasset3dLoader(false);
       }
 
-      function loadModeClonel() {
-        console.log("1111");
-
-        object.traverse(function (child) {
-          if (child.isMesh) {
-            // child.material.map = texture;
-            // child.material.color.setrgb(191, 14, 14)
-            child.material = new THREE.MeshBasicMaterial({ color: 0xc8c8c8 });
-            // child.material = child.material.clone();
-            // child.material = child.material.clone();
-            child.material.color.set(0xc8c8c8);
-            console.log("1111 indwe");
-          } else {
-            child.material = new THREE.MeshBasicMaterial({ color: 0xc8c8c8 });
-          }
-        });
-        // object.position.y = -0.5;
-        // object.scale.setScalar(0.07);
-        container.add(object);
-        scene.add(container);
-        // scene.add(object);
-        console.log("11sssssssssssss11");
-
-        // Adjust the camera position and rotation to focus on the loaded object
-        const boundingBox = new THREE.Box3().setFromObject(object);
-        const center = boundingBox.getCenter(new THREE.Vector3());
-        const size = boundingBox.getSize(new THREE.Vector3());
-        console.log("111sssssssssssss1");
-
-        // Calculate the distance to fit the object in the view
-        const maxDim = Math.max(size.x, size.y, size.z);
-        const fov = camera.fov * (Math.PI / 180);
-        const distance = Math.abs(maxDim / Math.sin(fov / 2));
-        console.log("1ssssssssssssssssssss111");
-
-        // Set the camera position and look at the object
-        camera.position.copy(center);
-
-        // camera.position.z += distance;
-        camera.lookAt(center);
-        setasset3dLoader(false);
-      }
       const postingCenter = (object) => {
         const boundingBox = new THREE.Box3().setFromObject(object);
         const center = boundingBox.getCenter(new THREE.Vector3());
         const size = boundingBox.getSize(new THREE.Vector3());
-        console.log("111sssssssssssss1");
 
         // Calculate the distance to fit the object in the view
         const maxDim = Math.max(size.x, size.y, size.z);
@@ -172,32 +142,11 @@ const Canvas3d = () => {
 
         // Set the camera position and look at the object
         camera.position.copy(center);
-        camera.position.y += distance;
-        object.position.set(0, -300, 0);
+        // camera.position.y += distance;
+        // object.position.set(0, 1, 0);
 
         camera.position.z += distance;
         camera.lookAt(center);
-        setasset3dLoader(false);
-      };
-
-      const postingCenterddd = (object) => {
-        const boundingBox = new THREE.Box3().setFromObject(object);
-        const center = boundingBox.getCenter(new THREE.Vector3());
-        const size = boundingBox.getSize(new THREE.Vector3());
-
-        // Calculate the distance to fit the object in the view
-        const maxDim = Math.max(size.x, size.y, size.z);
-        const fov = camera.fov * (Math.PI / 180);
-        const distance = Math.abs(maxDim / Math.sin(fov / 2));
-
-        // Set the camera position and look at the object
-        console.log(center);
-        camera.position.copy(center);
-        camera.position.y += distance;
-        object.position.set(0, 0, 0);
-        camera.position.z += distance;
-        camera.lookAt(center);
-
         setasset3dLoader(false);
       };
 
@@ -226,10 +175,7 @@ const Canvas3d = () => {
         setasset3dLoader(false);
       }
       const container = new THREE.Group();
-      renderer = new THREE.WebGLRenderer({
-        antialias: true,
-        preserveDrawingBuffer: true,
-      });
+
       let loader;
       if (tdFormate === ".obj") {
         loader = new OBJLoader();
@@ -244,7 +190,7 @@ const Canvas3d = () => {
       } else if (tdFormate === ".stl") {
         loader = new STLLoader();
       } else if (tdFormate === ".ply") {
-        loader = new STLLoader();
+        loader = new PLYLoader();
       }
 
       console.log(file3d, "dsfdsfds", file3dUrl);
@@ -252,6 +198,8 @@ const Canvas3d = () => {
         setshowText(true);
 
         if (tdFormate === ".obj") {
+          setasset3dLoader(true);
+
           loader.load(
             file3dUrl,
             (obj) => {
@@ -264,7 +212,7 @@ const Canvas3d = () => {
             onError
           );
         } else if (tdFormate === ".3ds") {
-          // console.log(file3d,"dsfggggggggggggggggggggggggdsfds",file3dUrl);
+          setasset3dLoader(true);
 
           loader.load(
             file3dUrl,
@@ -280,13 +228,33 @@ const Canvas3d = () => {
             onError
           );
         } else if (tdFormate === ".gltf") {
+          setasset3dLoader(true);
+
           loader.load(
             file3dUrl,
             // "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
-            (gltf) => {
-              const model = gltf.scene;
-              scene.add(model);
-              postingCenter(gltf);
+            (object) => {
+              object.scene.traverse(function (child) {
+                if (child.type === "Mesh") {
+                  let m = child;
+                  m.receiveShadow = true;
+                  m.castShadow = true;
+                }
+                if (child.type === "SpotLight") {
+                  let l = child;
+                  l.castShadow = true;
+                  l.shadow.bias = -0.003;
+                  l.shadow.mapSize.width = 2048;
+                  l.shadow.mapSize.height = 2048;
+                }
+              });
+              // progressBar.style.display = 'none'
+              scene.add(object.scene);
+              // gltf.animations; // Array<THREE.AnimationClip>
+              // gltf.scene; // THREE.Group
+              // gltf.scenes; // Array<THREE.Group>
+              // gltf.cameras; // Array<THREE.Camera>
+              // gltf.asset; // Object
 
               setasset3dLoader(false);
             },
@@ -294,24 +262,26 @@ const Canvas3d = () => {
             onError
           );
         } else if (tdFormate === ".fbx") {
+          setasset3dLoader(true);
+          const material = new THREE.MeshNormalMaterial();
+
           loader.load(
             file3dUrl,
             // "https://ik.imagekit.io/7urmiszfde/indoor%20plant_02_+2.fbx?updatedAt=1696879483866",
             (object) => {
               object.traverse(function (child) {
                 if (child.isMesh) {
-                  // child.material.map = texture;
-                  // child.material.color.setrgb(191, 14, 14)
-                  // child.material = new THREE.MeshBasicMaterial({ color: 0xc8c8c8 });
-                  // child.material = child.material.clone();
-                  child.material = child.material.clone();
-                  // child.material.color.set(0xc8c8c8);
-                  console.log("1111 indwe");
+                  child.material = material;
+                  if (child.material) {
+                    child.material.transparent = false;
+                  }
                 }
               });
-              container.add(object);
-              scene.add(container);
+              object.scale.set(0.01, 0.01, 0.01);
               postingCenter(object);
+              scene.add(object);
+              // container.add(object);
+              // scene.add(container);
 
               setasset3dLoader(false);
             },
@@ -319,6 +289,8 @@ const Canvas3d = () => {
             onError
           );
         } else if (tdFormate === ".mtl") {
+          setasset3dLoader(true);
+
           loader.load(
             file3dUrl,
             // "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
@@ -333,14 +305,32 @@ const Canvas3d = () => {
             onError
           );
         } else if (tdFormate === ".stl") {
+          setasset3dLoader(true);
+
           loader.load(
             file3dUrl,
             // "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
             (geometry) => {
-              const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+              const material = new THREE.MeshPhysicalMaterial({
+                color: 0xb2ffc8,
+                // envMap: envTexture,
+                metalness: 0.25,
+                roughness: 0.1,
+                opacity: 1.0,
+                transparent: true,
+                transmission: 0.99,
+                clearcoat: 1.0,
+                clearcoatRoughness: 0.25,
+              });
               const mesh = new THREE.Mesh(geometry, material);
               scene.add(mesh);
-              postingCenter(geometry);
+              mesh.rotateX(-Math.PI / 2);
+
+              camera.position.z += 200;
+              // camera.lookAt(200);
+              console.log(geometry, "fgdgfd");
+
+              // postingCenter(geometry);
 
               setasset3dLoader(false);
             },
@@ -352,10 +342,25 @@ const Canvas3d = () => {
             file3dUrl,
             // "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
             (geometry) => {
-              const material = new THREE.MeshNormalMaterial();
+              const material = new THREE.MeshPhysicalMaterial({
+                color: 0xb2ffc8,
+                // envMap: envTexture,
+                metalness: 0,
+                roughness: 0,
+                transparent: true,
+                transmission: 1.0,
+                side: THREE.DoubleSide,
+                clearcoat: 1.0,
+                clearcoatRoughness: 0.25,
+              });
+
+              // geometry.computeVertexNormals()
               const mesh = new THREE.Mesh(geometry, material);
+              mesh.rotateX(-Math.PI / 2);
               scene.add(mesh);
-              postingCenter(geometry);
+              camera.position.z += 150;
+
+              // postingCenter(geometry);
 
               setasset3dLoader(false);
             },
@@ -369,6 +374,8 @@ const Canvas3d = () => {
         }
 
         if (tdFormate === ".obj") {
+          setasset3dLoader(true);
+
           loader.load(
             file3d,
             (obj) => {
@@ -380,6 +387,8 @@ const Canvas3d = () => {
             onError
           );
         } else if (tdFormate === ".3ds") {
+          setasset3dLoader(true);
+
           loader.load(
             // "https://ik.imagekit.io/7urmiszfde/Bottle%20Coca-Cola%20N080710.3ds?updatedAt=1696856138699",
             file3d,
@@ -389,20 +398,38 @@ const Canvas3d = () => {
               postingCenter(object);
 
               setasset3dLoader(false);
-            }
-            // onProgress,
-            // onError
+            },
+            onProgress,
+            onError
           );
         } else if (tdFormate === ".gltf") {
+          setasset3dLoader(true);
+
           loader.load(
             file3d,
             // "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
             (object) => {
-              const model = object.scene;
-              console.log(model, "fggf");
-              scene.add(model);
-              // camera.position.y += 20;
-              postingCenterddd(object.scene);
+              object.scene.traverse(function (child) {
+                if (child.type === "Mesh") {
+                  let m = child;
+                  m.receiveShadow = true;
+                  m.castShadow = true;
+                }
+                if (child.type === "SpotLight") {
+                  let l = child;
+                  l.castShadow = true;
+                  l.shadow.bias = -0.003;
+                  l.shadow.mapSize.width = 2048;
+                  l.shadow.mapSize.height = 2048;
+                }
+              });
+              // progressBar.style.display = 'none'
+              scene.add(object.scene);
+              // gltf.animations; // Array<THREE.AnimationClip>
+              // gltf.scene; // THREE.Group
+              // gltf.scenes; // Array<THREE.Group>
+              // gltf.cameras; // Array<THREE.Camera>
+              // gltf.asset; // Object
 
               setasset3dLoader(false);
             },
@@ -410,12 +437,15 @@ const Canvas3d = () => {
             onError
           );
         } else if (tdFormate === ".mtl") {
+          setasset3dLoader(true);
+
           loader.load(
             file3d,
             // "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
             (object) => {
               const model = object.scene;
               scene.add(model);
+              object.preload();
 
               setasset3dLoader(false);
             },
@@ -423,37 +453,58 @@ const Canvas3d = () => {
             onError
           );
         } else if (tdFormate === ".fbx") {
+          setasset3dLoader(true);
+
+          const material = new THREE.MeshNormalMaterial();
           loader.load(
             file3d,
             // "https://ik.imagekit.io/7urmiszfde/rp_nathan_animated_003_walking.fbx?updatedAt=1696878521110",
             (object) => {
               object.traverse(function (child) {
                 if (child.isMesh) {
-                  // child.material.map = texture;
-                  // child.material.color.setrgb(191, 14, 14)
-                  child.material = new THREE.MeshBasicMaterial({
-                    color: 0xc8c8c8,
-                  });
-                  // child.material = child.material.clone();
+                  child.material = material;
+                  if (child.material) {
+                    child.material.transparent = false;
+                  }
                 }
               });
-              container.add(object);
-              scene.add(container);
+              object.scale.set(0.01, 0.01, 0.01);
               postingCenter(object);
+              scene.add(object);
+              // container.add(object);
+              // scene.add(container);
               setasset3dLoader(false);
             },
             onProgress,
             onError
           );
         } else if (tdFormate === ".stl") {
+          setasset3dLoader(true);
+
           loader.load(
             file3d,
             // "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
             (geometry) => {
-              const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+              const material = new THREE.MeshPhysicalMaterial({
+                color: 0xb2ffc8,
+                // envMap: envTexture,
+                metalness: 0.25,
+                roughness: 0.1,
+                opacity: 1.0,
+                transparent: true,
+                transmission: 0.99,
+                clearcoat: 1.0,
+                clearcoatRoughness: 0.25,
+              });
               const mesh = new THREE.Mesh(geometry, material);
               scene.add(mesh);
-              postingCenter(geometry);
+              mesh.rotateX(-Math.PI / 2);
+
+              camera.position.z += 200;
+              // camera.lookAt(200);
+              console.log(geometry, "fgdgfd");
+
+              // postingCenter(geometry);
 
               setasset3dLoader(false);
             },
@@ -461,14 +512,31 @@ const Canvas3d = () => {
             onError
           );
         } else if (tdFormate === ".ply") {
+          setasset3dLoader(true);
+
           loader.load(
             file3d,
             // "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
             (geometry) => {
-              const material = new THREE.MeshNormalMaterial();
+              const material = new THREE.MeshPhysicalMaterial({
+                color: 0xb2ffc8,
+                // envMap: envTexture,
+                metalness: 0,
+                roughness: 0,
+                transparent: true,
+                transmission: 1.0,
+                side: THREE.DoubleSide,
+                clearcoat: 1.0,
+                clearcoatRoughness: 0.25,
+              });
+
+              // geometry.computeVertexNormals()
               const mesh = new THREE.Mesh(geometry, material);
+              mesh.rotateX(-Math.PI / 2);
               scene.add(mesh);
-              postingCenter(geometry);
+              camera.position.z += 150;
+
+              // postingCenter(geometry);
 
               setasset3dLoader(false);
             },
@@ -491,11 +559,9 @@ const Canvas3d = () => {
       //   onError
       // );
 
-      console.log(renderer, "sfdedf");
-
       // renderer.setPixelRatio(window.devicePixelRatio);
       renderer.setClearColor(0x000000, 0);
-      renderer.setSize(400, 400);
+      renderer.setSize(activeSize.w, activeSize.h);
 
       // renderer.setPixelRatio(window.devicePixelRatio);
       // renderer.setSize(window.innerWidth, window.innerHeight);
@@ -507,7 +573,8 @@ const Canvas3d = () => {
       controls = new OrbitControls(camera, renderer.domElement);
       // controls.target.set(0, 0, -0.2);
       // controls.minDistance = 2;
-      controls.update();
+      // controls.update();
+      // controls.enableDamping = true;
       // controls.maxDistance = 150;
       controls.addEventListener("change", render);
 
@@ -555,7 +622,7 @@ const Canvas3d = () => {
         containerRef.current.removeChild(renderer.domElement);
       }
     };
-  }, [file3d, file3dUrl, tdFormate]);
+  }, [file3d, file3dUrl, tdFormate, activeSize]);
 
   const captureScreenshot = () => {
     console.log(renderer, "dsedfdegfdjjh");
@@ -594,7 +661,11 @@ const Canvas3d = () => {
       <div ref={containerRef} className="boxs">
         {!showText ? <div className="tesxt">3D model viewer</div> : null}
       </div>
-      <div ref={outputBox} className="outboxs">
+      <div
+        ref={outputBox}
+        className="outboxs"
+        style={{ minWidth: activeSize.w, height: activeSize.h }}
+      >
         {selectedImg?.image ? (
           <>
             <div className="btn">
@@ -649,33 +720,59 @@ const Canvas3d = () => {
 export default Canvas3d;
 
 const Cnavas3d = styled.div`
-  margin-top: 100px;
-  margin-left: 30px;
+  /* margin-top: 100px; */
+  padding: 0 30px;
+  /* padding-top: 100px; */
   display: flex;
   gap: 30px;
+  min-width: 100%;
+
+  height: auto;
+  /* overflow-y: auto; */
+  /* overflow-x: scroll; */
+  transform: scale(0.6) translateX(-32%) translateY(0%);
+  &::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  /* Track */
+  &::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+    height: 7px;
+  }
+
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+  }
+
   .boxs {
-    border: 1px solid rgba(249, 208, 13, 1);
+    border: 2px solid rgba(249, 208, 13, 1);
     .tesxt {
       color: #000;
       margin: 10px;
-      font-size: 18px;
+      font-size: 24px;
       font-size: 500;
     }
   }
   .outboxs {
     position: relative;
-    border: 1px solid rgba(249, 208, 13, 1);
-    width: 400px;
-    height: 400px;
+    background-color: rgb(254, 244, 199);
+    overflow: hidden;
+
     picture {
       width: 100%;
       height: 100%;
+    overflow: hidden;
+
     }
 
     img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: fill;
     }
   }
 

@@ -214,33 +214,7 @@ const Generate = () => {
             </Button>
           )}
         </Row>
-        {
-            TDMode?
-            <BoxOff>
-            <div className="gaps">
-              <div className="two">
-                <Label>No. of images to generate</Label>
-                <div className="rangeValue">
-                  <Label> {selectResult}</Label>
-                </div>
-              </div>
-              <div className="rangebox">
-                <input
-                  type="range"
-                  min="1"
-                  max="4"
-                  step="1"
-                  value={selectResult}
-                  onChange={(e) =>
-                    setSelectedresult(parseInt(e.target.value, 10))
-                  }
-                />
-              </div>
-            </div>
-          </BoxOff>
-
-            :null
-        }
+      
       
       </div>
 
@@ -269,22 +243,21 @@ const Generate = () => {
         >
           Templates
         </div>
-        {TDMode ? null : (
+    
           <div
             className={
               changeTab
                 ? "btnswitch activeSwitch"
-                : TDMode
-                ? "disavle btnswitch"
+             
                 : "btnswitch "
             }
             onClick={() => {
-              TDMode ? null : setChangeTab(true);
+               setChangeTab(true);
             }}
           >
             Settings
           </div>
-        )}
+ 
       </SwchichBtn>
       <Wrapper className="wrappper">
         {changeTab ? <EditorSection /> : <Tamplates />}

@@ -213,7 +213,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [generatedImgList, setGeneratedImgList] = useState<string[]>([]);
   const [jobId, setJobId] = useState<string[]>([]);
   const [jobIdOne, setJobIdOne] = useState<string[]>([]);
-  const [tdFormate, setTdFormate] = useState(".obj");
+  const [tdFormate, setTdFormate] = useState(".gltf");
 
   const PosisionbtnRef = useRef(null);
   const regenerateRef = useRef(null);

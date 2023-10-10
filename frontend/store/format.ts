@@ -1,13 +1,14 @@
 export const formate3d = [
+  {
+    tittle: "gltf",
+    formate: ".gltf"
+
+  },
     {
       tittle: "obj",
       formate: ".obj"
     },
-    {
-      tittle: "gltf",
-      formate: ".gltf"
-
-    },
+  
     {
       tittle: "tds",
       formate: ".3ds"

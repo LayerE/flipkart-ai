@@ -368,7 +368,7 @@ export const FileUpload3D: React.FC = ({ type, title, uerId }) => {
 
     setFile3dUrl(null);
     const selectedFile = event.target.files[0];
-    if (selectedFile.size > 10 * 1024 * 1024) { // Check if the file size is greater than 10MB
+    if (selectedFile.size > 20 * 1024 * 1024) { // Check if the file size is greater than 10MB
      
       // event.target.value = null; // Clear the file input
       setfilsizeMorethan10(true)
