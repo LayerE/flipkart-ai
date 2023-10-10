@@ -358,7 +358,8 @@ export const FileUpload3D: React.FC = ({ type, title, uerId }) => {
     setasset3dLoader,
     file3dUrl,
     setFile3dUrl,
-    tdFormate
+    tdFormate,
+    filsizeMorethan10, setfilsizeMorethan10
   } = useAppState();
   const [file, setFile] = useState(null);
 
@@ -366,8 +367,16 @@ export const FileUpload3D: React.FC = ({ type, title, uerId }) => {
     setasset3dLoader(true);
 
     setFile3dUrl(null);
-
     const selectedFile = event.target.files[0];
+    if (selectedFile.size > 10 * 1024 * 1024) { // Check if the file size is greater than 10MB
+     
+      // event.target.value = null; // Clear the file input
+      setfilsizeMorethan10(true)
+    } else {
+      setfilsizeMorethan10(false)
+
+    }
+
     const url = URL.createObjectURL(selectedFile);
     if (url) {
       setFile3d(url);

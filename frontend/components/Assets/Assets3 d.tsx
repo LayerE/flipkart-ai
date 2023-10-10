@@ -71,7 +71,7 @@ const Assets3d: React.FC = () => {
     <div className="accest">
       <div className="gap">
         <Row>
-          <Label>3D Formate</Label>
+          <Label>Select your file format</Label>
         </Row>
         <FormateBtnBox>
           <div className="formatfox">
