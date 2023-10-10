@@ -13,6 +13,7 @@ import assets from "@/public/assets";
 import { useAppState } from "@/context/app.context";
 import styled from "styled-components";
 import { saveAs } from "file-saver";
+import { toast } from "react-toastify";
 
 const Canvas3d = () => {
   const containerRef = useRef();
@@ -34,6 +35,8 @@ const Canvas3d = () => {
     setFile3dUrl,
     tdFormate,
     setTdFormate,
+    filsizeMorethan10,
+    setfilsizeMorethan10,
   } = useAppState();
 
   let camera, scene, object, controls, renderNew;
@@ -46,8 +49,11 @@ const Canvas3d = () => {
     containerRef.current.style.height = "400px";
     let renderer;
     const init = () => {
-      camera = new THREE.PerspectiveCamera(75, 400 / 400, 0.1, 1000);
-      camera.position.z = 0;
+      camera = new THREE.PerspectiveCamera(45, 400 / 400, 0.25, 2000);
+      camera.position.set(-1.8, 0.6, 2.7);
+      // camera.position.z = 0;
+      // camera.position.set(-20.5, 0.5, 8.0);
+      // camera.lookAt(new THREE.Vector3(0, 0, 0));
       scene = new THREE.Scene();
 
       const ambientLight = new THREE.AmbientLight(0x404040);
@@ -61,18 +67,120 @@ const Canvas3d = () => {
       scene.add(light);
 
       function loadModel() {
+        console.log("1111");
+
         object.traverse(function (child) {
           if (child.isMesh) {
             // child.material.map = texture;
             // child.material.color.setrgb(191, 14, 14)
-            // child.material = new THREE.MeshBasicMaterial({ color: 0xc8c8c8 });
-            child.material = child.material.clone();
+            if (filsizeMorethan10) {
+              child.material.color.set(0xc8c8c8);
+
+              child.material = new THREE.MeshBasicMaterial({ color: 0xc8c8c8 });
+            } else {
+              child.material = child.material.clone();
+            }
+            // child.material = child.material.clone();
+            console.log("1111 indwe");
+          } else {
+            if (filsizeMorethan10) {
+              child.material = new THREE.MeshBasicMaterial({ color: 0xc8c8c8 });
+            }
           }
         });
-        object.position.y = -0.5;
-        object.scale.setScalar(0.07);
-        scene.add(object);
+        // object.position.y = -0.5;
+        // object.scale.setScalar(0.07);
+        container.add(object);
+        scene.add(container);
+        // scene.add(object);
+        console.log("11sssssssssssss11");
+
         // Adjust the camera position and rotation to focus on the loaded object
+        const boundingBox = new THREE.Box3().setFromObject(object);
+        const center = boundingBox.getCenter(new THREE.Vector3());
+
+        const size = boundingBox.getSize(new THREE.Vector3());
+        console.log("111sssssssssssss1");
+
+        // Calculate the distance to fit the object in the view
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const fov = camera.fov * (Math.PI / 180);
+        const distance = Math.abs(maxDim / Math.sin(fov / 2));
+        console.log("1ssssssssssssssssssss111");
+
+        // Set the camera position and look at the object
+        camera.position.copy(center);
+
+        camera.position.z += distance;
+        camera.lookAt(center);
+        setasset3dLoader(false);
+      }
+
+      function loadModeClonel() {
+        console.log("1111");
+
+        object.traverse(function (child) {
+          if (child.isMesh) {
+            // child.material.map = texture;
+            // child.material.color.setrgb(191, 14, 14)
+            child.material = new THREE.MeshBasicMaterial({ color: 0xc8c8c8 });
+            // child.material = child.material.clone();
+            // child.material = child.material.clone();
+            child.material.color.set(0xc8c8c8);
+            console.log("1111 indwe");
+          } else {
+            child.material = new THREE.MeshBasicMaterial({ color: 0xc8c8c8 });
+          }
+        });
+        // object.position.y = -0.5;
+        // object.scale.setScalar(0.07);
+        container.add(object);
+        scene.add(container);
+        // scene.add(object);
+        console.log("11sssssssssssss11");
+
+        // Adjust the camera position and rotation to focus on the loaded object
+        const boundingBox = new THREE.Box3().setFromObject(object);
+        const center = boundingBox.getCenter(new THREE.Vector3());
+        const size = boundingBox.getSize(new THREE.Vector3());
+        console.log("111sssssssssssss1");
+
+        // Calculate the distance to fit the object in the view
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const fov = camera.fov * (Math.PI / 180);
+        const distance = Math.abs(maxDim / Math.sin(fov / 2));
+        console.log("1ssssssssssssssssssss111");
+
+        // Set the camera position and look at the object
+        camera.position.copy(center);
+
+        // camera.position.z += distance;
+        camera.lookAt(center);
+        setasset3dLoader(false);
+      }
+      const postingCenter = (object) => {
+        const boundingBox = new THREE.Box3().setFromObject(object);
+        const center = boundingBox.getCenter(new THREE.Vector3());
+        const size = boundingBox.getSize(new THREE.Vector3());
+        console.log("111sssssssssssss1");
+
+        // Calculate the distance to fit the object in the view
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const fov = camera.fov * (Math.PI / 180);
+        const distance = Math.abs(maxDim / Math.sin(fov / 2));
+        console.log("1ssssssssssssssssssss111");
+
+        // Set the camera position and look at the object
+        camera.position.copy(center);
+        camera.position.y += distance;
+        object.position.set(0, -300, 0);
+
+        camera.position.z += distance;
+        camera.lookAt(center);
+        setasset3dLoader(false);
+      };
+
+      const postingCenterddd = (object) => {
         const boundingBox = new THREE.Box3().setFromObject(object);
         const center = boundingBox.getCenter(new THREE.Vector3());
         const size = boundingBox.getSize(new THREE.Vector3());
@@ -83,11 +191,15 @@ const Canvas3d = () => {
         const distance = Math.abs(maxDim / Math.sin(fov / 2));
 
         // Set the camera position and look at the object
+        console.log(center);
         camera.position.copy(center);
+        camera.position.y += distance;
+        object.position.set(0, 0, 0);
         camera.position.z += distance;
         camera.lookAt(center);
+
         setasset3dLoader(false);
-      }
+      };
 
       function onProgress(xhr) {
         if (xhr.lengthComputable) {
@@ -101,10 +213,21 @@ const Canvas3d = () => {
         }
       }
 
-      function onError() {}
+      function onError(e) {
+        console.log({ error: e });
+        // if(e.message === `Unexpected token 'P', \"PK\u0003\u0004\u0014\u0000\u0000\u0000\u0000\u0000\"... is not valid JSON`){
+        //   toast.error("Invalide formate");
 
+        // }else{
+
+        toast.error(e.message);
+        // }
+
+        setasset3dLoader(false);
+      }
+      const container = new THREE.Group();
       renderer = new THREE.WebGLRenderer({
-        // antialias: true,
+        antialias: true,
         preserveDrawingBuffer: true,
       });
       let loader;
@@ -147,7 +270,10 @@ const Canvas3d = () => {
             file3dUrl,
             // "https://ik.imagekit.io/7urmiszfde/Bottle%20Coca-Cola%20N080710.3ds?updatedAt=1696856138699",
             (object) => {
-              scene.add(object);
+              container.add(object);
+              scene.add(container);
+              postingCenter(object);
+
               setasset3dLoader(false);
             },
             onProgress,
@@ -160,6 +286,8 @@ const Canvas3d = () => {
             (gltf) => {
               const model = gltf.scene;
               scene.add(model);
+              postingCenter(gltf);
+
               setasset3dLoader(false);
             },
             onProgress,
@@ -170,7 +298,21 @@ const Canvas3d = () => {
             file3dUrl,
             // "https://ik.imagekit.io/7urmiszfde/indoor%20plant_02_+2.fbx?updatedAt=1696879483866",
             (object) => {
-              scene.add(object);
+              object.traverse(function (child) {
+                if (child.isMesh) {
+                  // child.material.map = texture;
+                  // child.material.color.setrgb(191, 14, 14)
+                  // child.material = new THREE.MeshBasicMaterial({ color: 0xc8c8c8 });
+                  // child.material = child.material.clone();
+                  child.material = child.material.clone();
+                  // child.material.color.set(0xc8c8c8);
+                  console.log("1111 indwe");
+                }
+              });
+              container.add(object);
+              scene.add(container);
+              postingCenter(object);
+
               setasset3dLoader(false);
             },
             onProgress,
@@ -183,6 +325,8 @@ const Canvas3d = () => {
             (gltf) => {
               const model = gltf.scene;
               scene.add(model);
+              postingCenter(gltf);
+
               setasset3dLoader(false);
             },
             onProgress,
@@ -196,6 +340,8 @@ const Canvas3d = () => {
               const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
               const mesh = new THREE.Mesh(geometry, material);
               scene.add(mesh);
+              postingCenter(geometry);
+
               setasset3dLoader(false);
             },
             onProgress,
@@ -209,6 +355,8 @@ const Canvas3d = () => {
               const material = new THREE.MeshNormalMaterial();
               const mesh = new THREE.Mesh(geometry, material);
               scene.add(mesh);
+              postingCenter(geometry);
+
               setasset3dLoader(false);
             },
             onProgress,
@@ -236,7 +384,10 @@ const Canvas3d = () => {
             // "https://ik.imagekit.io/7urmiszfde/Bottle%20Coca-Cola%20N080710.3ds?updatedAt=1696856138699",
             file3d,
             (object) => {
-              scene.add(object);
+              container.add(object);
+              scene.add(container);
+              postingCenter(object);
+
               setasset3dLoader(false);
             }
             // onProgress,
@@ -246,9 +397,13 @@ const Canvas3d = () => {
           loader.load(
             file3d,
             // "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
-            (gltf) => {
-              const model = gltf.scene;
+            (object) => {
+              const model = object.scene;
+              console.log(model, "fggf");
               scene.add(model);
+              // camera.position.y += 20;
+              postingCenterddd(object.scene);
+
               setasset3dLoader(false);
             },
             onProgress,
@@ -258,9 +413,10 @@ const Canvas3d = () => {
           loader.load(
             file3d,
             // "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
-            (gltf) => {
-              const model = gltf.scene;
+            (object) => {
+              const model = object.scene;
               scene.add(model);
+
               setasset3dLoader(false);
             },
             onProgress,
@@ -271,7 +427,19 @@ const Canvas3d = () => {
             file3d,
             // "https://ik.imagekit.io/7urmiszfde/rp_nathan_animated_003_walking.fbx?updatedAt=1696878521110",
             (object) => {
-              scene.add(object);
+              object.traverse(function (child) {
+                if (child.isMesh) {
+                  // child.material.map = texture;
+                  // child.material.color.setrgb(191, 14, 14)
+                  child.material = new THREE.MeshBasicMaterial({
+                    color: 0xc8c8c8,
+                  });
+                  // child.material = child.material.clone();
+                }
+              });
+              container.add(object);
+              scene.add(container);
+              postingCenter(object);
               setasset3dLoader(false);
             },
             onProgress,
@@ -285,6 +453,8 @@ const Canvas3d = () => {
               const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
               const mesh = new THREE.Mesh(geometry, material);
               scene.add(mesh);
+              postingCenter(geometry);
+
               setasset3dLoader(false);
             },
             onProgress,
@@ -298,6 +468,8 @@ const Canvas3d = () => {
               const material = new THREE.MeshNormalMaterial();
               const mesh = new THREE.Mesh(geometry, material);
               scene.add(mesh);
+              postingCenter(geometry);
+
               setasset3dLoader(false);
             },
             onProgress,
@@ -324,11 +496,19 @@ const Canvas3d = () => {
       // renderer.setPixelRatio(window.devicePixelRatio);
       renderer.setClearColor(0x000000, 0);
       renderer.setSize(400, 400);
-      containerRef.current.appendChild(renderer.domElement);
 
+      // renderer.setPixelRatio(window.devicePixelRatio);
+      // renderer.setSize(window.innerWidth, window.innerHeight);
+      // renderer.toneMapping = THREE.ACESFilmicToneMapping; //added contrast for filmic look
+      // renderer.toneMappingExposure = 1;
+      // renderer.outputEncoding = THREE.sRGBEncoding;
+
+      containerRef.current.appendChild(renderer.domElement);
       controls = new OrbitControls(camera, renderer.domElement);
-      controls.minDistance = 2;
-      // controls.maxDistance = 17;
+      // controls.target.set(0, 0, -0.2);
+      // controls.minDistance = 2;
+      controls.update();
+      // controls.maxDistance = 150;
       controls.addEventListener("change", render);
 
       //   renderNew = renderer;
@@ -355,7 +535,7 @@ const Canvas3d = () => {
 
     const render = () => {
       setRenderer(renderer);
-      camera.lookAt(scene.position);
+      // camera.lookAt(scene.position);
 
       renderer.render(scene, camera);
     };

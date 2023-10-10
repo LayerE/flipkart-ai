@@ -265,6 +265,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [mode, setMode] = useState("pen");
   const [magicLoader, setMagicloder] = useState(false);
   const [crop, setCrop] = useState(false);
+  const [filsizeMorethan10, setfilsizeMorethan10] = useState(false);
+
 
   const stageRef = useRef<fabric.Canvas | null>(null);
 
@@ -1474,6 +1476,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       value={{
         canvasDisable,
         TdImage,
+        filsizeMorethan10, setfilsizeMorethan10,
         tdFormate,
         setTdFormate,
         file3dUrl,
