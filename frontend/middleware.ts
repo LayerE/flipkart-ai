@@ -16,6 +16,8 @@ export default authMiddleware({
     "/api/uploadbrandasset",
     "/api/getassets",
     "/api/getbanner",
+    "/api/addcaption",
+    "/api/deleteimage"
   ],
 });
 
