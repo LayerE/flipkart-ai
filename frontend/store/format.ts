@@ -19,11 +19,11 @@ export const formate3d = [
       formate: ".fbx"
 
     },
-    {
-      tittle: "mtl",
-      formate: ".mtl"
+    // {
+    //   tittle: "mtl",
+    //   formate: ".mtl"
 
-    },
+    // },
     {
         tittle: "stl",
         formate: ".stl"
