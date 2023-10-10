@@ -17,7 +17,8 @@ export default authMiddleware({
     "/api/getassets",
     "/api/getbanner",
     "/api/addcaption",
-    "/api/deleteimage"
+    "/api/deleteimage",
+    "/api/regenerate",
   ],
 });
 
