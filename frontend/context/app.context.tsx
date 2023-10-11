@@ -230,6 +230,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [category, setcategory] = useState(null);
 
   const [listofassets, setListOfAssets] = useState(null);
+  const [listofassetsBarand, setListOfAssetsBrand] = useState(null);
+
   const [listofassetsById, setListOfAssetsById] = useState([]);
 
   const [newassetonCanvas, setNewassetonCanvas] = useState(null);
@@ -889,7 +891,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       console.log(await data, "dfdgfdgfg");
 
       if (data?.data.length) {
-        setListOfAssets(await data.data);
+        const revers = data.data.reverse()
+
+        setListOfAssets(revers);
 
         // setRe(0)
       }
@@ -905,6 +909,49 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       console.error("Error fetching images:", error);
     }
   };
+  const fetchAssetsImagesBrant = async (userId, pro) => {
+    try {
+      // const response = await fetch(
+      //   `${process.env.NEXT_PUBLIC_API}/assets?userId=${userId}`,
+      //   {
+      //     method: "GET",
+      //   }
+      // );
+      const response = await fetch(`/api/getassets`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: userId,
+          // project_id: pro,
+          // assetType: AssetsActivTab,
+
+          // asset: { url: popup.dataArray.imageUrl, product: productnew },
+        }),
+      });
+      const data = await response.json();
+      console.log(await data, "dfdgfdgfg");
+
+      if (data?.length) {
+        const revers = data.reverse()
+        setListOfAssetsBrand(await revers);
+
+        // setRe(0)
+      }
+
+      // setImages(data); // Update the state with the fetched images
+      // setGeneratedImgList(data)
+
+      // if(data[0]?.prompt === prompt){
+
+      // }
+      return data;
+    } catch (error) {
+      console.error("Error fetching images:", error);
+    }
+
+  }
   const fetchAssetsImagesWithProjectId = async (userId, pro) => {
     try {
       // const response = await fetch(
@@ -1368,8 +1415,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         },
         body: JSON.stringify({
           image_url: regenratingId,
-          // maskDataUrl: null,
-          // prompt: promtText ? promtText : " " + " ",
           user_id: ueserId,
           category: category,
 
@@ -1544,6 +1589,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         listofassetsById,
         setListOfAssetsById,
         previewBox,
+        fetchAssetsImagesBrant,
         loara,
         setLoara,
         promtFull,
@@ -1660,6 +1706,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         isMagic,
         setIsMagic,
         downloadImg,
+        listofassetsBarand, setListOfAssetsBrand
+,
         setDownloadImg,
         popup,
         setPopup,

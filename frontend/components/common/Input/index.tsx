@@ -198,6 +198,24 @@ export const FileUpload: React.FC = ({ type, title, uerId }) => {
   } = useAppState();
 
   const handleFileChange = (event) => {
+
+    const fileSize = event.target.files[0].size
+    const maxSize =  25* 1024 * 1024; // 1MB
+    const filename = event.target.files[0].name
+    const format = filename.split('.').pop();
+
+
+    if (fileSize > maxSize) {
+  
+      toast.error('File size must be less than 25MB');
+
+      return false;
+    } else if(format !== 'png' && format !== 'webp' && format !== 'jpg') {
+      toast.error('Format not supported');
+
+
+    } else {
+
     setassetLoader(true);
 
     const selectedFile = event.target.files?.[0] || null;
@@ -274,6 +292,8 @@ export const FileUpload: React.FC = ({ type, title, uerId }) => {
     } catch (e) {
       console.log("cvff", e);
     }
+
+  }
   };
   const handleRemoveFile = () => {
     setFile(null);

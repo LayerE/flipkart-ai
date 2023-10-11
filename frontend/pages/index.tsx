@@ -52,7 +52,8 @@ export default function Home() {
     setLoader,
     fetchAssetsImages,
     popup,
-    setSelectedImg
+    setSelectedImg,
+    setListOfAssetsById
 
 
   } = useAppState();
@@ -81,6 +82,7 @@ setActiveTemplet(null)
 setDownloadeImgFormate("png")
 setProduct("")
 setpromt("")
+setListOfAssetsById([])
 setLoader(false)
 
 fetchAssetsImages(userId, null)

@@ -290,8 +290,7 @@ export default function Home() {
 
 const MainPages = styled.div`
   position: relative;
-  /* overflow: hidden; */
-/* height: 100vh; */
+
   .generated {
     width: 100%;
     display: flex;
@@ -438,9 +437,10 @@ const MainPages = styled.div`
   }
   .Editor {
     width: 100%;
-    min-height: 100%;
+    min-height: 100vh;
     position: relative;
-    
+    overflow: hidden;
+height: 100vh;
     /* padding-top: 100px; */
   }
   /* .main-privier {

@@ -542,8 +542,7 @@ export default function CanvasBox({ proid, userId }) {
           project_id: proid,
         })
         .then((response) => {
-          console.log(response);
-          console.log(response?.data?.newData, "adsfnbdhjskgvyuifdsgh");
+
           if (canvasInstanceRef) {
             canvasInstanceRef.loadFromJSON(
               response?.data.newData.canvasdata,

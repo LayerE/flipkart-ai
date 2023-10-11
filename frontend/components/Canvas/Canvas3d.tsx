@@ -727,10 +727,10 @@ const Cnavas3d = styled.div`
   gap: 30px;
   min-width: 100%;
 
-  height: auto;
+  height: 100%;
   /* overflow-y: auto; */
   /* overflow-x: scroll; */
-  transform: scale(0.6) translateX(-32%) translateY(0%);
+  transform: scale(0.6) translateX(-30%) translateY(-5%);
   &::-webkit-scrollbar {
     width: 10px;
     height: 10px;
@@ -765,8 +765,7 @@ const Cnavas3d = styled.div`
     picture {
       width: 100%;
       height: 100%;
-    overflow: hidden;
-
+      overflow: hidden;
     }
 
     img {

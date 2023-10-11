@@ -7,7 +7,6 @@ import { useAuth } from "@clerk/nextjs";
 import { useAppState } from "@/context/app.context";
 import { toast } from "react-toastify";
 import PopupUpload from "../Popup";
-import { setTimeout } from "timers";
 import { useRouter } from "next/router";
 import { AssetsLoader } from "../Loader/AssetsLoader";
 
@@ -36,10 +35,12 @@ const AssetsDir = () => {
     fetchAssetsImagesWithProjectId,
 
     setPopup,
-
+    fetchAssetsImagesBrant,
     setUploadedProductlist,
     setProduct,
     addimgToCanvasSubject,
+    listofassetsBarand, setListOfAssetsBrand
+
     // re, setRe,
   } = useAppState();
   const [assers, setAssets] = useState();
@@ -50,7 +51,7 @@ const AssetsDir = () => {
 
   useEffect(() => {
     if (userId) {
-      fetchAssetsImages(userId, null);
+      fetchAssetsImagess(userId, null);
       // setAssets(listofassets)
 
       const filterData = listofassets?.filter((item) => {
@@ -62,84 +63,130 @@ const AssetsDir = () => {
           return item.AssetType === AssetsActivTab;
         }
       });
-      setAssets(filterData);
+      // setAssets(filterData);
 
       // }
     }
-  }, [isReady, userId, AssetsActivTab, listofassets]);
+  }, [isReady, userId, AssetsActivTab, listofassets,listofassetsBarand]);
 
-  const handleFileChange = (event) => {
-    // setassetLoader(true);
-    setbrandassetLoader(true);
-
-    const selectedFile = event.target.files?.[0] || null;
+  const fetchAssetsImagess = async () => {
+    // setlaoder(true);
 
     try {
-      if (selectedFile) {
-        const reader = new FileReader();
-        reader.onloadend = async () => {
-          // const filename = `img${Date.now()}`;
-          // setLoader(true);
-          console.log(reader.result, "imge");
+      if (AssetsActivTab === "product") {
+        fetchAssetsImages(userId, null);
 
-          const response = await fetch("/api/uploadbrandasset", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              dataUrl: reader.result,
-              user_id: userId,
-              project_id: null,
-            }),
-          });
+        setAssets(listofassets);
 
-          if (response?.status === 413) {
-            toast.error("Image exceeded 4mb limit");
+        // if (data?.length) {
+        //   if (galleryActivTab === "ai") {
+        //     setGallery(data);
+        //     setlaoder(false);
+        //   } else {
+        //   }
+        // }
+        // setlaoder(false);
+      } else {
+        fetchAssetsImagesBrant(userId, null);
 
-            setbrandassetLoader(false);
-          } else if (response?.status === 400) {
-            toast.error("Image is corrupted or unsupported dimensions");
+        setAssets(listofassetsBarand);
 
-            setbrandassetLoader(false);
-          } else if (
-            response?.status !== 200 &&
-            response?.status !== 413 &&
-            response?.status !== 201
-          ) {
-            toast.error(response?.statusText);
+        // setlaoder(false);
+      }
+    } catch (error) {
+      // setlaoder(false);
 
-            setbrandassetLoader(false);
-          }
-          const data = await response.json();
-          console.log(data, "ddsfvd");
+      console.error("Error fetching images:", error);
+    }
+  };
 
-          if (data?.image_url) {
-            // setPopup({
-            //   status: true,
-            //   data: data?.data.data[0],
-            //   dataArray: data,
-            // });
+  const handleFileChange = (event) => {
+    const fileSize = event.target.files[0].size;
+    const maxSize = 25 * 1024 * 1024; // 1MB
+    const filename = event.target.files[0].name;
+    const format = filename.split(".").pop();
 
-            const response = await fetch(
-              `${process.env.NEXT_PUBLIC_API}/assets`,
-              {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  userId: userId,
-                  projectId: id,
-                  assetType: AssetsActivTab,
+    if (fileSize > maxSize) {
+      toast.error("File size must be less than 25MB");
 
-                  asset: { url: data.image_url, product: null },
-                }),
-              }
-            );
+      return false;
+    } else if (format !== "png" && format !== "webp" && format !== "jpg") {
+      toast.error("Format not supported");
+    } else {
+      // Upload the file
 
-            const datares = await response;
-            console.log(datares);
+      // setassetLoader(true);
+      setbrandassetLoader(true);
 
-            if (datares) {
+      const selectedFile = event.target.files?.[0] || null;
+
+      try {
+        if (selectedFile) {
+          const reader = new FileReader();
+          reader.onloadend = async () => {
+            // const filename = `img${Date.now()}`;
+            // setLoader(true);
+            console.log(reader.result, "imge");
+
+            const response = await fetch("/api/upload", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                dataUrl: reader.result,
+                user_id: userId,
+                project_id: null,
+                type: "brand",
+              }),
+            });
+
+            if (response?.status === 413) {
+              toast.error("Image exceeded 4mb limit");
+
+              setbrandassetLoader(false);
+            } else if (response?.status === 400) {
+              toast.error("Image is corrupted or unsupported dimensions");
+
+              setbrandassetLoader(false);
+            } else if (
+              response?.status !== 200 &&
+              response?.status !== 413 &&
+              response?.status !== 201
+            ) {
+              toast.error(response?.statusText);
+
+              setbrandassetLoader(false);
+            }
+            const data = await response.json();
+            console.log(data.data.data, "ddsfvd");
+
+            if (data?.data) {
+              // setPopup({
+              //   status: true,
+              //   data: data?.data.data[0],
+              //   dataArray: data,
+              // });
+
+              // const response = await fetch(
+              //   `${process.env.NEXT_PUBLIC_API}/assets`,
+              //   {
+              //     method: "POST",
+              //     headers: {
+              //       "Content-Type": "application/json",
+              //     },
+              //     body: JSON.stringify({
+              //       userId: userId,
+              //       projectId: id,
+              //       assetType: AssetsActivTab,
+
+              //       asset: { url: data.data.data[0], product: null },
+              //     }),
+              //   }
+              // );
+
+              // const datares = await response;
+              // console.log(datares,"ddfd");
+
+              // if (datares) {
               fetchAssetsImages(userId, null);
               // addimgToCanvasSubject(data?.data.data[0]);
               fetchAssetsImagesWithProjectId(userId, id);
@@ -154,17 +201,19 @@ const AssetsDir = () => {
               // setProduct(productnew);
               // setPopup({ status: false, data: null });
               setbrandassetLoader(false);
-            }
-          } else {
-            console.log("bg not removed");
+              // }
+            } else {
+              console.log("bg not removed");
 
-            // setbrandassetLoader(false);
-          }
-        };
-        reader.readAsDataURL(selectedFile);
+              // setbrandassetLoader(false);
+            }
+          };
+          reader.readAsDataURL(selectedFile);
+        }
+      } catch (e) {
+        console.log("cvff", e);
+        setbrandassetLoader(false);
       }
-    } catch (e) {
-      console.log("cvff", e);
     }
   };
 
@@ -227,7 +276,7 @@ const AssetsDir = () => {
                       id="fileInputAssets"
                       style={{ display: "none" }}
                       onChange={handleFileChange}
-                      accept=".webp, .png, .jpeg, .jpg"
+                      accept=".webp, .png, .jpg"
                     />
                   </>
                 )}
