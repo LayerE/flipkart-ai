@@ -28,8 +28,8 @@ export default function CanvasBox({ proid, userId }) {
     activeTab,
     setActiveTab,
     setSelectedColoreMode,
-    outerDivRef,
     downloadImg,
+    outerDivRef,
     setDownloadImg,
     // newEditorBox
     editorBox,
@@ -70,10 +70,12 @@ export default function CanvasBox({ proid, userId }) {
     setActiveSize,
     crop,
     setCrop,
-    canvasDisable, setCanvasDisable,
+    canvasDisable,
+    setCanvasDisable,
     loader,
-    TDMode
-
+    TDMode,
+    regenratingId,
+    setregeneraatingId,
 
     // canvasRef
   } = useAppState();
@@ -219,6 +221,7 @@ export default function CanvasBox({ proid, userId }) {
         if (options.target && options.target.type === "image") {
           let selectedObject;
           if (options.target._element instanceof Image) {
+            console.log(options.target.id, "option");
             // selectedObject = options.target._element.src;
             const img = new Image();
             img.src = options.target._element.src;
@@ -236,6 +239,9 @@ export default function CanvasBox({ proid, userId }) {
           }
 
           if (selectedObject) {
+            if (options.target.id) {
+              setregeneraatingId(options.target.id);
+            }
             setDownloadImg(selectedObject);
             setSelectedColoreMode("None");
           }
@@ -280,8 +286,8 @@ export default function CanvasBox({ proid, userId }) {
       //       left:newEditorBox.left,
       //     top:newEditorBox.top,
       //     width: newEditorBox.width,
-      //     height:newEditorBox.height,
       //   });
+      //     height:newEditorBox.height,
       //   // setDownloadImg(dataURL);
       //   setDownloadImg(dataURL);
       // });
@@ -300,8 +306,8 @@ export default function CanvasBox({ proid, userId }) {
       //     left: newEditorBox.left,
       //     top: newEditorBox.top,
       //     width: 512,
-      //     height: 512,
       //   });
+      //     height: 512,
       //   // setDownloadImg(dataURL);
       //   // setDownloadImg(dataURL);
       //   setSelectedImg(dataURL);
@@ -407,8 +413,8 @@ export default function CanvasBox({ proid, userId }) {
         // if (hasGenerated) {
         rebtn.style.display = "none";
         // Show the additional button if at least one object has the category "generated"
-        // rebtn.style.display = "block";
         // }
+        // rebtn.style.display = "block";
         setDownloadImg(null);
 
         if (activeTab === 5) {
@@ -443,7 +449,7 @@ export default function CanvasBox({ proid, userId }) {
       // canvasInstance?.current.remove(newEditorBox);
       // canvasInstance?.current.remove(imageGenRect);
     };
-  }, [canvasInstance.current, state,activeSize]);
+  }, [canvasInstance.current, state, activeSize]);
   // , activeSize, setActiveSize, re, state
 
   const DeletIrem = () => {
@@ -521,12 +527,7 @@ export default function CanvasBox({ proid, userId }) {
       };
       setZoomCanvas(zooms);
     }
-  }, [canvasInstance.current,]);
-
- 
-
-
-
+  }, [canvasInstance.current]);
 
   useEffect(() => {
     // Fetch canvas data from your API and load it into the canvas
@@ -610,7 +611,6 @@ export default function CanvasBox({ proid, userId }) {
     };
   }, []);
 
-
   // const saveCanvasToDatabasea = () => {};
 
   const saveCanvasDataToLocal = () => {
@@ -626,15 +626,15 @@ export default function CanvasBox({ proid, userId }) {
 
   const generationBoxStyle = {
     left: `${activeSize.l * zoom}px`,
-    top: `${activeSize.t* zoom}px`,
-    width: `${activeSize.w *zoom}px`, // Adjust the width based on canvas zoom
-    height: `${activeSize.h*zoom}px`, // Adjust the height based on canvas zoom
+    top: `${activeSize.t * zoom}px`,
+    width: `${activeSize.w * zoom}px`, // Adjust the width based on canvas zoom
+    height: `${activeSize.h * zoom}px`, // Adjust the height based on canvas zoom
   };
   const PreviewBoxStyle = {
-    left: `${activeSize.gl  * zoom}px`,
-    top: `${activeSize.gt  * zoom}px`,
-    width: `${activeSize.w  * zoom}px`, // Adjust the width based on canvas zoom
-    height: `${activeSize.h  * zoom}px`, // Adjust the height based on canvas zoom
+    left: `${activeSize.gl * zoom}px`,
+    top: `${activeSize.gt * zoom}px`,
+    width: `${activeSize.w * zoom}px`, // Adjust the width based on canvas zoom
+    height: `${activeSize.h * zoom}px`, // Adjust the height based on canvas zoom
     backgroundColor: "rgba(249, 208, 13, 0.23)",
   };
 
@@ -676,9 +676,7 @@ export default function CanvasBox({ proid, userId }) {
             className="leftbox"
             ref={generateBox}
             style={generationBoxStyle}
-          >
-            
-          </div>
+          ></div>
           <div
             className="rightbox"
             ref={previewBox}
@@ -748,7 +746,7 @@ export default function CanvasBox({ proid, userId }) {
           </picture>
         </div> */}
 
-        <canvas  ref={canvasRef}   />
+        <canvas ref={canvasRef} />
       </div>
     </Wrapper>
   );
@@ -757,7 +755,7 @@ export default function CanvasBox({ proid, userId }) {
 const Wrapper = styled.div`
 canvas {
 
-  pointer-events:${(props) => props.canvasDisable ? "none" : "auto"}
+  pointer-events:${(props) => (props.canvasDisable ? "none" : "auto")}
   
 }
   .convas-continer {

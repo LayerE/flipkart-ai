@@ -26,9 +26,12 @@ const Regeneret = () => {
     setRegenratedImgsJobid,
     setJobId,
     setActiveTab,
+    fetchGeneratedImages,
+    setCanvasDisable,
+    setLoader,
   } = useAppState();
 
-  const [loder, setLoader] = useState(true);
+  // const [loder, setLoader] = useState(true);
 
   const [selectedCards, setSelectedCards] = useState([]);
   const [cards] = useState(["Card 1", "Card 2", "Card 3", "Card 4"]);
@@ -39,7 +42,7 @@ const Regeneret = () => {
       (obj) => obj?.task_id === regenratedImgsJobId
     );
     setFilteredArray(filteredResult);
-    console.log(generatedImgList,"dfd");
+    console.log(generatedImgList, "dfd");
 
     if (filteredResult?.length) {
       setLoader(false);
@@ -49,6 +52,16 @@ const Regeneret = () => {
 
     console.log(filteredResult, "sdfds", regenratedImgsJobId);
   }, [generatedImgList, regenratedImgsJobId]);
+
+  useEffect(() => {
+    const time = setInterval(() => {
+      fetchGeneratedImages(userId);
+    }, 5000);
+
+    return () => {
+      clearInterval(time);
+    };
+  }, []);
 
   const addimgToCanvasGen = async (url: string[]) => {
     const gridSize = 2;
@@ -77,8 +90,8 @@ const Regeneret = () => {
           const maxWidth = canvasWidth;
           const maxHeight = canvasHeight;
           // Calculate the scaled width and height while maintaining the aspect ratio
-      let scaledWidth = maxWidth;
-      let scaledHeight = scaledWidth / imageAspectRatio;
+          let scaledWidth = maxWidth;
+          let scaledHeight = scaledWidth / imageAspectRatio;
 
           img.on("moving", () => {
             positionBtn(img);
@@ -146,6 +159,9 @@ const Regeneret = () => {
         setJobId((pre) => [...pre, regenratedImgsJobId]);
         // setRegenratedImgsJobid(generate_response?.job_id);
         // localStorage.setItem("jobId", jobId);
+        setCanvasDisable(false);
+        setLoader(false);
+
         GetProjextById(id);
         addimgToCanvasGen(selectedCards);
         setRegeneratePopup({ statu: false });
@@ -165,6 +181,8 @@ const Regeneret = () => {
           onClick={() => {
             setRegeneratePopup({ statu: false });
             setActiveTab(1);
+            setCanvasDisable(false);
+            setLoader(false);
           }}
         >
           <svg
@@ -310,7 +328,7 @@ const WrapperRegenerat = styled.div`
     justify-content: center;
     position: relative;
     width: 50vw !important;
-  min-height: 70vh;
+    min-height: 70vh;
     border: 2px solid #d9d9d9;
     border-radius: 8px !important;
     padding: 30px;
@@ -322,7 +340,6 @@ const WrapperRegenerat = styled.div`
       grid-template-columns: 1fr 1fr;
       gap: 12px;
       width: 100%;
-
     }
 
     .griteitem {
@@ -344,7 +361,6 @@ const WrapperRegenerat = styled.div`
       width: 100%;
       object-fit: cover;
       object-position: center;
-
     }
     .active {
       border: 2px solid rgba(249, 208, 13, 1);

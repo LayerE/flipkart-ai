@@ -50,7 +50,7 @@ const PopupCard = () => {
           // console.log(await response.json(), "dfvcvdfvdvcdsd");
           const datares = await response.json();
           if (datares?._id) {
-            setNewassetonCanvas(popupImage.list[currentIndex]?.url.url);
+            setNewassetonCanvas(popupImage.list[currentIndex]?.image_url);
 
             GetProjexts(popupImage.userId);
             setPopupImage({ statu: false });
@@ -64,12 +64,10 @@ const PopupCard = () => {
         // Handle error
       }
     } else {
-      if(popupImage?.list[currentIndex]?.modified_image_url){
-
+      if (popupImage?.list[currentIndex]?.modified_image_url) {
         handileDownload(popupImage?.list[currentIndex]?.modified_image_url);
-      }else{
+      } else {
         handileDownload(popupImage?.list[currentIndex]?.image_url);
-
       }
     }
   };
@@ -86,23 +84,33 @@ const PopupCard = () => {
     }
   };
 
-  const handleDelet = async (id: string) => {
+  const handleDelet = async () => {
     try {
       // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
 
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API}/assets?id=${id}`,
-        {
-          method: "DELETE",
-        }
-      );
+      // const response = await fetch(
+      //   `${process.env.NEXT_PUBLIC_API}/assets?id=${id}`,
+      //   {
+      //     method: "DELETE",
+      //   }
+      // );
+      console.log(popupImage?.list[currentIndex]?.image_url, "deleter");
+
+      const response = await fetch(`/api/deleteimage`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          image_url: popupImage?.list[currentIndex]?.image_url,
+        }),
+      });
+      console.log(response, "deleter");
       if (response.status === 200) {
         toast.success("Deleted successfully");
 
-        if(showNext)
-        handleNext()
-        else
-        setPopupImage({ statu: false });
+        if (showNext) handleNext();
+        else setPopupImage({ statu: false });
       } else {
         toast.error("Failed to delete");
       }
@@ -113,7 +121,7 @@ const PopupCard = () => {
     }
   };
   const redirectToAnotherSite = () => {
-    window.open(popupImage?.list[currentIndex]?.url.url, "_blank");
+    window.open(popupImage?.list[currentIndex]?.image_url, "_blank");
   };
   return (
     // <motion.div initial="hidden" animate="visible" variants={fadeIn}>
@@ -159,21 +167,21 @@ const PopupCard = () => {
 
         {popupImage.generat ? (
           <picture>
-            <img src={popupImage?.list[currentIndex]?.url.url} alt="image" />
+            <img src={popupImage?.list[currentIndex]?.image_url} alt="image" />
           </picture>
         ) : (
           <picture>
-          {
-            popupImage?.list[currentIndex]?.modified_image_url ?    <img
-            src={popupImage?.list[currentIndex]?.modified_image_url}
-            alt="image"
-          /> :  <img
-          src={popupImage?.list[currentIndex]?.image_url}
-          alt="image"
-        />
-
-          }
-          
+            {popupImage?.list[currentIndex]?.modified_image_url ? (
+              <img
+                src={popupImage?.list[currentIndex]?.modified_image_url}
+                alt="image"
+              />
+            ) : (
+              <img
+                src={popupImage?.list[currentIndex]?.image_url}
+                alt="image"
+              />
+            )}
           </picture>
         )}
 
@@ -182,47 +190,44 @@ const PopupCard = () => {
             // AssetsActivTab === "product" ? (
             //   <Button onClick={() => handletBtn()}> {popupImage.btn} </Button>
             // ) : (
-              <>
-                <div className="we">
-                  <div className="btnsd">
-                    <button
-                      className="selectone"
-                      onClick={() => handleDelet(popupImage?.id)}
+            <>
+              <div className="we">
+                <div className="btnsd">
+                  <button className="selectone" onClick={() => handleDelet()}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      aria-hidden="true"
+                      className="delet"
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke-width="1.5"
-                        stroke="currentColor"
-                        aria-hidden="true"
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                      ></path>
+                    </svg>
+                  </button>
+                  <button
+                    className="selectone"
+                    onClick={() => redirectToAnotherSite()}
+                  >
+                    <picture className="delet">
+                      <img
                         className="delet"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                        ></path>
-                      </svg>
-                    </button>
-                    <button
-                      className="selectone"
-                      onClick={() => redirectToAnotherSite()}
-                    >
-                      <picture className="delet">
-                        <img
-                          className="delet"
-                          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAACGElEQVR4nO2Zy0rDQBSGv67VuvMFVHTlbeOiCEpbd30i9TGEWjfi1voM3kAR3VlofQQr9VrErioDJ3Ao2iZNzExCPgi0IZk5f3POmflTyMjISAJl4BBoAV05zOcaUCIBzAOXQH/EcQ7M4SibwIsE+gTsAMvAhBwrwC7Qlms6wAaOUQS+JMATYGrItXngVImZc1FEFcj5uCcH1FWaJVKEfjJempWSKsJjV+433cwKWxGIQBpAX1pz7CwCrxGIQJqCGeeDmDFBX6nuFEaEVSFltU4Ma7FBU6tJzBzLxGaxi4I9Ge+AmHmUiZciGGtatV/TAWPlWyaeDDlOTq3uZ1jgXSY3eyfNDHANXPgUUVVblFks0JAATJFqEQ9y/jaAiC/ZaFrBBNED1n8R8SDf/YooYpECUEm6CI3TIsoD9vRdauJAnsQ4IvKqO/27iFH2tOcjnUzNrCo3uCaL3bPqTpu27emowq6I2L9+iLP/brFB7OmwdCpIDTQkHbuydzIpWXTJFAWpiVgpRiCiMtAAEiliXWrC3J8Ie3r3RzqtqvOxs6C6k197egPc/1ITkzLOGxa4SIM93U6LPT1Kiz1tpsWe9tJiTz8jEGJE7Nt+g94KmVrO2NOaBGFeGAfFKWdXGrP9OiXC41wCqgf4I8Y5EUhxdpQYY0GdsKfjsKHEtKVmrNrTsE/GS7O+TXsaZQOoyarfjdueZmRkEJofMI0LxuO9LrIAAAAASUVORK5CYII="
-                        />
-                      </picture>
-                    </button>
-                  </div>
+                        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAACGElEQVR4nO2Zy0rDQBSGv67VuvMFVHTlbeOiCEpbd30i9TGEWjfi1voM3kAR3VlofQQr9VrErioDJ3Ao2iZNzExCPgi0IZk5f3POmflTyMjISAJl4BBoAV05zOcaUCIBzAOXQH/EcQ7M4SibwIsE+gTsAMvAhBwrwC7Qlms6wAaOUQS+JMATYGrItXngVImZc1FEFcj5uCcH1FWaJVKEfjJempWSKsJjV+433cwKWxGIQBpAX1pz7CwCrxGIQJqCGeeDmDFBX6nuFEaEVSFltU4Ma7FBU6tJzBzLxGaxi4I9Ge+AmHmUiZciGGtatV/TAWPlWyaeDDlOTq3uZ1jgXSY3eyfNDHANXPgUUVVblFks0JAATJFqEQ9y/jaAiC/ZaFrBBNED1n8R8SDf/YooYpECUEm6CI3TIsoD9vRdauJAnsQ4IvKqO/27iFH2tOcjnUzNrCo3uCaL3bPqTpu27emowq6I2L9+iLP/brFB7OmwdCpIDTQkHbuydzIpWXTJFAWpiVgpRiCiMtAAEiliXWrC3J8Ie3r3RzqtqvOxs6C6k197egPc/1ITkzLOGxa4SIM93U6LPT1Kiz1tpsWe9tJiTz8jEGJE7Nt+g94KmVrO2NOaBGFeGAfFKWdXGrP9OiXC41wCqgf4I8Y5EUhxdpQYY0GdsKfjsKHEtKVmrNrTsE/GS7O+TXsaZQOoyarfjdueZmRkEJofMI0LxuO9LrIAAAAASUVORK5CYII="
+                      />
+                    </picture>
+                  </button>
                 </div>
+              </div>
 
-                <Button onClick={() => handletBtn()}> {popupImage.btn} </Button>
-              </>
-            // )
+              <Button onClick={() => handletBtn()}> {popupImage.btn} </Button>
+            </>
           ) : (
+            // )
             <Button onClick={() => handletBtn()}> {popupImage.btn} </Button>
           )}
         </div>

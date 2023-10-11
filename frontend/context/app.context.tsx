@@ -214,6 +214,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [jobId, setJobId] = useState<string[]>([]);
   const [jobIdOne, setJobIdOne] = useState<string[]>([]);
   const [tdFormate, setTdFormate] = useState(".gltf");
+  const [regenratingId, setregeneraatingId] = useState(null);
+
 
   const PosisionbtnRef = useRef(null);
   const regenerateRef = useRef(null);
@@ -229,7 +231,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [category, setcategory] = useState(null);
 
   const [listofassets, setListOfAssets] = useState(null);
-  const [listofassetsById, setListOfAssetsById] = useState(null);
+  const [listofassetsById, setListOfAssetsById] = useState([]);
 
   const [newassetonCanvas, setNewassetonCanvas] = useState(null);
 
@@ -266,7 +268,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [magicLoader, setMagicloder] = useState(false);
   const [crop, setCrop] = useState(false);
   const [filsizeMorethan10, setfilsizeMorethan10] = useState(false);
-
 
   const stageRef = useRef<fabric.Canvas | null>(null);
 
@@ -808,12 +809,13 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       //   }
       // });
 
-      img.scaleToWidth(scaledWidth);
+      img.scaleToWidth(scaledWidth);  
       img.scaleToHeight(scaledHeight);
       // Set the position of the image
       img.set({
         left: activeSize.gl,
         top: activeSize.gt,
+        id:url
 
         // scaleX: scaleX,
         // scaleY: scaleY,
@@ -865,17 +867,30 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
   const fetchAssetsImages = async (userId, pro) => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API}/assets?userId=${userId}`,
-        {
-          method: "GET",
-        }
-      );
-      const data = await response.json();
-      // console.log(await data);
+      // const response = await fetch(
+      //   `${process.env.NEXT_PUBLIC_API}/assets?userId=${userId}`,
+      //   {
+      //     method: "GET",
+      //   }
+      // );
+      const response = await fetch(`/api/images`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: userId,
+          // project_id: pro,
+          // assetType: AssetsActivTab,
 
-      if (data?.length) {
-        setListOfAssets(await data);
+          // asset: { url: popup.dataArray.imageUrl, product: productnew },
+        }),
+      });
+      const data = await response.json();
+      console.log(await data,"dfdgfdgfg");
+
+      if (data?.data.length) {
+        setListOfAssets(await data.data);
 
         // setRe(0)
       }
@@ -893,17 +908,33 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   };
   const fetchAssetsImagesWithProjectId = async (userId, pro) => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API}/assets?userId=${userId}&projectId=${pro}`,
-        {
-          method: "GET",
-        }
-      );
-      const data = await response.json();
-      console.log("cdcdcvdcvc", await data);
+      // const response = await fetch(
+      //   `${process.env.NEXT_PUBLIC_API}/assets?userId=${userId}&projectId=${pro}`,
+      //   {
+      //     method: "GET",
+      //   }
+      // );
+      const response = await fetch(`/api/images`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: userId,
+          project_id: pro,
+          // assetType: AssetsActivTab,
 
-      if (data?.length) {
-        setListOfAssetsById(await data);
+          // asset: { url: popup.dataArray.imageUrl, product: productnew },
+        }),
+      });
+      const data = await response.json();
+   
+
+      if (data?.data.length > 0) {
+    
+
+        setListOfAssetsById(data?.data);
+        // console.log(listofassetsById)
       }
 
       // setImages(data); // Update the state with the fetched images
@@ -1235,96 +1266,95 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const generate3dHandeler = async (ueserId, proid) => {
     if (category === null) {
       toast("Select your product category first !");
-    } else if ( !file3dUrl && !file3d) {
+    } else if (!file3dUrl && !file3d) {
       toast("Add a 3d model");
-    }else{
-
-  
-
-    if (renderer === null) {
-      toast("Add a 3d model");
-
     } else {
-      console.log("dsfdfgdg");
-      setLoader(true);
-
-      const promtText = promtFull;
-      const screenshot = renderer.domElement.toDataURL("image/png");
-      console.log(screenshot);
-
-      const response = await fetch("/api/generate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          dataUrl: screenshot,
-          maskDataUrl: null,
-          prompt: promtText.trim(),
-          user_id: userId,
-          category: category,
-          lora_type: loara,
-          num_images: selectResult,
-        }),
-      });
-
-      const generate_response = await response.json();
-
-      if (generate_response?.error) {
-        // alert(generate_response?.error);
-        toast.error(generate_response?.error);
-
-        setLoader(false);
-
-        return false;
+      if (renderer === null) {
+        toast("Add a 3d model");
       } else {
+        console.log("dsfdfgdg");
         setLoader(true);
 
-        try {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API}/jobId3d`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              userId: ueserId,
-              // projectId: proid,
-              jobId: generate_response?.job_id,
-            }),
-          });
-          const datares = await response;
+        const promtText = promtFull;
+        const screenshot = renderer.domElement.toDataURL("image/png");
+        console.log(screenshot);
 
-          if (datares.ok) {
-            setJobIdOne([generate_response?.job_id]);
+        const response = await fetch("/api/generate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            dataUrl: screenshot,
+            maskDataUrl: null,
+            prompt: promtText.trim(),
+            user_id: userId,
+            category: category,
+            lora_type: loara,
+            num_images: selectResult,
+          }),
+        });
 
-            // GetProjextById(proid);
-            axios
-            .get(`${process.env.NEXT_PUBLIC_API}/user?id=${ueserId}`)
-            .then((response) => {
-              console.log(response?.data?.jobIds3D, "dsfgdgfd")
-              setproject(response.data);
-              setJobId(response?.data?.jobIds3D);
-              // return response.data;
-            })
-            .catch((error) => {
-              console.error(error);
-              return error;
-            });
-          }
-          // window.open(`/generate/${datares?._id}`, "_self");
-        } catch (error) {
+        const generate_response = await response.json();
+
+        if (generate_response?.error) {
+          // alert(generate_response?.error);
+          toast.error(generate_response?.error);
+
           setLoader(false);
+
+          return false;
+        } else {
+          setLoader(true);
+
+          try {
+            const response = await fetch(
+              `${process.env.NEXT_PUBLIC_API}/jobId3d`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  userId: ueserId,
+                  // projectId: proid,
+                  jobId: generate_response?.job_id,
+                }),
+              }
+            );
+            const datares = await response;
+
+            if (datares.ok) {
+              setJobIdOne([generate_response?.job_id]);
+
+              // GetProjextById(proid);
+              axios
+                .get(`${process.env.NEXT_PUBLIC_API}/user?id=${ueserId}`)
+                .then((response) => {
+                  console.log(response?.data?.jobIds3D, "dsfgdgfd");
+                  setproject(response.data);
+                  setJobId(response?.data?.jobIds3D);
+                  // return response.data;
+                })
+                .catch((error) => {
+                  console.error(error);
+                  return error;
+                });
+            }
+            // window.open(`/generate/${datares?._id}`, "_self");
+          } catch (error) {
+            setLoader(false);
+          }
         }
       }
     }
-  }
   };
 
   const [reloder, setreLoader] = useState(true);
 
   // regenrate
   const RegenerateImageHandeler = async (ueserId, proid, img) => {
-    // console.log(promt);
+    console.log(regenratingId,"dfffffffffffffffffffffffffffffffffffffffffffffff");
     setLoader(true);
     setGenerationLoader(true);
     try {
@@ -1332,38 +1362,25 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
       const promtText = promtFull ? promtFull : " ";
 
-      // product +
-      // ", " +
-      // selectPlacement +
-      // " " +
-      // placementTest +
-      // ", " +
-      // selectSurrounding +
-      // " " +
-      // surroundingTest +
-      // ", " +
-      // selectBackground +
-      // " " +
-      // backgroundTest;
-
-      const response = await fetch("/api/generate", {
+      const response = await fetch("/api/regenerate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          dataUrl: img,
-          maskDataUrl: null,
-          prompt: promtText ? promtText : " " + " ",
+          image_url: regenratingId,
+          // maskDataUrl: null,
+          // prompt: promtText ? promtText : " " + " ",
           user_id: ueserId,
           category: category,
 
           // lora_type: loara,
-          num_images: 3,
+          // num_images: 3,
         }),
       });
 
       const generate_response = await response.json();
+      console.log(generate_response,"generate_response")
 
       if (generate_response?.error) {
         toast.error(generate_response?.error);
@@ -1476,7 +1493,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       value={{
         canvasDisable,
         TdImage,
-        filsizeMorethan10, setfilsizeMorethan10,
+        filsizeMorethan10,
+        setfilsizeMorethan10,
+        regenratingId, setregeneraatingId,
         tdFormate,
         setTdFormate,
         file3dUrl,

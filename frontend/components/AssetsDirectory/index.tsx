@@ -274,8 +274,8 @@ const AssetsDir = () => {
                   className="img"
                   onClick={() =>
                     setPopupImage({
-                      id: image?._id,
-                      url: image?.url.url,
+                      id: i,
+                      url: image?.image_url,
                       status: true,
                       userId: userId,
                       btn: "Use to generate",
@@ -286,7 +286,7 @@ const AssetsDir = () => {
                   }
                 >
                   <picture>
-                    <img src={image?.url?.url} alt="" />
+                    <img src={image?.image_url} alt="" />
                   </picture>
                 </div>
               </div>

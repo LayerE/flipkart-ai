@@ -32,17 +32,30 @@ const PopupUpload = () => {
       try {
         // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API}/assets`, {
+        // const response = await fetch(`${process.env.NEXT_PUBLIC_API}/assets`, {
+        //   method: "POST",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   },
+        //   body: JSON.stringify({
+        //     userId: userId,
+        //     projectId: id,
+        //     assetType: AssetsActivTab,
+
+        //     asset: { url: popup.dataArray.imageUrl, product: productnew },
+        //   }),
+        // });
+        const response = await fetch(`/api/addcaption`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            userId: userId,
-            projectId: id,
-            assetType: AssetsActivTab,
+            image_url: popup.dataArray.imageUrl,
+            caption: productnew,
+            // assetType: AssetsActivTab,
 
-            asset: { url: popup.dataArray.imageUrl, product: productnew },
+            // asset: { url: popup.dataArray.imageUrl, product: productnew },
           }),
         });
 

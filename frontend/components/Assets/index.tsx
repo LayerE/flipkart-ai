@@ -43,8 +43,9 @@ const Assets: React.FC = () => {
     if (userId && isReady) {
       fetchAssetsImagesWithProjectId(userId, id);
 
-      const filer = listofassetsById?.filter((item) => item.project_id === id);
-      setFilter(filer);
+      // const filer = listofassetsById?.filter((item) => item.project_id === id);
+      console.log(listofassetsById, "listofassetsById");
+      // setFilter(listofassetsById);
       console.log(listofassetsById, "dfdf");
     }
   }, [isReady, userId, re]);
@@ -95,22 +96,25 @@ const Assets: React.FC = () => {
         ) : null}
 
         <ResponsiveRowWraptwo>
-          {listofassetsById?.map((test, i) => (
-            <div
-              key={i}
-              className={"imageBox"}
-              onClick={() => {
-                if (!assetLoader && !loader) {
-                  addimgToCanvasSubject(test?.url.url);
-                  setProduct(test.url.product);
-                }
-              }}
-            >
-              <picture>
-                <img src={test.url.url} alt="" />
-              </picture>
-            </div>
-          ))}
+          {listofassetsById?.length ?(
+             listofassetsById?.map((test, i) => (
+                <div
+                  key={i}
+                  className={"imageBox"}
+                  onClick={() => {
+                    if (!assetLoader && !loader) {
+                      addimgToCanvasSubject(test?.image_url);
+                      setProduct(test?.caption);
+                    }
+                  }}
+                >
+                  <picture>
+                    <img src={test?.image_url} alt="" />
+                  </picture>
+                </div>
+              ))
+          )
+            : null}
         </ResponsiveRowWraptwo>
       </div>
     </div>
