@@ -68,13 +68,21 @@ export default async function handler(req: NextRequest, res: NextResponse) {
 
     const { body } = req;
     const payload = body;
-    const { user_id, dataUrl, project_id } = payload;
-
+    const { user_id, dataUrl, project_id, type } = payload;
     console.log(dataUrl);
 
     if (!user_id) {
       res.status(400).send("Missing user_id");
       return;
+    }
+
+    var image_type = "image";
+    var is_bg_removal_needed = true;
+    var outputBase64Url = dataUrl;
+
+    if (type && type.length > 0) {
+      image_type = type;
+      is_bg_removal_needed = false;
     }
 
     const inputBase64Url = dataUrl;
@@ -95,12 +103,6 @@ export default async function handler(req: NextRequest, res: NextResponse) {
       return;
     }
 
-    // Encode the base64 data as a buffer
-    const inputBuffer = Buffer.from(
-      inputBase64Url.split(";base64,").pop(),
-      "base64"
-    );
-
     // Upload image to ImageKit
     const { url: imageUrl, height, width } = await uploadImage(dataUrl);
 
@@ -118,6 +120,7 @@ export default async function handler(req: NextRequest, res: NextResponse) {
           user_id,
           image_url: imageUrl,
           project_id: project_id || null,
+          type: image_type,
         }),
       }
     );

@@ -5,9 +5,9 @@ const { createCanvas, loadImage } = require("canvas");
 
 export const config = {
   api: {
-      bodyParser: {
-          sizeLimit: '4mb' // Set desired value here
-      }
+    bodyParser: {
+      sizeLimit: '4mb' // Set desired value here
+    }
   }
 }
 
@@ -68,7 +68,7 @@ export default async function handler(req: NextRequest, res: NextResponse) {
 
     const { body } = req;
     const payload = body;
-    const { user_id, dataUrl, project_id } = payload;
+    const { user_id, dataUrl, project_id, type } = payload;
 
     console.log(dataUrl);
 
@@ -140,6 +140,7 @@ export default async function handler(req: NextRequest, res: NextResponse) {
           user_id,
           image_url: imageUrl,
           project_id: project_id || null,
+          type: type || null,
         }),
       }
     );
