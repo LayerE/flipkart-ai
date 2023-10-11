@@ -216,7 +216,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [tdFormate, setTdFormate] = useState(".gltf");
   const [regenratingId, setregeneraatingId] = useState(null);
 
-
   const PosisionbtnRef = useRef(null);
   const regenerateRef = useRef(null);
   const genrateeRef = useRef(null);
@@ -809,13 +808,13 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       //   }
       // });
 
-      img.scaleToWidth(scaledWidth);  
+      img.scaleToWidth(scaledWidth);
       img.scaleToHeight(scaledHeight);
       // Set the position of the image
       img.set({
         left: activeSize.gl,
         top: activeSize.gt,
-        id:url
+        id: url,
 
         // scaleX: scaleX,
         // scaleY: scaleY,
@@ -887,7 +886,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         }),
       });
       const data = await response.json();
-      console.log(await data,"dfdgfdgfg");
+      console.log(await data, "dfdgfdgfg");
 
       if (data?.data.length) {
         setListOfAssets(await data.data);
@@ -928,11 +927,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         }),
       });
       const data = await response.json();
-   
 
       if (data?.data.length > 0) {
-    
-
         setListOfAssetsById(data?.data);
         // console.log(listofassetsById)
       }
@@ -1354,7 +1350,10 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
   // regenrate
   const RegenerateImageHandeler = async (ueserId, proid, img) => {
-    console.log(regenratingId,"dfffffffffffffffffffffffffffffffffffffffffffffff");
+    console.log(
+      regenratingId,
+      "dfffffffffffffffffffffffffffffffffffffffffffffff"
+    );
     setLoader(true);
     setGenerationLoader(true);
     try {
@@ -1380,7 +1379,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       });
 
       const generate_response = await response.json();
-      console.log(generate_response,"generate_response")
+      console.log(generate_response, "generate_response");
 
       if (generate_response?.error) {
         toast.error(generate_response?.error);
@@ -1495,7 +1494,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         TdImage,
         filsizeMorethan10,
         setfilsizeMorethan10,
-        regenratingId, setregeneraatingId,
+        regenratingId,
+        setregeneraatingId,
         tdFormate,
         setTdFormate,
         file3dUrl,
