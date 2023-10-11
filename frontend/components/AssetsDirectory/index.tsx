@@ -331,6 +331,7 @@ const AssetsDir = () => {
                       generat: true,
                       index: i,
                       list: assers,
+                      type: AssetsActivTab
                     })
                   }
                 >

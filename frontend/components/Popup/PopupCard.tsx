@@ -96,6 +96,16 @@ const PopupCard = () => {
       // );
       console.log(popupImage?.list[currentIndex]?.image_url, "deleter");
 
+let deletfrom 
+      if(popupImage.type === "product"){
+        deletfrom = null
+
+      }else{
+        deletfrom = "brand"
+
+
+      }
+
       const response = await fetch(`/api/deleteimage`, {
         method: "POST",
         headers: {
@@ -103,6 +113,7 @@ const PopupCard = () => {
         },
         body: JSON.stringify({
           image_url: popupImage?.list[currentIndex]?.image_url,
+          type: deletfrom
         }),
       });
       console.log(response, "deleter");
