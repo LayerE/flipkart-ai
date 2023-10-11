@@ -77,12 +77,9 @@ export default async function handler(req: NextRequest, res: NextResponse) {
     }
 
     var image_type = "image";
-    var is_bg_removal_needed = true;
-    var outputBase64Url = dataUrl;
 
     if (type && type.length > 0) {
       image_type = type;
-      is_bg_removal_needed = false;
     }
 
     const inputBase64Url = dataUrl;
@@ -106,24 +103,43 @@ export default async function handler(req: NextRequest, res: NextResponse) {
     // Upload image to ImageKit
     const { url: imageUrl, height, width } = await uploadImage(dataUrl);
 
-    // Add the image to the database
-    await fetch(
-      `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/${process.env.NEXT_PUBLIC_BACKGROUND_REMOVED_IMAGES_TABLE}`,
-      {
-        headers: {
-          apikey: process.env.SUPABASE_SERVICE_KEY as string,
-          Authorization: `Bearer ${process.env.SUPABASE_SERVICE_KEY}` as string,
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-        body: JSON.stringify({
-          user_id,
-          image_url: imageUrl,
-          project_id: project_id || null,
-          type: image_type,
-        }),
-      }
-    );
+    if (image_type == "image") {
+
+      // Add the image to the database
+      await fetch(
+        `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/${process.env.NEXT_PUBLIC_BACKGROUND_REMOVED_IMAGES_TABLE}`,
+        {
+          headers: {
+            apikey: process.env.SUPABASE_SERVICE_KEY as string,
+            Authorization: `Bearer ${process.env.SUPABASE_SERVICE_KEY}` as string,
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+          body: JSON.stringify({
+            user_id,
+            image_url: imageUrl,
+            project_id: project_id || null,
+            type: image_type,
+          }),
+        }
+      );
+    } else {
+      await fetch(
+        `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/${process.env.BRAND_ASSETS_TABLE}`,
+        {
+          headers: {
+            apikey: process.env.SUPABASE_SERVICE_KEY as string,
+            Authorization: `Bearer ${process.env.SUPABASE_SERVICE_KEY}` as string,
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+          body: JSON.stringify({
+            user_id,
+            image_url: imageUrl,
+          }),
+        }
+      );
+    }
 
     res.status(200).send(
       JSON.stringify({
