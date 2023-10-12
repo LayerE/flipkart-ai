@@ -334,7 +334,7 @@ const Edit3d = () => {
                       Erase
                     </div>
                     <div
-                      className={`btn ${mode === "eraser" ? "activBtn" : ""}`}
+                      className={`btnq ${mode === "eraser" ? "activBtn" : ""}`}
                       onClick={() => {
                         // undoLastDrawing();
                         setLinesHistory([]);
@@ -473,6 +473,17 @@ const WrapperEdit = styled.div`
     cursor: pointer;
 
     text-align: center;
+  }
+  .btnq {
+    width: 100%;
+    padding: 5px;
+    cursor: pointer;
+
+    text-align: center;
+    &:hover{
+    background: #f9d20d3f;
+
+    }
   }
 
   .activBtn {
