@@ -6,10 +6,10 @@ const { createCanvas, loadImage } = require("canvas");
 export const config = {
   api: {
     bodyParser: {
-      sizeLimit: '4mb' // Set desired value here
-    }
-  }
-}
+      sizeLimit: "4mb", // Set desired value here
+    },
+  },
+};
 
 async function getImageDimensions(base64Url: string) {
   const canvas = createCanvas();
@@ -59,6 +59,11 @@ const uploadImage = async (dataUrl: string) => {
   }
 };
 
+function isUrl(url: string) {
+  const urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
+  return urlRegex.test(url);
+}
+
 export default async function handler(req: NextRequest, res: NextResponse) {
   try {
     if (req.method !== "POST") {
@@ -77,10 +82,29 @@ export default async function handler(req: NextRequest, res: NextResponse) {
       return;
     }
 
-    const inputBase64Url = dataUrl;
+    // If DataUrl is a website url, fetch the image and convert it to a base64Url
+    // Check if dataUrl is a url
+    const is_url = isUrl(dataUrl);
+
+    var inputBase64Url = "";
+
+    if (is_url) {
+      const response = await axios.get(dataUrl, {
+        responseType: "arraybuffer",
+      });
+
+      const base64Url = `data:image/png;base64,${response.data.toString(
+        "base64"
+      )}`;
+      inputBase64Url = base64Url;
+    } else {
+      inputBase64Url = dataUrl;
+    }
 
     // Get the image dimensions of the image from its base64Url
-    const { width: img_width, height: img_height } = await getImageDimensions(inputBase64Url);
+    const { width: img_width, height: img_height } = await getImageDimensions(
+      inputBase64Url
+    );
 
     if (!img_width || !img_height) {
       res.status(400).send("Image is corrupted or unsupported dimensions");
@@ -101,8 +125,8 @@ export default async function handler(req: NextRequest, res: NextResponse) {
 
     let form = new FormData();
     form.append("image_file", inputBuffer, {
-      filename: "input.jpg",
-      contentType: "image/jpeg",
+      filename: "input.png",
+      contentType: "image/png",
     });
 
     let config = {
@@ -153,7 +177,7 @@ export default async function handler(req: NextRequest, res: NextResponse) {
     );
     return;
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
     res.status(500).send("Error removing background");
     return;
   }
