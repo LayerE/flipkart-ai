@@ -9,7 +9,7 @@ import { AssetsLoader } from "../Loader/AssetsLoader";
 import { RemoveLoader } from "../Loader/RemoveLoader";
 import { useAuth } from "@clerk/nextjs";
 import { toast } from "react-toastify";
-import { upSacle } from "@/store/api";
+
 import { arrayBufferToDataURL, dataURLtoFile } from "@/utils/BufferToDataUrl";
 
 const RemoveBox = ({ type }) => {
@@ -92,6 +92,49 @@ const RemoveBox = ({ type }) => {
       });
   }
 
+  const upSacle = async (photo: string, filename: string): Promise<string> => {
+    const form = new FormData();
+    const fileItem = await dataURLtoFile(photo, filename);
+    form.append("image_file", fileItem);
+    form.append("target_width", 2048);
+    form.append("target_height", 2048);
+    const response = await fetch(
+      "https://clipdrop-api.co/image-upscaling/v1/upscale",
+      {
+        method: "POST",
+        headers: {
+          "x-api-key":
+            "ca2c46b3fec7f2917642e99ab5c48d3e23a2f940293a0a3fbec2e496566107f9d8b192d030b7ecfd85cfb02b6adb32f4",
+        },
+        body: form,
+      }
+    );
+
+    const buffer = await response.arrayBuffer();
+    const dataURL = await arrayBufferToDataURL(buffer);
+    localStorage.setItem("m-images", JSON.stringify(dataURL));
+    console.log(buffer, response, dataURL, "imgs");
+
+    if (response.status === 402) {
+        toast.error("Not enough credits to process the request");
+        setromovepopu3d(false);
+        setupdateImg(null);
+      }
+    // const response = await fetch("/api/upscale", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     image_url: photo,
+    //     user_id: userId,
+      
+    //   }),
+    // });
+
+    return dataURL;
+  };
+
   const UpscaleBG = async () => {
     setLoader(true);
 
@@ -111,41 +154,16 @@ const RemoveBox = ({ type }) => {
     // console.log(await data, "upscale ");
     try {
       //   const data = await upSacle(downloadImg, "imger");
+      const data = await upSacle(downloadImg, "imger");
 
-      const form = new FormData();
-      const fileItem = await dataURLtoFile(downloadImg, "imger");
-      form.append("image_file", fileItem);
-      form.append("target_width", 2048);
-      form.append("target_height", 2048);
-      const response = await fetch(
-        "https://clipdrop-api.co/image-upscaling/v1/upscale",
-        {
-          method: "POST",
-          headers: {
-            "x-api-key":
-              "5f28e1037978f6eee7cfc6d61439fc02dd23c4ca3b73fc1ee7521b3948b852d06cfae5fd52cc626460bd1eabce6120fd",
-          },
-          body: form,
-        }
-      );
-
-      const buffer = await response.arrayBuffer();
-      const dataURL = await arrayBufferToDataURL(buffer);
-      //   localStorage.setItem("m-images", JSON.stringify(dataURL));
-      console.log(buffer, response, dataURL, "imgs");
-      if (response.status === 402) {
-        toast.error("Not enough credits to process the request");
-        setromovepopu3d(false);
-        setupdateImg(null);
-      } else {
-        if (dataURL) {
+        if (data) {
           console.log(updateImg);
           // addimgToCanvasGen(data);
           setupdateImg(data);
 
           //   setSelectedImg({ status: true, image: data });
         }
-      }
+      
     } catch (error) {
       setLoader(false);
       toast.error("Error upscale Image");
