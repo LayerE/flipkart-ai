@@ -75,8 +75,6 @@ export default async function handler(req: NextRequest, res: NextResponse) {
     const payload = body;
     const { user_id, dataUrl, project_id, type } = payload;
 
-    console.log(dataUrl);
-
     if (!user_id) {
       res.status(400).send("Missing user_id");
       return;
@@ -151,7 +149,7 @@ export default async function handler(req: NextRequest, res: NextResponse) {
     const { url: imageUrl, height, width } = await uploadImage(outputBase64Url);
 
     // Add the image to the database
-    await fetch(
+    const respy = await fetch(
       `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/${process.env.NEXT_PUBLIC_BACKGROUND_REMOVED_IMAGES_TABLE}`,
       {
         headers: {
@@ -164,7 +162,7 @@ export default async function handler(req: NextRequest, res: NextResponse) {
           user_id,
           image_url: imageUrl,
           project_id: project_id || null,
-          type: type || null,
+          type: type === null ? "image" : type,
         }),
       }
     );
