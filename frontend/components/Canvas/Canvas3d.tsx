@@ -16,6 +16,9 @@ import { useAppState } from "@/context/app.context";
 import styled from "styled-components";
 import { saveAs } from "file-saver";
 import { toast } from "react-toastify";
+import PopupCanvas from "./popupCanvas";
+import CropperBox from "./Cropper";
+import RemoveBox from "./RomovePopu";
 
 const Canvas3d = () => {
   const containerRef = useRef();
@@ -40,7 +43,12 @@ const Canvas3d = () => {
     filsizeMorethan10,
     setfilsizeMorethan10,
     setActiveSize,
+    isMagic,
+    crop,
     activeSize,
+    setDownloadImg,
+    downloadImg,
+    romovepopu3d, setromovepopu3d
   } = useAppState();
 
   let camera, scene, object, controls, renderNew;
@@ -654,10 +662,18 @@ const Canvas3d = () => {
 
   const DeletIrem = () => {
     setSelectedImg(null);
+    setDownloadImg(null);
   };
 
   return (
     <Cnavas3d>
+      {isMagic ? <PopupCanvas /> : null}
+      {crop ? <CropperBox /> : null}
+
+      {romovepopu3d.status? <RemoveBox type={"bgRevcbvmove"}/> : null}
+
+      <div className="boxs3d">
+
       <div ref={containerRef} className="boxs">
         {!showText ? <div className="tesxt">3D model viewer</div> : null}
       </div>
@@ -709,6 +725,7 @@ const Canvas3d = () => {
           </>
         ) : null}
       </div>
+      </div>
 
       {/* <button onClick={() => captureScreenshot()} ref={downloadRef}>
         Capture Screenshot
@@ -723,19 +740,22 @@ const Cnavas3d = styled.div`
   /* margin-top: 100px; */
   padding: 0 30px;
   /* padding-top: 100px; */
-  display: flex;
-  gap: 30px;
   min-width: 100%;
 
   height: 100%;
   /* overflow-y: auto; */
   /* overflow-x: scroll; */
-  transform: scale(0.6) translateX(-30%) translateY(-5%);
   &::-webkit-scrollbar {
     width: 10px;
     height: 10px;
   }
+.boxs3d{
+  display: flex;
+  transform: scale(0.6) translateX(-30%) translateY(-5%);
+  gap: 30px;
 
+
+}
   /* Track */
   &::-webkit-scrollbar-track {
     box-shadow: inset 0 0 5px grey;

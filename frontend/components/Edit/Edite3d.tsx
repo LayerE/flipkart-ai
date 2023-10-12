@@ -22,7 +22,7 @@ import { styled } from "styled-components";
 import { fabric } from "fabric";
 import TextLoader from "../Loader/text";
 
-const Edit = () => {
+const Edit3d = () => {
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
   const popupRef = useRef<HTMLDivElement>(null);
 
@@ -34,7 +34,8 @@ const Edit = () => {
     downloadImg,
     canvasInstance,
     addimgToCanvasGen,
-    addimgToCanvasSubject,git ,
+    addimgToCanvasSubject,
+    git,
     modifidImageArray,
     isMagic,
     setIsMagic,
@@ -55,9 +56,15 @@ const Edit = () => {
     setLines,
     magicLoader,
     setMagicloder,
+    setDownloadImg,
+    selectedImg,
+
     // HandleInpainting,
-    crop, setCrop,
-    loader
+    crop,
+    setCrop,
+    loader,
+    romovepopu3d,
+    setromovepopu3d,
   } = useAppState();
 
   const { userId } = useAuth();
@@ -102,88 +109,30 @@ const Edit = () => {
     }
   };
 
-  function addColorOverlayToSelectedImage(color, mode) {
-    const canvas = canvasInstance.current;
-    const activeObject = canvas?.getActiveObject();
-
-    if (activeObject && activeObject.type === "image") {
-      activeObject.filters = []; // Clear existing filters
-
-      if (mode !== "none") {
-        let filter;
-        switch (mode) {
-          case "Overlay":
-            filter = new fabric.Image.filters.BlendColor({
-              color: color,
-              mode: "overlay",
-              alpha: 0.5,
-            });
-            break;
-          case "Multiply":
-            filter = new fabric.Image.filters.BlendColor({
-              color: color,
-              mode: "multiply",
-              alpha: 1,
-            });
-            break;
-          case "Add":
-            filter = new fabric.Image.filters.BlendColor({
-              color: color,
-              mode: "add",
-              alpha: 1,
-            });
-            break;
-          case "Tint":
-            filter = new fabric.Image.filters.Tint({
-              color: color,
-              opacity: 0.5,
-            });
-            break;
-        }
-
-        if (filter) {
-          activeObject.filters.push(filter);
-        }
-      }
-
-      activeObject.applyFilters();
-      canvas.renderAll();
-    } else {
-      // alert("Please select an image on the canvas first.");
-    }
-  }
   /* eslint-disable */
 
   const HandelBG = async () => {
+    setCrop(false);
     setIsMagic(false);
-
-    setLoader(true);
-    const response = await fetch("/api/removebg", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        dataUrl: downloadImg,
-        user_id: userId,
-        project_id: id,
-      }),
-    });
-    const data = await response.json();
-    if (data) {
-      addimgToCanvasSubject(data?.data?.data[0]);
-      // addimgToCanvasGen(data?.data[0]);
-      // setSelectedImg({ status: true, image: data?.data[0] });
-      // addimgToCanvasGen(data);
-
-      setModifidImageArray((pre) => [
-        ...pre,
-        { url: data?.data[0], tool: "upscale" },
-      ]);
-    }
-
-    setLoader(false);
+    setromovepopu3d({ status: true, type: "bgRemove" });
   };
 
   async function toB64(imgUrl: string): Promise<string> {
+    const datas = await fetch(imgUrl)
+      .then((response) => response.blob())
+      .then((blob) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const base64data = reader.result;
+          return base64data;
+
+          // setBase64Image(base64data);
+        };
+        reader.readAsDataURL(blob);
+      });
+  }
+
+  async function toB64New(imgUrl: string): Promise<string> {
     const response = await fetch(imgUrl);
     const arrayBuffer = await response.arrayBuffer();
     const base64String = btoa(
@@ -195,74 +144,14 @@ const Edit = () => {
     return base64String;
   }
 
-  const upSacle = async (photo: string, filename: string): Promise<string> => {
-    const form = new FormData();
-    const fileItem = await dataURLtoFile(photo, filename);
-    form.append("image_file", fileItem);
-    form.append("target_width", 2048);
-    form.append("target_height", 2048);
-    const response = await fetch(
-      "https://clipdrop-api.co/image-upscaling/v1/upscale",
-      {
-        method: "POST",
-        headers: {
-          "x-api-key":
-            "ca2c46b3fec7f2917642e99ab5c48d3e23a2f940293a0a3fbec2e496566107f9d8b192d030b7ecfd85cfb02b6adb32f4",
-        },
-        body: form,
-      }
-    );
-
-    const buffer = await response.arrayBuffer();
-    const dataURL = await arrayBufferToDataURL(buffer);
-    localStorage.setItem("m-images", JSON.stringify(dataURL));
-    console.log(buffer, response, dataURL, "imgs");
-    // const response = await fetch("/api/upscale", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     image_url: photo,
-    //     user_id: userId,
-      
-    //   }),
-    // });
-
-    return dataURL;
-  };
 
   const UpscaleBG = async () => {
+    setCrop(false);
     setIsMagic(false);
 
-    setLoader(true);
+    setromovepopu3d({ status: true, type: "upscale" });
 
-    // const datatacke = {
-    //   image: await toB64(downloadImg),
-    //   scale: 2,
-    // };
-    // const response = await fetch("https://api.segmind.com/v1/esrgan", {
-    //   method: "POST",
-    //   headers: {
-    //     "x-api-key": "SG_86fe6533d0888ca0",
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(datatacke),
-    // });
-    // const data = await response;
-    // console.log(await data, "upscale ");
-
-    const data = await upSacle(downloadImg, "imger");
-    console.log(data, "upscale ");
-
-    if (data) {
-      addimgToCanvasGen(data);
-      setSelectedImg({ status: true, image: data });
-
-      setModifidImageArray((pre) => [...pre, { url: data, tool: "upscale" }]);
-    }
-
-    setLoader(false);
+  
   };
   useEffect(() => {
     // addColorOverlayToSelectedImage(colore, selectColoreMode);
@@ -277,12 +166,12 @@ const Edit = () => {
   const [isEraseMode, setIsEraseMode] = useState(false);
   const history = useRef([]);
   const historyIndex = useRef(-1);
-  useEffect(() => {
-    canvasInstance.current.on("object:added", () => {
-      history.current.push(JSON.stringify(canvasInstance.current.toJSON()));
-      historyIndex.current += 1;
-    });
-  }, [size, canvasInstance]);
+  // useEffect(() => {
+  //   canvasInstance.current.on("object:added", () => {
+  //     history.current.push(JSON.stringify(canvasInstance.current.toJSON()));
+  //     historyIndex.current += 1;
+  //   });
+  // }, [size, canvasInstance]);
 
   const toggleEraseMode = () => {
     setIsEraseMode(!isEraseMode);
@@ -348,33 +237,23 @@ const Edit = () => {
     setLinesHistory(linesHistory.slice(0, linesHistory.length - 1));
   };
 
-  const HandelCrop = ()=>{
-    setCrop(true)
-    setIsMagic(false)
+  const HandelCrop = () => {
+    setromovepopu3d({ });
 
-  }
+    setCrop(true);
+    setIsMagic(false);
+  };
 
   return (
     <motion.div
       initial="hidden"
       animate="visible"
       variants={fadeIn}
-      className={downloadImg && !loader ? "accest" : "accest blure"}
+      className={selectedImg && !loader ? "accest" : "accest blure"}
       style={{ paddingBottom: "50px" }}
     >
       <WrapperEdit>
         {/* <div className="gap"></div> */}
-        <div className="gaps">
-          <Label>Arrange</Label>
-          <div className="selectbox">
-            <div className={"selectone"} onClick={() => bringImageToFront()}>
-              Bring to Front
-            </div>
-            <div className={"selectone"} onClick={() => sendImageToBack()}>
-              Send to back
-            </div>
-          </div>
-        </div>
 
         {/* <div className="gap">
         <Label>Color</Label>
@@ -409,15 +288,20 @@ const Edit = () => {
           <Label>Tools</Label>
 
           <div className="gaps">
-            <div className={isMagic ?  "selectTool activeTool" :"selectTool"} onClick={() => {setIsMagic(true); 
-    setCrop(false)
-            
-            }}>
+            <div
+              className={isMagic ? "selectTool activeTool" : "selectTool"}
+              onClick={() => {
+    setromovepopu3d({ });
+
+                setIsMagic(true);
+                setCrop(false);
+              }}
+            >
               <div className="mageic">
                 <div className="gaps">
-                  <Label>Erase</Label>
+                  <Label>Magic Erase</Label>
                   <DisabledLabel>
-                    Erase any unwanted parts of
+                    Erase then click Generate to replace any unwanted parts of
                     the background.
                   </DisabledLabel>
                 </div>
@@ -456,7 +340,7 @@ const Edit = () => {
                     <div
                       className={`btn ${mode === "eraser" ? "activBtn" : ""}`}
                       onClick={() => {
-                        undoLastDrawing()
+                        undoLastDrawing();
                         setMode("eraser");
                         // clearDrawing();
                       }}
@@ -526,9 +410,7 @@ const Edit = () => {
               </div>
             </div>
             <div
-        
-            className={crop ?  "selectTool activeTool" :"selectTool"} 
-
+              className={crop ? "selectTool activeTool" : "selectTool"}
               onClick={() => {
                 HandelCrop();
               }}
@@ -569,7 +451,7 @@ const Edit = () => {
   );
 };
 
-export default Edit;
+export default Edit3d;
 
 const WrapperEdit = styled.div`
   .gaps {

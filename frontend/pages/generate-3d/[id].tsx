@@ -57,6 +57,7 @@ export default function Home() {
     GetProjextById,
     setproject,
     project,
+    setDownloadImg,
     jobId,
     addimgToCanvasSubject,
     projectId,
@@ -106,6 +107,8 @@ export default function Home() {
     if (!loader) {
       addimgToCanvasGen(url);
       setSelectedImg({ status: true, image: url });
+      setDownloadImg(url);
+
       setModifidImageArray((pre) => [
         ...pre,
         { url: url, tool: "generated-selected" },

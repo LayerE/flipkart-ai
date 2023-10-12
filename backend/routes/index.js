@@ -259,6 +259,14 @@ router.post("/jobId", async function (req, res, next) {
         },
       }
     );
+    await Users.findOneAndUpdate(
+      { userId: userId },
+      {
+        $push: {
+          allJobIs: jobId,
+        },
+      }
+    );
 
     const updateDB = await Projects.findOneAndUpdate(
       { userId: userId, _id: projectId },
@@ -290,6 +298,14 @@ router.post("/jobId3d", async function (req, res, next) {
     //     error: "product not found",
     //   });
     // }
+   await Users.findOneAndUpdate(
+      { userId: userId },
+      {
+        $push: {
+          allJobIs: jobId,
+        },
+      }
+    );
 
     const updateUserDB = await Users.findOneAndUpdate(
       { userId: userId },
@@ -511,8 +527,12 @@ router.get("/generatedImg", async function (req, res, next) {
     }
 
     const filteredResult = data.filter((obj) =>
-      user.jobIds?.includes(obj?.task_id)
+      user.allJobIs?.includes(obj?.task_id)
     );
+    const filteredResult3d = data.filter((obj) =>
+    user.jobIds3D?.includes(obj?.task_id)
+  );
+  const mergedResult = filteredResult.concat(filteredResult3d);
 
     return res.json(filteredResult);
   } catch (error) {
@@ -549,8 +569,6 @@ router.get("/generated3dImg", async function (req, res, next) {
       }
     );
     const data = await response.json();
-
-   
 
     const filteredResult = data.filter((obj) =>
       user.jobIds3D?.includes(obj?.task_id)

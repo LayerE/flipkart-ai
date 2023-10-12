@@ -197,6 +197,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [generationLoader, setGenerationLoader] = useState<boolean>(false);
   const [loader, setLoader] = useState<boolean>(false);
   const [modifidImageArray, setModifidImageArray] = useState<string[]>([]);
+  const [romovepopu3d, setromovepopu3d] = useState<object>({});
+
 
   const [undoArray, setUndoArray] = useState<string[]>([]);
   const [editorBox, setEditorBox] = useState<fabric.Rect | null>(null);
@@ -1194,6 +1196,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
             category: category,
             lora_type: loara,
             num_images: selectResult,
+            caption: product
           }),
         });
 
@@ -1335,6 +1338,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
             category: category,
             lora_type: loara,
             num_images: selectResult,
+            // caption : product
           }),
         });
 
@@ -1592,6 +1596,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         fetchAssetsImagesBrant,
         loara,
         setLoara,
+        romovepopu3d, setromovepopu3d,
         promtFull,
         setpromtFull,
         GetProjexts,

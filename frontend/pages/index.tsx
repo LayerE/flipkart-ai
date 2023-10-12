@@ -53,9 +53,7 @@ export default function Home() {
     fetchAssetsImages,
     popup,
     setSelectedImg,
-    setListOfAssetsById
-
-
+    setListOfAssetsById,
   } = useAppState();
 
   // const [loadercarna, setloadercarna] = useState(true);
@@ -74,21 +72,20 @@ export default function Home() {
       //   if (userId) localStorage.setItem("userId", userId);
       // }
 
-//  reset
-setActiveTab(1)
-setcategory(null)
-setpromtFull("")
-setActiveTemplet(null)
-setDownloadeImgFormate("png")
-setProduct("")
-setpromt("")
-setListOfAssetsById([])
-setLoader(false)
+      //  reset
+      setActiveTab(1);
+      setcategory(null);
+      setpromtFull("");
+      setActiveTemplet(null);
+      setDownloadeImgFormate("png");
+      setProduct("");
+      setpromt("");
+      setListOfAssetsById([]);
+      setLoader(false);
 
-fetchAssetsImages(userId, null)
+      fetchAssetsImages(userId, null);
 
-
-      // 
+      //
       setMainLoader(true);
       setFilteredArray(null);
       axios
@@ -133,7 +130,7 @@ fetchAssetsImages(userId, null)
 
   return (
     <MainPage>
-        {popup?.status ? <PopupUpload /> : null}
+      {popup?.status ? <PopupUpload /> : null}
 
       {mainLoader ? <MainLoader /> : null}
 

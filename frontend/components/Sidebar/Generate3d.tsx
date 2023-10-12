@@ -20,6 +20,7 @@ import ListOf from "../List OfProduct";
 import MagicEraser from "../MagicErase";
 import RegenratTab from "../RegenrateTab";
 import Assets3d from "../Assets/Assets3 d";
+import Edit3d from "../Edit/Edite3d";
 const fadeIn = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 1 } },
@@ -39,13 +40,13 @@ const TabData = [
     tittle: "Generate",
   },
 
-//   {
-//     id: 3,
+  {
+    id: 3,
 
-//     image: assets.icons.edit_icon,
-//     tittle: "Edit",
-//     disable: assets.icons.edit_icon_diable,
-//   },
+    image: assets.icons.edit_icon,
+    tittle: "Edit",
+    disable: assets.icons.edit_icon_diable,
+  },
 ];
 
 const Sidebar3d: React.FC = () => {
@@ -144,7 +145,7 @@ const Sidebar3d: React.FC = () => {
             ) : activeTab === 2 ? (
               <Generate />
             ) : activeTab === 3 ? (
-              <Edit />
+              <Edit3d />
             ) : null}
           </motion.div>
         </div>
