@@ -62,6 +62,9 @@ const PopupCanvas = () => {
 
   
   const [img, status] = useImage(downloadImg, "Anonymous");
+  const [img2, status2] = useImage("https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80", "Anonymous");
+
+
   const handleMouseDown = () => {
     setDrawing(true);
     const pos = stageRef.current.getPointerPosition();
@@ -201,6 +204,7 @@ const PopupCanvas = () => {
             // onWheel={handleWheel}
             ref={stageRef}
           >
+            
             <Layer>
               {/* <Rect
                       width={imageWidth}
@@ -208,6 +212,7 @@ const PopupCanvas = () => {
                       fill={bgColor}
                     /> */}
               <KonvaImage image={img} width={300} height={300} />
+              
               {lines.map((line, i) => (
                 <Line
                   key={i}
@@ -217,11 +222,12 @@ const PopupCanvas = () => {
                   tension={0.5}
                   lineCap="round"
                   globalCompositeOperation={
-                    line.mode === "pen" ? "destination-out" : "destination-out"
+                    line.mode === "pen" ? "destination-out" : "source-over"
                   }
                 />
               ))}
             </Layer>
+           
           </Stage>
           {/* <img
                   src="https://preview.redd.it/need-an-npm-package-that-lets-you-create-an-image-mask-v0-12kzpoiivwha1.png?width=512&format=png&auto=webp&s=e19be5fdbd7406757e148f419eca861b7ae7f2dd"

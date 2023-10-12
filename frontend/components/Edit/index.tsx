@@ -34,7 +34,8 @@ const Edit = () => {
     downloadImg,
     canvasInstance,
     addimgToCanvasGen,
-    addimgToCanvasSubject,git ,
+    addimgToCanvasSubject,
+    git,
     modifidImageArray,
     isMagic,
     setIsMagic,
@@ -56,8 +57,9 @@ const Edit = () => {
     magicLoader,
     setMagicloder,
     // HandleInpainting,
-    crop, setCrop,
-    loader
+    crop,
+    setCrop,
+    loader,
   } = useAppState();
 
   const { userId } = useAuth();
@@ -225,7 +227,7 @@ const Edit = () => {
     //   body: JSON.stringify({
     //     image_url: photo,
     //     user_id: userId,
-      
+
     //   }),
     // });
 
@@ -348,11 +350,10 @@ const Edit = () => {
     setLinesHistory(linesHistory.slice(0, linesHistory.length - 1));
   };
 
-  const HandelCrop = ()=>{
-    setCrop(true)
-    setIsMagic(false)
-
-  }
+  const HandelCrop = () => {
+    setCrop(true);
+    setIsMagic(false);
+  };
 
   return (
     <motion.div
@@ -409,22 +410,24 @@ const Edit = () => {
           <Label>Tools</Label>
 
           <div className="gaps">
-            <div className={isMagic ?  "selectTool activeTool" :"selectTool"} onClick={() => {setIsMagic(true); 
-    setCrop(false)
-            
-            }}>
+            <div
+              className={isMagic ? "selectTool activeTool" : "selectTool"}
+              onClick={() => {
+                setIsMagic(true);
+                setCrop(false);
+              }}
+            >
               <div className="mageic">
                 <div className="gaps">
                   <Label>Erase</Label>
                   <DisabledLabel>
-                    Erase any unwanted parts of
-                    the background.
+                    Erase any unwanted parts of the background.
                   </DisabledLabel>
                 </div>
                 <div className="gaps">
                   <div className="flex">
                     <Label>Mode</Label>
-                    {/* {linesHistory.length === 0 ? null : (
+                    {linesHistory.length === 0 ? null : (
                       <div onClick={undoLastDrawing}>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -441,7 +444,7 @@ const Edit = () => {
                           ></path>
                         </svg>
                       </div>
-                    )} */}
+                    )}
                   </div>
                   <div className="modeBtns">
                     <div
@@ -454,10 +457,12 @@ const Edit = () => {
                       Erase
                     </div>
                     <div
-                      className={`btn ${mode === "eraser" ? "activBtn" : ""}`}
+                      className={`btnq ${mode === "eraser" ? "activBtn" : ""}`}
                       onClick={() => {
-                        undoLastDrawing()
-                        setMode("eraser");
+                        // undoLastDrawing()
+                        setLinesHistory([]);
+                        setLines([]);
+                        // setMode("eraser");
                         // clearDrawing();
                       }}
                     >
@@ -526,9 +531,7 @@ const Edit = () => {
               </div>
             </div>
             <div
-        
-            className={crop ?  "selectTool activeTool" :"selectTool"} 
-
+              className={crop ? "selectTool activeTool" : "selectTool"}
               onClick={() => {
                 HandelCrop();
               }}
@@ -593,6 +596,21 @@ const WrapperEdit = styled.div`
     cursor: pointer;
 
     text-align: center;
+    &:hover{
+    /* background: #f9d20d3f; */
+
+    }
+  }
+  .btnq {
+    width: 100%;
+    padding: 5px;
+    cursor: pointer;
+
+    text-align: center;
+    &:hover{
+    background: #f9d20d3f;
+
+    }
   }
 
   .activBtn {

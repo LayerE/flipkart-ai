@@ -144,14 +144,11 @@ const Edit3d = () => {
     return base64String;
   }
 
-
   const UpscaleBG = async () => {
     setCrop(false);
     setIsMagic(false);
 
     setromovepopu3d({ status: true, type: "upscale" });
-
-  
   };
   useEffect(() => {
     // addColorOverlayToSelectedImage(colore, selectColoreMode);
@@ -238,7 +235,7 @@ const Edit3d = () => {
   };
 
   const HandelCrop = () => {
-    setromovepopu3d({ });
+    setromovepopu3d({});
 
     setCrop(true);
     setIsMagic(false);
@@ -291,7 +288,7 @@ const Edit3d = () => {
             <div
               className={isMagic ? "selectTool activeTool" : "selectTool"}
               onClick={() => {
-    setromovepopu3d({ });
+                setromovepopu3d({});
 
                 setIsMagic(true);
                 setCrop(false);
@@ -301,14 +298,13 @@ const Edit3d = () => {
                 <div className="gaps">
                   <Label> Erase</Label>
                   <DisabledLabel>
-                    Erase any unwanted parts of
-                    the background.
+                    Erase any unwanted parts of the background.
                   </DisabledLabel>
                 </div>
                 <div className="gaps">
                   <div className="flex">
                     <Label>Mode</Label>
-                    {/* {linesHistory.length === 0 ? null : (
+                    {linesHistory.length === 0 ? null : (
                       <div onClick={undoLastDrawing}>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -325,7 +321,7 @@ const Edit3d = () => {
                           ></path>
                         </svg>
                       </div>
-                    )} */}
+                    )}
                   </div>
                   <div className="modeBtns">
                     <div
@@ -340,8 +336,10 @@ const Edit3d = () => {
                     <div
                       className={`btn ${mode === "eraser" ? "activBtn" : ""}`}
                       onClick={() => {
-                        undoLastDrawing();
-                        setMode("eraser");
+                        // undoLastDrawing();
+                        setLinesHistory([]);
+                        setLines([]);
+                        // setMode("eraser");
                         // clearDrawing();
                       }}
                     >
