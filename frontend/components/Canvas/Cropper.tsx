@@ -23,6 +23,8 @@ const CropperBox = () => {
     downloadImg,
     addimgToCanvasGen,
     TDMode,
+    downloadeImgFormate,
+    downloadImgEdit, setDownloadImgEdit
   } = useAppState();
 
   // const [cropSize, setCropSize] = useState({ x: 0, y: 0 })
@@ -74,13 +76,14 @@ const CropperBox = () => {
       setCrop(false);
     }
   };
-  const downloadH = async() => {
+  const downloadH = async () => {
     console.log("dfg");
     if (cropSize.width && cropSize.height) {
       console.log("dfg");
 
       const canvas = document.createElement("canvas");
       const image = document.getElementById("img");
+      image.setAttribute("crossOrigin", "anonymous");
       const scaleX = image.naturalWidth / image.width;
       const scaleY = image.naturalHeight / image.height;
 
@@ -102,7 +105,7 @@ const CropperBox = () => {
 
       // const blob = await new Promise((resolve) =>
       // );
-    const  url =  canvas.toDataURL("image/png")
+      const url = canvas.toDataURL();
       // const url = URL.createObjectURL(blob);
 
       // const link = document.createElement('a');

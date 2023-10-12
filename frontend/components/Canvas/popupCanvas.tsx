@@ -157,8 +157,8 @@ const PopupCanvas = () => {
     saveAs(dataURL, `image${Date.now()}.${downloadeImgFormate}`);
 
     // addimgToCanvasSubject(dataURL);
-    setLinesHistory([]);
-    setLines([]);
+    // setLinesHistory([]);
+    // setLines([]);
 
     // setIsMagic(false);
 

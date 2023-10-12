@@ -166,6 +166,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [mainLoader, setMainLoader] = useState(true);
   const [selectedImg, setSelectedImg] = useState<object | null>(null);
   const [downloadImg, setDownloadImg] = useState<string | null>(null);
+  const [downloadImgEdit, setDownloadImgEdit] = useState<string | null>(null);
+
   const [isMagic, setIsMagic] = useState<boolean | null>(false);
   const [activeTab, setActiveTab] = useState<number | null>(1);
   const [activeTabHome, setActiveTabHome] = useState<number | null>(1);
@@ -1548,6 +1550,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         tdFormate,
         setTdFormate,
         file3dUrl,
+        downloadImgEdit, setDownloadImgEdit,
         setFile3dUrl,
         set3DImage,
         setCanvasDisable,

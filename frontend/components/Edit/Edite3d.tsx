@@ -299,9 +299,9 @@ const Edit3d = () => {
             >
               <div className="mageic">
                 <div className="gaps">
-                  <Label>Magic Erase</Label>
+                  <Label> Erase</Label>
                   <DisabledLabel>
-                    Erase then click Generate to replace any unwanted parts of
+                    Erase any unwanted parts of
                     the background.
                   </DisabledLabel>
                 </div>
