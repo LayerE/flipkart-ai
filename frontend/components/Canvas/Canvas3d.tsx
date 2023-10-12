@@ -48,7 +48,11 @@ const Canvas3d = () => {
     activeSize,
     setDownloadImg,
     downloadImg,
-    romovepopu3d, setromovepopu3d
+    romovepopu3d,
+    file3dName,
+    setromovepopu3d,
+    setFile3dName
+
   } = useAppState();
 
   let camera, scene, object, controls, renderNew;
@@ -115,6 +119,8 @@ const Canvas3d = () => {
         container.add(object);
         scene.add(container);
         // scene.add(object);
+
+
         console.log("11sssssssssssss11");
 
         // Adjust the camera position and rotation to focus on the loaded object
@@ -179,7 +185,7 @@ const Canvas3d = () => {
 
         toast.error(e.message);
         // }
-
+        setFile3dName(null)
         setasset3dLoader(false);
       }
       const container = new THREE.Group();
@@ -670,61 +676,60 @@ const Canvas3d = () => {
       {isMagic ? <PopupCanvas /> : null}
       {crop ? <CropperBox /> : null}
 
-      {romovepopu3d.status? <RemoveBox type={"bgRevcbvmove"}/> : null}
+      {romovepopu3d.status ? <RemoveBox type={"bgRevcbvmove"} /> : null}
 
       <div className="boxs3d">
+        <div ref={containerRef} className="boxs">
+          {!showText ? <div className="tesxt">3D model viewer</div> : null}
+        </div>
+        <div
+          ref={outputBox}
+          className="outboxs"
+          style={{ minWidth: activeSize.w, height: activeSize.h }}
+        >
+          {selectedImg?.image ? (
+            <>
+              <div className="btn">
+                <button className="selectone" onClick={() => DeletIrem()}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                    className="delet"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                    ></path>
+                  </svg>
+                </button>
+                <button className="selectone" onClick={() => downlaedImf()}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                    className="delet"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 3a.75.75 0 01.75.75v10.638l3.96-4.158a.75.75 0 111.08 1.04l-5.25 5.5a.75.75 0 01-1.08 0l-5.25-5.5a.75.75 0 111.08-1.04l3.96 4.158V3.75A.75.75 0 0110 3z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                </button>
+              </div>
 
-      <div ref={containerRef} className="boxs">
-        {!showText ? <div className="tesxt">3D model viewer</div> : null}
-      </div>
-      <div
-        ref={outputBox}
-        className="outboxs"
-        style={{ minWidth: activeSize.w, height: activeSize.h }}
-      >
-        {selectedImg?.image ? (
-          <>
-            <div className="btn">
-              <button className="selectone" onClick={() => DeletIrem()}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  aria-hidden="true"
-                  className="delet"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                  ></path>
-                </svg>
-              </button>
-              <button className="selectone" onClick={() => downlaedImf()}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  aria-hidden="true"
-                  className="delet"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M10 3a.75.75 0 01.75.75v10.638l3.96-4.158a.75.75 0 111.08 1.04l-5.25 5.5a.75.75 0 01-1.08 0l-5.25-5.5a.75.75 0 111.08-1.04l3.96 4.158V3.75A.75.75 0 0110 3z"
-                    clip-rule="evenodd"
-                  ></path>
-                </svg>
-              </button>
-            </div>
-
-            <picture>
-              <img src={selectedImg?.image} />
-            </picture>
-          </>
-        ) : null}
-      </div>
+              <picture>
+                <img src={selectedImg?.image} />
+              </picture>
+            </>
+          ) : null}
+        </div>
       </div>
 
       {/* <button onClick={() => captureScreenshot()} ref={downloadRef}>
@@ -749,13 +754,11 @@ const Cnavas3d = styled.div`
     width: 10px;
     height: 10px;
   }
-.boxs3d{
-  display: flex;
-  transform: scale(0.6) translateX(-30%) translateY(-5%);
-  gap: 30px;
-
-
-}
+  .boxs3d {
+    display: flex;
+    transform: scale(0.6) translateX(-30%) translateY(-5%);
+    gap: 30px;
+  }
   /* Track */
   &::-webkit-scrollbar-track {
     box-shadow: inset 0 0 5px grey;

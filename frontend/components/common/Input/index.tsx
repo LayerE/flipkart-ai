@@ -379,7 +379,8 @@ export const FileUpload3D: React.FC = ({ type, title, uerId }) => {
     file3dUrl,
     setFile3dUrl,
     tdFormate,
-    filsizeMorethan10, setfilsizeMorethan10
+    filsizeMorethan10, setfilsizeMorethan10,
+    file3dName, setFile3dName
   } = useAppState();
   const [file, setFile] = useState(null);
 
@@ -399,12 +400,13 @@ export const FileUpload3D: React.FC = ({ type, title, uerId }) => {
 
     const url = URL.createObjectURL(selectedFile);
     if (url) {
+      setFile3dName(selectedFile)
       setFile3d(url);
       setFile3dUrl(null);
 
       // setasset3dLoader(false);
 
-      console.log(file3d, "fdsfsdg");
+      console.log(selectedFile, "fdsfsdg");
     } else {
       setasset3dLoader(false);
     }

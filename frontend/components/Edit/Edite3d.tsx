@@ -304,7 +304,7 @@ const Edit3d = () => {
                 <div className="gaps">
                   <div className="flex">
                     <Label>Mode</Label>
-                    {linesHistory.length === 0 ? null : (
+                    {/* {linesHistory.length === 0 ? null : (
                       <div onClick={undoLastDrawing}>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -321,7 +321,7 @@ const Edit3d = () => {
                           ></path>
                         </svg>
                       </div>
-                    )}
+                    )} */}
                   </div>
                   <div className="modeBtns">
                     <div

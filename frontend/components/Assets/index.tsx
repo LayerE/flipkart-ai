@@ -19,13 +19,14 @@ const Assets: React.FC = () => {
 
     setUploadedProductlist,
     // addimgToCanvas,
-
+    listofassets,
     fetchAssetsImagesWithProjectId,
     listofassetsById,
     setListOfAssetsById,
     addimgToCanvasSubject,
     getBase64FromUrl,
     assetLoader,
+    fetchAssetsImages,
     loader,
   } = useAppState();
   const { query, isReady } = useRouter();
@@ -39,7 +40,7 @@ const Assets: React.FC = () => {
       setRe(re + 1);
     }
     if (userId && isReady) {
-      fetchAssetsImagesWithProjectId(userId, id);
+      fetchAssetsImages(userId, id);
 
       // const filer = listofassetsById?.filter((item) => item.project_id === id);
       console.log(listofassetsById, "listofassetsById");
@@ -87,15 +88,15 @@ const Assets: React.FC = () => {
         </ResponsiveRowWraptwo>
       </div>
       <div className="gap">
-        {listofassetsById?.length ? (
+        {listofassets?.length ? (
           <Row>
             <Label>Uploaded Products</Label>
           </Row>
         ) : null}
 
         <ResponsiveRowWraptwo>
-          {listofassetsById?.length ?(
-             listofassetsById?.map((test, i) => (
+          {listofassets?.length
+            ? listofassets?.map((test, i) => (
                 <div
                   key={i}
                   className={"imageBox"}
@@ -111,7 +112,6 @@ const Assets: React.FC = () => {
                   </picture>
                 </div>
               ))
-          )
             : null}
         </ResponsiveRowWraptwo>
       </div>

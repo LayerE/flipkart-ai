@@ -69,6 +69,8 @@ const Regeneret = () => {
     // Calculate cell width and height
     const cellWidth = canvasInstance.current.width / gridSize;
     const cellHeight = canvasInstance.current.height / gridSize;
+    console.log(`dgf`, url);
+    let incr = 0;
 
     url.forEach(async (imageSrc, index) => {
       const row = Math.floor(index / gridSize);
@@ -82,8 +84,8 @@ const Regeneret = () => {
         function (img: any) {
           // Set the image's dimensions
           img.scaleToWidth(200);
-          const canvasWidth = 380;
-          const canvasHeight = 380;
+          const canvasWidth = 440;
+          const canvasHeight = 440;
           const imageAspectRatio = img.width / img.height;
 
           // Calculate the maximum width and height based on the canvas size
@@ -110,8 +112,8 @@ const Regeneret = () => {
           // Set the position of the image
           img.set("category", "generated");
           img.set({
-            left: randomLeft,
-            top: randomTop,
+            left: 100 + index *100,
+            top: 150 +  index *50,
           });
           img.scaleToWidth(scaledWidth);
           img.scaleToHeight(scaledHeight);
@@ -123,6 +125,7 @@ const Regeneret = () => {
           canvasInstance.current.renderAll();
         }
       );
+      incr = incr + 50;
     });
   };
 

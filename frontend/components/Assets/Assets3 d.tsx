@@ -34,8 +34,11 @@ const Assets3d: React.FC = () => {
     setFile3dUrl,
     loader,
     setFile3d,
-
+    file3dName,
+    file3d,
     tdFormate,
+    assetL3doader,
+    setFile3dName,
     setTdFormate,
   } = useAppState();
   const { query, isReady } = useRouter();
@@ -54,22 +57,59 @@ const Assets3d: React.FC = () => {
       const filer = listofassetsById?.filter((item) => item.project_id === id);
       setFilter(filer);
       console.log(listofassetsById, "dfdf");
+      console.log(file3dName, "dsfdccccccccccccccccccccccccccccccccccfdf");
     }
-  }, [isReady, userId, re, file3dUrl]);
+  }, [isReady, userId, re, file3dUrl, file3d]);
 
   // listofassets
   const [url, setUrl] = useState(null);
+  function slideName(name: string) {
+    const maxLength = 8;
+    let displayedName;
+
+    if (name.length <= maxLength) {
+      displayedName = name;
+    } else {
+      const firstPart = name.slice(0, 15);
+      const lastPart = name.slice(-15);
+      displayedName = firstPart + "..." + lastPart;
+    }
+
+    return displayedName;
+  }
   const addUrl = (e) => {
     setUrl(e.target.value);
+  
+
+    
   };
   const HandileUrl = () => {
     setUrl(null);
     setFile3d(null);
     setFile3dUrl(url);
+    const name =slideName(url)
+    setFile3dName({name: name});
   };
   return (
     <div className="accest">
-      <div className="gap">
+      {
+        file3dName?.name && !assetL3doader ?
+        <Selectd className="gap">
+        <div className="boxFile">
+          <div className="filenamer">{file3dName?.name}</div>
+          <div className="colse" onClick={()=>{
+            setFile3d(null)
+            setFile3dUrl(null)
+            setFile3dName(null)
+
+          }}>
+            x
+          </div>
+        </div>
+      </Selectd>
+
+        :
+        <div className="gap">
         <Row>
           <Label>Select your file format</Label>
         </Row>
@@ -125,10 +165,40 @@ const Assets3d: React.FC = () => {
           </Button>
         </Row>
       </div>
+
+      }
+
+    
+    
     </div>
   );
 };
+
+export const Selectd= styled.div`
+
+
+.boxFile{
+  border-radius: 8px;
+  padding: 8px 15px;
+  border: 2px solid rgba(249, 208, 13, 1);
+display: flex;
+justify-content: space-between;
+align-items: center;
+  .filenamer{
+
+  }
+  .colse{
+    cursor: pointer;
+    
+  }
+
+}
+
+`
 export const FormateBtnBox = styled.div`
+
+
+
   .formatfox {
     display: flex;
     gap: 10px;

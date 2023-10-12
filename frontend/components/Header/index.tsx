@@ -18,12 +18,12 @@ const Header = () => {
   const [back, setBAck] = useState(false);
   const currentRoute = router.pathname;
 
-  // console.log(currentRoute);
+  console.log(currentRoute);
   useEffect(() => {
-    if (currentRoute === "/" || currentRoute === "/tools") {
-      setBAck(false);
-    } else {
+    if (currentRoute === "/generate-3d/[id]" ) {
       setBAck(true);
+    } else {
+      setBAck(false);
     }
 
     const handleOutsideClick = (event: MouseEvent) => {

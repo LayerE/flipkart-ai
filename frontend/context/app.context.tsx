@@ -174,6 +174,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [file, setFile] = useState<File | null>(null);
   const [file3d, setFile3d] = useState<File | null>(null);
   const [file3dUrl, setFile3dUrl] = useState<string | null>(null);
+  const [file3dName, setFile3dName] = useState(null);
+
 
   const [viewMore, setViewMore] = useState<object>({});
   const [selectPlacement, setSelectedPlacement] = useState<string>("");
@@ -327,7 +329,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       setLinesHistory([]);
       setLines([]);
 
-      addimgToCanvasGen(dataURL);
+      // addimgToCanvasGen(dataURL);
       setIsMagic(false);
       setMagicloder(false);
     } else {
@@ -978,10 +980,11 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         }),
       });
       const data = await response.json();
+      console.log(data,"dfsgsg")
 
       if (data?.data.length > 0) {
         setListOfAssetsById(data?.data);
-        // console.log(listofassetsById)
+        console.log(listofassetsById,"dfsgsg")
       }
 
       // setImages(data); // Update the state with the fetched images
@@ -1493,7 +1496,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           { url: loadeImge[0]?.modified_image_url, tool: "generated" },
         ]);
 
-        addimgToCanvasGen(loadeImge[0]?.modified_image_url);
+        // addimgToCanvasGen(loadeImge[0]?.modified_image_url);
         // canvas1.remove(editorBox).renderAll();
 
         setGeneratedImgList(loadeImge.slice(0, 20));
@@ -1597,6 +1600,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setListOfAssetsById,
         previewBox,
         fetchAssetsImagesBrant,
+        file3dName, setFile3dName,
         loara,
         setLoara,
         romovepopu3d, setromovepopu3d,
