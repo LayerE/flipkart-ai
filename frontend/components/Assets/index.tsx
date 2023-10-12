@@ -19,9 +19,7 @@ const Assets: React.FC = () => {
 
     setUploadedProductlist,
     // addimgToCanvas,
-    listofassets,
-    setListOfAssets,
-    fetchAssetsImages,
+
     fetchAssetsImagesWithProjectId,
     listofassetsById,
     setListOfAssetsById,

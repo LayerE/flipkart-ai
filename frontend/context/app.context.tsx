@@ -258,7 +258,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [brushSize, setBrushSize] = useState(5);
 
   const [AssetsActivTab, setassetsActiveTab] = useState("product");
-  const [galleryActivTab, setgalleryActiveTab] = useState("banner");
+  const [galleryActivTab, setgalleryActiveTab] = useState("ai");
   const [TdImage, set3DImage] = useState(null);
   const [renderer, setRenderer] = useState(null);
 
