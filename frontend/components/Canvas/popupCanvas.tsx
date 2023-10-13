@@ -48,6 +48,7 @@ const PopupCanvas = () => {
     downloadeImgFormate,
     // HandleInpainting,
     addimgToCanvasSubject,
+    canvasInstance,
 
     // canvasRef
   } = useAppState();
@@ -143,6 +144,7 @@ const PopupCanvas = () => {
     const stage = stageRef?.current;
 
     const dataURL = stage.toDataURL();
+    DeletIrem()
 
     addimgToCanvasSubject(dataURL);
     setLinesHistory([]);
@@ -166,6 +168,14 @@ const PopupCanvas = () => {
     // setIsMagic(false);
 
     // return dataURL;
+  };
+
+  const DeletIrem = () => {
+    const activeObject = canvasInstance?.current?.getActiveObject();
+    if (activeObject) {
+      canvasInstance?.current?.remove(activeObject);
+      canvasInstance?.current?.renderAll();
+    }
   };
 
   return (

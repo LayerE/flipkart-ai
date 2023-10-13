@@ -24,7 +24,8 @@ const CropperBox = () => {
     addimgToCanvasGen,
     TDMode,
     downloadeImgFormate,
-    downloadImgEdit, setDownloadImgEdit
+    downloadImgEdit, setDownloadImgEdit,
+    canvasInstance
   } = useAppState();
 
   // const [cropSize, setCropSize] = useState({ x: 0, y: 0 })
@@ -71,6 +72,7 @@ const CropperBox = () => {
       // document.body.appendChild(link);
       // link.click();
       // document.body.removeChild(link);
+      DeletIrem()
 
       addimgToCanvasGen(url);
       setCrop(false);
@@ -125,6 +127,13 @@ const CropperBox = () => {
     // return dataURL;
   };
 
+  const DeletIrem = () => {
+    const activeObject = canvasInstance?.current?.getActiveObject();
+    if (activeObject) {
+      canvasInstance?.current?.remove(activeObject);
+      canvasInstance?.current?.renderAll();
+    }
+  };
   return (
     <Wrapper>
       <div className="cropperbox">
