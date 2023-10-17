@@ -84,7 +84,7 @@ const PopupUpload = () => {
     }
   };
   useEffect(() => {
-   if(popup?.dataArray?.caption){
+   if(popup?.dataArray?.caption && popup?.dataArray?.caption  !== null){
     setProductnew(popup?.dataArray?.caption);
 
 
