@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import Label, { DisabledLabel } from "../common/Label";
 import { Input } from "../common/Input";
@@ -64,7 +64,7 @@ const PopupUpload = () => {
 
         if (datares) {
           fetchAssetsImages(userId, null);
-          addimgToCanvasSubject(popup?.data);
+          addimgToCanvasSubject(popup?.dataArray?.imageUrl);
           fetchAssetsImagesWithProjectId(userId, id);
           // setTimeout(() => {
             
@@ -83,12 +83,21 @@ const PopupUpload = () => {
       }
     }
   };
+  useEffect(() => {
+   if(popup?.dataArray?.caption){
+    setProductnew(popup?.dataArray?.caption);
+
+
+   }
+   console.log(popup,"sssssss",popup?.dataArray?.caption)
+  }, [])
+  
 
   return (
     <PopupWrapper>
       <div className="wrapper">
         <picture>
-          <img src={popup?.data} alt="" />
+          <img src={popup?.dataArray?.imageUrl} alt="" />
         </picture>
         <div className="test">
           <div>
@@ -96,6 +105,7 @@ const PopupUpload = () => {
 
             <Input
               type="text"
+              value={productnew}
               onChange={(e) => setProductnew(e.target.value)}
               placeholder=" e.g. 'red sofa' or 'blue perfume bottle'"
             />

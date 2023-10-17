@@ -259,12 +259,13 @@ export const FileUpload: React.FC = ({ type, title, uerId }) => {
               setassetLoader(false);
             }
             const data = await response.json();
+            console.log(data);
 
             // BgRemover(reader.result, filename);
             if (data?.data) {
               setPopup({
                 status: true,
-                data: data?.data.data[0],
+                data: data[0],
                 dataArray: data,
               });
               setassetLoader(false);
