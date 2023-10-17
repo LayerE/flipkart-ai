@@ -143,7 +143,7 @@ export const TempletList = [
       {
         title: "Kitchen 1 ",
 
-        image: "https://www.linkpicture.com/q/Kitchen_1.png",
+        image: "https://ik.imagekit.io/7urmiszfde/Kitchen.png?updatedAt=1697518303106",
         promt: "In a simple, contemporary kitchen",
         placementType: "",
         surroundingType: "",
@@ -157,7 +157,7 @@ export const TempletList = [
       {
         title: "Kitchen 2 ",
 
-        image: "https://www.linkpicture.com/q/Kitchen_1.png",
+        image: "https://ik.imagekit.io/7urmiszfde/Kitchen.png?updatedAt=1697518303106",
         promt: "In a luxury, aesthetic kitchen ",
         placementType: "",
         surroundingType: "",
@@ -171,7 +171,7 @@ export const TempletList = [
       {
         title: "Living Room 1 ",
 
-        image: "https://www.linkpicture.com/q/Living-Room.png",
+        image: "https://ik.imagekit.io/7urmiszfde/Living%20Room.png?updatedAt=1697518302302",
         promt: "in a luxury, contemporary living room",
         placementType: "",
         surroundingType: "",
@@ -185,7 +185,7 @@ export const TempletList = [
       {
         title: "Living Room 2 ",
 
-        image: "https://www.linkpicture.com/q/Living-Room.png",
+        image: "https://ik.imagekit.io/7urmiszfde/Living%20Room.png?updatedAt=1697518302302",
         promt: " in a simple, minimalistic living room",
         placementType: "",
         surroundingType: "",
@@ -199,7 +199,7 @@ export const TempletList = [
       {
         title: "Dining 1 ",
 
-        image: "https://www.linkpicture.com/q/image-1_15.png",
+        image: "https://ik.imagekit.io/7urmiszfde/Screenshot%202023-10-17%20102933.png?updatedAt=1697518804744",
         promt: "in a simple, minimalistic Dining hall",
         placementType: "",
         surroundingType: "",
@@ -213,7 +213,7 @@ export const TempletList = [
       {
         title: "Dining 2 ",
 
-        image: "https://www.linkpicture.com/q/image-1_15.png",
+        image: "https://ik.imagekit.io/7urmiszfde/Screenshot%202023-10-17%20102933.png?updatedAt=1697518804744",
         promt: "in a luxury, contemporary Dining hall ",
         placementType: "",
         surroundingType: "",
@@ -227,7 +227,7 @@ export const TempletList = [
       {
         title: "Office  1 ",
 
-        image: "https://www.linkpicture.com/q/image-2_91.png",
+        image: "https://ik.imagekit.io/7urmiszfde/image%20(2).png?updatedAt=1697518662396",
         promt: "in a modern, class office space",
         placementType: "",
         surroundingType: "",
@@ -241,7 +241,7 @@ export const TempletList = [
       {
         title: "Office  2 ",
 
-        image: "https://www.linkpicture.com/q/image-2_91.png",
+        image: "https://ik.imagekit.io/7urmiszfde/image%20(2).png?updatedAt=1697518662396",
         promt: " in a simple, minimalistic Office space",
         placementType: "",
         surroundingType: "",
@@ -255,7 +255,7 @@ export const TempletList = [
       {
         title: "Bedroom   1 ",
 
-        image: "https://www.linkpicture.com/q/image-3_54.png",
+        image: "https://ik.imagekit.io/7urmiszfde/image%20(3).png?updatedAt=1697518630772",
         promt: "In a modern, luxury bedroom ",
         placementType: "",
         surroundingType: "",
@@ -269,7 +269,7 @@ export const TempletList = [
       {
         title: "Bedroom 2 ",
 
-        image: "https://www.linkpicture.com/q/image-3_54.png",
+        image: "https://ik.imagekit.io/7urmiszfde/image%20(3).png?updatedAt=1697518630772",
         promt: " In a simple, minimalistic bedroom ",
         placementType: "",
         surroundingType: "",
@@ -282,7 +282,7 @@ export const TempletList = [
       }, {
         title: "House 1 ",
 
-        image: "https://www.linkpicture.com/q/image-4_41.png",
+        image: "https://ik.imagekit.io/7urmiszfde/image%20(4).png?updatedAt=1697518652695",
         promt: " Inside a simple, traditional, aesthetic house",
         placementType: "",
         surroundingType: "",
@@ -296,7 +296,7 @@ export const TempletList = [
       {
         title: "House 2 ",
 
-        image: "https://www.linkpicture.com/q/image-4_41.png",
+        image: "https://ik.imagekit.io/7urmiszfde/image%20(4).png?updatedAt=1697518652695",
         promt: " Inside a luxury, modern house",
         placementType: "",
         surroundingType: "",
@@ -309,7 +309,7 @@ export const TempletList = [
       }, {
         title: "House 3",
 
-        image: "https://www.linkpicture.com/q/image-4_41.png",
+        image: "https://ik.imagekit.io/7urmiszfde/image%20(4).png?updatedAt=1697518652695",
         promt: "Inside a minimalistic, contemporary house",
         placementType: "",
         surroundingType: "",
@@ -329,7 +329,7 @@ export const TempletList = [
       {
         title: "Counter ",
 
-        image: "https://www.linkpicture.com/q/image-5_46.png",
+        image: "https://ik.imagekit.io/7urmiszfde/image%20(5).png?updatedAt=1697518655355",
         promt: "On a Kitchen Counter",
         placementType: "on",
         surroundingType: "",
@@ -343,7 +343,7 @@ export const TempletList = [
       {
         title: "Office ",
 
-        image: "https://www.linkpicture.com/q/image-5_46.png",
+        image: "https://ik.imagekit.io/7urmiszfde/image%20(5).png?updatedAt=1697518655355",
         promt: "On an Office Table",
         placementType: "on",
         surroundingType: "",
@@ -357,7 +357,7 @@ export const TempletList = [
       {
         title: "Bench ",
 
-        image: "https://www.linkpicture.com/q/Untitled-15.webp",
+        image: "https://ik.imagekit.io/7urmiszfde/Untitled%20(15).webp?updatedAt=1697519169587",
         promt: "On a park bench",
         placementType: "on",
         surroundingType: "",
@@ -371,7 +371,7 @@ export const TempletList = [
       {
         title: "Coffee ",
 
-        image: "https://www.linkpicture.com/q/Untitled-15.webp",
+        image: "https://ik.imagekit.io/7urmiszfde/Untitled%20(15).webp?updatedAt=1697519169587",
         promt: "On a Coffee Table",
         placementType: "on",
         surroundingType: "",
@@ -385,7 +385,7 @@ export const TempletList = [
       {
         title: "Photoshoot ",
 
-        image: "https://www.linkpicture.com/q/Untitled-3_5.png",
+        image: "https://ik.imagekit.io/7urmiszfde/Untitled%20(3).png?updatedAt=1697518596819",
         promt: "On a professional photoshoot pedestal ",
         placementType: "on",
         surroundingType: "",
@@ -399,7 +399,7 @@ export const TempletList = [
       {
         title: "Podium ",
 
-        image: "https://www.linkpicture.com/q/Untitled-3_5.png",
+        image: "https://ik.imagekit.io/7urmiszfde/Untitled%20(3).png?updatedAt=1697518596819",
         promt: " On a marble podium",
         placementType: "on",
         surroundingType: "",
@@ -418,7 +418,7 @@ export const TempletList = [
       {
         title: "Beach ",
 
-        image: "https://www.linkpicture.com/q/Beach_1.png",
+        image: "https://ik.imagekit.io/7urmiszfde/Beach.png?updatedAt=1697519275490",
         promt: "On the sand near a stunning beach",
         placementType: "on",
         surroundingType: "",
@@ -432,7 +432,7 @@ export const TempletList = [
       {
         title: "Rocks ",
 
-        image: "https://www.linkpicture.com/q/Rocks.png",
+        image: "https://ik.imagekit.io/7urmiszfde/Rocks.png?updatedAt=1697518237488",
         promt: "On a rock, around a stunning nature backdrop",
         placementType: "on",
         surroundingType: "",
@@ -446,7 +446,7 @@ export const TempletList = [
       {
         title: "Mountain ",
 
-        image: "https://www.linkpicture.com/q/Rocks.png",
+        image: "https://ik.imagekit.io/7urmiszfde/Rocks.png?updatedAt=1697518237488",
         promt: "Surrounded by a stunning Mountain backdrop",
         placementType: "on",
         surroundingType: "",
@@ -460,7 +460,7 @@ export const TempletList = [
       {
         title: "Forest ",
 
-        image: "https://www.linkpicture.com/q/Forest_1.png",
+        image: "https://ik.imagekit.io/7urmiszfde/Forest.png?updatedAt=1697519163718",
         promt: "Surrounded by a lush Forest Background",
         placementType: "on",
         surroundingType: "",
@@ -473,7 +473,7 @@ export const TempletList = [
       },
       {
         title: "Waterfall ",
-        image: "https://www.linkpicture.com/q/Waterfalls.png",
+        image: "https://ik.imagekit.io/7urmiszfde/Waterfalls.png?updatedAt=1697518237119",
 
         promt: "On the floor near a Waterfall",
         placementType: "on",
@@ -501,7 +501,7 @@ export const TempletList = [
       },
       {
         title: "Grass ",
-        image: "https://www.linkpicture.com/q/Untitled-4_4.png",
+        image: "https://ik.imagekit.io/7urmiszfde/Untitled%20(4).png?updatedAt=1697518624849",
 
         promt: "On lush green grass",
         placementType: "on",
@@ -516,7 +516,7 @@ export const TempletList = [
       {
         title: "Cloudy ",
 
-        image: "https://www.linkpicture.com/q/Untitled-5_5.png",
+        image: "https://ik.imagekit.io/7urmiszfde/Untitled%20(5).png?updatedAt=1697518601572",
         promt: "Under a cloudy scene",
         placementType: "on",
         surroundingType: "",
@@ -529,7 +529,7 @@ export const TempletList = [
       },
       {
         title: "Sunset ",
-        image: "https://www.linkpicture.com/q/Untitled-6_1.png",
+        image: "https://ik.imagekit.io/7urmiszfde/Untitled%20(6).png?updatedAt=1697518603212",
 
         promt: " In front of a Sunset",
         placementType: "on",
@@ -550,7 +550,7 @@ export const TempletList = [
       {
         title: "Minimal ",
 
-        image: "https://www.linkpicture.com/q/Untitled-7.png",
+        image: "https://ik.imagekit.io/7urmiszfde/Untitled%20(7).png?updatedAt=1697518601517",
         promt: "Against a Minimalistic Background",
         placementType: "on",
         surroundingType: "",
@@ -564,7 +564,7 @@ export const TempletList = [
       {
         title: "Texture ",
 
-        image: "https://www.linkpicture.com/q/Untitled-8_10.png",
+        image: "https://ik.imagekit.io/7urmiszfde/Untitled%20(8).png?updatedAt=1697518626376",
         promt: "Against a Textured Wall",
         placementType: "on",
         surroundingType: "",
@@ -578,7 +578,7 @@ export const TempletList = [
       {
         title: "Fabric ",
 
-        image: "https://www.linkpicture.com/q/Untitled-9_2.png",
+        image: "https://ik.imagekit.io/7urmiszfde/Untitled%20(9).png?updatedAt=1697518630173",
         promt: "Put against a Textured Fabric",
         placementType: "on",
         surroundingType: "",
@@ -592,7 +592,7 @@ export const TempletList = [
       {
         title: "Aesthetic ",
 
-        image: "https://www.linkpicture.com/q/Untitled-10_10.png",
+        image: "https://ik.imagekit.io/7urmiszfde/Untitled%20(10).png?updatedAt=1697518662057",
         promt: "Against a an Aesthetic background",
         placementType: "on",
         surroundingType: "",
@@ -605,7 +605,7 @@ export const TempletList = [
       },
       {
         title: "Colourful ",
-        image: "https://www.linkpicture.com/q/Untitled-11.webp",
+        image: "https://ik.imagekit.io/7urmiszfde/Untitled%20(11).webp?updatedAt=1697518172391",
 
         promt: "Against a Colourful background",
         placementType: "on",
@@ -620,7 +620,7 @@ export const TempletList = [
       {
         title: "Smooth ",
 
-        image: "https://www.linkpicture.com/q/Untitled-12_5.png",
+        image: "https://ik.imagekit.io/7urmiszfde/Untitled%20(12).png?updatedAt=1697518659336",
         promt: "Put against a Smooth Fabric",
         placementType: "on",
         surroundingType: "",
@@ -633,7 +633,7 @@ export const TempletList = [
       },
       {
         title: "Abstract ",
-        image: "https://www.linkpicture.com/q/Untitled-13_2.png",
+        image: "https://ik.imagekit.io/7urmiszfde/Screenshot%202023-10-17%20104228.png?updatedAt=1697519576048",
 
         promt: "Against a an Abstract Background",
         placementType: "on",
@@ -648,7 +648,7 @@ export const TempletList = [
       {
         title: "Simple ",
 
-        image: "https://www.linkpicture.com/q/Untitled-14_2.png",
+        image: "https://ik.imagekit.io/7urmiszfde/Untitled%20(14).webp?updatedAt=1697518109998",
         promt: " Against a Simple Color Background",
         placementType: "on",
         surroundingType: "",
@@ -713,7 +713,7 @@ export const templets = [
   {
     title: "Living Room ",
 
-    image: "https://www.linkpicture.com/q/Living-Room.png",
+    image: "https://ik.imagekit.io/7urmiszfde/Living%20Room.png?updatedAt=1697518302302",
 
     promt: " in a Living Room  background",
     placementType: "in",
@@ -728,7 +728,7 @@ export const templets = [
   {
     title: "Rocks ",
 
-    image: "https://www.linkpicture.com/q/Rocks.png",
+    image: "https://ik.imagekit.io/7urmiszfde/Rocks.png?updatedAt=1697518237488",
 
     promt: " top of  rock backgroundd",
     placementType: "on",
