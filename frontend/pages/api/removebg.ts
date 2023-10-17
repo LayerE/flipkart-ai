@@ -152,7 +152,7 @@ export default async function handler(req: NextRequest, res: NextResponse) {
         "base64"
       )}`;
     } else {
-      const caption_bg_response = await fetch(process.env.MODAL_ENDPOINT as string,
+      const caption_bg_response = await fetch("https://dehiddenformodal--bgremove-caption-removebg-and-caption.modal.run",
         {
           headers: {
             "Content-Type": "application/json",
