@@ -115,7 +115,7 @@ export default async function handler(req: NextRequest, res: NextResponse) {
       return;
     }
 
-    const useClipDrop = false;
+    const useClipDrop = true;
     var outputBase64Url = "";
     var caption = "";
 
@@ -124,6 +124,18 @@ export default async function handler(req: NextRequest, res: NextResponse) {
       const inputBuffer = Buffer.from(
         inputBase64Url.split(";base64,").pop(),
         "base64"
+      );
+
+      const caption_response = await fetch("https://dehiddenformodal--onlycaption-caption.modal.run",
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+          body: JSON.stringify({
+            img: inputBase64Url,
+          }),
+        }
       );
 
       let form = new FormData();
@@ -145,6 +157,10 @@ export default async function handler(req: NextRequest, res: NextResponse) {
       };
 
       const response = axios.request(config);
+
+      //  Get the caption
+      const caption_data = await caption_response.json();
+      caption = caption_data["caption"];
 
       // Get base64url from response
       const { data } = await response;
