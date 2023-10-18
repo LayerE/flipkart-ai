@@ -7,14 +7,20 @@ import { styled } from "styled-components";
 // import { category, test } from "@/store/dropdown";
 import { useAppState } from "@/context/app.context";
 import { productList } from "@/store/listOfElement";
-import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/router";
 import Button from "../common/Button";
 import { formate3d } from "@/store/format";
+import { useSession } from "@supabase/auth-helpers-react";
 // import { fabric } from "fabric";
 
 const Assets3d: React.FC = () => {
-  const { userId } = useAuth();
+  const session = useSession();
+  const [userId, setUserId] = useState<string | null>(null);
+    useEffect(() => {
+      if (session) {
+        setUserId(session.user.id);
+      }
+    }, [session]);
   const {
     setProduct,
     uploadedProductlist,
@@ -79,126 +85,110 @@ const Assets3d: React.FC = () => {
   }
   const addUrl = (e) => {
     setUrl(e.target.value);
-  
-
-    
   };
   const HandileUrl = () => {
     setUrl(null);
     setFile3d(null);
     setFile3dUrl(url);
-    const name =slideName(url)
-    setFile3dName({name: name});
+    const name = slideName(url);
+    setFile3dName({ name: name });
   };
   return (
     <div className="accest">
-      {
-        file3dName?.name && !assetL3doader ?
+      {file3dName?.name && !assetL3doader ? (
         <Selectd className="gap">
-        <div className="boxFile">
-          <div className="filenamer">{file3dName?.name}</div>
-          <div className="colse" onClick={()=>{
-            setFile3d(null)
-            setFile3dUrl(null)
-            setFile3dName(null)
-
-          }}>
-            x
+          <div className="boxFile">
+            <div className="filenamer">{file3dName?.name}</div>
+            <div
+              className="colse"
+              onClick={() => {
+                setFile3d(null);
+                setFile3dUrl(null);
+                setFile3dName(null);
+              }}
+            >
+              x
+            </div>
           </div>
-        </div>
-      </Selectd>
-
-        :
+        </Selectd>
+      ) : (
         <div className="gap">
-        <Row>
-          <Label>Select your file format</Label>
-        </Row>
-        <FormateBtnBox>
-          <div className="formatfox">
-            {formate3d.map((formate) => (
-              <div
-                className={
-                  tdFormate === formate.formate
-                    ? "formatebtn activFormate"
-                    : "formatebtn"
-                }
-                onClick={() => {
-                  setTdFormate(formate.formate);
-                  setFile3d(null);
-                  setFile3dUrl(null);
-                }}
-              >
-                {formate.tittle}
-              </div>
-            ))}
+          <Row>
+            <Label>Select your file format</Label>
+          </Row>
+          <FormateBtnBox>
+            <div className="formatfox">
+              {formate3d.map((formate) => (
+                <div
+                  className={
+                    tdFormate === formate.formate
+                      ? "formatebtn activFormate"
+                      : "formatebtn"
+                  }
+                  onClick={() => {
+                    setTdFormate(formate.formate);
+                    setFile3d(null);
+                    setFile3dUrl(null);
+                  }}
+                >
+                  {formate.tittle}
+                </div>
+              ))}
+            </div>
+          </FormateBtnBox>
+
+          <Row>
+            <FileUpload3D
+              type={"product"}
+              title={` Upload 3D Object (eg: tree${tdFormate})`}
+              uerId={userId}
+            />
+          </Row>
+          <div
+            style={{
+              textAlign: "center",
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <Label>Or</Label>
           </div>
-        </FormateBtnBox>
-
-        <Row>
-          <FileUpload3D
-            type={"product"}
-            title={` Upload 3D Object (eg: tree${tdFormate})`}
-            uerId={userId}
-          />
-        </Row>
-        <div
-          style={{
-            textAlign: "center",
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <Label>Or</Label>
+          <Row>
+            <Input
+              type="text"
+              value={url ? url : ""}
+              onChange={(e) => addUrl(e)}
+              placeholder={` 3D Object  URL (file type should be ${tdFormate})`}
+            />
+          </Row>
+          <Row>
+            <Button onClick={HandileUrl} disabled={url ? false : true}>
+              Add 3D Object{" "}
+            </Button>
+          </Row>
         </div>
-        <Row>
-          <Input
-            type="text"
-            value={url ? url : ""}
-            onChange={(e) => addUrl(e)}
-            placeholder={` 3D Object  URL (file type should be ${tdFormate})`}
-          />
-        </Row>
-        <Row>
-          <Button onClick={HandileUrl} disabled={url ? false : true}>
-            Add 3D Object{" "}
-          </Button>
-        </Row>
-      </div>
-
-      }
-
-    
-    
+      )}
     </div>
   );
 };
 
-export const Selectd= styled.div`
-
-
-.boxFile{
-  border-radius: 8px;
-  padding: 8px 15px;
-  border: 2px solid rgba(249, 208, 13, 1);
-display: flex;
-justify-content: space-between;
-align-items: center;
-  .filenamer{
-
+export const Selectd = styled.div`
+  .boxFile {
+    border-radius: 8px;
+    padding: 8px 15px;
+    border: 2px solid rgba(249, 208, 13, 1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .filenamer {
+    }
+    .colse {
+      cursor: pointer;
+    }
   }
-  .colse{
-    cursor: pointer;
-    
-  }
-
-}
-
-`
+`;
 export const FormateBtnBox = styled.div`
-
-
-
   .formatfox {
     display: flex;
     gap: 10px;

@@ -16,7 +16,7 @@ import { arrayBufferToDataURL, dataURLtoFile } from "@/utils/BufferToDataUrl";
 import { ImgFormate, coloreMode } from "@/store/dropdown";
 import { Input } from "../common/Input";
 import { Console } from "console";
-import { useAuth } from "@clerk/nextjs";
+import { useSession } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
 import { styled } from "styled-components";
 import { fabric } from "fabric";
@@ -62,7 +62,14 @@ const Edit = () => {
     loader,
   } = useAppState();
 
-  const { userId } = useAuth();
+  const session = useSession();
+  const [userId, setUserId] = useState<string | null>(null);
+  useEffect(() => {
+    if (session) {
+      setUserId(session.user.id);
+    }
+  }, [session]);
+
   const { query, isReady } = useRouter();
   // const { id } = query;
   const id = (query.id as string[]) || [];
@@ -596,9 +603,8 @@ const WrapperEdit = styled.div`
     cursor: pointer;
 
     text-align: center;
-    &:hover{
-    /* background: #f9d20d3f; */
-
+    &:hover {
+      /* background: #f9d20d3f; */
     }
   }
   .btnq {
@@ -607,9 +613,8 @@ const WrapperEdit = styled.div`
     cursor: pointer;
 
     text-align: center;
-    &:hover{
-    background: #f9d20d3f;
-
+    &:hover {
+      background: #f9d20d3f;
     }
   }
 

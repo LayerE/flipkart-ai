@@ -4,7 +4,7 @@ import Label, { DisabledLabel } from "../common/Label";
 import { Input } from "../common/Input";
 import Button from "../common/Button";
 import { useAppState } from "@/context/app.context";
-import { useAuth } from "@clerk/nextjs";
+import { useSession } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
 
 const PopupUpload = () => {
@@ -15,17 +15,22 @@ const PopupUpload = () => {
     setProduct,
     addimgToCanvasSubject,
     fetchAssetsImagesWithProjectId,
-    AssetsActivTab, setassetsActiveTab,
-    fetchAssetsImages
-
+    AssetsActivTab,
+    setassetsActiveTab,
+    fetchAssetsImages,
   } = useAppState();
   const [productnew, setProductnew] = useState("");
-  const { userId } = useAuth();
+  const session = useSession();
+  const [userId, setUserId] = useState<string | null>(null);
+  useEffect(() => {
+    if (session) {
+      setUserId(session.user.id);
+    }
+  }, [session]);
   const { query, isReady } = useRouter();
   const { id } = query;
 
   const HandileUpload = async () => {
- 
     if (productnew !== "") {
       console.log(popup.dataArray);
 
@@ -67,7 +72,7 @@ const PopupUpload = () => {
           addimgToCanvasSubject(popup?.data);
           fetchAssetsImagesWithProjectId(userId, id);
           // setTimeout(() => {
-            
+
           // }, 500);
 
           // setUploadedProductlist((prev) => [

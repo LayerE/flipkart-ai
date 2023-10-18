@@ -3,19 +3,27 @@ import Layout from "@/layouts/app.layout";
 import "@/styles/globals.css";
 import ThemeProvider, { ThemedGlobalStyle } from "@/theme";
 import type { AppProps } from "next/app";
-import React, { useEffect, useLayoutEffect } from "react";
-import { ClerkProvider } from "@clerk/nextjs";
-import dynamic from 'next/dynamic';
+import React, { useEffect, useLayoutEffect, useState } from "react";
+import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
+import { SessionContextProvider, Session } from "@supabase/auth-helpers-react";
+import "../styles/globals.css";
 
-const DynamicContextProvider = dynamic(() => import('@/context/app.context').then(mod => mod.AppContextProvider), {
-  ssr: false
-});
-
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({
+  Component,
+  pageProps,
+}: AppProps<{
+  initialSession: Session;
+}>) {
   if (typeof window === "undefined") React.useLayoutEffect = () => {};
+
+  // Create a new supabase browser client on every first render.
+  const [supabaseClient] = useState(() => createPagesBrowserClient());
+
   return (
-    <ClerkProvider {...pageProps}>
-    {/* <DynamicContextProvider> */}
+    <SessionContextProvider
+      supabaseClient={supabaseClient}
+      initialSession={pageProps.initialSession}
+    >
       <AppContextProvider>
         <ThemeProvider>
           <ThemedGlobalStyle />
@@ -24,7 +32,6 @@ export default function App({ Component, pageProps }: AppProps) {
           </Layout>
         </ThemeProvider>
       </AppContextProvider>
-    {/* </DynamicContextProvider> */}
-    </ClerkProvider>
+    </SessionContextProvider>
   );
 }

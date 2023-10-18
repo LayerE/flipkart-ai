@@ -1,11 +1,11 @@
 import { createContext, useContext, useState, useRef, useEffect } from "react";
 import { fabric } from "fabric";
-import { useAuth } from "@clerk/nextjs";
 import { saveAs } from "file-saver";
 import axios from "axios";
 
 import { toast } from "react-toastify";
 import { arrayBufferToDataURL, dataURLtoFile } from "@/utils/BufferToDataUrl";
+import { useSession } from "@supabase/auth-helpers-react";
 
 type ContextProviderProps = {
   children: React.ReactNode;
@@ -176,7 +176,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [file3dUrl, setFile3dUrl] = useState<string | null>(null);
   const [file3dName, setFile3dName] = useState(null);
 
-
   const [viewMore, setViewMore] = useState<object>({});
   const [selectPlacement, setSelectedPlacement] = useState<string>("");
   const [selectSurrounding, setSelectedSurrounding] = useState<string>("");
@@ -202,7 +201,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [loader, setLoader] = useState<boolean>(false);
   const [modifidImageArray, setModifidImageArray] = useState<string[]>([]);
   const [romovepopu3d, setromovepopu3d] = useState<object>({});
-
 
   const [undoArray, setUndoArray] = useState<string[]>([]);
   const [editorBox, setEditorBox] = useState<fabric.Rect | null>(null);
@@ -841,7 +839,13 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   };
   const canvasHistoryRef = useRef([]);
   const [currentStep, setCurrentStep] = useState(-1);
-  const { userId } = useAuth();
+  const session = useSession();
+  const [userId, setUserID] = useState<string | null>(null);
+  useEffect(() => {
+    if (session) {
+      setUserID(session.user.id);
+    }
+  }, [session]);
 
   const fetchGeneratedImages = async (userId) => {
     try {
@@ -897,7 +901,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       console.log(await data, "dfdgfdgfg");
 
       if (data?.data.length) {
-        const revers = data.data.reverse()
+        const revers = data.data.reverse();
 
         setListOfAssets(revers);
 
@@ -940,7 +944,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       console.log(await data, "dfdgfdgfg");
 
       if (data?.length) {
-        const revers = data.reverse()
+        const revers = data.reverse();
         setListOfAssetsBrand(await revers);
 
         // setRe(0)
@@ -956,8 +960,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     } catch (error) {
       console.error("Error fetching images:", error);
     }
-
-  }
+  };
   const fetchAssetsImagesWithProjectId = async (userId, pro) => {
     try {
       // const response = await fetch(
@@ -980,11 +983,11 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         }),
       });
       const data = await response.json();
-      console.log(data,"dfsgsg")
+      console.log(data, "dfsgsg");
 
       if (data?.data.length > 0) {
         setListOfAssetsById(data?.data);
-        console.log(listofassetsById,"dfsgsg")
+        console.log(listofassetsById, "dfsgsg");
       }
 
       // setImages(data); // Update the state with the fetched images
@@ -1201,7 +1204,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
             category: category,
             lora_type: loara,
             num_images: selectResult,
-            caption: product
+            caption: product,
           }),
         });
 
@@ -1553,7 +1556,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         tdFormate,
         setTdFormate,
         file3dUrl,
-        downloadImgEdit, setDownloadImgEdit,
+        downloadImgEdit,
+        setDownloadImgEdit,
         setFile3dUrl,
         set3DImage,
         setCanvasDisable,
@@ -1600,10 +1604,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setListOfAssetsById,
         previewBox,
         fetchAssetsImagesBrant,
-        file3dName, setFile3dName,
+        file3dName,
+        setFile3dName,
         loara,
         setLoara,
-        romovepopu3d, setromovepopu3d,
+        romovepopu3d,
+        setromovepopu3d,
         promtFull,
         setpromtFull,
         GetProjexts,
@@ -1718,8 +1724,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         isMagic,
         setIsMagic,
         downloadImg,
-        listofassetsBarand, setListOfAssetsBrand
-,
+        listofassetsBarand,
+        setListOfAssetsBrand,
         setDownloadImg,
         popup,
         setPopup,

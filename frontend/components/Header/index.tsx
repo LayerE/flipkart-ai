@@ -6,7 +6,6 @@ import assets from "@/public/assets";
 import { theme } from "@/theme";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { UserButton } from "@clerk/nextjs";
 
 const Header = () => {
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
@@ -1811,7 +1810,7 @@ const Header = () => {
         ) : null}
 
         <div className="profilbox">
-          <UserButton afterSignOutUrl="/" />
+          {/* <UserButton afterSignOutUrl="/" /> */}
 
           {/* <div className="profilIcon" onClick={handleButtonClick}>
          

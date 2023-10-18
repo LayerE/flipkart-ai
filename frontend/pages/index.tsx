@@ -16,7 +16,7 @@ import { useAppState } from "@/context/app.context";
 import Tools from "@/components/Tools/Tools";
 import Gellery from "@/components/Gellery/Gellery";
 import AssetsDir from "@/components/AssetsDirectory";
-import { useAuth } from "@clerk/nextjs";
+import { useSession } from "@supabase/auth-helpers-react";
 import { useEffect, useState } from "react";
 import PopupCard from "@/components/Popup/PopupCard";
 import axios from "axios";
@@ -26,8 +26,21 @@ import MainLoader from "@/components/Loader/main";
 import PopupUpload from "@/components/Popup";
 
 export default function Home() {
-  const { userId } = useAuth();
-  const { query, isReady } = useRouter();
+  const session = useSession();
+  const router = useRouter();
+  const [userId, setUserID] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (session) {
+      setUserID(session.user.id);
+    } else {
+      // Wait for 1 second
+      setTimeout(() => {}, 500);
+      router.push("/sign-in");
+    }
+  }, [session]);
+
+  const { query, isReady } = router;
   // const { id } = query;
   const id = (query.id as string[]) || [];
   const {

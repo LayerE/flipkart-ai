@@ -4,10 +4,16 @@ import Button from "../common/Button";
 import { useAppState } from "@/context/app.context";
 import { fabric } from "fabric";
 import { useRouter } from "next/router";
-import { useAuth } from "@clerk/nextjs";
+import { useSession } from "@supabase/auth-helpers-react";
 
 const Regeneret = () => {
-  const { userId } = useAuth();
+  const session = useSession();
+  const [userId, setUserId] = useState<string | null>(null);
+  useEffect(() => {
+    if (session) {
+      setUserId(session.user.id);
+    }
+  }, [session]);
   const { query, isReady } = useRouter();
   // const { id } = query;
   const id = (query.id as string[]) || [];
@@ -112,8 +118,8 @@ const Regeneret = () => {
           // Set the position of the image
           img.set("category", "generated");
           img.set({
-            left: 100 + index *100,
-            top: 150 +  index *50,
+            left: 100 + index * 100,
+            top: 150 + index * 50,
           });
           img.scaleToWidth(scaledWidth);
           img.scaleToHeight(scaledHeight);

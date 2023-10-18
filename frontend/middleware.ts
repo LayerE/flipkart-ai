@@ -1,27 +1,11 @@
-import { authMiddleware } from "@clerk/nextjs";
+import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs";
+import { NextResponse } from "next/server";
 
-// This example protects all routes including api/trpc routes
-// Please edit this to allow other routes to be public as needed.
-// See https://clerk.com/docs/references/nextjs/auth-middleware for more information about configuring your middleware
-export default authMiddleware({
-  publicRoutes: [
-    "/api/generate",
-    "/api/removebg",
-    "/api/hello",
-    "/api/images",
-    "/api/user",
-    "/api/canvasdata",
-    "/api/upscale",
-    "/api/upload",
-    "/api/uploadbrandasset",
-    "/api/getassets",
-    "/api/getbanner",
-    "/api/addcaption",
-    "/api/deleteimage",
-    "/api/regenerate",
-  ],
-});
+import type { NextRequest } from "next/server";
 
-export const config = {
-  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
-};
+export async function middleware(req: NextRequest) {
+  const res = NextResponse.next();
+  const supabase = createMiddlewareClient({ req, res });
+  await supabase.auth.getSession();
+  return res;
+}

@@ -3,12 +3,12 @@ import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 
 import { motion } from "framer-motion";
-import { useAuth } from "@clerk/nextjs";
 import { useAppState } from "@/context/app.context";
 import { toast } from "react-toastify";
 import PopupUpload from "../Popup";
 import { useRouter } from "next/router";
 import { AssetsLoader } from "../Loader/AssetsLoader";
+import { useSession } from "@supabase/auth-helpers-react";
 
 const fadeIn = {
   hidden: { opacity: 0 },
@@ -16,7 +16,13 @@ const fadeIn = {
 };
 
 const AssetsDir = () => {
-  const { userId } = useAuth();
+  const session = useSession();
+  const [userId, setUserId] = useState<string | null>(null);
+  useEffect(() => {
+    if (session) {
+      setUserId(session.user.id);
+    }
+  }, [session]);
 
   const {
     fetchGeneratedImages,
@@ -39,7 +45,8 @@ const AssetsDir = () => {
     setUploadedProductlist,
     setProduct,
     addimgToCanvasSubject,
-    listofassetsBarand, setListOfAssetsBrand
+    listofassetsBarand,
+    setListOfAssetsBrand,
 
     // re, setRe,
   } = useAppState();
@@ -67,7 +74,7 @@ const AssetsDir = () => {
 
       // }
     }
-  }, [isReady, userId, AssetsActivTab, listofassets,listofassetsBarand]);
+  }, [isReady, userId, AssetsActivTab, listofassets, listofassetsBarand]);
 
   const fetchAssetsImagess = async () => {
     // setlaoder(true);
@@ -331,7 +338,7 @@ const AssetsDir = () => {
                       generat: true,
                       index: i,
                       list: assers,
-                      type: AssetsActivTab
+                      type: AssetsActivTab,
                     })
                   }
                 >

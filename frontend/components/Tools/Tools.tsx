@@ -7,11 +7,17 @@ const fadeIn = {
 };
 
 import { motion } from "framer-motion";
-import { useAuth } from "@clerk/nextjs";
+import { useSession } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
 
 const Tools = () => {
-  const { userId } = useAuth();
+  const session = useSession();
+  const [userId, setUserId] = useState<string | null>(null);
+  useEffect(() => {
+    if (session) {
+      setUserId(session.user.id);
+    }
+  }, [session]);
   const router = useRouter();
 
   const toolslist = [
