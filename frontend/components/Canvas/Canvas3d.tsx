@@ -70,8 +70,8 @@ const Canvas3d = () => {
         1000
       );
       // camera.position.set(-1.8, 0.6, 2.7);
-      camera.position.z = 5;
-      camera.position.x = 10;
+      // camera.position.z = 5;
+      // camera.position.x = 10;
 
       // camera.position.set(-20.5, 0.5, 8.0);
       // camera.lookAt(new THREE.Vector3(0, 0, 0));
@@ -143,10 +143,11 @@ const Canvas3d = () => {
         const distance = Math.abs(maxDim / Math.sin(fov / 2));
 
         // Set the camera position and look at the object
-        camera.position.copy(center);
+        // camera.position.copy(center);
 
         camera.position.z += distance;
-        camera.lookAt(center);
+        // camera.lookAt(center);
+        controls.target = center;
         setasset3dLoader(false);
       }
 
@@ -214,7 +215,6 @@ const Canvas3d = () => {
         loader = new PLYLoader();
       }
 
-
       if (file3dUrl != null) {
         setshowText(true);
 
@@ -242,7 +242,22 @@ const Canvas3d = () => {
               container.add(object);
               scene.add(container);
               postingCenter(object);
+              const boundingBox = new THREE.Box3().setFromObject(object);
+              const center = boundingBox.getCenter(new THREE.Vector3());
 
+              const size = boundingBox.getSize(new THREE.Vector3());
+
+              // Calculate the distance to fit the object in the view
+              const maxDim = Math.max(size.x, size.y, size.z);
+              const fov = camera.fov * (Math.PI / 180);
+              const distance = Math.abs(maxDim / Math.sin(fov / 2));
+
+              // Set the camera position and look at the object
+              // camera.position.copy(center);
+
+              camera.position.z += distance;
+              // camera.lookAt(center);
+              controls.target = center;
               setasset3dLoader(false);
             },
             onProgress,
@@ -280,8 +295,18 @@ const Canvas3d = () => {
               // After loading the model, calculate the center
               const boundingBox = new THREE.Box3().setFromObject(object.scene);
               const center = boundingBox.getCenter(new THREE.Vector3());
+              // controls.target = center;
+              const size = boundingBox.getSize(new THREE.Vector3());
+
+              // Calculate the distance to fit the object in the view
+              const maxDim = Math.max(size.x, size.y, size.z);
+              const fov = camera.fov * (Math.PI / 180);
+              const distance = Math.abs(maxDim / Math.sin(fov / 2));
+
+              camera.position.z += distance;
+
               controls.target = center;
-              const distance = center.distanceTo(controls.object.position);
+              const distances = center.distanceTo(controls.object.position);
 
               scene.add(object.scene);
               setasset3dLoader(false);
@@ -311,6 +336,22 @@ const Canvas3d = () => {
               // container.add(object);
               // scene.add(container);
 
+              const boundingBox = new THREE.Box3().setFromObject(object);
+              const center = boundingBox.getCenter(new THREE.Vector3());
+
+              const size = boundingBox.getSize(new THREE.Vector3());
+
+              // Calculate the distance to fit the object in the view
+              const maxDim = Math.max(size.x, size.y, size.z);
+              const fov = camera.fov * (Math.PI / 180);
+              const distance = Math.abs(maxDim / Math.sin(fov / 2));
+
+              // Set the camera position and look at the object
+              // camera.position.copy(center);
+
+              camera.position.z += distance;
+              // camera.lookAt(center);
+              controls.target = center;
               setasset3dLoader(false);
             },
             onProgress,
@@ -424,7 +465,22 @@ const Canvas3d = () => {
               container.add(object);
               scene.add(container);
               postingCenter(object);
+              const boundingBox = new THREE.Box3().setFromObject(object);
+              const center = boundingBox.getCenter(new THREE.Vector3());
 
+              const size = boundingBox.getSize(new THREE.Vector3());
+
+              // Calculate the distance to fit the object in the view
+              const maxDim = Math.max(size.x, size.y, size.z);
+              const fov = camera.fov * (Math.PI / 180);
+              const distance = Math.abs(maxDim / Math.sin(fov / 2));
+
+              // Set the camera position and look at the object
+              // camera.position.copy(center);
+
+              camera.position.z += distance;
+              // camera.lookAt(center);
+              controls.target = center;
               setasset3dLoader(false);
             },
             onProgress,
@@ -454,8 +510,18 @@ const Canvas3d = () => {
               // After loading the model, calculate the center
               const boundingBox = new THREE.Box3().setFromObject(object.scene);
               const center = boundingBox.getCenter(new THREE.Vector3());
+
+              const size = boundingBox.getSize(new THREE.Vector3());
+
+              // Calculate the distance to fit the object in the view
+              const maxDim = Math.max(size.x, size.y, size.z);
+              const fov = camera.fov * (Math.PI / 180);
+              const distance = Math.abs(maxDim / Math.sin(fov / 2));
+
+              camera.position.z += distance;
+
               controls.target = center;
-              const distance = center.distanceTo(controls.object.position);
+              const distances = center.distanceTo(controls.object.position);
 
               // const cameraPosition = camera.position;
               // const objectPosition = object.scene.position;
@@ -511,6 +577,23 @@ const Canvas3d = () => {
               scene.add(object);
               // container.add(object);
               // scene.add(container);
+
+              const boundingBox = new THREE.Box3().setFromObject(object);
+              const center = boundingBox.getCenter(new THREE.Vector3());
+
+              const size = boundingBox.getSize(new THREE.Vector3());
+
+              // Calculate the distance to fit the object in the view
+              const maxDim = Math.max(size.x, size.y, size.z);
+              const fov = camera.fov * (Math.PI / 180);
+              const distance = Math.abs(maxDim / Math.sin(fov / 2));
+
+              // Set the camera position and look at the object
+              // camera.position.copy(center);
+
+              camera.position.z += distance;
+              // camera.lookAt(center);
+              controls.target = center;
               setasset3dLoader(false);
             },
             onProgress,

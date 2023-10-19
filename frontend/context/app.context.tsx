@@ -1032,7 +1032,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
         const subjectDataUrl = subjectCanvas.toDataURL({format : "png",multiplier:  0.5});
         const subjectDataUrlJson = subjectCanvas.toJSON();
-        console.log(subjectDataUrlJson,"dsfdf")
+        const updatedObject = {
+          width: activeSize.w, // Add the new key-value pair
+          height: activeSize.h,
+          ...subjectDataUrlJson, // Spread the existing object
+        };
+        console.log(updatedObject,"dsfdf")
 
         // const subjectDataUrl = subjectCanvas.toDataURL("image/png");
 
