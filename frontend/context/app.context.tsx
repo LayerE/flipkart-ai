@@ -1,11 +1,11 @@
 import { createContext, useContext, useState, useRef, useEffect } from "react";
 import { fabric } from "fabric";
-import { useAuth } from "@clerk/nextjs";
 import { saveAs } from "file-saver";
 import axios from "axios";
 import * as THREE from "three";
 import { toast } from "react-toastify";
 import { arrayBufferToDataURL, dataURLtoFile } from "@/utils/BufferToDataUrl";
+import { useSession } from "@supabase/auth-helpers-react";
 
 type ContextProviderProps = {
   children: React.ReactNode;
@@ -289,7 +289,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
   const [undoArray, setUndoArray] = useState<string[]>([]);
   const [editorBox, setEditorBox] = useState<fabric.Rect | null>(null);
-  const [zoom, setZoomCanvas] = useState<number>(1);
+  const [zoom, setZoomCanvas] = useState<number>(0.6);
 
   const [canvasDisable, setCanvasDisable] = useState<boolean>(false);
 
@@ -298,72 +298,53 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [regeneratePopup, setRegeneratePopup] = useState<object>({});
   const [projectlist, setprojectlist] = useState<object[]>([]);
   const [project, setproject] = useState<object[]>([]);
-
   const [generatedImgList, setGeneratedImgList] = useState<string[]>([]);
   const [jobId, setJobId] = useState<string[]>([]);
   const [jobIdOne, setJobIdOne] = useState<string[]>([]);
   const [tdFormate, setTdFormate] = useState(".gltf");
   const [regenratingId, setregeneraatingId] = useState(null);
-
   const PosisionbtnRef = useRef<HTMLElement | null>(null);
   const regenerateRef = useRef<HTMLElement | null>(null);
   const genrateeRef = useRef<HTMLElement | null>(null);
-
   const generateBox = useRef<HTMLElement | null>(null);
   const previewBox = useRef<HTMLElement | null>(null);
-
   const [regenratedImgsJobId, setRegenratedImgsJobid] = useState(null);
-
   const [projectId, setprojectId] = useState(null);
   const [uerId, setUserId] = useState(null);
   const [category, setcategory] = useState(null);
-
   const [listofassets, setListOfAssets] = useState(null);
   const [listofassetsBarand, setListOfAssetsBrand] = useState(null);
-
   const [listofassetsById, setListOfAssetsById] = useState([]);
-
   const [newassetonCanvas, setNewassetonCanvas] = useState(null);
-
   const [genRect, setgenRect] = useState();
   const [assetLoader, setassetLoader] = useState(false);
   const [assetL3doader, setasset3dLoader] = useState(false);
-
   const [brandassetLoader, setbrandassetLoader] = useState(false);
-
   const canvasHistory = useRef<any[]>([]);
   const currentCanvasIndex = useRef(-1);
   const canvasRef = useRef(null);
   const [activeTemplet, setActiveTemplet] = useState(null);
   const [downloadeImgFormate, setDownloadeImgFormate] = useState("png");
-
   const [incremetPosition, setIncremetPosition] = useState(0);
   const [magickErase, setmagickErase] = useState(false);
   const [brushSize, setBrushSize] = useState(5);
-
   const [AssetsActivTab, setassetsActiveTab] = useState("product");
   const [galleryActivTab, setgalleryActiveTab] = useState("ai");
   const [TdImage, set3DImage] = useState(null);
   const [renderer, setRenderer] = useState<THREE.WebGLRenderer | null>(null);
-
   const [TDMode, set3dMode] = useState(false);
-
   const [re, setRe] = useState(1);
-
   const [linesHistory, setLinesHistory] = useState<any[]>([]);
   const [lines, setLines] = useState<any[]>([]);
-
   const [mode, setMode] = useState<string>("pen");
   const [magicLoader, setMagicloder] = useState(false);
   const [crop, setCrop] = useState(false);
   const [filsizeMorethan10, setfilsizeMorethan10] = useState(false);
-
   const stageRef = useRef(null);
-
   const [activeSize, setActiveSize] = useState({
     id: 1,
     title: "Default",
-    subTittle: "1024✕1024",
+    subTittle: "512✕512",
     h: 512,
     w: 512,
     l: 100,
@@ -817,7 +798,13 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   };
   const canvasHistoryRef = useRef([]);
   const [currentStep, setCurrentStep] = useState(-1);
-  const { userId } = useAuth();
+  const session = useSession();
+  const [userId, setUserID] = useState<string | null>(null);
+  useEffect(() => {
+    if (session) {
+      setUserID(session.user.id);
+    }
+  }, [session]);
 
   const fetchGeneratedImages = async (userId: any) => {
     try {
@@ -890,6 +877,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       console.error("Error fetching images:", error);
     }
   };
+
   const fetchAssetsImagesWithProjectId = async (userId: any, pro: any) => {
     try {
       const response = await fetch(`/api/images`, {
@@ -1029,7 +1017,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         });
 
         // Make image with only the subject objects
-        const subjectCanvas = new fabric.StaticCanvas(null, {
+        const subjectCanvas = new fabric.Canvas(null, {
           // width: newEditorBox.width,
           // height: newEditorBox.height,
           // top: newEditorBox.top,
@@ -1049,7 +1037,10 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           subjectCanvas.add(gg);
         });
 
-        const subjectDataUrl = subjectCanvas.toDataURL();
+        const subjectDataUrl = subjectCanvas.toDataURL({format : "png",multiplier:  0.5});
+        const subjectDataUrlJson = subjectCanvas.toJSON();
+        console.log(subjectDataUrlJson,"dsfdf")
+
         // const subjectDataUrl = subjectCanvas.toDataURL("image/png");
 
         subjectObjects.forEach((object: any) => {
@@ -1207,7 +1198,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       if (renderer === null) {
         toast("Add a 3d model");
       } else {
-        console.log("dsfdfgdg");
         setLoader(true);
 
         const promtText = promtFull;
@@ -1359,25 +1349,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
   const [loadercarna, setloadercarna] = useState(false);
 
-  // const handleZoomIn = () => {
-  //   const canvasInstanceRef = canvasInstance?.current;
 
-  //   const newZoom = canvasInstanceRef.getZoom() * 1.1; // Increase zoom by 10%
-  //   canvasInstanceRef.setZoom(newZoom);
-  //   canvasInstanceRef.renderAll();
-  //   setZoomCanvas(newZoom);
-
-  //   console.log(zoom);
-  // };
-
-  // const handleZoomOut = () => {
-  //   const canvasInstanceRef = canvasInstance?.current;
-
-  //   const newZoom = canvasInstanceRef.getZoom() / 1.1; // Decrease zoom by 10%
-  //   setZoomCanvas(newZoom);
-  //   canvasInstanceRef.setZoom(newZoom);
-  //   canvasInstanceRef.renderAll();
-  // };
 
   return (
     <AppContext.Provider

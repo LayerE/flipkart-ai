@@ -3,7 +3,7 @@ import { Row } from "../common/Row";
 import Button from "../common/Button";
 import { useAppState } from "@/context/app.context";
 import { styled } from "styled-components";
-import { useAuth } from "@clerk/nextjs";
+import { useSession } from "@supabase/auth-helpers-react";
 const fadeIn = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 0.5 } },
@@ -28,7 +28,13 @@ import DropdownInput, { DropdownNOBorder } from "../common/Dropdown";
 import { Input, TestArea } from "../common/Input";
 
 const Generate = () => {
-  const { userId } = useAuth();
+  const session = useSession();
+  const [userId, setUserId] = useState<string | null>(null);
+  useEffect(() => {
+    if (session) {
+      setUserId(session.user.id);
+    }
+  }, [session]);
   const {
     product,
     placementTest,
@@ -214,8 +220,6 @@ const Generate = () => {
             </Button>
           )}
         </Row>
-      
-      
       </div>
 
       {/* <div className="rowwothtwo" style={{ marginBottom: "0px" }}>
@@ -243,21 +247,15 @@ const Generate = () => {
         >
           Templates
         </div>
-    
-          <div
-            className={
-              changeTab
-                ? "btnswitch activeSwitch"
-             
-                : "btnswitch "
-            }
-            onClick={() => {
-               setChangeTab(true);
-            }}
-          >
-            Settings
-          </div>
- 
+
+        <div
+          className={changeTab ? "btnswitch activeSwitch" : "btnswitch "}
+          onClick={() => {
+            setChangeTab(true);
+          }}
+        >
+          Settings
+        </div>
       </SwchichBtn>
       <Wrapper className="wrappper">
         {changeTab ? <EditorSection /> : <Tamplates />}

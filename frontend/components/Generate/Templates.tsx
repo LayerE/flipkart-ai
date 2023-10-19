@@ -12,7 +12,7 @@ const fadeIn = {
 import { motion } from "framer-motion";
 // import { Label } from "react-konva";
 import { TempletList, templets } from "@/store/dropdown";
-import { useAuth } from "@clerk/nextjs";
+import { useSession } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
 import Label from "../common/Label";
 
@@ -32,13 +32,21 @@ const Tamplates = () => {
     setViewMore,
     loara,
     setLoara,
-    promt, setpromt,
+    promt,
+    setpromt,
     loader,
     backgroundTest,
     GetProjextById,
-    activeTemplet, setActiveTemplet
+    activeTemplet,
+    setActiveTemplet,
   } = useAppState();
-  const { userId } = useAuth();
+  const session = useSession();
+  const [userId, setUserId] = useState<string | null>(null);
+  useEffect(() => {
+    if (session) {
+      setUserId(session.user.id);
+    }
+  }, [session]);
   const { query, isReady } = useRouter();
   // const { id } = query;
   const id = (query.id as string[]) || [];
@@ -46,7 +54,7 @@ const Tamplates = () => {
     if (isReady) {
       try {
         // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
-     
+
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API}/recently`,
           {
@@ -117,23 +125,21 @@ const Tamplates = () => {
               {filterRecently?.slice(0, 5).map((test, i) => (
                 <div
                   key={i}
-                  className={`imageBoxs ${activeTemplet === test ? "actives" : ""}`}
+                  className={`imageBoxs ${
+                    activeTemplet === test ? "actives" : ""
+                  }`}
                   onClick={() => {
-                    if(!loader)
-                    {
+                    if (!loader) {
+                      setActiveTemplet(test); // Set the current item as active
 
-                  
-                    
-                  setActiveTemplet(test); // Set the current item as active
-
-                    setPlacementTest(test.placement);
-                    setSurroundingTest(test.surrounding);
-                    setBackgrundTest(test.background);
-                    setSelectedPlacement(test.placementType);
-                    setSelectedSurrounding(test.surroundingType);
-                    setSelectedBackground(test.backgroundType);
-                    setLoara(test.lora);
-                    setpromt(test.promt);
+                      setPlacementTest(test.placement);
+                      setSurroundingTest(test.surrounding);
+                      setBackgrundTest(test.background);
+                      setSelectedPlacement(test.placementType);
+                      setSelectedSurrounding(test.surroundingType);
+                      setSelectedBackground(test.backgroundType);
+                      setLoara(test.lora);
+                      setpromt(test.promt);
                     }
                   }}
                 >
@@ -152,60 +158,44 @@ const Tamplates = () => {
             <Label>Select a Template Below:</Label>
           </div>
         </div>
-          {TempletList.map((testd, i) => (
-<>
+        {TempletList.map((testd, i) => (
+          <>
             <div className="sub-title">
               <Label>{testd.title}</Label>
             </div>
-        <ResponsiveRowWraptwo>
-
-          
-              { testd.list.map((test, i) =>(
+            <ResponsiveRowWraptwo>
+              {testd.list.map((test, i) => (
                 <div
-                key={i}
-                className={`imageBoxs ${activeTemplet === test ? "actives" : ""}`}
-
-                onClick={() => {
-                  if(!loader)
-                  {
-
-                  setActiveTemplet(test); // Set the current item as active
-                  // addtoRecntly(test);
-                  setTemplet(test)
-                  // setProduct(test.product);
-                  setPlacementTest(test.placement);
-                  setSurroundingTest(test.surrounding);
-                  setBackgrundTest(test.background);
-                  setSelectedPlacement(test.placementType);
-                  setSelectedSurrounding(test.surroundingType);
-                  setSelectedBackground(test.backgroundType);
-                  setLoara(test.lora);
-                  setpromt(test.promt);
-
-                  }
-  
-                }}
-              >
-                <picture>
-                  <img src={test.image} alt="" />
-                </picture>
-                <div className="head">{test?.title}</div>
-  
-              </div>
-
-
-                ))
-              }
-        
-
-
-
-
-            
-            
-        </ResponsiveRowWraptwo>
-            </>
-          ))}
+                  key={i}
+                  className={`imageBoxs ${
+                    activeTemplet === test ? "actives" : ""
+                  }`}
+                  onClick={() => {
+                    if (!loader) {
+                      setActiveTemplet(test); // Set the current item as active
+                      // addtoRecntly(test);
+                      setTemplet(test);
+                      // setProduct(test.product);
+                      setPlacementTest(test.placement);
+                      setSurroundingTest(test.surrounding);
+                      setBackgrundTest(test.background);
+                      setSelectedPlacement(test.placementType);
+                      setSelectedSurrounding(test.surroundingType);
+                      setSelectedBackground(test.backgroundType);
+                      setLoara(test.lora);
+                      setpromt(test.promt);
+                    }
+                  }}
+                >
+                  <picture>
+                    <img src={test.image} alt="" />
+                  </picture>
+                  <div className="head">{test?.title}</div>
+                </div>
+              ))}
+            </ResponsiveRowWraptwo>
+          </>
+        ))}
       </RecentWrapper>
     </motion.div>
   );
@@ -224,12 +214,11 @@ export const ResponsiveRowWraptwo = styled(Row)`
 `;
 
 export const RecentWrapper = styled(Row)`
-
-.sub-title{
-  text-align: left;
-  width: 100%;
-  padding: 15px 0;
-}
+  .sub-title {
+    text-align: left;
+    width: 100%;
+    padding: 15px 0;
+  }
   margin-bottom: 50px;
   .rowsnew {
     margin-top: 30px !important;
@@ -322,15 +311,11 @@ export const RecentWrapper = styled(Row)`
       border: 2px solid rgba(249, 208, 13, 1);
     }
   }
-  .actives{
+  .actives {
     border: 2px solid rgba(249, 208, 13, 1);
     background-color: rgba(249, 208, 13, 0.23);
     img {
-   
-        transform: scale(1.1);
-      
+      transform: scale(1.1);
     }
-
-
   }
 `;

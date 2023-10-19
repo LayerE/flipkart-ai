@@ -5,7 +5,7 @@ import Link from "next/link";
 import assets from "@/public/assets";
 import ProjectCard from "./ProjectCard";
 import { useAppState } from "@/context/app.context";
-import { useAuth } from "@clerk/nextjs";
+import { useSession } from "@supabase/auth-helpers-react";
 import { setTimeout } from "timers";
 import { useRouter } from "next/router";
 import MainLoader from "../Loader/main";
@@ -17,7 +17,13 @@ const fadeIn = {
 const Projects = ({ onDelet }) => {
   const router = useRouter();
   const [projects, setProjects] = useState([]);
-  const { userId } = useAuth();
+  const session = useSession();
+  const [userId, setUserId] = useState<string | null>(null);
+  useEffect(() => {
+    if (session) {
+      setUserId(session.user.id);
+    }
+  }, [session]);
   const {
     activeTab,
     setprojectlist,
@@ -223,7 +229,7 @@ const ProjectWrapper = styled.div`
   height: 100%;
   display: grid;
   /* grid-template-columns: 1fr 1fr 1fr 1fr; */
-  grid-template-rows: 1fr 1fr ;
+  grid-template-rows: 1fr 1fr;
   /* grid-template-rows: repeat(auto-fill, minmax(100px, 1fr)); */
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 15px;

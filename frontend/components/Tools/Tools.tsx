@@ -7,11 +7,17 @@ const fadeIn = {
 };
 
 import { motion } from "framer-motion";
-import { useAuth } from "@clerk/nextjs";
+import { useSession } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
 
 const Tools = () => {
-  const { userId } = useAuth();
+  const session = useSession();
+  const [userId, setUserId] = useState<string | null>(null);
+  useEffect(() => {
+    if (session) {
+      setUserId(session.user.id);
+    }
+  }, [session]);
   const router = useRouter();
 
   const toolslist = [
@@ -31,14 +37,14 @@ const Tools = () => {
       url: "/generate-3d/",
       img: "https://media.sketchfab.com/models/724f69d360e24cda99ba84fead2bed88/thumbnails/3bc8180aab6148778a75cde61100e6d4/915356641a0547a6907f0b8c89383780.jpeg",
     },
-    {
-      name: "Quick  Generator",
-      route: true,
+    // {
+    //   name: "Quick  Generator",
+    //   route: true,
 
-      discription: "Generator a background images",
-      url: "/quick-generator/",
-      img: "https://thumbs.dreamstime.com/b/space-background-galaxy-nebula-blue-orange-clouds-neural-network-ai-generated-art-271138821.jpg",
-    },
+    //   discription: "Generator a background images",
+    //   url: "/quick-generator/",
+    //   img: "https://thumbs.dreamstime.com/b/space-background-galaxy-nebula-blue-orange-clouds-neural-network-ai-generated-art-271138821.jpg",
+    // },
     // {
     //   name: "Tool Name",
     //   discription: "Discription about this tool",

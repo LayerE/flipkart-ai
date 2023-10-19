@@ -4,7 +4,7 @@ import { styled } from "styled-components";
 
 import { motion } from "framer-motion";
 import { useAppState } from "@/context/app.context";
-import { useAuth } from "@clerk/nextjs";
+import { useSession } from "@supabase/auth-helpers-react";
 import PopupCard from "../Popup/PopupCard";
 import axios from "axios";
 import Loader from "../Loader";
@@ -15,8 +15,13 @@ const fadeIn = {
 };
 
 const Gellery = () => {
-  const { userId } = useAuth();
-
+  const session = useSession();
+  const [userId, setUserId] = useState<string | null>(null);
+  useEffect(() => {
+    if (session) {
+      setUserId(session.user.id);
+    }
+  }, [session]);
   const [gallery, setGallery] = useState();
 
   const {

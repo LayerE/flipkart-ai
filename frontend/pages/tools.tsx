@@ -16,7 +16,7 @@ import { useAppState } from "@/context/app.context";
 import Tools from "@/components/Tools/Tools";
 import Gellery from "@/components/Gellery/Gellery";
 import AssetsDir from "@/components/AssetsDirectory";
-import { useAuth } from "@clerk/nextjs";
+
 import { useEffect, useState } from "react";
 import PopupCard from "@/components/Popup/PopupCard";
 import axios from "axios";
@@ -24,9 +24,16 @@ import { useRouter } from "next/router";
 import Loader from "@/components/Loader";
 import MainLoader from "@/components/Loader/main";
 import PopupUpload from "@/components/Popup";
+import { useSession } from "@supabase/auth-helpers-react";
 
 export default function Home() {
-  const { userId } = useAuth();
+  const session = useSession();
+  const [userId, setUserID] = useState<string | null>(null);
+  useEffect(() => {
+    if (session) {
+      setUserID(session.user.id);
+    }
+  }, [session]);
   const { query, isReady } = useRouter();
   // const { id } = query;
   const id = (query.id as string[]) || [];
@@ -52,7 +59,7 @@ export default function Home() {
     setLoader,
     fetchAssetsImages,
     popup,
-    setSelectedImg
+    setSelectedImg,
   } = useAppState();
 
   // const [loadercarna, setloadercarna] = useState(true);

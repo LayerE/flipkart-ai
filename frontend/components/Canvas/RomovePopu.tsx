@@ -7,13 +7,19 @@ import Button from "../common/Button";
 import { saveAs } from "file-saver";
 import { AssetsLoader } from "../Loader/AssetsLoader";
 import { RemoveLoader } from "../Loader/RemoveLoader";
-import { useAuth } from "@clerk/nextjs";
+import { useSession } from "@supabase/auth-helpers-react";
 import { toast } from "react-toastify";
 
 import { arrayBufferToDataURL, dataURLtoFile } from "@/utils/BufferToDataUrl";
 
 const RemoveBox = ({ type }) => {
-  const { userId } = useAuth();
+  const session = useSession();
+  const [userId, setUserId] = useState<string | null>(null);
+  useEffect(() => {
+    if (session) {
+      setUserId(session.user.id);
+    }
+  }, [session]);
 
   const {
     addimgToCanvasCropped,
@@ -25,7 +31,7 @@ const RemoveBox = ({ type }) => {
     setromovepopu3d,
     selectedImg,
     romovepopu3d,
-    downloadeImgFormate
+    downloadeImgFormate,
   } = useAppState();
 
   // const [cropSize, setCropSize] = useState({ x: 0, y: 0 })
@@ -116,10 +122,10 @@ const RemoveBox = ({ type }) => {
     console.log(buffer, response, dataURL, "imgs");
 
     if (response.status === 402) {
-        toast.error("Not enough credits to process the request");
-        setromovepopu3d(false);
-        setupdateImg(null);
-      }
+      toast.error("Not enough credits to process the request");
+      setromovepopu3d(false);
+      setupdateImg(null);
+    }
     // const response = await fetch("/api/upscale", {
     //   method: "POST",
     //   headers: {
@@ -128,7 +134,7 @@ const RemoveBox = ({ type }) => {
     //   body: JSON.stringify({
     //     image_url: photo,
     //     user_id: userId,
-      
+
     //   }),
     // });
 
@@ -156,14 +162,13 @@ const RemoveBox = ({ type }) => {
       //   const data = await upSacle(downloadImg, "imger");
       const data = await upSacle(downloadImg, "imger");
 
-        if (data) {
-          console.log(updateImg);
-          // addimgToCanvasGen(data);
-          setupdateImg(data);
+      if (data) {
+        console.log(updateImg);
+        // addimgToCanvasGen(data);
+        setupdateImg(data);
 
-          //   setSelectedImg({ status: true, image: data });
-        }
-      
+        //   setSelectedImg({ status: true, image: data });
+      }
     } catch (error) {
       setLoader(false);
       toast.error("Error upscale Image");

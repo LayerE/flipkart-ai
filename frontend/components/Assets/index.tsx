@@ -7,12 +7,18 @@ import { styled } from "styled-components";
 // import { category, test } from "@/store/dropdown";
 import { useAppState } from "@/context/app.context";
 import { productList } from "@/store/listOfElement";
-import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/router";
+import { useSession } from "@supabase/auth-helpers-react";
 // import { fabric } from "fabric";
 
 const Assets: React.FC = () => {
-  const { userId } = useAuth();
+  const session = useSession();
+  const [userId, setUserId] = useState<string | null>(null);
+    useEffect(() => {
+      if (session) {
+        setUserId(session.user.id);
+      }
+    }, [session]);
   const {
     setProduct,
     uploadedProductlist,
