@@ -7,8 +7,7 @@ import { TDSLoader } from "three/addons/loaders/TDSLoader.js";
 import { FBXLoader } from "three/addons/loaders/FBXLoader.js";
 import { STLLoader } from "three/addons/loaders/STLLoader.js";
 import { PLYLoader } from "three/addons/loaders/PLYLoader.js";
-
-import Stats from "three/examples/jsm/libs/stats.module";
+import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import assets from "@/public/assets";
@@ -51,8 +50,7 @@ const Canvas3d = () => {
     romovepopu3d,
     file3dName,
     setromovepopu3d,
-    setFile3dName
-
+    setFile3dName,
   } = useAppState();
 
   let camera, scene, object, controls, renderNew;
@@ -72,7 +70,9 @@ const Canvas3d = () => {
         1000
       );
       // camera.position.set(-1.8, 0.6, 2.7);
-      camera.position.z = 2;
+      camera.position.z = 5;
+      camera.position.x = 10;
+
       // camera.position.set(-20.5, 0.5, 8.0);
       // camera.lookAt(new THREE.Vector3(0, 0, 0));
       scene = new THREE.Scene();
@@ -83,6 +83,11 @@ const Canvas3d = () => {
         antialias: true,
         preserveDrawingBuffer: true,
       });
+      const pmremGenerator = new THREE.PMREMGenerator(renderer);
+      scene.environment = pmremGenerator.fromScene(
+        new RoomEnvironment(renderer),
+        0.04
+      ).texture;
       // renderer.useLegacyLights = false;
       // renderer.shadowMap.enabled = true;
       const ambientLight = new THREE.AmbientLight(0x404040);
@@ -95,6 +100,10 @@ const Canvas3d = () => {
       const light = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
       light.position.set(2.5, 7.5, 15);
       scene.add(light);
+
+      controls = new OrbitControls(camera, renderer.domElement);
+      // controls.target.set( 0, .5, 2 );
+      controls.update();
 
       function loadModel() {
         object.traverse(function (child) {
@@ -120,7 +129,6 @@ const Canvas3d = () => {
         scene.add(container);
         // scene.add(object);
 
-
         console.log("11sssssssssssss11");
 
         // Adjust the camera position and rotation to focus on the loaded object
@@ -133,7 +141,6 @@ const Canvas3d = () => {
         const maxDim = Math.max(size.x, size.y, size.z);
         const fov = camera.fov * (Math.PI / 180);
         const distance = Math.abs(maxDim / Math.sin(fov / 2));
-        console.log("1ssssssssssssssssssss111");
 
         // Set the camera position and look at the object
         camera.position.copy(center);
@@ -185,7 +192,7 @@ const Canvas3d = () => {
 
         toast.error(e.message);
         // }
-        setFile3dName(null)
+        setFile3dName(null);
         setasset3dLoader(false);
       }
       const container = new THREE.Group();
@@ -195,7 +202,7 @@ const Canvas3d = () => {
         loader = new OBJLoader();
       } else if (tdFormate === ".3ds") {
         loader = new TDSLoader();
-      } else if (tdFormate === ".gltf") {
+      } else if (tdFormate === ".gltf" || tdFormate === ".glb") {
         loader = new GLTFLoader();
       } else if (tdFormate === ".fbx") {
         loader = new FBXLoader();
@@ -207,7 +214,7 @@ const Canvas3d = () => {
         loader = new PLYLoader();
       }
 
-      console.log(file3d, "dsfdsfds", file3dUrl);
+
       if (file3dUrl != null) {
         setshowText(true);
 
@@ -241,35 +248,42 @@ const Canvas3d = () => {
             onProgress,
             onError
           );
-        } else if (tdFormate === ".gltf") {
+        } else if (tdFormate === ".gltf" || tdFormate === ".gltf") {
           setasset3dLoader(true);
 
           loader.load(
             file3dUrl,
             // "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
             (object) => {
-              object.scene.traverse(function (child) {
-                if (child.type === "Mesh") {
-                  let m = child;
-                  m.receiveShadow = true;
-                  m.castShadow = true;
-                }
-                if (child.type === "SpotLight") {
-                  let l = child;
-                  l.castShadow = true;
-                  l.shadow.bias = -0.003;
-                  l.shadow.mapSize.width = 2048;
-                  l.shadow.mapSize.height = 2048;
-                }
-              });
-              // progressBar.style.display = 'none'
-              scene.add(object.scene);
-              // gltf.animations; // Array<THREE.AnimationClip>
-              // gltf.scene; // THREE.Group
-              // gltf.scenes; // Array<THREE.Group>
-              // gltf.cameras; // Array<THREE.Camera>
-              // gltf.asset; // Object
+              // object.scene.traverse(function (child) {
+              //   if (child.type === "Mesh") {
+              //     let m = child;
+              //     m.receiveShadow = true;
+              //     m.castShadow = true;
+              //   }
+              //   if (child.type === "SpotLight") {
+              //     let l = child;
+              //     l.castShadow = true;
+              //     l.shadow.bias = -0.003;
+              //     l.shadow.mapSize.width = 2048;
+              //     l.shadow.mapSize.height = 2048;
+              //   }
+              // });
+              // // progressBar.style.display = 'none'
+              // scene.add(object.scene);
+              // // gltf.animations; // Array<THREE.AnimationClip>
+              // // gltf.scene; // THREE.Group
+              // // gltf.scenes; // Array<THREE.Group>
+              // // gltf.cameras; // Array<THREE.Camera>
+              // // gltf.asset; // Object
 
+              // After loading the model, calculate the center
+              const boundingBox = new THREE.Box3().setFromObject(object.scene);
+              const center = boundingBox.getCenter(new THREE.Vector3());
+              controls.target = center;
+              const distance = center.distanceTo(controls.object.position);
+
+              scene.add(object.scene);
               setasset3dLoader(false);
             },
             onProgress,
@@ -416,7 +430,7 @@ const Canvas3d = () => {
             onProgress,
             onError
           );
-        } else if (tdFormate === ".gltf") {
+        } else if (tdFormate === ".gltf" || tdFormate === ".glb") {
           setasset3dLoader(true);
 
           loader.load(
@@ -425,20 +439,30 @@ const Canvas3d = () => {
             (object) => {
               object.scene.traverse(function (child) {
                 if (child.type === "Mesh") {
-                  let m = child;
-                  m.receiveShadow = true;
-                  m.castShadow = true;
+                  // let m = child;
+                  // m.receiveShadow = true;
+                  // m.castShadow = true;
                 }
                 if (child.type === "SpotLight") {
-                  let l = child;
-                  l.castShadow = true;
-                  l.shadow.bias = -0.003;
-                  l.shadow.mapSize.width = 2048;
-                  l.shadow.mapSize.height = 2048;
+                  // let l = child;
+                  // l.castShadow = true;
+                  // l.shadow.bias = -0.003;
+                  // l.shadow.mapSize.width = 2048;
+                  // l.shadow.mapSize.height = 2048;
                 }
               });
+              // After loading the model, calculate the center
+              const boundingBox = new THREE.Box3().setFromObject(object.scene);
+              const center = boundingBox.getCenter(new THREE.Vector3());
+              controls.target = center;
+              const distance = center.distanceTo(controls.object.position);
+
+              // const cameraPosition = camera.position;
+              // const objectPosition = object.scene.position;
+              // const distance = cameraPosition.distanceTo(objectPosition);
               // progressBar.style.display = 'none'
               scene.add(object.scene);
+
               // gltf.animations; // Array<THREE.AnimationClip>
               // gltf.scene; // THREE.Group
               // gltf.scenes; // Array<THREE.Group>
@@ -584,7 +608,10 @@ const Canvas3d = () => {
       // renderer.outputEncoding = THREE.sRGBEncoding;
 
       containerRef.current.appendChild(renderer.domElement);
-      controls = new OrbitControls(camera, renderer.domElement);
+
+      // controls.enablePan = false;
+      // controls.enableDamping = true;
+
       // controls.target.set(0, 0, -0.2);
       // controls.minDistance = 2;
       // controls.update();

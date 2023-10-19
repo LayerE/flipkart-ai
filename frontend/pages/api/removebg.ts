@@ -115,35 +115,75 @@ export default async function handler(req: NextRequest, res: NextResponse) {
       return;
     }
 
-    // Encode the base64 data as a buffer
-    const inputBuffer = Buffer.from(
-      inputBase64Url.split(";base64,").pop(),
-      "base64"
-    );
+    const useClipDrop = true;
+    var outputBase64Url = "";
+    var caption = "";
 
-    let form = new FormData();
-    form.append("image_file", inputBuffer, {
-      filename: "input.png",
-      contentType: "image/png",
-    });
+    if (useClipDrop) {
+      // Encode the base64 data as a buffer
+      const inputBuffer = Buffer.from(
+        inputBase64Url.split(";base64,").pop(),
+        "base64"
+      );
 
-    let config = {
-      method: "post",
-      maxBodyLength: 10 * 1024 * 1024,
-      url: "https://clipdrop-api.co/remove-background/v1",
-      headers: {
-        "x-api-key": process.env.CLIPDROP_API_KEY || null,
-        ...form.getHeaders(),
-      },
-      data: form,
-      responseType: "arraybuffer",
-    };
+      const caption_response = await fetch("https://dehiddenformodal--onlycaption-caption.modal.run",
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+          body: JSON.stringify({
+            img: inputBase64Url,
+          }),
+        }
+      );
 
-    const response = axios.request(config);
+      let form = new FormData();
+      form.append("image_file", inputBuffer, {
+        filename: "input.png",
+        contentType: "image/png",
+      });
 
-    // Get base64url from response
-    const { data } = await response;
-    const outputBase64Url = `data:image/png;base64,${data.toString("base64")}`;
+      let config = {
+        method: "post",
+        maxBodyLength: 10 * 1024 * 1024,
+        url: "https://clipdrop-api.co/remove-background/v1",
+        headers: {
+          "x-api-key": process.env.CLIPDROP_API_KEY || null,
+          ...form.getHeaders(),
+        },
+        data: form,
+        responseType: "arraybuffer",
+      };
+
+      const response = axios.request(config);
+
+      //  Get the caption
+      const caption_data = await caption_response.json();
+      caption = caption_data["caption"];
+
+      // Get base64url from response
+      const { data } = await response;
+      outputBase64Url = `data:image/png;base64,${data.toString(
+        "base64"
+      )}`;
+    } else {
+      const caption_bg_response = await fetch("https://dehiddenformodal--bgremove-caption-removebg-and-caption.modal.run",
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+          body: JSON.stringify({
+            img: inputBase64Url,
+          }),
+        }
+      );
+        
+      const caption_bg_data = await caption_bg_response.json();
+      outputBase64Url = caption_bg_data["image"];
+      caption = caption_bg_data["caption"];
+    }
 
     // Upload image to ImageKit
     const { url: imageUrl, height, width } = await uploadImage(outputBase64Url);
@@ -169,7 +209,8 @@ export default async function handler(req: NextRequest, res: NextResponse) {
 
     res.status(200).send(
       JSON.stringify({
-        data: { data: [outputBase64Url] },
+        data: { data: [outputBase64Url]},
+        caption,
         imageUrl,
       })
     );

@@ -285,7 +285,7 @@ export default function CanvasBox({ proid, userId }) {
       //       left:newEditorBox.left,
       //     top:newEditorBox.top,
       //     width: newEditorBox.width,
-      //   });
+      //   }); 
       //     height:newEditorBox.height,
       //   // setDownloadImg(dataURL);
       //   setDownloadImg(dataURL);

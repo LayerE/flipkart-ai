@@ -42,11 +42,11 @@ const PopupCanvas = () => {
     setLines,
     mode,
     setMode,
-    Inpainting,
+
     stageRef,
     TDMode,
     downloadeImgFormate,
-    // HandleInpainting,
+  
     addimgToCanvasSubject,
     canvasInstance,
 
@@ -94,12 +94,7 @@ const PopupCanvas = () => {
   };
 
   const [scale, setScale] = useState(1);
-  const handleZoomIn = () => {
-    setScale(scale * 1.2);
-  };
-  const handleZoomOut = () => {
-    setScale(scale / 1.2);
-  };
+
   const undoLastDrawing = () => {
     if (linesHistory.length === 0) return;
 

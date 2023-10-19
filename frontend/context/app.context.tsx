@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useRef, useEffect } from "react";
 import { fabric } from "fabric";
 import { saveAs } from "file-saver";
 import axios from "axios";
-
+import * as THREE from "three";
 import { toast } from "react-toastify";
 import { arrayBufferToDataURL, dataURLtoFile } from "@/utils/BufferToDataUrl";
 import { useSession } from "@supabase/auth-helpers-react";
@@ -12,14 +12,13 @@ type ContextProviderProps = {
 };
 
 interface ContextITFC {
-  // canvasInstance: React.MutableRefObject< null>;
-  // outerDivRef: React.MutableRefObject<any | null>;
+  canvasInstance: React.MutableRefObject<null>;
+  outerDivRef: React.MutableRefObject<any | null>;
   addimgToCanvas: (url: string) => void;
   addimgToCanvasSubject: (url: string) => void;
   addimgToCanvasGen: (url: string) => void;
   editorBox: fabric.Rect | null;
   setEditorBox: (editorBox: fabric.Rect | null) => void;
-
   getBase64FromUrl: (url: string) => void;
   activeTab: number | null;
   setActiveTab: (activeTab: number) => void;
@@ -27,12 +26,10 @@ interface ContextITFC {
   setActiveTabHome: (activeTabHome: number) => void;
   selectedImg: object | null;
   setSelectedImg: (selectedImg: object) => void;
-
   downloadImg: string | null;
   setDownloadImg: (downloadImg: string) => void;
   isMagic: boolean | null;
   setIsMagic: (isMagic: boolean) => void;
-
   file: File | null;
   setFile: (file: File | null) => void;
   viewMore: object;
@@ -69,12 +66,10 @@ interface ContextITFC {
   setUploadedProductlist: (uploadedProductlist: string[]) => void;
   generatedImgList: string[];
   setGeneratedImgList: (generatedImgList: string[]) => void;
-
   previewLoader: boolean;
   setPriviewLoader: (previewLoader: boolean) => void;
   generationLoader: boolean;
   setGenerationLoader: (generationLoader: boolean) => void;
-
   loader: boolean;
   setLoader: (loader: boolean) => void;
   modifidImageArray: string[];
@@ -84,6 +79,52 @@ interface ContextITFC {
   EditorBox: any;
   popup: object;
   setPopup: (popup: object) => void;
+
+  stageRef: React.MutableRefObject<any | null>;
+  lines: any[];
+  setLines: (lines: any[]) => void;
+  linesHistory: any[];
+  setLinesHistory: (linesHistory: any[]) => void;
+
+  mode: string;
+  setMode: (generatedImgList: string) => void;
+  magicLoader: boolean;
+  setMagicloder: React.Dispatch<React.SetStateAction<boolean>>;
+  crop: boolean;
+  setCrop: React.Dispatch<React.SetStateAction<boolean>>;
+  filsizeMorethan10: boolean;
+  setfilsizeMorethan10: React.Dispatch<React.SetStateAction<boolean>>;
+
+  canvasDisable: boolean;
+  setCanvasDisable: (canvasDisable: boolean) => void;
+  TdImage: any;
+  set3DImage: (TdImage: any) => void;
+  regenratingId: any;
+  setregeneraatingId: (regenratingId: any) => void;
+  tdFormate: string;
+  setTdFormate: (tdFormate: string) => void;
+  file3dUrl: any;
+  setFile3dUrl: (file3dUrl: any) => void;
+  downloadImgEdit: any;
+  setDownloadImgEdit: (downloadImgEdit: any) => void;
+
+  galleryActivTab: string;
+  setgalleryActiveTab: (galleryActivTab: string) => void;
+  addimgToCanvasCropped: (url: string) => void;
+  changeRectangleSize: () => void;
+
+  generate3dHandeler: (ueserId: any, proid: any) => void;
+
+  AssetsActivTab: string;
+  setassetsActiveTab: (AssetsActivTab: string) => void;
+  magickErase: boolean;
+  setmagickErase: (magickErase: boolean) => void;
+  customsize: any;
+  setCustomsize: (customsize: any) => void;
+  zoom: number;
+  setZoomCanvas: (zoom: number) => void;
+  activeSize: object;
+  setActiveSize: (activeSize: object) => void;
 }
 export const AppContext = createContext<ContextITFC>({
   activeTab: 1,
@@ -156,6 +197,50 @@ export const AppContext = createContext<ContextITFC>({
 
   popup: {},
   setPopup: () => {},
+
+  stageRef: null,
+  lines: [],
+  setLines: () => {},
+  linesHistory: [],
+  setLinesHistory: () => {},
+  // linesHistory: Array<YourTypeHere>; // Specify the type
+  // setLinesHistory: React.Dispatch<React.SetStateAction<Array<YourTypeHere>>>;
+  mode: "pen",
+  setMode: (mode: string) => {},
+  magicLoader: false,
+  setMagicloder: () => {},
+  crop: false,
+  setCrop: () => {},
+  filsizeMorethan10: false,
+  setfilsizeMorethan10: () => {},
+  canvasDisable: false,
+  setCanvasDisable: () => {},
+  TdImage: "",
+  set3DImage: () => {},
+  regenratingId: "",
+  setregeneraatingId: () => {},
+  tdFormate: "",
+  setTdFormate: (tdFormate: string) => {},
+  file3dUrl: "",
+  setFile3dUrl: () => {},
+  downloadImgEdit: "",
+  setDownloadImgEdit: () => {},
+  galleryActivTab: "",
+  setgalleryActiveTab: (galleryActivTab: string) => {},
+  addimgToCanvasCropped: () => {},
+  changeRectangleSize: () => {},
+  generate3dHandeler: () => {},
+
+  AssetsActivTab: "",
+  setassetsActiveTab: (AssetsActivTab: string) => {},
+  magickErase: false,
+  setmagickErase: () => {},
+  customsize: "",
+  setCustomsize: () => {},
+  zoom: 0,
+  setZoomCanvas: () => {},
+  activeSize: {},
+  setActiveSize: (activeSize: Object) => {},
 });
 
 export const AppContextProvider = ({ children }: ContextProviderProps) => {
@@ -173,7 +258,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [activeTabHome, setActiveTabHome] = useState<number | null>(1);
   const [file, setFile] = useState<File | null>(null);
   const [file3d, setFile3d] = useState<File | null>(null);
-  const [file3dUrl, setFile3dUrl] = useState<string | null>(null);
+  const [file3dUrl, setFile3dUrl] = useState<string>(null);
   const [file3dName, setFile3dName] = useState(null);
 
   const [viewMore, setViewMore] = useState<object>({});
@@ -213,141 +298,53 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [regeneratePopup, setRegeneratePopup] = useState<object>({});
   const [projectlist, setprojectlist] = useState<object[]>([]);
   const [project, setproject] = useState<object[]>([]);
-
   const [generatedImgList, setGeneratedImgList] = useState<string[]>([]);
   const [jobId, setJobId] = useState<string[]>([]);
   const [jobIdOne, setJobIdOne] = useState<string[]>([]);
   const [tdFormate, setTdFormate] = useState(".gltf");
   const [regenratingId, setregeneraatingId] = useState(null);
-
-  const PosisionbtnRef = useRef(null);
-  const regenerateRef = useRef(null);
-  const genrateeRef = useRef(null);
-
-  const generateBox = useRef(null);
-  const previewBox = useRef(null);
-
+  const PosisionbtnRef = useRef<HTMLElement | null>(null);
+  const regenerateRef = useRef<HTMLElement | null>(null);
+  const genrateeRef = useRef<HTMLElement | null>(null);
+  const generateBox = useRef<HTMLElement | null>(null);
+  const previewBox = useRef<HTMLElement | null>(null);
   const [regenratedImgsJobId, setRegenratedImgsJobid] = useState(null);
-
   const [projectId, setprojectId] = useState(null);
   const [uerId, setUserId] = useState(null);
   const [category, setcategory] = useState(null);
-
   const [listofassets, setListOfAssets] = useState(null);
   const [listofassetsBarand, setListOfAssetsBrand] = useState(null);
-
   const [listofassetsById, setListOfAssetsById] = useState([]);
-
   const [newassetonCanvas, setNewassetonCanvas] = useState(null);
-
   const [genRect, setgenRect] = useState();
   const [assetLoader, setassetLoader] = useState(false);
   const [assetL3doader, setasset3dLoader] = useState(false);
-
   const [brandassetLoader, setbrandassetLoader] = useState(false);
-
-  const canvasHistory = useRef([]);
+  const canvasHistory = useRef<any[]>([]);
   const currentCanvasIndex = useRef(-1);
   const canvasRef = useRef(null);
   const [activeTemplet, setActiveTemplet] = useState(null);
   const [downloadeImgFormate, setDownloadeImgFormate] = useState("png");
-  // const [mode, setMode] = useState(false);
   const [incremetPosition, setIncremetPosition] = useState(0);
   const [magickErase, setmagickErase] = useState(false);
-  // maig
   const [brushSize, setBrushSize] = useState(5);
-
   const [AssetsActivTab, setassetsActiveTab] = useState("product");
   const [galleryActivTab, setgalleryActiveTab] = useState("ai");
   const [TdImage, set3DImage] = useState(null);
-  const [renderer, setRenderer] = useState(null);
-
+  const [renderer, setRenderer] = useState<THREE.WebGLRenderer | null>(null);
   const [TDMode, set3dMode] = useState(false);
-
   const [re, setRe] = useState(1);
-
-  const [linesHistory, setLinesHistory] = useState([]);
-  const [lines, setLines] = useState([]);
-
-  const [mode, setMode] = useState("pen");
+  const [linesHistory, setLinesHistory] = useState<any[]>([]);
+  const [lines, setLines] = useState<any[]>([]);
+  const [mode, setMode] = useState<string>("pen");
   const [magicLoader, setMagicloder] = useState(false);
   const [crop, setCrop] = useState(false);
   const [filsizeMorethan10, setfilsizeMorethan10] = useState(false);
-
-  const stageRef = useRef<fabric.Canvas | null>(null);
-
-  // const saveImage = () => {
-  //   const stage = stageRef.current;
-  //   if (stage) {
-  //     const dataURL = stage.toDataURL();
-  //     return dataURL;
-  //   }
-  // };
-  // const saveCanvasToBlobURL = () => {
-  //   const canvas = stageRef.current;
-  //   if (canvas) {
-  //     const imageObject = canvas.findOne("Image")
-  //     if (imageObject instanceof fabric.Object) {
-  //       // canvas.findOne("Image").hide();
-  //       // const base = canvas.toDataURL();
-  //       // canvas.findOne("Image").show();
-  //       imageObject.hide();
-  //       const base = canvas.toDataURL();
-  //       imageObject.show();
-
-  //       return base;
-  //     }
-  //   }
-  // };
-
-  const Inpainting = async (
-    photo: string,
-    filename: string,
-    mask: string
-  ): Promise<string> => {
-    const form = new FormData();
-    const fileItem = await dataURLtoFile(photo, filename);
-    const maskFile = await dataURLtoFile(mask, "mask.png");
-
-    form.append("image_file", fileItem);
-    form.append("mask_file", maskFile);
-
-    const response = await fetch("https://clipdrop-api.co/cleanup/v1", {
-      method: "POST",
-      headers: {
-        "x-api-key":
-          "60ac33bf0e64004c10379344a8e59039a707b54c43b2a30d63aae2f3501ce692538f2e62be79d352e8b3c97206ef016b",
-      },
-      body: form,
-    });
-
-    const buffer = await response.arrayBuffer();
-    const dataURL = await arrayBufferToDataURL(buffer);
-    if (dataURL) {
-      setLinesHistory([]);
-      setLines([]);
-
-      // addimgToCanvasGen(dataURL);
-      setIsMagic(false);
-      setMagicloder(false);
-    } else {
-      setMagicloder(false);
-    }
-
-    return dataURL;
-  };
-  // const HandleInpainting = async () => {
-  //   setMagicloder(true);
-  //   const mask = await saveCanvasToBlobURL();
-  //   const ogimage = await saveImage();
-
-  //   await Inpainting(ogimage, "hero.png", mask);
-  // };
-
+  const stageRef = useRef(null);
   const [activeSize, setActiveSize] = useState({
     id: 1,
     title: "Default",
-    subTittle: "1024✕1024",
+    subTittle: "512✕512",
     h: 512,
     w: 512,
     l: 100,
@@ -402,9 +399,14 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         zIndex: 10,
       });
       img.on("selected", () => {
-        const rebtn = regenerateRef.current;
-        rebtn.style.display = "none";
-        positionBtn(img);
+        const rebtn = regenerateRef?.current as HTMLElement;
+        if (rebtn) {
+          rebtn.style.display = "none";
+          positionBtn(img);
+        } else {
+          // Handle the case when rebtn is null, if necessary
+        }
+
         // RegeneratepositionBtn(img);
       });
       img.on("moving", () => {
@@ -436,7 +438,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       // Calculate the maximum width and height based on the canvas size
       const maxWidth = canvasWidth;
       const maxHeight = canvasHeight;
-      const getRandomPosition = (max) => Math.floor(Math.random() * max);
+      const getRandomPosition = (max: number) =>
+        Math.floor(Math.random() * max);
 
       const randomLeft = getRandomPosition(
         canvasInstance?.current?.width / 2 - img.width
@@ -463,20 +466,26 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       img.scaleToHeight(activeSize.w / 2);
 
       img.on("selected", () => {
-        const rebtn = regenerateRef.current;
-        rebtn.style.display = "none";
+        const rebtn = regenerateRef?.current as HTMLElement;
+        if (rebtn) {
+          rebtn.style.display = "none";
 
-        const btn = PosisionbtnRef.current;
-        btn.style.display = "flex";
-        positionBtn(img);
-        // RegeneratepositionBtn(img);
+          const btn = PosisionbtnRef?.current;
+          if (btn) {
+            btn.style.display = "flex";
+            positionBtn(img);
+          }
+        }
       });
 
       img.on("moving", () => {
-        const btn = PosisionbtnRef.current;
-        btn.style.display = "flex";
-        positionBtn(img);
-        console.log(zoom);
+        const btn = PosisionbtnRef?.current;
+        if (btn) {
+          btn.style.display = "flex";
+          positionBtn(img);
+          console.log(zoom);
+        }
+
         // RegeneratepositionBtn(img);
       });
 
@@ -505,7 +514,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       // Calculate the maximum width and height based on the canvas size
       const maxWidth = canvasWidth;
       const maxHeight = canvasHeight;
-      const getRandomPosition = (max) => Math.floor(Math.random() * max);
+      const getRandomPosition = (max: number) =>
+        Math.floor(Math.random() * max);
 
       const randomLeft = getRandomPosition(
         canvasInstance?.current?.width / 2 - img.width
@@ -530,65 +540,36 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
       img.scaleToWidth(activeSize.w / 2);
       img.scaleToHeight(activeSize.w / 2);
-      // img.scaleToHeight(150);
-      // Scale the image to have the same width and height as the rectangle
-      // const scaleX = downloadRect.width / img.width;
-      // const scaleY = downloadRect.height / img.height;
-      // Position the image to be in the center of the rectangle
-      // img.set({
-      //   left: 100,
-      //   top: 200,
-      //   // scaleX: scaleX,
-      //   // scaleY: scaleY,
-      // });
-      img.on("selected", () => {
-        const rebtn = regenerateRef.current;
-        rebtn.style.display = "none";
 
-        const btn = PosisionbtnRef.current;
-        btn.style.display = "flex";
-        positionBtn(img);
+      img.on("selected", () => {
+        const rebtn = regenerateRef?.current as HTMLElement;
+        if (rebtn) {
+          rebtn.style.display = "none";
+        }
+        const btn = PosisionbtnRef?.current;
+        if (btn) {
+          btn.style.display = "flex";
+          positionBtn(img);
+        }
         // RegeneratepositionBtn(img);
       });
 
       img.on("moving", () => {
-        const btn = PosisionbtnRef.current;
-        btn.style.display = "flex";
-        positionBtn(img);
-        console.log(zoom);
-        // RegeneratepositionBtn(img);
+        const btn = PosisionbtnRef?.current;
+        if (btn) {
+          btn.style.display = "flex";
+          positionBtn(img);
+          console.log(zoom);
+        }
       });
 
       img.on("scaling", () => {
         positionBtn(img);
       });
-      // img.on("scaling", function () {
-      //   positionBtn(img);
-      // });
 
-      // img.on("mouseover", () => {
-      //   // regenerateRef.current.style.display = 'block';
-      //   setBtnVisible(true);
-      // });
-
-      // Hide the button when moving the mouse away from the image
-      // img.on("mouseout", (e) => {
-      //   // regenerateRef.current.style.display = 'none';
-      //   if (
-      //     e.e.clientX > regenerateRef.left ||
-      //     e.e.clientX < regenerateRef.left + regenerateRef.width ||
-      //     e.e.clientY > regenerateRef.top ||
-      //     e.e.clientY < regenerateRef.bottom
-      //   ) {
-      //     setBtnVisible(false);
-      //   } else {
-      //     setBtnVisible(true);
-      //   }
-      // });
       img.set("zIndex", 10);
 
       img.set({ category: "subject" });
-      // canvasInstance.current.clear();
       canvasInstance?.current?.add(img);
       canvasInstance?.current?.setActiveObject(img);
       canvasInstance?.current?.renderAll();
@@ -604,20 +585,22 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     currentCanvasIndex.current++;
   };
 
-  function positionBtn(obj) {
-    const btn = PosisionbtnRef.current;
-    const absCoords = canvasInstance?.current.getAbsoluteCoords(obj);
-    btn.style.left = absCoords.left + 10 + "px";
-    btn.style.top = absCoords.top + 10 + "px";
-    // btn.style.left = absCoords.left - 150 / 2 + "px";
-    // btn.style.top = absCoords.top - 80 / 2 + "px";
+  function positionBtn(obj: any) {
+    const btn = PosisionbtnRef?.current;
+    if (btn) {
+      const absCoords = canvasInstance?.current.getAbsoluteCoords(obj);
+      btn.style.left = absCoords.left + 10 + "px";
+      btn.style.top = absCoords.top + 10 + "px";
+      // btn.style.left = absCoords.left - 150 / 2 + "px";
+      // btn.style.top = absCoords.top - 80 / 2 + "px";
+    }
   }
 
-  function RegeneratepositionBtn(obj) {
+  function RegeneratepositionBtn(obj: any) {
     var zooms = canvasInstance?.current.getZoom();
 
     console.log("regenerate position", zooms);
-    const btns = regenerateRef.current;
+    const btns = regenerateRef?.current as HTMLElement;
     const absCoords = canvasInstance?.current.getAbsoluteCoords(obj);
     btns.style.left =
       absCoords.left - 100 / 2 + (obj.getScaledWidth() * zooms) / 2 + "px";
@@ -639,20 +622,17 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   };
 
   const saveCanvasToDatabase = async () => {
-    console.log("sdsdfs", "dsffff");
-
     const canvasData = canvasInstance.current.toJSON(["category"]);
     if (canvasData.objects.length > 1 && !loadercarna) {
-      console.log("sdsdfs,", userId, projectId, canvasData, "dsffff");
       console.log(canvasData);
 
       SaveProjexts(userId, projectId, canvasData);
-      const filteredResult = generatedImgList.filter((obj) =>
+      const filteredResult = generatedImgList.filter((obj: any) =>
         jobId?.includes(obj?.task_id)
       );
     }
   };
-  const GetProjextById = (getUser: string) => {
+  const GetProjextById = (getUser: any) => {
     axios
       .get(`${process.env.NEXT_PUBLIC_API}/project?id=${getUser}`)
       .then((response) => {
@@ -665,7 +645,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         return error;
       });
   };
-  const SaveProjexts = async (userId, projectId, canvas) => {
+  const SaveProjexts = async (userId: any, projectId: any, canvas: any) => {
     const json = JSON.stringify({
       user_id: userId,
       project_id: projectId,
@@ -684,7 +664,11 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       });
       const data = await response.json();
 
-      if (data && filteredArray[0]?.modified_image_url) {
+      if (
+        data &&
+        filteredArray[0] &&
+        "modified_image_url" in filteredArray[0]
+      ) {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API}/addPreview`,
           {
@@ -696,7 +680,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
             body: JSON.stringify({
               userId: userId,
               projectId: projectId,
-              img: filteredArray[0]?.modified_image_url,
+              img: (filteredArray[0] as any)?.modified_image_url,
             }),
           }
         );
@@ -713,7 +697,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     }
   };
 
-  const renameProject = async (userId, projectId, name) => {
+  const renameProject = async (userId: any, projectId: any, name: any) => {
     const json = JSON.stringify({
       id: userId,
       projectId: projectId,
@@ -757,62 +741,37 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       let scaledWidth = maxWidth;
       let scaledHeight = scaledWidth / imageAspectRatio;
 
-      // If the scaled height exceeds the canvas height, scale it down
-      // if (scaledHeight > maxHeight) {
-      //   scaledHeight = maxHeight;
-      //   scaledWidth = scaledHeight * imageAspectRatio;
-      // }
-
       img.on("selected", () => {
-        const rebtn = regenerateRef.current;
+        const rebtn = regenerateRef?.current as HTMLElement;
         rebtn.style.display = "block";
         positionBtn(img);
         RegeneratepositionBtn(img);
-        const btn = PosisionbtnRef.current;
-        btn.style.display = "flex";
+        const btn = PosisionbtnRef?.current;
+        if (btn) {
+          btn.style.display = "flex";
+        }
       });
 
       img.on("moving", () => {
-        const rebtn = regenerateRef.current;
+        const rebtn = regenerateRef?.current as HTMLElement;
         rebtn.style.display = "block";
         positionBtn(img);
         RegeneratepositionBtn(img);
-        const btn = PosisionbtnRef.current;
-        btn.style.display = "flex";
+        const btn = PosisionbtnRef?.current;
+        if (btn) {
+          btn.style.display = "flex";
+        }
       });
 
       img.on("scaling", () => {
-        const btn = PosisionbtnRef.current;
-        btn.style.display = "flex";
-        positionBtn(img);
+        const btn = PosisionbtnRef?.current;
+        if (btn) {
+          btn.style.display = "flex";
+          positionBtn(img);
+        }
 
         RegeneratepositionBtn(img);
       });
-
-      // img.on("scaling", function () {
-      //   positionBtn(img);
-      //   // RegeneratepositionBtn(img);
-      // });
-
-      // img.on("mouseover", () => {
-      //   RegeneratepositionBtn(img);
-
-      //   // regenerateRef.current.style.display = 'block';
-      //   setBtnVisible(true);
-      // });
-
-      // // Hide the button when moving the mouse away from the image
-      // img.on("mouseout", (e) => {
-      //   // regenerateRef.current.style.display = 'none';
-      //   if (
-      //     e.e.clientX < regenerateRef.left ||
-      //     e.e.clientX > regenerateRef.left + regenerateRef.width ||
-      //     e.e.clientY < regenerateRef.top ||
-      //     e.e.clientY > regenerateRef.bottom
-      //   ) {
-      //     setBtnVisible(false);
-      //   }
-      // });
 
       img.scaleToWidth(scaledWidth);
       img.scaleToHeight(scaledHeight);
@@ -847,7 +806,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     }
   }, [session]);
 
-  const fetchGeneratedImages = async (userId) => {
+  const fetchGeneratedImages = async (userId: any) => {
     try {
       const response = await fetch(
         `https://tvjjvhjhvxwpkohjqxld.supabase.co/rest/v1/public_images?select=*&order=created_at.desc&user_id=eq.${userId}`,
@@ -864,26 +823,14 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setGeneratedImgList(await data);
       }
 
-      // setImages(data); // Update the state with the fetched images
-      // setGeneratedImgList(data)
-
-      // if(data[0]?.prompt === prompt){
-
-      // }
       return data;
     } catch (error) {
       console.error("Error fetching images:", error);
     }
   };
 
-  const fetchAssetsImages = async (userId, pro) => {
+  const fetchAssetsImages = async (userId: any, pro: any) => {
     try {
-      // const response = await fetch(
-      //   `${process.env.NEXT_PUBLIC_API}/assets?userId=${userId}`,
-      //   {
-      //     method: "GET",
-      //   }
-      // );
       const response = await fetch(`/api/images`, {
         method: "POST",
         headers: {
@@ -891,10 +838,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         },
         body: JSON.stringify({
           user_id: userId,
-          // project_id: pro,
-          // assetType: AssetsActivTab,
-
-          // asset: { url: popup.dataArray.imageUrl, product: productnew },
         }),
       });
       const data = await response.json();
@@ -902,31 +845,16 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
       if (data?.data.length) {
         const revers = data.data.reverse();
-
         setListOfAssets(revers);
-
-        // setRe(0)
       }
 
-      // setImages(data); // Update the state with the fetched images
-      // setGeneratedImgList(data)
-
-      // if(data[0]?.prompt === prompt){
-
-      // }
       return data;
     } catch (error) {
       console.error("Error fetching images:", error);
     }
   };
-  const fetchAssetsImagesBrant = async (userId, pro) => {
+  const fetchAssetsImagesBrant = async (userId: any, pro: any) => {
     try {
-      // const response = await fetch(
-      //   `${process.env.NEXT_PUBLIC_API}/assets?userId=${userId}`,
-      //   {
-      //     method: "GET",
-      //   }
-      // );
       const response = await fetch(`/api/getassets`, {
         method: "POST",
         headers: {
@@ -934,10 +862,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         },
         body: JSON.stringify({
           user_id: userId,
-          // project_id: pro,
-          // assetType: AssetsActivTab,
-
-          // asset: { url: popup.dataArray.imageUrl, product: productnew },
         }),
       });
       const data = await response.json();
@@ -946,29 +870,16 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       if (data?.length) {
         const revers = data.reverse();
         setListOfAssetsBrand(await revers);
-
-        // setRe(0)
       }
 
-      // setImages(data); // Update the state with the fetched images
-      // setGeneratedImgList(data)
-
-      // if(data[0]?.prompt === prompt){
-
-      // }
       return data;
     } catch (error) {
       console.error("Error fetching images:", error);
     }
   };
-  const fetchAssetsImagesWithProjectId = async (userId, pro) => {
+
+  const fetchAssetsImagesWithProjectId = async (userId: any, pro: any) => {
     try {
-      // const response = await fetch(
-      //   `${process.env.NEXT_PUBLIC_API}/assets?userId=${userId}&projectId=${pro}`,
-      //   {
-      //     method: "GET",
-      //   }
-      // );
       const response = await fetch(`/api/images`, {
         method: "POST",
         headers: {
@@ -977,9 +888,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         body: JSON.stringify({
           user_id: userId,
           project_id: pro,
-          // assetType: AssetsActivTab,
-
-          // asset: { url: popup.dataArray.imageUrl, product: productnew },
         }),
       });
       const data = await response.json();
@@ -990,22 +898,14 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         console.log(listofassetsById, "dfsgsg");
       }
 
-      // setImages(data); // Update the state with the fetched images
-      // setGeneratedImgList(data)
-
-      // if(data[0]?.prompt === prompt){
-
-      // }
       return data;
     } catch (error) {
       console.error("Error fetching images:", error);
     }
   };
 
-  const addtoRecntly = async (ueserId, proid, obj) => {
+  const addtoRecntly = async (ueserId: any, proid: any) => {
     try {
-      // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
-
       const response = await fetch(`${process.env.NEXT_PUBLIC_API}/recently`, {
         method: "POST",
         headers: {
@@ -1017,17 +917,13 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           recently: templet,
         }),
       });
-      // console.log(await response.json(), "dfvcvdfvdvcdsd");
+
       const datares = await response;
 
       if (datares.ok) {
-        GetProjextById(id);
-        // setfilterRecently(project?.recently.reverse())
+        GetProjextById(proid);
       }
-      // window.open(`/generate/${datares?._id}`, "_self");
-    } catch (error) {
-      // Handle error
-    }
+    } catch (error) {}
   };
 
   const bringImageToFront = () => {
@@ -1066,7 +962,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     stroke: "rgba(249, 208, 13, 1)",
     strokeWidth: 1,
     excludeFromExport: true,
-  });
+  } as any);
 
   const imageGenRect = new fabric.Rect({
     left: 660,
@@ -1086,13 +982,11 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
     // Redraw the canvas
     canvasInstance?.current.renderAll();
-
-    console.log("dfd", newEditorBox);
   };
-  const generateImageHandeler = async (ueserId, proid) => {
+  const generateImageHandeler = async (ueserId: any, proid: any) => {
     var subjectCount = 0;
 
-    canvasInstance?.current.forEachObject(function (obj) {
+    canvasInstance?.current.forEachObject(function (obj: any) {
       if (obj.category === "subject") {
         if (newEditorBox.intersectsWithObject(obj)) {
           subjectCount++;
@@ -1112,44 +1006,18 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       setGenerationLoader(true);
       const canvas1 = canvasInstance.current;
       try {
-        const genBox = generateBox.current;
-        const preBox = previewBox.current;
-
         addtoRecntly(ueserId, proid);
 
         const objects = canvas1.getObjects();
-        const maskObjects = [];
-        const subjectObjects = [];
-        objects.forEach((object) => {
-          if (object.category === "mask") {
-            maskObjects.push(object);
-          }
+        const subjectObjects: any = [];
+        objects.forEach((object: any) => {
           if (object.category === "subject") {
             subjectObjects.push(object);
           }
         });
 
-        const maskCanvas = new fabric.StaticCanvas(null, {
-          width: newEditorBox.width,
-          height: newEditorBox.height,
-          top: newEditorBox.top,
-          left: newEditorBox.left,
-        });
-
-        maskObjects.forEach((object) => {
-          // You can adjust the object's position relative to the canvas as needed
-          // object.set({
-          //   left: object.left - newEditorBox.left,
-          //   top: object.top - newEditorBox.top,
-          // });
-          // maskCanvas.add(object);
-        });
-        const maskDataUrl = maskCanvas.toDataURL("image/png");
-
-        // console.log("mask", maskDataUrl);
-
         // Make image with only the subject objects
-        const subjectCanvas = new fabric.StaticCanvas(null, {
+        const subjectCanvas = new fabric.Canvas(null, {
           // width: newEditorBox.width,
           // height: newEditorBox.height,
           // top: newEditorBox.top,
@@ -1158,9 +1026,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           top: activeSize.t,
           width: activeSize.w,
           height: activeSize.h,
-        });
+        } as any);
 
-        subjectObjects.forEach((object) => {
+        subjectObjects.forEach((object: any) => {
           const gg = object;
           gg.set({
             left: object.left - activeSize.l,
@@ -1169,8 +1037,13 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           subjectCanvas.add(gg);
         });
 
-        const subjectDataUrl = subjectCanvas.toDataURL("image/png");
-        subjectObjects.forEach((object) => {
+        const subjectDataUrl = subjectCanvas.toDataURL({format : "png",multiplier:  0.5});
+        const subjectDataUrlJson = subjectCanvas.toJSON();
+        console.log(subjectDataUrlJson,"dsfdf")
+
+        // const subjectDataUrl = subjectCanvas.toDataURL("image/png");
+
+        subjectObjects.forEach((object: any) => {
           object.set({
             left: object.left + activeSize.l,
             top: object.top + activeSize.t,
@@ -1187,7 +1060,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         });
 
         console.log(subjectDataUrl, "subject");
-        console.log(maskDataUrl, "mask");
 
         const promtText = promtFull;
 
@@ -1198,7 +1070,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           },
           body: JSON.stringify({
             dataUrl: subjectDataUrl,
-            maskDataUrl: maskDataUrl,
+            maskDataUrl: null,
             prompt: promtText.trim(),
             user_id: userId,
             category: category,
@@ -1317,7 +1189,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     }
   };
 
-  const generate3dHandeler = async (ueserId, proid) => {
+  const generate3dHandeler = async (ueserId: any, proid: any) => {
     if (category === null) {
       toast("Select your product category first !");
     } else if (!file3dUrl && !file3d) {
@@ -1326,10 +1198,10 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       if (renderer === null) {
         toast("Add a 3d model");
       } else {
-        console.log("dsfdfgdg");
         setLoader(true);
 
         const promtText = promtFull;
+
         const screenshot = renderer.domElement.toDataURL("image/png");
         console.log(screenshot);
 
@@ -1408,11 +1280,11 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [reloder, setreLoader] = useState(true);
 
   // regenrate
-  const RegenerateImageHandeler = async (ueserId, proid, img) => {
-    console.log(
-      regenratingId,
-      "dfffffffffffffffffffffffffffffffffffffffffffffff"
-    );
+  const RegenerateImageHandeler = async (
+    ueserId: any,
+    proid: any,
+    img: any
+  ) => {
     setLoader(true);
     setGenerationLoader(true);
     try {
@@ -1441,46 +1313,18 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       if (generate_response?.error) {
         toast.error(generate_response?.error);
 
-        // alert(generate_response?.error);
         setLoader(false);
         setreLoader(false);
 
         return false;
       } else {
         try {
-          // setSelectedresult(1);
           setreLoader(false);
 
-          // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
-
-          // const response = await fetch(`${process.env.NEXT_PUBLIC_API}/jobId`, {
-          //   method: "POST",
-          //   headers: {
-          //     "Content-Type": "application/json",
-          //   },
-          //   body: JSON.stringify({
-          //     userId: ueserId,
-          //     projectId: proid,
-          //     jobId: generate_response?.job_id,
-          //   }),
-          // });
-          // // // console.log(await response.json(), "dfvcvdfvdvcdsd");
-          // const datares = await response;
-          // setreLoader(false);
-
-          // if (datares.ok) {
-          // setJobId((pre) => [...pre, generate_response?.job_id]);
           setRegenratedImgsJobid(generate_response?.job_id);
 
           console.log(generate_response?.job_id);
-          // localStorage.setItem("jobId", jobId);
-
-          // GetProjextById(proid);
-          // }
-          // window.open(`/generate/${datares?._id}`, "_self");
         } catch (error) {
-          // Handle error
-
           setreLoader(false);
         }
       }
@@ -1494,55 +1338,18 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           modifiedImage: loadeImge[0]?.modified_image_url,
         });
 
-        setModifidImageArray((pre) => [
-          ...pre,
-          { url: loadeImge[0]?.modified_image_url, tool: "generated" },
-        ]);
-
-        // addimgToCanvasGen(loadeImge[0]?.modified_image_url);
-        // canvas1.remove(editorBox).renderAll();
-
         setGeneratedImgList(loadeImge.slice(0, 20));
-
-        // setSelectedresult(1);
-
-        // setLoader(false);
       }, 30000);
     } catch (error) {
       console.error("Error generating image:", error);
     } finally {
       setGenerationLoader(false);
-      // canvas1.set({
-      //   top: 0,
-      //   left: 0
-      // });
-      // canvas1.renderAll();
     }
   };
 
-  // regenrtate
-
   const [loadercarna, setloadercarna] = useState(false);
 
-  const handleZoomIn = () => {
-    const canvasInstanceRef = canvasInstance?.current;
 
-    const newZoom = canvasInstanceRef.getZoom() * 1.1; // Increase zoom by 10%
-    canvasInstanceRef.setZoom(newZoom);
-    canvasInstanceRef.renderAll();
-    setZoomCanvas(newZoom);
-
-    console.log(zoom);
-  };
-
-  const handleZoomOut = () => {
-    const canvasInstanceRef = canvasInstance?.current;
-
-    const newZoom = canvasInstanceRef.getZoom() / 1.1; // Decrease zoom by 10%
-    setZoomCanvas(newZoom);
-    canvasInstanceRef.setZoom(newZoom);
-    canvasInstanceRef.renderAll();
-  };
 
   return (
     <AppContext.Provider
@@ -1572,11 +1379,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setCrop,
         stageRef,
         mode,
-        genrateeRef,
         setMode,
-        handleZoomIn,
-        Inpainting,
-        // HandleInpainting,
+        // handleZoomIn,
+        // handleZoomOut,
         magicLoader,
         setMagicloder,
         linesHistory,
@@ -1585,14 +1390,10 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setmagickErase,
         lines,
         setLines,
-        handleZoomOut,
-        newEditorBox,
         customsize,
         setCustomsize,
         zoom,
         setZoomCanvas,
-        activeSize,
-        setActiveSize,
         activeTemplet,
         setActiveTemplet,
         brushSize,
@@ -1613,6 +1414,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         promtFull,
         setpromtFull,
         GetProjexts,
+        genrateeRef,
         canvasRef,
         file3d,
         setFile3d,
@@ -1679,6 +1481,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         file,
         setFile,
         mainLoader,
+        activeSize,
+        setActiveSize,
         setMainLoader,
         selectPlacement,
         setSelectedPlacement,
@@ -1757,6 +1561,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setRenderer,
         assetL3doader,
         setasset3dLoader,
+        newEditorBox,
       }}
     >
       {children}

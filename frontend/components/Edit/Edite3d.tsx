@@ -58,7 +58,7 @@ const Edit3d = () => {
     setDownloadImg,
     selectedImg,
 
-    // HandleInpainting,
+    
     crop,
     setCrop,
     loader,

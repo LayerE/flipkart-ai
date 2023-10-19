@@ -4,28 +4,6 @@ export const config = {
   runtime: "edge",
 };
 
-const uploadImage = async (dataUrl: string) => {
-  const formdata = new FormData();
-  formdata.append("file", dataUrl);
-  formdata.append("fileName", "img.png");
-
-  const imageKitResponse = await fetch(
-    "https://upload.imagekit.io/api/v1/files/upload",
-    {
-      method: "POST",
-      headers: {
-        Authorization: "Basic " + btoa(process.env.IMAGEKIT_API_KEY + ":"),
-      },
-      body: formdata,
-    }
-  );
-
-  const imageKitJson = await imageKitResponse.json();
-  const { url, name, height, width } = imageKitJson;
-
-  return { url, name, height, width };
-};
-
 export default async (req: NextRequest) => {
   try {
     if (req.method !== "POST") {
@@ -34,9 +12,8 @@ export default async (req: NextRequest) => {
 
     const body = await req.json();
     const {
-      dataUrl,
+      image_url,
       prompt,
-      maskDataUrl,
       user_id,
       num_images,
       lora_type,
@@ -44,11 +21,8 @@ export default async (req: NextRequest) => {
       caption,
     } = body;
 
-    console.log("Coming here in API");
-    console.log(user_id);
-
-    if (!dataUrl) {
-      return NextResponse.json({ error: "Missing dataUrl" });
+    if (!image_url) {
+      return NextResponse.json({ error: "Missing image_url" });
     }
 
     if (!prompt) {
@@ -57,16 +31,6 @@ export default async (req: NextRequest) => {
 
     console.log("Prompt was " + prompt);
 
-    const { url: imageUrl, height, width } = await uploadImage(dataUrl);
-
-    // if (height > 768 || width > 768 || height < 256 || width < 256) {
-    //   return NextResponse.json({
-    //     error: "Image must be between 256px and 768px",
-    //   });
-    // }
-
-    console.log(dataUrl);
-
     const response = await fetch(process.env.CELERY_WORKER_URL as string, {
       method: "POST",
       headers: {
@@ -74,15 +38,15 @@ export default async (req: NextRequest) => {
       },
       body: JSON.stringify({
         key: process.env.KEY,
-        image_url: imageUrl + "?tr=orig-true",
+        image_url,
         prompt: prompt,
-        mask_image: maskDataUrl,
         user_id: user_id,
         num_images: num_images,
         lora_type: lora_type,
         category: category,
         is_dev_site: true,
         caption: caption,
+        is_bg_removed: false,
       }),
     });
 

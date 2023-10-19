@@ -4,6 +4,11 @@ export const formate3d = [
     formate: ".gltf"
 
   },
+  {
+    tittle: "glb",
+    formate: ".glb"
+
+  },
     {
       tittle: "obj",
       formate: ".obj"
