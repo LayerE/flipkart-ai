@@ -733,8 +733,8 @@ export default function CanvasBox({ proid, userId }) {
           <button className="selectone yello">Regenerate Product</button>
         </div>
 
-        {/* <div className="ss">
-            <button onClick={handleButtonClick}>,/fdvd</button>
+        <div className="ss">
+            {/* <button onClick={handleButtonClick}>,/fdvd</button> */}
           <picture>
             <img
               onClick={() => saveCanvasToDatabase()}
@@ -742,7 +742,7 @@ export default function CanvasBox({ proid, userId }) {
               alt=""
             />
           </picture>
-        </div> */}
+        </div>
 
         <canvas ref={canvasRef} />
       </div>
