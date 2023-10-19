@@ -33,19 +33,7 @@ export default async (req: NextRequest) => {
     }
 
     const body = await req.json();
-    const {
-      dataUrl,
-      prompt,
-      maskDataUrl,
-      user_id,
-      num_images,
-      lora_type,
-      category,
-      caption,
-    } = body;
-
-    console.log("Coming here in API");
-    console.log(user_id);
+    const { dataUrl, prompt, maskDataUrl, user_id, num_images, lora_type, category, caption, is_3d } = body;
 
     if (!dataUrl) {
       return NextResponse.json({ error: "Missing dataUrl" });
@@ -83,6 +71,7 @@ export default async (req: NextRequest) => {
         category: category,
         is_dev_site: true,
         caption: caption,
+        is_3d: is_3d,
       }),
     });
 
