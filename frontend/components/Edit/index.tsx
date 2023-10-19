@@ -10,7 +10,7 @@ const fadeIn = {
   visible: { opacity: 1, transition: { duration: 1 } },
 };
 import { saveAs } from "file-saver";
-import { SketchPicker } from "react-color";
+// import { SketchPicker } from "react-color";
 import { motion } from "framer-motion";
 import { arrayBufferToDataURL, dataURLtoFile } from "@/utils/BufferToDataUrl";
 import { ImgFormate, coloreMode } from "@/store/dropdown";
@@ -35,7 +35,6 @@ const Edit = () => {
     canvasInstance,
     addimgToCanvasGen,
     addimgToCanvasSubject,
-    git,
     modifidImageArray,
     isMagic,
     setIsMagic,
