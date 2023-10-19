@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useEffect} from "react";
 import { styled } from "styled-components";
 
 const fadeIn = {
@@ -9,15 +9,13 @@ const fadeIn = {
 import { motion } from "framer-motion";
 import { useSession } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
+import { useAppState } from "@/context/app.context";
 
 const Tools = () => {
   const session = useSession();
-  const [userId, setUserId] = useState<string | null>(null);
-  useEffect(() => {
-    if (session) {
-      setUserId(session.user.id);
-    }
-  }, [session]);
+  const { userId } = useAppState();
+  // const [userId, setUserId] = useState<string | null>(null);
+
   const router = useRouter();
 
   const toolslist = [

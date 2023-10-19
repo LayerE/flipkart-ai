@@ -7,6 +7,11 @@ import Loader from "@/components/Loader";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Script from "next/script";
+import { useEffect } from "react";
+import { useSession } from "@supabase/auth-helpers-react";
+import { useRouter } from "next/router";
+import { supabase } from "@/utils/supabase";
+
 const LayoutContentWrapper = styled.div`
   width: 100%;
   height: 100%;
@@ -14,8 +19,21 @@ const LayoutContentWrapper = styled.div`
 `;
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-  const { mainLoader } = useAppState();
+  const { mainLoader, userId, setUserID } = useAppState();
+  const session = useSession();
+  const router = useRouter();
 
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data } = await supabase.auth.getSession();
+      if (data.session) {
+        setUserID(data.session.user.id);
+      } else {
+        // router.push("/sign-in");
+      }
+    };
+    checkSession();
+  }, [session]);
   return (
     <>
       <Head>

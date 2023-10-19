@@ -24,21 +24,11 @@ import { useRouter } from "next/router";
 import Loader from "@/components/Loader";
 import MainLoader from "@/components/Loader/main";
 import PopupUpload from "@/components/Popup";
+import { supabase } from "@/utils/supabase";
 
 export default function Home() {
   const session = useSession();
   const router = useRouter();
-  const [userId, setUserID] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (session) {
-      setUserID(session.user.id);
-    } else {
-      // Wait for 1 second
-      setTimeout(() => {}, 500);
-      router.push("/sign-in");
-    }
-  }, [session]);
 
   const { query, isReady } = router;
   // const { id } = query;
@@ -66,11 +56,32 @@ export default function Home() {
     fetchAssetsImages,
     popup,
     setSelectedImg,
+    userId,
+    setUserID,
     setListOfAssetsById,
   } = useAppState();
 
   // const [loadercarna, setloadercarna] = useState(true);
   const [rerenter, setre] = useState(false);
+  // const [userId, setUserID] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (isReady) {
+      const checkSession = async () => {
+        const { data } = await supabase.auth.getSession();
+        if (data.session) {
+          // router.push("/");
+          setUserID(data.session.user.id);
+        
+        }else{
+          // router.push("/sign-in");
+
+        }
+      };
+      checkSession();
+      
+    }
+  }, [session]);
 
   useEffect(() => {
     if (rerenter <= 6) {
@@ -79,6 +90,8 @@ export default function Home() {
     setSelectedImg(null);
 
     if (isReady && userId) {
+      console.log(session)
+
       // const getUser = localStorage.getItem("userId");
       // if (!getUser) {
       //   setTimeout(() => {}, 3000);

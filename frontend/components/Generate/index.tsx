@@ -29,12 +29,8 @@ import { Input, TestArea } from "../common/Input";
 
 const Generate = () => {
   const session = useSession();
-  const [userId, setUserId] = useState<string | null>(null);
-  useEffect(() => {
-    if (session) {
-      setUserId(session.user.id);
-    }
-  }, [session]);
+
+
   const {
     product,
     placementTest,
@@ -73,13 +69,18 @@ const Generate = () => {
     genrateeRef,
     TDMode,
     generate3dHandeler,
+    userId, setUserId
   } = useAppState();
 
   const { query, isReady } = useRouter();
   const id = (query.id as string[]) || [];
 
   const [changeTab, setChangeTab] = useState(false);
-
+  useEffect(() => {
+    if (session) {
+      setUserId(session.user.id);
+    }
+  }, [session]);
   // const [promtFull, setpromtFull] = useState();
 
   // const promt =
@@ -211,8 +212,8 @@ const Generate = () => {
               ref={genrateeRef}
               onClick={() =>
                 TDMode
-                  ? generate3dHandeler(userId, id)
-                  : generateImageHandeler(userId, id)
+                  ? generate3dHandeler(session?.user?.id, id)
+                  : generateImageHandeler(session?.user?.id, id)
               }
               disabled={promtFull === " " ? true : false}
             >

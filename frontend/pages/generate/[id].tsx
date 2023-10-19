@@ -18,6 +18,7 @@ import assets from "@/public/assets";
 import Regeneret from "@/components/Popup/Regeneret";
 import { useRouter } from "next/router";
 import Canvas3d from "@/components/Canvas/Canvas3d";
+import { supabase } from "@/utils/supabase";
 
 const fadeIn = {
   hidden: { opacity: 0 },
@@ -26,12 +27,8 @@ const fadeIn = {
 
 export default function Home() {
   const session = useSession();
-  const [userId, setUserID] = useState<string | null>(null);
-  useEffect(() => {
-    if (session) {
-      setUserID(session.user.id);
-    }
-  }, [session]);
+  // const [userId, setUserID] = useState<string | null>(null);
+
   const { query, isReady } = useRouter();
   // const { id } = query;
   const id = (query.id as string[]) || [];
@@ -73,8 +70,19 @@ export default function Home() {
     setassetsActiveTab,
     TDMode,
     set3dMode,
+    userId, setUserID
   } = useAppState();
-
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data } = await supabase.auth.getSession();
+      if (data.session) {
+        // router.push("/");
+        setUserID(data.session.user.id);
+      
+      }
+    };
+    checkSession();
+  }, [session]);
   useEffect(() => {
     // const getUser = localStorage.getItem("userId");
     // if (!getUser) {

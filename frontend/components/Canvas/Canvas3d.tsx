@@ -27,6 +27,7 @@ const Canvas3d = () => {
     file3d,
     setFile3d,
     TdImage,
+    loader,
     set3DImage,
     activeTab,
     genrateeRef,
@@ -104,7 +105,6 @@ const Canvas3d = () => {
       controls = new OrbitControls(camera, renderer.domElement);
       // controls.target.set( 0, .5, 2 );
       controls.update();
-
       function loadModel() {
         object.traverse(function (child) {
           if (child.isMesh) {
@@ -198,21 +198,21 @@ const Canvas3d = () => {
       }
       const container = new THREE.Group();
 
-      let loader;
+      let loader3d;
       if (tdFormate === ".obj") {
-        loader = new OBJLoader();
+        loader3d = new OBJLoader();
       } else if (tdFormate === ".3ds") {
-        loader = new TDSLoader();
+        loader3d = new TDSLoader();
       } else if (tdFormate === ".gltf" || tdFormate === ".glb") {
-        loader = new GLTFLoader();
+        loader3d = new GLTFLoader();
       } else if (tdFormate === ".fbx") {
-        loader = new FBXLoader();
+        loader3d = new FBXLoader();
       } else if (tdFormate === ".mtl") {
-        loader = new MTLLoader();
+        loader3d = new MTLLoader();
       } else if (tdFormate === ".stl") {
-        loader = new STLLoader();
+        loader3d = new STLLoader();
       } else if (tdFormate === ".ply") {
-        loader = new PLYLoader();
+        loader3d = new PLYLoader();
       }
 
       if (file3dUrl != null) {
@@ -221,7 +221,7 @@ const Canvas3d = () => {
         if (tdFormate === ".obj") {
           setasset3dLoader(true);
 
-          loader.load(
+          loader3d.load(
             file3dUrl,
             (obj) => {
               object = obj;
@@ -235,7 +235,7 @@ const Canvas3d = () => {
         } else if (tdFormate === ".3ds") {
           setasset3dLoader(true);
 
-          loader.load(
+          loader3d.load(
             file3dUrl,
             // "https://ik.imagekit.io/7urmiszfde/Bottle%20Coca-Cola%20N080710.3ds?updatedAt=1696856138699",
             (object) => {
@@ -266,7 +266,7 @@ const Canvas3d = () => {
         } else if (tdFormate === ".gltf" || tdFormate === ".gltf") {
           setasset3dLoader(true);
 
-          loader.load(
+          loader3d.load(
             file3dUrl,
             // "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
             (object) => {
@@ -318,7 +318,7 @@ const Canvas3d = () => {
           setasset3dLoader(true);
           const material = new THREE.MeshNormalMaterial();
 
-          loader.load(
+          loader3d.load(
             file3dUrl,
             // "https://ik.imagekit.io/7urmiszfde/indoor%20plant_02_+2.fbx?updatedAt=1696879483866",
             (object) => {
@@ -360,7 +360,7 @@ const Canvas3d = () => {
         } else if (tdFormate === ".mtl") {
           setasset3dLoader(true);
 
-          loader.load(
+          loader3d.load(
             file3dUrl,
             // "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
             (gltf) => {
@@ -376,7 +376,7 @@ const Canvas3d = () => {
         } else if (tdFormate === ".stl") {
           setasset3dLoader(true);
 
-          loader.load(
+          loader3d.load(
             file3dUrl,
             // "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
             (geometry) => {
@@ -407,7 +407,7 @@ const Canvas3d = () => {
             onError
           );
         } else if (tdFormate === ".ply") {
-          loader.load(
+          loader3d.load(
             file3dUrl,
             // "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
             (geometry) => {
@@ -445,7 +445,7 @@ const Canvas3d = () => {
         if (tdFormate === ".obj") {
           setasset3dLoader(true);
 
-          loader.load(
+          loader3d.load(
             file3d,
             (obj) => {
               object = obj;
@@ -458,7 +458,7 @@ const Canvas3d = () => {
         } else if (tdFormate === ".3ds") {
           setasset3dLoader(true);
 
-          loader.load(
+          loader3d.load(
             // "https://ik.imagekit.io/7urmiszfde/Bottle%20Coca-Cola%20N080710.3ds?updatedAt=1696856138699",
             file3d,
             (object) => {
@@ -489,7 +489,7 @@ const Canvas3d = () => {
         } else if (tdFormate === ".gltf" || tdFormate === ".glb") {
           setasset3dLoader(true);
 
-          loader.load(
+          loader3d.load(
             file3d,
             // "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
             (object) => {
@@ -543,7 +543,7 @@ const Canvas3d = () => {
         } else if (tdFormate === ".mtl") {
           setasset3dLoader(true);
 
-          loader.load(
+          loader3d.load(
             file3d,
             // "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
             (object) => {
@@ -560,7 +560,7 @@ const Canvas3d = () => {
           setasset3dLoader(true);
 
           const material = new THREE.MeshNormalMaterial();
-          loader.load(
+          loader3d.load(
             file3d,
             // "https://ik.imagekit.io/7urmiszfde/rp_nathan_animated_003_walking.fbx?updatedAt=1696878521110",
             (object) => {
@@ -602,7 +602,7 @@ const Canvas3d = () => {
         } else if (tdFormate === ".stl") {
           setasset3dLoader(true);
 
-          loader.load(
+          loader3d.load(
             file3d,
             // "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
             (geometry) => {
@@ -635,7 +635,7 @@ const Canvas3d = () => {
         } else if (tdFormate === ".ply") {
           setasset3dLoader(true);
 
-          loader.load(
+          loader3d.load(
             file3d,
             // "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
             (geometry) => {
@@ -667,7 +667,7 @@ const Canvas3d = () => {
         }
       }
 
-      // loader.load(
+      // loader3d.load(
       //   "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
       //   (obj) => {
       //     object = obj;
@@ -700,8 +700,10 @@ const Canvas3d = () => {
       // controls.update();
       // controls.enableDamping = true;
       // controls.maxDistance = 150;
-      controls.addEventListener("change", render);
+      // controls.enableDamping = false;
 
+      controls.addEventListener("change", render);
+      
       //   renderNew = renderer;
 
       //   const genBox = downloadRef.current;
@@ -748,6 +750,28 @@ const Canvas3d = () => {
     };
   }, [file3d, file3dUrl, tdFormate, activeSize]);
 
+
+  // useEffect(() => {
+  //   console.log(!loader,"ssssssssssssssssssssssss");
+    
+  //   if(controls){
+
+  //     controls.enableRotate = !loader; // Disable rotation
+  //     controls.enableZoom = !loader;   // Disable zooming
+  //     controls.enablePan = !loader;    // Disable panning
+  //   }
+  //   // return () => {
+  //   //   if (renderer) {
+  //   //     renderer.dispose(); // Dispose of the renderer
+  //   //   }
+  //   //   // Remove the renderer's canvas from the DOM
+  //   //   if (containerRef.current) {
+  //   //     containerRef.current.removeChild(renderer.domElement);
+  //   //   }
+
+  //   // }
+  // }, [loader])
+  
   const captureScreenshot = () => {
     console.log(renderer, "dsedfdegfdjjh");
     if (renderer) {

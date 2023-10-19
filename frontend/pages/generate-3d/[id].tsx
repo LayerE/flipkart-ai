@@ -22,6 +22,7 @@ import Sidebar3d from "@/components/Sidebar/Generate3d";
 import ThreeScene from "@/components/Canvas/3d/gltf";
 import TDS from "@/components/Canvas/3d/tds";
 import GLTF from "@/components/Canvas/3d/gltf";
+import { supabase } from "@/utils/supabase";
 
 const fadeIn = {
   hidden: { opacity: 0 },
@@ -29,18 +30,14 @@ const fadeIn = {
 };
 
 export default function Home() {
-  const session = useSession();
-  const [userId, setUserID] = useState<string | null>(null);
-  useEffect(() => {
-    if (session) {
-      setUserID(session.user.id);
-    }
-  }, [session]);
+  const session =  useSession();
+ 
   const { query, isReady } = useRouter();
   // const { id } = query;
   const id = (query.id as string[]) || [];
 
   //   const [tdFormate, setTdFormate] = useState("obj");
+  
 
   const {
     outerDivRef,
@@ -74,17 +71,30 @@ export default function Home() {
     setCanvasDisable,
     setassetsActiveTab,
     TDMode,
+    userId, setUserID,
     set3dMode,
     // tdFormate, setTdFormate
   } = useAppState();
+  // const [userId, setUserID] = useState<string | null>(null);
 
   useEffect(() => {
     if (isReady) {
       GetProjextById(id);
+
+      const checkSession = async () => {
+        const { data } = await supabase.auth.getSession();
+        if (data.session) {
+          // router.push("/");
+          setUserID(data.session.user.id);
+          console.log(data.session,"dfdsd")
+        
+        }
+      };
+      checkSession();
       
     }
     set3dMode(true);
-  }, [id, isReady, TDMode]);
+  }, [id, isReady, TDMode,session]);
 
   useEffect(() => {
     const times = setInterval(() => {

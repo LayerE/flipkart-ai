@@ -11,6 +11,7 @@ type ContextProviderProps = {
   children: React.ReactNode;
 };
 
+
 interface ContextITFC {
   canvasInstance: React.MutableRefObject<null>;
   outerDivRef: React.MutableRefObject<any | null>;
@@ -289,7 +290,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
   const [undoArray, setUndoArray] = useState<string[]>([]);
   const [editorBox, setEditorBox] = useState<fabric.Rect | null>(null);
-  const [zoom, setZoomCanvas] = useState<number>(0.6);
+  const [zoom, setZoomCanvas] = useState<number>(0.9);
 
   const [canvasDisable, setCanvasDisable] = useState<boolean>(false);
 
@@ -358,6 +359,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const handileDownload = (url: string) => {
     saveAs(url, `image${Date.now()}.${downloadeImgFormate}`);
   };
+
+
 
   const getBase64FromUrl = async (url: string): Promise<string> => {
     const data = await fetch(url);
@@ -799,7 +802,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const canvasHistoryRef = useRef([]);
   const [currentStep, setCurrentStep] = useState(-1);
   const session = useSession();
-  const [userId, setUserID] = useState<string | null>(null);
+  const [userId, setUserID] = useState<string | null>("34afa810-7f7e-4a35-be32-e9c561f35067");
   useEffect(() => {
     if (session) {
       setUserID(session.user.id);
@@ -1223,6 +1226,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
             category: category,
             lora_type: loara,
             num_images: selectResult,
+            is_3d : true
             // caption : product
           }),
         });
@@ -1359,6 +1363,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   return (
     <AppContext.Provider
       value={{
+        userId,
+        setUserID,
         canvasDisable,
         TdImage,
         filsizeMorethan10,

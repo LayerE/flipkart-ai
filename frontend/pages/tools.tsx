@@ -25,15 +25,12 @@ import Loader from "@/components/Loader";
 import MainLoader from "@/components/Loader/main";
 import PopupUpload from "@/components/Popup";
 import { useSession } from "@supabase/auth-helpers-react";
+import { supabase } from "@/utils/supabase";
 
 export default function Home() {
   const session = useSession();
-  const [userId, setUserID] = useState<string | null>(null);
-  useEffect(() => {
-    if (session) {
-      setUserID(session.user.id);
-    }
-  }, [session]);
+  // const [userId, setUserID] = useState<string | null>(null);
+
   const { query, isReady } = useRouter();
   // const { id } = query;
   const id = (query.id as string[]) || [];
@@ -42,6 +39,8 @@ export default function Home() {
     setActiveTabHome,
     activeTab,
     popupImage,
+    setUserID,
+    userId,
     projectlist,
     setMainLoader,
     setprojectlist,
@@ -61,7 +60,19 @@ export default function Home() {
     popup,
     setSelectedImg,
   } = useAppState();
+  const router = useRouter();
 
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data } = await supabase.auth.getSession();
+      if (data.session) {
+        // router.push("/");
+        setUserID(data.session.user.id);
+      
+      }
+    };
+    checkSession();
+  }, [session]);
   // const [loadercarna, setloadercarna] = useState(true);
   const [rerenter, setre] = useState(false);
 

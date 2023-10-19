@@ -6,25 +6,40 @@ import assets from "@/public/assets";
 import { theme } from "@/theme";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useSession } from "@supabase/auth-helpers-react";
+import { supabase } from "@/utils/supabase";
 
 const Header = () => {
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
   const popupRef = useRef<HTMLDivElement>(null);
+  const session = useSession();
 
   const router = useRouter();
   const isGeneratorRoute = router.pathname === "/generate";
   const [projectName, setProjectName] = useState("Untitled");
   const [back, setBAck] = useState(false);
+  const [userData, setuserData] = useState();
+
   const currentRoute = router.pathname;
 
   console.log(currentRoute);
   useEffect(() => {
-    if (currentRoute === "/generate-3d/[id]" ) {
+    if (currentRoute === "/generate-3d/[id]") {
       setBAck(true);
     } else {
       setBAck(false);
     }
+    const checkSession = async () => {
+      const { data } = await supabase.auth.getSession();
+      if (data.session) {
+        setuserData(data?.session);
+        
+      }else{
+        // router.push("/sign-in")
 
+      }
+    };
+    checkSession();
     const handleOutsideClick = (event: MouseEvent) => {
       if (
         popupRef.current &&
@@ -1812,16 +1827,18 @@ const Header = () => {
         <div className="profilbox">
           {/* <UserButton afterSignOutUrl="/" /> */}
 
-          {/* <div className="profilIcon" onClick={handleButtonClick}>
-         
-            <div className="profile">N</div>
-          </div> */}
+          {userData?.user ? (
+            <div className="profilIcon" onClick={handleButtonClick}>
+              <div className="profile">{userData?.user?.email[0]}</div>
+            </div>
+          ) : null}
+
           {isPopupOpen && (
             <div className="topSpacre" ref={popupRef}>
               <div className="profilcard">
-                <div className="propilname">Siva Shankar</div>
+                <div className="propilname">{userData?.user?.email}</div>
                 <div className="itemss">
-                  <div className="items">
+                  {/* <div className="items">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="19"
@@ -1842,7 +1859,7 @@ const Header = () => {
                     </svg>
 
                     <span>Manage Subscription</span>
-                  </div>
+                  </div> */}
                   <div className="items">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -1950,6 +1967,7 @@ const Headers = styled.div`
       justify-content: center;
       align-items: center;
       font-size: 24px;
+      text-transform: uppercase;
       /* font-weight : 600; */
     }
     .profilcard {
@@ -1963,6 +1981,7 @@ const Headers = styled.div`
         padding: 12px 27px;
         border-bottom: 1px solid rgba(57, 57, 57, 1);
         font-weight: 500;
+        /* text-transform: uppercase; */
       }
       .itemss {
         padding: 20px 27px;
