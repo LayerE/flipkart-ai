@@ -7,7 +7,7 @@ import { styled } from "styled-components";
 import { useAppState } from "@/context/app.context";
 import { motion } from "framer-motion";
 import PopupUpload from "@/components/Popup";
-import Canvas from "@/components/Canvas/Canvas";
+
 import Loader from "@/components/Loader";
 import BottomTab from "@/components/BottomTab";
 import CanvasBox from "@/components/Canvas";
@@ -50,13 +50,9 @@ export default function Home() {
     setModifidImageArray,
     fetchGeneratedImages,
     regeneratePopup,
-    generateImageHandeler,
-    SaveProjexts,
     newassetonCanvas,
     setNewassetonCanvas,
     GetProjextById,
-    setproject,
-    project,
     setDownloadImg,
     jobId,
     addimgToCanvasSubject,
@@ -65,7 +61,6 @@ export default function Home() {
     uerId,
     setUserId,
     setGeneratedImgList,
-    saveCanvasToDatabase,
     filteredArray,
     setFilteredArray,
     jobIdOne,
@@ -78,15 +73,9 @@ export default function Home() {
   } = useAppState();
 
   useEffect(() => {
-    // const getUser = localStorage.getItem("userId");
-    // if (!getUser) {
-    //   if (userId) localStorage.setItem("userId", userId);
-    // }
     if (isReady) {
-      // setFilteredArray([])
       GetProjextById(id);
-      //  fetchAssetsImages(userId, null);
-      console.log(TDMode, "dddddddddddddddddddddddddddddddd");
+      
     }
     set3dMode(true);
   }, [id, isReady, TDMode]);
@@ -109,11 +98,7 @@ export default function Home() {
       setSelectedImg({ status: true, image: url });
       setDownloadImg(url);
 
-      setModifidImageArray((pre) => [
-        ...pre,
-        { url: url, tool: "generated-selected" },
-      ]);
-    }
+      
   };
 
   useEffect(() => {
@@ -132,7 +117,7 @@ export default function Home() {
 
     const objects = canvas1?.getObjects();
     const subjectObjects = [];
-    objects?.forEach((object) => {
+    objects?.forEach((object:any) => {
       if (object.category === "subject") {
         subjectObjects.push(object);
       }
@@ -158,12 +143,6 @@ export default function Home() {
     };
   }, [isReady, userId, jobId]);
 
-  useEffect(() => {
-    return () => {
-      // setFilteredArray([]);
-    };
-  }, []);
-
   const fetchAssetsImages = async () => {
     try {
       const response = await fetch(
@@ -178,13 +157,13 @@ export default function Home() {
       console.log(jobId, "JOBS");
 
       if (data?.length) {
-        const filteredResults = await data?.filter((obj) =>
+        const filteredResults = await data?.filter((obj:any) =>
           jobIdOne?.includes(obj?.task_id)
         );
         // console.log(data?.length);
 
         const filteredResultss = data?.map(
-          (obj) => obj?.task_id === jobIdOne[0]
+          (obj:any) => obj?.task_id === jobIdOne[0]
         );
         console.log(filteredResults, "dfd", filteredResultss);
 
@@ -218,7 +197,7 @@ export default function Home() {
 
     const objects = canvas1?.getObjects();
     const subjectObjects = [];
-    objects?.forEach((object) => {
+    objects?.forEach((object:any) => {
       if (object.category === "subject") {
         subjectObjects.push(object);
       }
@@ -267,7 +246,7 @@ export default function Home() {
           {filteredArray?.length > 0 ? (
             <div className="generatedBox">
               <div className="itemsWrapper">
-                {filteredArray?.map((item, i) => (
+                {filteredArray?.map((item:any, i:number) => (
                   <div
                     key={i}
                     className="items"
@@ -427,7 +406,7 @@ const MainPages = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #e6e6e60;
+    /* background: #e6e6e60; */
     font-size: 24px;
     color: #f9d00d;
     z-index: 3;
@@ -443,24 +422,10 @@ const MainPages = styled.div`
     min-height: 100vh;
     position: relative;
     overflow: hidden;
-height: 100vh;
+    height: 100vh;
     /* padding-top: 100px; */
   }
-  /* .main-privier {
-    padding: 2rem;
-    padding-top: ${({ theme }) => theme.paddings.paddingTop};
-    width: 100%;
-    height: 100%;
-    display: none;
-  } */
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    .main-privier {
-    padding: 2rem;
-    padding-top: ${({ theme }) => theme.paddings.paddingTopMobile};
-    }
-    
-  `}
-
+  
   .convas-continer {
     /* border: 1px solid #434343; */
     width: 100%;
@@ -523,17 +488,6 @@ height: 100vh;
       }
     }
   }
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-  .tgide {
-    display: grid;
-    grid-template-columns: 1fr ;
-    gap: 20px;
-
-  }
-
- 
-  `}
 
   .undoBox {
     position: absolute;

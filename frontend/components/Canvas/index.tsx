@@ -286,7 +286,7 @@ export default function CanvasBox({ proid, userId }) {
       //       left:newEditorBox.left,
       //     top:newEditorBox.top,
       //     width: newEditorBox.width,
-      //   });
+      //   }); 
       //     height:newEditorBox.height,
       //   // setDownloadImg(dataURL);
       //   setDownloadImg(dataURL);
@@ -542,7 +542,6 @@ export default function CanvasBox({ proid, userId }) {
           project_id: proid,
         })
         .then((response) => {
-
           if (canvasInstanceRef) {
             canvasInstanceRef.loadFromJSON(
               response?.data.newData.canvasdata,

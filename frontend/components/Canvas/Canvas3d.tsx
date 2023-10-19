@@ -8,7 +8,6 @@ import { FBXLoader } from "three/addons/loaders/FBXLoader.js";
 import { STLLoader } from "three/addons/loaders/STLLoader.js";
 import { PLYLoader } from "three/addons/loaders/PLYLoader.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
-import Stats from "three/examples/jsm/libs/stats.module";
 
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import assets from "@/public/assets";

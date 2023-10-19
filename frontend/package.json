@@ -61,6 +61,7 @@
   "devDependencies": {
     "@types/fabric": "^5.3.4",
     "@types/file-saver": "^2.0.5",
+    "@types/three": "^0.157.2",
     "@types/uuid": "^9.0.5"
   }
 }
