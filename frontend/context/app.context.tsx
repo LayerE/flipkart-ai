@@ -1,11 +1,11 @@
 import { createContext, useContext, useState, useRef, useEffect } from "react";
 import { fabric } from "fabric";
-import { useAuth } from "@clerk/nextjs";
 import { saveAs } from "file-saver";
 import axios from "axios";
 import * as THREE from "three";
 import { toast } from "react-toastify";
 import { arrayBufferToDataURL, dataURLtoFile } from "@/utils/BufferToDataUrl";
+import { useSession } from "@supabase/auth-helpers-react";
 
 type ContextProviderProps = {
   children: React.ReactNode;
@@ -798,7 +798,13 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   };
   const canvasHistoryRef = useRef([]);
   const [currentStep, setCurrentStep] = useState(-1);
-  const { userId } = useAuth();
+  const session = useSession();
+  const [userId, setUserID] = useState<string | null>(null);
+  useEffect(() => {
+    if (session) {
+      setUserID(session.user.id);
+    }
+  }, [session]);
 
   const fetchGeneratedImages = async (userId: any) => {
     try {
@@ -871,6 +877,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       console.error("Error fetching images:", error);
     }
   };
+
   const fetchAssetsImagesWithProjectId = async (userId: any, pro: any) => {
     try {
       const response = await fetch(`/api/images`, {

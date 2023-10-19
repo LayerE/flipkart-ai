@@ -6,7 +6,6 @@ import { useEffect, useLayoutEffect, useCallback } from "react";
 import { fabric } from "fabric";
 import { styled } from "styled-components";
 import { useRouter } from "next/router";
-import { useAuth } from "@clerk/nextjs";
 import axios from "axios";
 import Loader from "../Loader";
 import { setInterval } from "timers";

@@ -12,7 +12,7 @@ import Loader from "@/components/Loader";
 import BottomTab from "@/components/BottomTab";
 import CanvasBox from "@/components/Canvas";
 // const CanvasBox = lazy(() => import("@/components/Canvas"));
-import { useAuth } from "@clerk/nextjs";
+import { useSession } from "@supabase/auth-helpers-react";
 import assert from "assert";
 import assets from "@/public/assets";
 import Regeneret from "@/components/Popup/Regeneret";
@@ -29,7 +29,13 @@ const fadeIn = {
 };
 
 export default function Home() {
-  const { userId } = useAuth();
+  const session = useSession();
+  const [userId, setUserID] = useState<string | null>(null);
+  useEffect(() => {
+    if (session) {
+      setUserID(session.user.id);
+    }
+  }, [session]);
   const { query, isReady } = useRouter();
   // const { id } = query;
   const id = (query.id as string[]) || [];
