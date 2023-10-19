@@ -47,11 +47,11 @@ export default async (req: NextRequest) => {
 
     const { url: imageUrl, height, width } = await uploadImage(dataUrl);
 
-    if (height > 768 || width > 768 || height < 256 || width < 256) {
-      return NextResponse.json({
-        error: "Image must be between 256px and 768px",
-      });
-    }
+    // if (height > 768 || width > 768 || height < 256 || width < 256) {
+    //   return NextResponse.json({
+    //     error: "Image must be between 256px and 768px",
+    //   });
+    // }
 
     console.log(dataUrl);
 
