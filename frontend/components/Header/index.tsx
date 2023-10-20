@@ -20,12 +20,8 @@ const Header = () => {
   const [projectName, setProjectName] = useState("Untitled");
   const [back, setBAck] = useState(false);
   const [userData, setuserData] = useState();
-const {
-  userId, setUserID
+  const { userId, setUserID } = useAppState();
 
-} = useAppState();
-
-  
   const currentRoute = router.pathname;
 
   console.log(currentRoute);
@@ -34,11 +30,10 @@ const {
       const { data } = await supabase.auth.getSession();
       if (data.session) {
         setuserData(data?.session);
-        console.log(data,"sdffffffffffffff")
-      }else{
-        console.log("sdffffffffffffff",userId)
+        console.log(data, "sdffffffffffffff");
+      } else {
+        console.log("sdffffffffffffff", userId);
         // router.push("/sign-in")
-
       }
     };
     checkSession();
@@ -47,7 +42,7 @@ const {
     } else {
       setBAck(false);
     }
-    
+
     const handleOutsideClick = (event: MouseEvent) => {
       if (
         popupRef.current &&
@@ -62,7 +57,11 @@ const {
     return () => {
       document.removeEventListener("click", handleOutsideClick);
     };
-  }, [currentRoute,session,userData]);
+  }, [currentRoute, session, userData]);
+
+  const logoutH = async ()=> {
+    await supabase.auth.signOut()
+  }
 
   const handleButtonClick = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
@@ -1868,7 +1867,7 @@ const {
 
                     <span>Manage Subscription</span>
                   </div> */}
-                  <div className="items">
+                  <div className="items" onClick={logoutH}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="18"

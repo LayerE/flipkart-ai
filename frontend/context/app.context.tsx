@@ -356,6 +356,24 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [customsize, setCustomsize] = useState({ w: 1024, h: 1024 });
 
   const [btnVisible, setBtnVisible] = useState(false);
+
+
+
+
+  const canvasHistoryRef = useRef([]);
+  const [currentStep, setCurrentStep] = useState(-1);
+  const session = useSession();
+  // const [userId, setUserID] = useState<string | null>("34afa810-7f7e-4a35-be32-e9c561f35067")
+  const [userId, setUserID] = useState<string | null>(null);
+  
+  useEffect(() => {
+    if (session) {
+      setUserID(session.user.id);
+    }
+  }, [session]);
+
+
+
   const handileDownload = (url: string) => {
     saveAs(url, `image${Date.now()}.${downloadeImgFormate}`);
   };
@@ -799,18 +817,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       saveCanvasToDatabase();
     });
   };
-  const canvasHistoryRef = useRef([]);
-  const [currentStep, setCurrentStep] = useState(-1);
-  const session = useSession();
-  const [userId, setUserID] = useState<string | null>("34afa810-7f7e-4a35-be32-e9c561f35067")
-  // const [userId, setUserID] = useState<string | null>(null);
   
-  useEffect(() => {
-    if (session) {
-      setUserID(session.user.id);
-    }
-  }, [session]);
-
   const fetchGeneratedImages = async (userId: any) => {
     try {
       const response = await fetch(
