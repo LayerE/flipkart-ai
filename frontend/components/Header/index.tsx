@@ -23,20 +23,8 @@ const Header = () => {
   const { userId, setUserID } = useAppState();
 
   const currentRoute = router.pathname;
-
-  console.log(currentRoute);
   useEffect(() => {
-    const checkSession = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (data.session) {
-        setuserData(data?.session);
-        console.log(data, "sdffffffffffffff");
-      } else {
-        console.log("sdffffffffffffff", userId);
-        // router.push("/sign-in")
-      }
-    };
-    checkSession();
+   
     if (currentRoute === "/generate-3d/[id]") {
       setBAck(true);
     } else {
@@ -58,6 +46,21 @@ const Header = () => {
       document.removeEventListener("click", handleOutsideClick);
     };
   }, [currentRoute, session, userData]);
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data } = await supabase.auth.getSession();
+      if (data.session) {
+        setuserData(data?.session);
+        console.log(data, "sdffffffffffffff");
+      } else {
+        console.log("sdffffffffffffff", userId);
+        // router.push("/sign-in")
+      }
+    };
+    checkSession();
+   
+  }, [ session]);
 
   const logoutH = async ()=> {
     await supabase.auth.signOut()
