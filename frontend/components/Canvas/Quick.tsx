@@ -158,7 +158,7 @@ const QuickCanvas = () => {
             </>
           ) : null}
         </div>
-        <button
+        {/* <button
           style={{ position: "relative", zIndex: "100" }}
           onClick={() => {
             addimgToCanvasQuike(
@@ -167,7 +167,7 @@ const QuickCanvas = () => {
           }}
         >
           fgfdg
-        </button>
+        </button> */}
       </div>
     </CnavasQuick>
   );

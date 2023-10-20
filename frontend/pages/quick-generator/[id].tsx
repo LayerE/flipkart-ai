@@ -55,7 +55,6 @@ const QuickGenerator = () => {
 
 
   const { query, isReady } = useRouter();
-  const id = (query.id as string[]) || [];
   useEffect(() => {
     if (isReady) {
       const checkSession = async () => {
