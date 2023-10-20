@@ -683,6 +683,7 @@ const Canvas3d = () => {
       // renderer.setPixelRatio(window.devicePixelRatio);
       renderer.setClearColor(0x000000, 0);
       renderer.setSize(activeSize.w, activeSize.h);
+      // renderer.setS(activeSize.w, activeSize.h);
 
       // renderer.setPixelRatio(window.devicePixelRatio);
       // renderer.setSize(window.innerWidth, window.innerHeight);
@@ -703,7 +704,7 @@ const Canvas3d = () => {
       // controls.enableDamping = false;
 
       controls.addEventListener("change", render);
-      
+
       //   renderNew = renderer;
 
       //   const genBox = downloadRef.current;
@@ -750,10 +751,9 @@ const Canvas3d = () => {
     };
   }, [file3d, file3dUrl, tdFormate, activeSize]);
 
-
   // useEffect(() => {
   //   console.log(!loader,"ssssssssssssssssssssssss");
-    
+
   //   if(controls){
 
   //     controls.enableRotate = !loader; // Disable rotation
@@ -771,7 +771,7 @@ const Canvas3d = () => {
 
   //   // }
   // }, [loader])
-  
+
   const captureScreenshot = () => {
     console.log(renderer, "dsedfdegfdjjh");
     if (renderer) {
@@ -806,11 +806,18 @@ const Canvas3d = () => {
   };
 
   return (
-    <Cnavas3d>
+    <Cnavas3d canvasDisable={loader}>
       {isMagic ? <PopupCanvas /> : null}
       {crop ? <CropperBox /> : null}
 
       {romovepopu3d.status ? <RemoveBox type={"bgRevcbvmove"} /> : null}
+      {
+        loader ?
+
+        <div className="divovelay"></div>
+
+        : null
+      }
 
       <div className="boxs3d">
         <div ref={containerRef} className="boxs">
@@ -890,7 +897,7 @@ const Cnavas3d = styled.div`
   }
   .boxs3d {
     display: flex;
-    transform: scale(0.6) translateX(-30%) translateY(-5%);
+    transform: scale(0.4) translateX(-75%) translateY(-50%);
     gap: 30px;
   }
   /* Track */
@@ -904,8 +911,21 @@ const Cnavas3d = styled.div`
   &::-webkit-scrollbar-thumb {
     border-radius: 10px;
   }
+  .divovelay{
+    /* display: ${(props) => (props.canvasDisable ? "none" : "block")}; */
+    z-index: 10;
+    position:absolute;
+    width: 100%;
+    height: 100%;
+    /* background-color: #000; */
+  }
 
   .boxs {
+   
+
+/* pointer-events:${(props) => (props.canvasDisable ? "none" : "auto")} */
+
+
     border: 2px solid rgba(249, 208, 13, 1);
     .tesxt {
       color: #000;

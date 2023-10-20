@@ -290,7 +290,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
   const [undoArray, setUndoArray] = useState<string[]>([]);
   const [editorBox, setEditorBox] = useState<fabric.Rect | null>(null);
-  const [zoom, setZoomCanvas] = useState<number>(0.9);
+  const [zoom, setZoomCanvas] = useState<number>(0.4);
 
   const [canvasDisable, setCanvasDisable] = useState<boolean>(false);
 
@@ -345,13 +345,13 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [activeSize, setActiveSize] = useState({
     id: 1,
     title: "Default",
-    subTittle: "512✕512",
-    h: 512,
-    w: 512,
+    subTittle: "1024✕1024",
+    h: 1024,
+    w: 1024,
     l: 100,
-    t: 160,
-    gl: 652,
-    gt: 160,
+    t: 240,
+    gl: 1152,
+    gt: 240,
   });
   const [customsize, setCustomsize] = useState({ w: 1024, h: 1024 });
 
@@ -802,8 +802,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const canvasHistoryRef = useRef([]);
   const [currentStep, setCurrentStep] = useState(-1);
   const session = useSession();
-  // const [userId, setUserID] = useState<string | null>("34afa810-7f7e-4a35-be32-e9c561f35067")
-  const [userId, setUserID] = useState<string | null>(null);
+  const [userId, setUserID] = useState<string | null>("34afa810-7f7e-4a35-be32-e9c561f35067")
+  // const [userId, setUserID] = useState<string | null>(null);
   
   useEffect(() => {
     if (session) {
@@ -1138,7 +1138,33 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
         const promtText = promtFull;
         const screenshot = renderer.domElement.toDataURL("image/png");
-        console.log(screenshot);
+        var img = new Image();
+
+        // Set an onload event handler
+        let scaledDataURL
+        img.onload = function () {
+            // Scale down the image by setting its width and height to 0.5 times the original dimensions
+            img.width *= 0.5;
+            img.height *= 0.5;
+        
+            // Create a canvas to draw the scaled image
+            var canvas = document.createElement("canvas");
+            canvas.width = img.width;
+            canvas.height = img.height;
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, img.width, img.height);
+        
+            // Get the scaled data URL
+             scaledDataURL = canvas.toDataURL("image/png");
+        
+            // Now, scaledDataURL contains the data URL of the image scaled down to 0.5 of its original size.
+            // You can use it as needed.
+        };
+        
+        // Set the source of the image to the original data URL
+        img.src = screenshot;
+        
+        console.log(scaledDataURL,"fsddsfds");
 
         const response = await fetch("/api/generate", {
           method: "POST",
@@ -1146,7 +1172,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            dataUrl: screenshot,
+            dataUrl: scaledDataURL,
             maskDataUrl: null,
             prompt: promtText.trim(),
             user_id: userId,
@@ -1212,78 +1238,109 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
         const promtText = promtFull;
 
-        const screenshot = renderer.domElement.toDataURL("image/png");
-        console.log(screenshot);
+        // const screenshot = renderer.domElement.toDataURL("image/png");
+        const screenshot = renderer.domElement.toDataURL("image/png", 0.5);
 
-        const response = await fetch("/api/generate", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            dataUrl: screenshot,
-            maskDataUrl: null,
-            prompt: promtText.trim(),
-            user_id: userId,
-            category: category,
-            lora_type: loara,
-            num_images: selectResult,
-            is_3d : true
-            // caption : product
-          }),
-        });
+        var img = new Image();
 
-        const generate_response = await response.json();
+        // Set an onload event handler
+        let scaledDataURL
+        img.onload = async function () {
+            // Scale down the image by setting its width and height to 0.5 times the original dimensions
+            img.width *= 0.5;
+            img.height *= 0.5;
+        
+            // Create a canvas to draw the scaled image
+            var canvas = document.createElement("canvas");
+            canvas.width = img.width;
+            canvas.height = img.height;
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, img.width, img.height);
+        
+            // Get the scaled data URL
+             scaledDataURL = canvas.toDataURL("image/png");
+             console.log(scaledDataURL,"fsddsfds");
 
-        if (generate_response?.error) {
-          // alert(generate_response?.error);
-          toast.error(generate_response?.error);
-
-          setLoader(false);
-
-          return false;
-        } else {
-          setLoader(true);
-
-          try {
-            const response = await fetch(
-              `${process.env.NEXT_PUBLIC_API}/jobId3d`,
-              {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  userId: ueserId,
-                  // projectId: proid,
-                  jobId: generate_response?.job_id,
-                }),
+             const response = await fetch("/api/generate", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                dataUrl: scaledDataURL,
+                maskDataUrl: null,
+                prompt: promtText.trim(),
+                user_id: userId,
+                category: category,
+                lora_type: loara,
+                num_images: selectResult,
+                // is_3d : true
+                // caption : product
+              }),
+            });
+    
+            const generate_response = await response.json();
+    
+            if (generate_response?.error) {
+              // alert(generate_response?.error);
+              toast.error(generate_response?.error);
+    
+              setLoader(false);
+    
+              return false;
+            } else {
+              setLoader(true);
+    
+              try {
+                const response = await fetch(
+                  `${process.env.NEXT_PUBLIC_API}/jobId3d`,
+                  {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      userId: userId,
+                      // projectId: proid,
+                      jobId: generate_response?.job_id,
+                    }),
+                  }
+                );
+                const datares = await response;
+    
+                if (datares.ok) {
+                  setJobIdOne([generate_response?.job_id]);
+    
+                  // GetProjextById(proid);
+                  axios
+                    .get(`${process.env.NEXT_PUBLIC_API}/user?id=${ueserId}`)
+                    .then((response) => {
+                      console.log(response?.data?.jobIds3D, "dsfgdgfd");
+                      setproject(response.data);
+                      setJobId(response?.data?.jobIds3D);
+                      // return response.data;
+                    })
+                    .catch((error) => {
+                      console.error(error);
+                      return error;
+                    });
+                }
+                // window.open(`/generate/${datares?._id}`, "_self");
+              } catch (error) {
+                setLoader(false);
               }
-            );
-            const datares = await response;
-
-            if (datares.ok) {
-              setJobIdOne([generate_response?.job_id]);
-
-              // GetProjextById(proid);
-              axios
-                .get(`${process.env.NEXT_PUBLIC_API}/user?id=${ueserId}`)
-                .then((response) => {
-                  console.log(response?.data?.jobIds3D, "dsfgdgfd");
-                  setproject(response.data);
-                  setJobId(response?.data?.jobIds3D);
-                  // return response.data;
-                })
-                .catch((error) => {
-                  console.error(error);
-                  return error;
-                });
             }
-            // window.open(`/generate/${datares?._id}`, "_self");
-          } catch (error) {
-            setLoader(false);
-          }
-        }
+        
+            // Now, scaledDataURL contains the data URL of the image scaled down to 0.5 of its original size.
+            // You can use it as needed.
+        };
+        
+        // Set the source of the image to the original data URL
+        img.src = screenshot;
+        
+        console.log(scaledDataURL,"fsddsfds");
+
+    
       }
     }
   };

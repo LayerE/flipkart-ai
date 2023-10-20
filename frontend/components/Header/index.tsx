@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useSession } from "@supabase/auth-helpers-react";
 import { supabase } from "@/utils/supabase";
+import { useAppState } from "@/context/app.context";
 
 const Header = () => {
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
@@ -19,27 +20,34 @@ const Header = () => {
   const [projectName, setProjectName] = useState("Untitled");
   const [back, setBAck] = useState(false);
   const [userData, setuserData] = useState();
+const {
+  userId, setUserID
 
+} = useAppState();
+
+  
   const currentRoute = router.pathname;
 
   console.log(currentRoute);
   useEffect(() => {
-    if (currentRoute === "/generate-3d/[id]") {
-      setBAck(true);
-    } else {
-      setBAck(false);
-    }
     const checkSession = async () => {
       const { data } = await supabase.auth.getSession();
       if (data.session) {
         setuserData(data?.session);
-        
+        console.log(data,"sdffffffffffffff")
       }else{
+        console.log("sdffffffffffffff",userId)
         // router.push("/sign-in")
 
       }
     };
     checkSession();
+    if (currentRoute === "/generate-3d/[id]") {
+      setBAck(true);
+    } else {
+      setBAck(false);
+    }
+    
     const handleOutsideClick = (event: MouseEvent) => {
       if (
         popupRef.current &&
@@ -54,7 +62,7 @@ const Header = () => {
     return () => {
       document.removeEventListener("click", handleOutsideClick);
     };
-  }, [currentRoute]);
+  }, [currentRoute,session,userData]);
 
   const handleButtonClick = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();

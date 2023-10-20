@@ -29,7 +29,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       if (data.session) {
         setUserID(data.session.user.id);
       } else {
-        router.push("/sign-in");
+        // router.push("/sign-in");
       }
     };
     checkSession();

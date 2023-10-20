@@ -83,6 +83,7 @@ const QuickBar: React.FC = () => {
     genrateeRef,
     promtFull,
     setpromtFull,
+    userId,
     setSelectedresult,
     setPlacementTest,
   } = useAppState();
@@ -102,6 +103,19 @@ const QuickBar: React.FC = () => {
             }
           >
             <div className="tittle">Quick Generate</div>
+            <div className="gap">
+            <Row>
+          <Label>Product</Label>
+        </Row>
+
+        <Row>
+          <FileUpload
+            type={"product"}
+            title={"Upload Product Photo"}
+            uerId={userId}
+          />
+        </Row>
+            </div>
             <div className="gap">
               <DisabledLabel>Describe your photo </DisabledLabel>
 

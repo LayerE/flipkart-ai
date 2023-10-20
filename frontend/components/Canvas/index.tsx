@@ -252,7 +252,7 @@ export default function CanvasBox({ proid, userId }) {
       const EditorBoxText = new fabric.Text("Place Your Product Here", {
         left: newEditorBox.left + 20, // center of the rectangle
         top: newEditorBox.top + 20, // center of the rectangle
-        fontSize: 24,
+        fontSize: 42,
         // originX: "center",
         // originY: "center",
         selectable: false,

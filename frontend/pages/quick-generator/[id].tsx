@@ -5,7 +5,9 @@ import QuickBar from "@/components/Sidebar/QuickSlidbar";
 import styled from "styled-components";
 import { useAppState } from "@/context/app.context";
 import { useRouter } from "next/router";
-import { useAuth } from "@clerk/nextjs";
+import { supabase } from "@/utils/supabase";
+import Quick from "@/components/Canvas/quick";
+
 
 const QuickGenerator = () => {
   const {
@@ -46,12 +48,30 @@ const QuickGenerator = () => {
     setassetsActiveTab,
     TDMode,
     set3dMode,
+    userId,
+    setUserID,
   } = useAppState();
 
-  const { userId } = useAuth();
+
   const { query, isReady } = useRouter();
   const id = (query.id as string[]) || [];
+  useEffect(() => {
+    if (isReady) {
+      const checkSession = async () => {
+        const { data } = await supabase.auth.getSession();
+        if (data.session) {
+          // router.push("/");
+          setUserID(data.session.user.id);
+        
+        }else{
+          // router.push("/sign-in");
 
+        }
+      };
+      checkSession();
+      
+    }
+  }, []);
   const upateImage = (url) => {
     if (!loader) {
       addimgToCanvasGen(url);
@@ -117,7 +137,8 @@ const QuickGenerator = () => {
     <MainPages>
       <QuickBar />
       <div className="Editor">
-        <div className="outputbox"></div>
+        {/* <div className="outputbox"></div> */}
+        <Quick/>
       </div>
     </MainPages>
   );
@@ -139,29 +160,29 @@ const MainPages = styled.div`
     overflow: hidden;
     height: 100vh;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    /* justify-content: center;
+    align-items: center; */
     /* padding-top: 100px; */
   }
 
-  .outputbox {
+  /* .outputbox {
     width: 512px;
     height: 512px;
     border: 2px solid rgba(249, 208, 13, 1);
     transform: scale(0.8);
     background-color: rgba(249, 208, 13, 0.23);
-  }
+  } */
   .generatedBox {
-    width: 100%;
+    /* width: 100%;
     display: flex;
     position: absolute;
     bottom: 0px;
     padding-right: 30px;
     left: 20px;
     /* right: 20px; */
-    justify-content: right;
+    /* justify-content: right;
     z-index: 10;
-    z-index: 100;
+    z-index: 100; */ */
 
     .itemsWrapper {
       display: flex;
