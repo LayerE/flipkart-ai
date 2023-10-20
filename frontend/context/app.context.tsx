@@ -1049,7 +1049,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           subjectCanvas.add(gg);
         });
 
-        const subjectDataUrl = subjectCanvas.toDataURL({format : "png",multiplier:  0.5});
+        const subjectDataUrl = subjectCanvas.toDataURL({format : "png", multiplier:  4});
         const subjectDataUrlJson = subjectCanvas.toJSON();
         const updatedObject = {
           width: activeSize.w, // Add the new key-value pair
