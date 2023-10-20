@@ -9,6 +9,7 @@ import PopupUpload from "../Popup";
 import { useRouter } from "next/router";
 import { AssetsLoader } from "../Loader/AssetsLoader";
 import { useSession } from "@supabase/auth-helpers-react";
+import { supabase } from "@/utils/supabase";
 
 const fadeIn = {
   hidden: { opacity: 0 },
@@ -19,9 +20,18 @@ const AssetsDir = () => {
   const session = useSession();
   const [userId, setUserId] = useState<string | null>(null);
   useEffect(() => {
-    if (session) {
-      setUserId(session.user.id);
-    }
+    const checkSession = async () => {
+      const { data } = await supabase.auth.getSession();
+      if (data.session) {
+        // router.push("/");
+        setUserID(data.session.user.id);
+      
+      }else{
+        // router.push("/sign-in");
+
+      }
+    };
+    checkSession();
   }, [session]);
 
   const {

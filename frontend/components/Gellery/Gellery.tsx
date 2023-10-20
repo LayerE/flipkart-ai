@@ -8,6 +8,7 @@ import { useSession } from "@supabase/auth-helpers-react";
 import PopupCard from "../Popup/PopupCard";
 import axios from "axios";
 import Loader from "../Loader";
+import { supabase } from "@/utils/supabase";
 
 const fadeIn = {
   hidden: { opacity: 0 },
@@ -16,12 +17,8 @@ const fadeIn = {
 
 const Gellery = () => {
   const session = useSession();
-  const [userId, setUserId] = useState<string | null>(null);
-  useEffect(() => {
-    if (session) {
-      setUserId(session.user.id);
-    }
-  }, [session]);
+  // const [userId, setUserId] = useState<string | null>(null);
+
   const [gallery, setGallery] = useState();
 
   const {
@@ -31,6 +28,7 @@ const Gellery = () => {
     setGeneratedImgList,
     galleryActivTab,
     setgalleryActiveTab,
+    userId
   } = useAppState();
 
   const [laoder, setlaoder] = useState(true);
