@@ -1246,7 +1246,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
                   "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                  userId: ueserId,
+                  userId: userId,
                   projectId: proid,
                   jobId: generate_response?.job_id,
                 }),
