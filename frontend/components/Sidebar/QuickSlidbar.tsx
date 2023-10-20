@@ -6,7 +6,7 @@ import assets from "@/public/assets";
 import { useAppState } from "@/context/app.context";
 import { ResponsiveRowWrap, Row } from "../common/Row";
 import Label, { DisabledLabel } from "../common/Label";
-import { FileUpload, Input, Input2, TestArea } from "../common/Input";
+import { FileUpload, FileUploadQuick, Input, Input2, TestArea } from "../common/Input";
 import DropdownInput from "../common/Dropdown";
 import Button from "../common/Button";
 import Assets from "../Assets/index";
@@ -68,7 +68,7 @@ const QuickBar: React.FC = () => {
     selectBackground,
     getBase64FromUrl,
     addimgToCanvasGen,
-
+    generateQuikcHandeler,
     setGeneratedImgList,
     generatedImgList,
     setSelectedImg,
@@ -109,7 +109,7 @@ const QuickBar: React.FC = () => {
         </Row>
 
         <Row>
-          <FileUpload
+          <FileUploadQuick
             type={"product"}
             title={"Upload Product Photo"}
             uerId={userId}
@@ -135,8 +135,8 @@ const QuickBar: React.FC = () => {
                 ) : (
                   <Button
                     ref={genrateeRef}
-                    onClick={() => generateImageHandeler(userId, id)}
-                    disabled={promtFull === " " ? true : false}
+                    onClick={() => generateQuikcHandeler(userId, id)}
+                    disabled={promtFull === "" ? true : false}
                   >
                     {generationLoader ? "Loading..." : "Generate"}
                   </Button>

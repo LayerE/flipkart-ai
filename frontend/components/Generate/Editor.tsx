@@ -20,7 +20,6 @@ import {
   renderStrength,
   resultList,
   surroundingList,
-  test,
 } from "@/store/dropdown";
 import { useAppState } from "@/context/app.context";
 import { styled } from "styled-components";
@@ -297,7 +296,7 @@ const EditorSection = () => {
               <div
                 key={i}
                 className={`items ${
-                  activeSize.id === item.id ? "actives" : ""
+                  activeSize?.id === item.id ? "actives" : ""
                 }`}
                 onClick={() => {
                   setActiveSize(item);
@@ -312,7 +311,7 @@ const EditorSection = () => {
                       readOnly={activeSize.id === item.id ? "" : "readOnly"}
                       value={customsize.w}
                       onChange={(e) =>
-                        setCustomsize((pre) => ({ ...pre, w: e.target.value }))
+                        setCustomsize((pre:any) => ({ ...pre, w: e.target.value }))
                       }
                     />
                     X
@@ -320,7 +319,7 @@ const EditorSection = () => {
                       type="number"
                       value={customsize.h}
                       onChange={(e) =>
-                        setCustomsize((pre) => ({ ...pre, h: e.target.value }))
+                        setCustomsize((pre:any) => ({ ...pre, h: e.target.value }))
                       }
                     />
                   </div>
@@ -598,7 +597,7 @@ export const BoxOff = styled.div`
   }
   input[type="range"]::-moz-range-thumb {
     box-shadow: 0px 0px 0px #000000;
-    border: 1px solid #rgba(249, 208, 13, 1);
+    border: 1px solid rgba(249, 208, 13, 1);
     height: 18px;
     width: 18px;
     border-radius: 25px;

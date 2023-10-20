@@ -11,7 +11,6 @@ type ContextProviderProps = {
   children: React.ReactNode;
 };
 
-
 interface ContextITFC {
   canvasInstance: React.MutableRefObject<null>;
   outerDivRef: React.MutableRefObject<any | null>;
@@ -246,6 +245,8 @@ export const AppContext = createContext<ContextITFC>({
 
 export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const canvasInstance = useRef<any | null>(null);
+  const canvasInstanceQuick = useRef<any | null>(null);
+
   const [filteredArray, setFilteredArray] = useState([]);
 
   const outerDivRef = useRef(null);
@@ -357,28 +358,23 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
   const [btnVisible, setBtnVisible] = useState(false);
 
-
-
-
   const canvasHistoryRef = useRef([]);
   const [currentStep, setCurrentStep] = useState(-1);
   const session = useSession();
-  // const [userId, setUserID] = useState<string | null>("34afa810-7f7e-4a35-be32-e9c561f35067")
+  // const [userId, setUserID] = useState<string | null>(
+  //   "34afa810-7f7e-4a35-be32-e9c561f35067"
+  // );
   const [userId, setUserID] = useState<string | null>(null);
-  
+
   useEffect(() => {
     if (session) {
       setUserID(session.user.id);
     }
   }, [session]);
 
-
-
   const handileDownload = (url: string) => {
     saveAs(url, `image${Date.now()}.${downloadeImgFormate}`);
   };
-
-
 
   const getBase64FromUrl = async (url: string): Promise<string> => {
     const data = await fetch(url);
@@ -520,6 +516,43 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       canvasInstance?.current?.setActiveObject(img);
       canvasInstance?.current?.renderAll();
       saveCanvasState();
+    });
+  };
+
+  const addimgToCanvasQuike = async (url: string) => {
+    fabric.Image.fromURL(await getBase64FromUrl(url), function (img: any) {
+      // Set the image's dimensions
+      console.log("img", url);
+      // img.scaleToWidth(200);
+      const canvasWidth = activeSize.w;
+      const canvasHeight = activeSize.h;
+      const imageAspectRatio = img.width / img.height;
+
+      // Calculate the maximum width and height based on the canvas size
+      const maxWidth = canvasWidth;
+      const maxHeight = canvasHeight;
+
+      // Calculate the scaled width and height while maintaining the aspect ratio
+      let scaledWidth = maxWidth;
+      let scaledHeight = scaledWidth / imageAspectRatio;
+
+      img.scaleToWidth(512 / 2);
+      img.scaleToHeight(512 / 2);
+      // Set the position of the image
+      img.set({
+        left: 100,
+        top: 100,
+
+        // scaleX: scaleX,
+        // scaleY: scaleY,
+      });
+
+      img.set("category", "quick");
+      console.log(canvasInstanceQuick.current);
+      // canvasInstance.current.clear();
+      canvasInstanceQuick?.current.add(img);
+      canvasInstanceQuick?.current.setActiveObject(img);
+      canvasInstanceQuick?.current.renderAll();
     });
   };
 
@@ -817,7 +850,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       saveCanvasToDatabase();
     });
   };
-  
+
   const fetchGeneratedImages = async (userId: any) => {
     try {
       const response = await fetch(
@@ -1049,14 +1082,17 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           subjectCanvas.add(gg);
         });
 
-        const subjectDataUrl = subjectCanvas.toDataURL({format : "png", multiplier:  4});
+        const subjectDataUrl = subjectCanvas.toDataURL({
+          format: "png",
+          multiplier: 4,
+        });
         const subjectDataUrlJson = subjectCanvas.toJSON();
         const updatedObject = {
           width: activeSize.w, // Add the new key-value pair
           height: activeSize.h,
           ...subjectDataUrlJson, // Spread the existing object
         };
-        console.log(updatedObject,"dsfdf")
+        console.log(updatedObject, "dsfdf");
 
         // const subjectDataUrl = subjectCanvas.toDataURL("image/png");
 
@@ -1148,30 +1184,30 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         var img = new Image();
 
         // Set an onload event handler
-        let scaledDataURL
+        let scaledDataURL;
         img.onload = function () {
-            // Scale down the image by setting its width and height to 0.5 times the original dimensions
-            img.width *= 0.5;
-            img.height *= 0.5;
-        
-            // Create a canvas to draw the scaled image
-            var canvas = document.createElement("canvas");
-            canvas.width = img.width;
-            canvas.height = img.height;
-            var ctx = canvas.getContext("2d");
-            ctx.drawImage(img, 0, 0, img.width, img.height);
-        
-            // Get the scaled data URL
-             scaledDataURL = canvas.toDataURL("image/png");
-        
-            // Now, scaledDataURL contains the data URL of the image scaled down to 0.5 of its original size.
-            // You can use it as needed.
+          // Scale down the image by setting its width and height to 0.5 times the original dimensions
+          img.width *= 0.5;
+          img.height *= 0.5;
+
+          // Create a canvas to draw the scaled image
+          var canvas = document.createElement("canvas");
+          canvas.width = img.width;
+          canvas.height = img.height;
+          var ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, img.width, img.height);
+
+          // Get the scaled data URL
+          scaledDataURL = canvas.toDataURL("image/png");
+
+          // Now, scaledDataURL contains the data URL of the image scaled down to 0.5 of its original size.
+          // You can use it as needed.
         };
-        
+
         // Set the source of the image to the original data URL
         img.src = screenshot;
-        
-        console.log(scaledDataURL,"fsddsfds");
+
+        console.log(scaledDataURL, "fsddsfds");
 
         const response = await fetch("/api/generate", {
           method: "POST",
@@ -1232,6 +1268,131 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     }
   };
 
+  const generateQuikcHandeler = async (ueserId: any, proid: any) => {
+    var subjectCount = 0;
+
+    canvasInstanceQuick?.current.forEachObject(function (obj: any) {
+      if (obj.category === "quick") {
+        if (newEditorBox.intersectsWithObject(obj)) {
+          subjectCount++;
+        } else {
+        }
+      }
+    });
+
+    if (subjectCount === 0) {
+      toast("Add product first");
+    } else {
+      // console.log(promt);
+      setLoader(true);
+      setCanvasDisable(true);
+      setGenerationLoader(true);
+      const canvas1 = canvasInstanceQuick.current;
+      try {
+        addtoRecntly(ueserId, proid);
+
+        const objects = canvas1.getObjects();
+        const subjectObjects: any = [];
+        objects.forEach((object: any) => {
+          if (object.category === "quick") {
+            subjectObjects.push(object);
+          }
+        });
+
+        // Make image with only the subject objects
+        const subjectCanvas = new fabric.Canvas(null, {
+          // width: newEditorBox.width,
+          // height: newEditorBox.height,
+          // top: newEditorBox.top,
+          // left: newEditorBox.left,
+          // left: activeSize.l,
+          // top: activeSize.t,
+          width: 512,
+          height: 512,
+        } as any);
+
+        subjectObjects.forEach((object: any) => {
+          subjectCanvas.add(object);
+        });
+
+        const subjectDataUrl = subjectCanvas.toDataURL({
+          format: "png",
+          multiplier: 1,
+        });
+        const subjectDataUrlJson = subjectCanvas.toJSON();
+        const updatedObject = {
+          width: activeSize.w, // Add the new key-value pair
+          height: activeSize.h,
+          ...subjectDataUrlJson, // Spread the existing object
+        };
+        console.log(updatedObject, "dsfdf");
+
+        // const subjectDataUrl = subjectCanvas.toDataURL("image/png");
+
+        console.log(subjectDataUrl, "subject");
+
+        const promtText = promtFull;
+
+        const response = await fetch("/api/quickgenerate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            image_url: subjectDataUrl,
+            maskDataUrl: null,
+            prompt: promtText.trim(),
+            user_id: userId,
+            category: category,
+            lora_type: loara,
+            num_images: selectResult,
+            caption: product,
+          }),
+        });
+
+        const generate_response = await response.json();
+
+        if (generate_response?.error) {
+          // alert(generate_response?.error);
+          toast.error(generate_response?.error);
+
+          setLoader(false);
+
+          return false;
+        } else {
+          try {
+            const response = await fetch(
+              `${process.env.NEXT_PUBLIC_API}/jobIdQuick`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  userId: ueserId,
+                  projectId: proid,
+                  jobId: generate_response?.job_id,
+                }),
+              }
+            );
+            const datares = await response;
+
+            if (datares.ok) {
+              setJobIdOne([generate_response?.job_id]);
+
+              GetProjextById(proid);
+            }
+            // window.open(`/generate/${datares?._id}`, "_self");
+          } catch (error) {}
+        }
+      } catch (error) {
+        console.error("Error generating image:", error);
+      } finally {
+        setGenerationLoader(false);
+      }
+    }
+  };
+
   const generate3dHandeler = async (ueserId: any, proid: any) => {
     if (category === null) {
       toast("Select your product category first !");
@@ -1251,103 +1412,101 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         var img = new Image();
 
         // Set an onload event handler
-        let scaledDataURL
+        let scaledDataURL;
         img.onload = async function () {
-            // Scale down the image by setting its width and height to 0.5 times the original dimensions
-            img.width *= 0.5;
-            img.height *= 0.5;
-        
-            // Create a canvas to draw the scaled image
-            var canvas = document.createElement("canvas");
-            canvas.width = img.width;
-            canvas.height = img.height;
-            var ctx = canvas.getContext("2d");
-            ctx.drawImage(img, 0, 0, img.width, img.height);
-        
-            // Get the scaled data URL
-             scaledDataURL = canvas.toDataURL("image/png");
-             console.log(scaledDataURL,"fsddsfds");
+          // Scale down the image by setting its width and height to 0.5 times the original dimensions
+          img.width *= 0.5;
+          img.height *= 0.5;
 
-             const response = await fetch("/api/generate", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                dataUrl: scaledDataURL,
-                maskDataUrl: null,
-                prompt: promtText.trim(),
-                user_id: userId,
-                category: category,
-                lora_type: loara,
-                num_images: selectResult,
-                // is_3d : true
-                // caption : product
-              }),
-            });
-    
-            const generate_response = await response.json();
-    
-            if (generate_response?.error) {
-              // alert(generate_response?.error);
-              toast.error(generate_response?.error);
-    
-              setLoader(false);
-    
-              return false;
-            } else {
-              setLoader(true);
-    
-              try {
-                const response = await fetch(
-                  `${process.env.NEXT_PUBLIC_API}/jobId3d`,
-                  {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                      userId: userId,
-                      // projectId: proid,
-                      jobId: generate_response?.job_id,
-                    }),
-                  }
-                );
-                const datares = await response;
-    
-                if (datares.ok) {
-                  setJobIdOne([generate_response?.job_id]);
-    
-                  // GetProjextById(proid);
-                  axios
-                    .get(`${process.env.NEXT_PUBLIC_API}/user?id=${ueserId}`)
-                    .then((response) => {
-                      console.log(response?.data?.jobIds3D, "dsfgdgfd");
-                      setproject(response.data);
-                      setJobId(response?.data?.jobIds3D);
-                      // return response.data;
-                    })
-                    .catch((error) => {
-                      console.error(error);
-                      return error;
-                    });
+          // Create a canvas to draw the scaled image
+          var canvas = document.createElement("canvas");
+          canvas.width = img.width;
+          canvas.height = img.height;
+          var ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, img.width, img.height);
+
+          // Get the scaled data URL
+          scaledDataURL = canvas.toDataURL("image/png");
+          console.log(scaledDataURL, "fsddsfds");
+
+          const response = await fetch("/api/generate", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              dataUrl: scaledDataURL,
+              maskDataUrl: null,
+              prompt: promtText.trim(),
+              user_id: userId,
+              category: category,
+              lora_type: loara,
+              num_images: selectResult,
+              // is_3d : true
+              // caption : product
+            }),
+          });
+
+          const generate_response = await response.json();
+
+          if (generate_response?.error) {
+            // alert(generate_response?.error);
+            toast.error(generate_response?.error);
+
+            setLoader(false);
+
+            return false;
+          } else {
+            setLoader(true);
+
+            try {
+              const response = await fetch(
+                `${process.env.NEXT_PUBLIC_API}/jobId3d`,
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    userId: userId,
+                    // projectId: proid,
+                    jobId: generate_response?.job_id,
+                  }),
                 }
-                // window.open(`/generate/${datares?._id}`, "_self");
-              } catch (error) {
-                setLoader(false);
+              );
+              const datares = await response;
+
+              if (datares.ok) {
+                setJobIdOne([generate_response?.job_id]);
+
+                // GetProjextById(proid);
+                axios
+                  .get(`${process.env.NEXT_PUBLIC_API}/user?id=${ueserId}`)
+                  .then((response) => {
+                    console.log(response?.data?.jobIds3D, "dsfgdgfd");
+                    setproject(response.data);
+                    setJobId(response?.data?.jobIds3D);
+                    // return response.data;
+                  })
+                  .catch((error) => {
+                    console.error(error);
+                    return error;
+                  });
               }
+              // window.open(`/generate/${datares?._id}`, "_self");
+            } catch (error) {
+              setLoader(false);
             }
-        
-            // Now, scaledDataURL contains the data URL of the image scaled down to 0.5 of its original size.
-            // You can use it as needed.
+          }
+
+          // Now, scaledDataURL contains the data URL of the image scaled down to 0.5 of its original size.
+          // You can use it as needed.
         };
-        
+
         // Set the source of the image to the original data URL
         img.src = screenshot;
-        
-        console.log(scaledDataURL,"fsddsfds");
 
-    
+        console.log(scaledDataURL, "fsddsfds");
       }
     }
   };
@@ -1424,8 +1583,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
   const [loadercarna, setloadercarna] = useState(false);
 
-
-
   return (
     <AppContext.Provider
       value={{
@@ -1456,9 +1613,11 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setCrop,
         stageRef,
         mode,
+        generateQuikcHandeler,
         setMode,
         // handleZoomIn,
         // handleZoomOut,
+        canvasInstanceQuick,
         magicLoader,
         setMagicloder,
         linesHistory,
@@ -1526,6 +1685,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         handileDownload,
         canvasInstance,
         addimgToCanvasGen,
+        addimgToCanvasQuike,
         genRect,
         setgenRect,
         outerDivRef,

@@ -171,7 +171,7 @@ export default function Home() {
   const fetchAssetsImages = async () => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API}/generatedImg?userId=${userId}&projectId=${id}`,
+        `${process.env.NEXT_PUBLIC_API}/generatedQuickImg?userId=${userId}&projectId=${id}`,
         {
           method: "GET",
         }
