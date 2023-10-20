@@ -5,7 +5,7 @@ import { saveAs } from "file-saver";
 import { fabric } from "fabric";
 import { useRouter } from "next/router";
 
-const Quick = () => {
+const QuickCanvas = () => {
   const { activeSize, selectedImg,setSelectedImg,setDownloadImg, addimgToCanvasQuike, canvasInstanceQuick } =
     useAppState();
   const canvasRef = useRef(null);
@@ -173,7 +173,7 @@ const Quick = () => {
   );
 };
 
-export default Quick;
+export default QuickCanvas;
 
 const CnavasQuick = styled.div`
   padding: 20px;

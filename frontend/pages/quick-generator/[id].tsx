@@ -6,7 +6,8 @@ import styled from "styled-components";
 import { useAppState } from "@/context/app.context";
 import { useRouter } from "next/router";
 import { supabase } from "@/utils/supabase";
-import Quick from "@/components/Canvas/quick";
+import QuickCanvas from "@/components/Canvas/Quick";
+
 
 
 const QuickGenerator = () => {
@@ -178,7 +179,7 @@ const QuickGenerator = () => {
             </div>
           ) : null}
         {/* <div className="outputbox"></div> */}
-        <Quick/>
+        <QuickCanvas/>
       </div>
     </MainPages>
   );

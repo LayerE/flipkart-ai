@@ -930,7 +930,7 @@ const Cnavas3d = styled.div`
     .tesxt {
       color: #000;
       margin: 10px;
-      font-size: 24px;
+      font-size: 42px;
       font-size: 500;
     }
   }
