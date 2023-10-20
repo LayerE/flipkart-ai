@@ -329,6 +329,54 @@ router.post("/jobId3d", async function (req, res, next) {
     return res.json({ error: "Server error" });
   }
 });
+
+router.post("/jobIdQuick", async function (req, res, next) {
+  try {
+    const { userId, jobId } = req.body;
+    const user = await Users.findOne({ userId: userId });
+    if (!user) {
+      return res.json({
+        error: "user not found",
+      });
+    }
+
+    // const product = await Projects.findOne({ _id: projectId });
+    // if (!product) {
+    //   return res.json({
+    //     error: "product not found",
+    //   });
+    // }
+   await Users.findOneAndUpdate(
+      { userId: userId },
+      {
+        $push: {
+          allJobIs: jobId,
+        },
+      }
+    );
+
+    const updateUserDB = await Users.findOneAndUpdate(
+      { userId: userId },
+      {
+        $push: {
+          jobIdsQuike: jobId,
+        },
+      }
+    );
+
+    // const updateDB = await Projects.findOneAndUpdate(
+    //   { userId: userId, _id: projectId },
+    //   {
+    //     $push: {
+    //       jobIds3D: jobId,
+    //     },
+    //   }
+    // );
+    return res.json(updateUserDB);
+  } catch (error) {
+    return res.json({ error: "Server error" });
+  }
+});
 router.post("/upload/asset", async function (req, res, next) {
   try {
     const { userId, projectId, url, assetType } = req.body;
@@ -572,6 +620,46 @@ router.get("/generated3dImg", async function (req, res, next) {
 
     const filteredResult = data.filter((obj) =>
       user.jobIds3D?.includes(obj?.task_id)
+    );
+
+    return res.json(filteredResult);
+  } catch (error) {
+    console.error("Error:", error);
+    return res.json({ error: "Server error" });
+  }
+});
+
+router.get("/generatedQuickImg", async function (req, res, next) {
+  try {
+    const { userId } = req.query;
+    if (!userId) {
+      return res.json({
+        error: "Missing data query parameter",
+      });
+    }
+
+    const user = await Users.findOne({ userId: userId });
+
+    if (!user) {
+      return res.json({
+        error: "user not found",
+      });
+    }
+
+    const response = await fetch(
+      `https://tvjjvhjhvxwpkohjqxld.supabase.co/rest/v1/public_images?select=*&order=created_at.desc&user_id=eq.${userId}`,
+      {
+        method: "GET",
+        headers: {
+          apikey:
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2amp2aGpodnh3cGtvaGpxeGxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTI4Njg5NDQsImV4cCI6MjAwODQ0NDk0NH0.dwKxNDrr7Jw5OjeHgIbk8RLyvJuQVwZ_48Bv71P1n3Y",
+        },
+      }
+    );
+    const data = await response.json();
+
+    const filteredResult = data.filter((obj) =>
+      user.jobIdsQuike?.includes(obj?.task_id)
     );
 
     return res.json(filteredResult);
