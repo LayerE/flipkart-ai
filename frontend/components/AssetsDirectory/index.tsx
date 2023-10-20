@@ -18,21 +18,8 @@ const fadeIn = {
 
 const AssetsDir = () => {
   const session = useSession();
-  const [userId, setUserId] = useState<string | null>(null);
-  useEffect(() => {
-    const checkSession = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (data.session) {
-        // router.push("/");
-        setUserID(data.session.user.id);
-      
-      }else{
-        // router.push("/sign-in");
-
-      }
-    };
-    checkSession();
-  }, [session]);
+ 
+  
 
   const {
     fetchGeneratedImages,
@@ -57,9 +44,24 @@ const AssetsDir = () => {
     addimgToCanvasSubject,
     listofassetsBarand,
     setListOfAssetsBrand,
-
+    userId, setUserId,
     // re, setRe,
   } = useAppState();
+
+  // useEffect(() => {
+  //   const checkSession = async () => {
+  //     const { data } = await supabase.auth.getSession();
+  //     if (data.session) {
+  //       // router.push("/");
+  //       setUserId(data.session.user.id);
+      
+  //     }else{
+  //       // router.push("/sign-in");
+
+  //     }
+  //   };
+  //   checkSession();
+  // }, [session]);
   const [assers, setAssets] = useState();
   // const [re, setRe] = useState(1);
 
