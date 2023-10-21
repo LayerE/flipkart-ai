@@ -115,9 +115,14 @@ export default function Home() {
             setprojectlist(await dataFecth.data);
 
             setMainLoader(false);
+          }else{
+            setMainLoader(false);
+
           }
         })
         .catch((error) => {
+          setMainLoader(false);
+
           console.error(error);
         });
     }

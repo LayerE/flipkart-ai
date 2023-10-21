@@ -18,12 +18,12 @@ const Projects = ({ onDelet }) => {
   const router = useRouter();
   const [projects, setProjects] = useState([]);
   const session = useSession();
-  const [userId, setUserId] = useState<string | null>(null);
-  useEffect(() => {
-    if (session) {
-      setUserId(session.user.id);
-    }
-  }, [session]);
+  // const [userId, setUserId] = useState<string | null>(null);
+  // useEffect(() => {
+  //   if (session) {
+  //     setUserId(session.user.id);
+  //   }
+  // }, [session]);
   const {
     activeTab,
     setprojectlist,
@@ -31,6 +31,7 @@ const Projects = ({ onDelet }) => {
     projectlist,
     GetProjexts,
     renameProject,
+    userId, setUserId
   } = useAppState();
   const [projectsLoader, setprojectsLoader] = useState(false);
 

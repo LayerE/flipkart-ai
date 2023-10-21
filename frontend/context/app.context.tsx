@@ -7,13 +7,18 @@ import { toast } from "react-toastify";
 import { arrayBufferToDataURL, dataURLtoFile } from "@/utils/BufferToDataUrl";
 import { useSession } from "@supabase/auth-helpers-react";
 
+import { IMG_TABLE } from "@/store/table";
+import { supabase } from "@/utils/supabase";
+
 type ContextProviderProps = {
   children: React.ReactNode;
 };
 
 interface ContextITFC {
-  canvasInstance: React.MutableRefObject<null>;
-  outerDivRef: React.MutableRefObject<any | null>;
+  canvasInstance: React.MutableRefObject<null> | null;
+  canvasInstanceQuick: React.MutableRefObject<null> | null;
+
+  outerDivRef: React.MutableRefObject<null> | null;
   addimgToCanvas: (url: string) => void;
   addimgToCanvasSubject: (url: string) => void;
   addimgToCanvasGen: (url: string) => void;
@@ -22,6 +27,9 @@ interface ContextITFC {
   getBase64FromUrl: (url: string) => void;
   activeTab: number | null;
   setActiveTab: (activeTab: number) => void;
+  brushSize: number | null;
+  setBrushSize: (brushSize: number) => void;
+
   activeTabHome: number | null;
   setActiveTabHome: (activeTabHome: number) => void;
   selectedImg: object | null;
@@ -80,7 +88,11 @@ interface ContextITFC {
   popup: object;
   setPopup: (popup: object) => void;
 
-  stageRef: React.MutableRefObject<any | null>;
+  activeTemplet: object | null;
+  setActiveTemplet: (activeTemplet: object) => void;
+
+  stageRef: React.MutableRefObject<HTMLElement | null> | null;
+
   lines: any[];
   setLines: (lines: any[]) => void;
   linesHistory: any[];
@@ -114,9 +126,14 @@ interface ContextITFC {
   changeRectangleSize: () => void;
 
   generate3dHandeler: (ueserId: any, proid: any) => void;
+  generateQuikcHandeler: (ueserId: any, proid: any) => void;
 
   AssetsActivTab: string;
   setassetsActiveTab: (AssetsActivTab: string) => void;
+
+  userId: string | null;
+  setUserID: (userId: string) => void;
+
   magickErase: boolean;
   setmagickErase: (magickErase: boolean) => void;
   customsize: any;
@@ -124,13 +141,29 @@ interface ContextITFC {
   zoom: number;
   setZoomCanvas: (zoom: number) => void;
   activeSize: object;
-  setActiveSize: (activeSize: object) => void;
+
+  setActiveSize: React.Dispatch<
+    React.SetStateAction<{
+      id: number;
+      title: string;
+      subTittle: string;
+      h: number;
+      w: number;
+      l: number;
+      t: number;
+      gl: number;
+      gt: number;
+    }>
+  >;
 }
 export const AppContext = createContext<ContextITFC>({
   activeTab: 1,
   setActiveTab: () => {},
   activeTabHome: 1,
   setActiveTabHome: () => {},
+  brushSize: 5,
+  setBrushSize: () => {},
+
   selectedImg: null,
   setSelectedImg: () => {},
 
@@ -141,8 +174,9 @@ export const AppContext = createContext<ContextITFC>({
   EditorBox: null,
   editorBox: null,
   setEditorBox: () => {},
-  // canvasInstance: null,
-  // outerDivRef: null,
+  canvasInstance: null,
+  canvasInstanceQuick: null,
+  outerDivRef: null,
   addimgToCanvas: () => {},
   addimgToCanvasSubject: () => {},
   addimgToCanvasGen: () => {},
@@ -155,6 +189,9 @@ export const AppContext = createContext<ContextITFC>({
   setFile: () => {},
   viewMore: {},
   setViewMore: (viewMore: Object) => {},
+
+  activeTemplet: {},
+  setActiveTemplet: (activeTemplet: object) => {},
   selectPlacement: "",
   setSelectedPlacement: (selectPlacement: string) => {},
   surroundingtype: "",
@@ -230,9 +267,12 @@ export const AppContext = createContext<ContextITFC>({
   addimgToCanvasCropped: () => {},
   changeRectangleSize: () => {},
   generate3dHandeler: () => {},
+  generateQuikcHandeler: () => {},
 
   AssetsActivTab: "",
   setassetsActiveTab: (AssetsActivTab: string) => {},
+  userId: "",
+  setUserID: (userId: string) => {},
   magickErase: false,
   setmagickErase: () => {},
   customsize: "",
@@ -260,7 +300,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [activeTabHome, setActiveTabHome] = useState<number | null>(1);
   const [file, setFile] = useState<File | null>(null);
   const [file3d, setFile3d] = useState<File | null>(null);
-  const [file3dUrl, setFile3dUrl] = useState<string>(null);
+  const [file3dUrl, setFile3dUrl] = useState<string | null>(null);
   const [file3dName, setFile3dName] = useState(null);
 
   const [viewMore, setViewMore] = useState<object>({});
@@ -312,7 +352,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const previewBox = useRef<HTMLElement | null>(null);
   const [regenratedImgsJobId, setRegenratedImgsJobid] = useState(null);
   const [projectId, setprojectId] = useState(null);
-  const [uerId, setUserId] = useState(null);
+
   const [category, setcategory] = useState(null);
   const [listofassets, setListOfAssets] = useState(null);
   const [listofassetsBarand, setListOfAssetsBrand] = useState(null);
@@ -325,7 +365,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const canvasHistory = useRef<any[]>([]);
   const currentCanvasIndex = useRef(-1);
   const canvasRef = useRef(null);
-  const [activeTemplet, setActiveTemplet] = useState(null);
+  const [activeTemplet, setActiveTemplet] = useState<null | object>(null);
   const [downloadeImgFormate, setDownloadeImgFormate] = useState("png");
   const [incremetPosition, setIncremetPosition] = useState(0);
   const [magickErase, setmagickErase] = useState(false);
@@ -342,8 +382,18 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [magicLoader, setMagicloder] = useState(false);
   const [crop, setCrop] = useState(false);
   const [filsizeMorethan10, setfilsizeMorethan10] = useState(false);
-  const stageRef = useRef(null);
-  const [activeSize, setActiveSize] = useState({
+  const stageRef = useRef<HTMLElement | null>(null);
+  const [activeSize, setActiveSize] = useState<{
+    id: number;
+    title: string;
+    subTittle: string;
+    h: number;
+    w: number;
+    l: number;
+    t: number;
+    gl: number;
+    gt: number;
+  }>({
     id: 1,
     title: "Default",
     subTittle: "1024✕1024",
@@ -1195,7 +1245,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           canvas.width = img.width;
           canvas.height = img.height;
           var ctx = canvas.getContext("2d");
-          ctx.drawImage(img, 0, 0, img.width, img.height);
+          if (ctx) {
+            ctx.drawImage(img, 0, 0, img.width, img.height);
+          }
 
           // Get the scaled data URL
           scaledDataURL = canvas.toDataURL("image/png");
@@ -1423,7 +1475,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           canvas.width = img.width;
           canvas.height = img.height;
           var ctx = canvas.getContext("2d");
-          ctx.drawImage(img, 0, 0, img.width, img.height);
+          if (ctx) {
+            ctx.drawImage(img, 0, 0, img.width, img.height);
+          }
 
           // Get the scaled data URL
           scaledDataURL = canvas.toDataURL("image/png");
@@ -1582,12 +1636,46 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   };
 
   const [loadercarna, setloadercarna] = useState(false);
+  const getSupabaseImage = async () => {
+    if (userId !== null) {
+      const { data, error } = await supabase
+        .from(IMG_TABLE)
+        .select("*")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false });
 
+      if (data.length > 0) {
+        console.log(data, "dataaaaa");
+        return data;
+      } else if (error) {
+        return error;
+      }
+
+    } else {
+      const { datas } = await supabase.auth.getSession();
+      if (datas.session) {
+        const { data, error } = await supabase
+          .from(IMG_TABLE)
+          .select("*")
+          .eq("user_id", data.session.user.id)
+          .order("created_at", { ascending: false });
+
+        if (data.length > 0) {
+        console.log(data, "dataaaaa");
+
+          return data;
+        } else if (error) {
+          return error;
+        }
+      }
+    }
+  };
   return (
     <AppContext.Provider
       value={{
         userId,
         setUserID,
+        getSupabaseImage,
         canvasDisable,
         TdImage,
         filsizeMorethan10,
@@ -1658,8 +1746,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         downloadeImgFormate,
         setDownloadeImgFormate,
         setprojectId,
-        uerId,
-        setUserId,
         SaveProjexts,
         GetProjextById,
         project,

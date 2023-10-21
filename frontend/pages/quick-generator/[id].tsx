@@ -37,7 +37,7 @@ const QuickGenerator = () => {
     addimgToCanvasSubject,
     projectId,
     setprojectId,
-    uerId,
+
     setUserId,
     setGeneratedImgList,
     saveCanvasToDatabase,

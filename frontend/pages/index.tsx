@@ -41,7 +41,6 @@ export default function Home() {
     projectlist,
     setMainLoader,
     setprojectlist,
-    uerId,
     setUserId,
     mainLoader,
     setFilteredArray,
@@ -59,6 +58,7 @@ export default function Home() {
     userId,
     setUserID,
     setListOfAssetsById,
+    GetProjexts,
   } = useAppState();
 
   // const [loadercarna, setloadercarna] = useState(true);
@@ -72,10 +72,9 @@ export default function Home() {
         if (data.session) {
           // router.push("/");
           setUserID(data.session.user.id);
-        
-        }else{
+          GetProjexts(data.session.user.id)
+        } else {
           // router.push("/sign-in");
-
         }
       };
       checkSession();
@@ -90,7 +89,7 @@ export default function Home() {
     setSelectedImg(null);
 
     if (isReady && userId) {
-      console.log(session)
+      console.log(session);
 
       // const getUser = localStorage.getItem("userId");
       // if (!getUser) {
@@ -125,10 +124,17 @@ export default function Home() {
             setprojectlist(await dataFecth.data);
 
             setMainLoader(false);
+          }else{
+            setMainLoader(false);
+
+
           }
         })
         .catch((error) => {
           console.error(error);
+          setMainLoader(false);
+
+
         });
     }
   }, [isReady, userId]);

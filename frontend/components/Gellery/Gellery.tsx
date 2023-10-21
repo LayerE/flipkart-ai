@@ -9,6 +9,7 @@ import PopupCard from "../Popup/PopupCard";
 import axios from "axios";
 import Loader from "../Loader";
 import { supabase } from "@/utils/supabase";
+import { IMG_TABLE } from "@/store/table";
 
 const fadeIn = {
   hidden: { opacity: 0 },
@@ -28,7 +29,9 @@ const Gellery = () => {
     setGeneratedImgList,
     galleryActivTab,
     setgalleryActiveTab,
-    userId
+    userId,
+    setUserID,
+    getSupabaseImage
   } = useAppState();
 
   const [laoder, setlaoder] = useState(true);
@@ -59,8 +62,19 @@ const Gellery = () => {
   // }, []);
 
   useEffect(() => {
+    const checkSession = async () => {
+      const { data } = await supabase.auth.getSession();
+      if (data.session) {
+        // router.push("/");
+        setUserID(data.session.user.id);
+      } else {
+        // router.push("/sign-in");
+      }
+    };
+    checkSession();
     if (userId) {
       fetchAssetsImages();
+      getSupabaseImage()
     }
   }, [userId, galleryActivTab]);
 
@@ -68,46 +82,65 @@ const Gellery = () => {
     setlaoder(true);
 
     try {
+     
+     
       if (galleryActivTab === "ai") {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API}/generatedImg?userId=${userId}`,
-          {
-            method: "GET",
-          }
-        );
-        const data = await response.json();
-        console.log(data, "dd");
 
-        if (data?.length) {
-          if (galleryActivTab === "ai") {
-            setGallery(data);
-            setlaoder(false);
-          } else {
-          }
+        const datass = await  getSupabaseImage()
+        if (datass){
+console.log(datass,"dddddddddddddddddddddddd")
+          setGallery(datass);
         }
+
+        // const response = await fetch(
+        //   `${process.env.NEXT_PUBLIC_API}/generatedImg?userId=${userId}`,
+        //   {
+        //     method: "GET",
+        //   }
+        // );
+        // const data = await response.json();
+        // console.log(data, "dd");
+
+        // if (data?.length) {
+        //   if (galleryActivTab === "ai") {
+        //     // setGallery(data);
+        //     setlaoder(false);
+        //   } else {
+        //   }
+        // }
         setlaoder(false);
       } else {
-        const response = await fetch(`/api/getbanner`, {
-          method: "POST",
-          body: JSON.stringify({
-            user_id: userId,
-          }),
-        });
-        const data = await response.json();
-        console.log(data, "gelery");
+        // const response = await fetch(`/api/getbanner`, {
+        //   method: "POST",
+        //   body: JSON.stringify({
+        //     user_id: userId,
+        //   }),
+        // });
+        // const data = await response.json();
+        // console.log(data, "gelery");
 
-        if (data?.length) {
-          //   if (galleryActivTab === "ai") {
-          //     setGallery(data);
-          //     setlaoder(false);
-          //   } else {
-          //   }
+        // if (data?.length) {
+        //     if (galleryActivTab === "ai") {
+        //       console.log(data,"ssssssssssssssssss")
+        //       setGallery(data);
+        //       setlaoder(false);
+        //     } else {
+        //     }
 
-          setGallery(data);
-        }
-
+        //   setGallery(data);
+        // }
+        const { data, error } = await supabase
+        .from("banner")
+        .select("*")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false });
         setlaoder(false);
+        if(data){
+          setGallery(data);
+
       }
+      }
+      
     } catch (error) {
       setlaoder(false);
 

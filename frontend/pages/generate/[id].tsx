@@ -58,7 +58,7 @@ export default function Home() {
     addimgToCanvasSubject,
     projectId,
     setprojectId,
-    uerId,
+
     setUserId,
     setGeneratedImgList,
     saveCanvasToDatabase,
@@ -70,6 +70,7 @@ export default function Home() {
     setassetsActiveTab,
     TDMode,
     set3dMode,
+    getSupabaseImage,
     userId, setUserID
   } = useAppState();
   useEffect(() => {
@@ -90,6 +91,7 @@ export default function Home() {
     // }
     if (isReady) {
       // setFilteredArray([])
+      console.log("setFilteredArray", id)
       GetProjextById(id);
       //  fetchAssetsImages(userId, null);
       console.log(TDMode, "dddddddddddddddddddddddddddddddd");
@@ -113,16 +115,13 @@ export default function Home() {
     if (!loader) {
       addimgToCanvasGen(url);
       setSelectedImg({ status: true, image: url });
-      setModifidImageArray((pre) => [
-        ...pre,
-        { url: url, tool: "generated-selected" },
-      ]);
+      
     }
   };
 
   useEffect(() => {
     setprojectId(id);
-    setUserId(userId);
+    // setUserId(userId);
     setassetsActiveTab("product");
     // let filteredResult;
 
@@ -171,26 +170,24 @@ export default function Home() {
   const fetchAssetsImages = async () => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API}/generatedQuickImg?userId=${userId}&projectId=${id}`,
+        `${process.env.NEXT_PUBLIC_API}/generatedImg?userId=${userId}&projectId=${id}`,
         {
           method: "GET",
         }
       );
-      const data = await response.json();
+      // const data = await response.json();
       // console.log(await data, "dfdd");
-      console.log(data, "JOB");
-      console.log(jobId, "JOBS");
+      // console.log(data, "JOB");
+      // console.log(jobId, "JOBS");
+      const data = await  getSupabaseImage()
+      console.log(data, "dsffffffffffffffffffffffffffffffffffdf")
 
       if (data?.length) {
         const filteredResults = await data?.filter((obj) =>
           jobIdOne?.includes(obj?.task_id)
+          // obj?.project_id == id
         );
-        // console.log(data?.length);
-
-        const filteredResultss = data?.map(
-          (obj) => obj?.task_id === jobIdOne[0]
-        );
-        // console.log(filteredResults,"dfd", filteredResultss)
+    
 
         if (filteredResults?.length) {
           // console.log(filteredResults,"fddscvcvcvcgd",jobIdOne)

@@ -61,7 +61,7 @@ export default function Home() {
     addimgToCanvasSubject,
     projectId,
     setprojectId,
-    uerId,
+   
     setUserId,
     setGeneratedImgList,
     filteredArray,
