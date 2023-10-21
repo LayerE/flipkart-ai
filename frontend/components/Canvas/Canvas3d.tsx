@@ -888,8 +888,8 @@ const Cnavas3d = styled.div`
   /* padding-top: 100px; */
   min-width: 100%;
 
-  height: 100%;
-  /* overflow-y: auto; */
+  /* height: 100%; */
+  overflow-y: auto;
   /* overflow-x: scroll; */
   &::-webkit-scrollbar {
     width: 10px;
@@ -899,6 +899,7 @@ const Cnavas3d = styled.div`
     display: flex;
     transform: scale(0.4) translateX(-75%) translateY(-50%);
     gap: 30px;
+    margin-right:30px;
   }
   /* Track */
   &::-webkit-scrollbar-track {
@@ -964,6 +965,7 @@ const Cnavas3d = styled.div`
     border: 2px solid rgba(249, 208, 13, 1);
     padding: 5px 8px;
     background: rgba(249, 208, 13, 1) !important;
+   
 
     color: #000;
     font-size: 12px;
@@ -976,7 +978,7 @@ const Cnavas3d = styled.div`
     }
   }
   .delet {
-    width: 20px;
-    height: 20px;
+    width: 60px;
+    height: 60px;
   }
 `;

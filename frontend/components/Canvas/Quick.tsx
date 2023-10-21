@@ -6,7 +6,7 @@ import { fabric } from "fabric";
 import { useRouter } from "next/router";
 
 const QuickCanvas = () => {
-  const { activeSize, selectedImg,setSelectedImg,setDownloadImg, addimgToCanvasQuike, canvasInstanceQuick } =
+  const { activeSize, selectedImg,setSelectedImg,setDownloadImg, loader, addimgToCanvasQuike, canvasInstanceQuick } =
     useAppState();
   const canvasRef = useRef(null);
   const canvasBox = useRef(null);
@@ -105,7 +105,7 @@ const QuickCanvas = () => {
      setDownloadImg(null);
   };
   return (
-    <CnavasQuick>
+    <CnavasQuick canvasDisable={loader}>
       <div className="boxsss">
         <div
           className="genrtbox"
@@ -182,7 +182,11 @@ const CnavasQuick = styled.div`
 
   height: 100%;
   /* overflow: scroll; */
+  canvas {
 
+pointer-events:${(props) => (props.canvasDisable ? "none" : "auto")}
+
+}
   .boxsss {
     display: flex;
     gap: 20px;

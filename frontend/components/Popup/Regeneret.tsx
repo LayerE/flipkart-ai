@@ -8,12 +8,12 @@ import { useSession } from "@supabase/auth-helpers-react";
 
 const Regeneret = () => {
   const session = useSession();
-  const [userId, setUserId] = useState<string | null>(null);
-  useEffect(() => {
-    if (session) {
-      setUserId(session.user.id);
-    }
-  }, [session]);
+  // const [userId, setUserId] = useState<string | null>(null);
+  // useEffect(() => {
+  //   if (session) {
+  //     setUserId(session.user.id);
+  //   }
+  // }, [session]);
   const { query, isReady } = useRouter();
   // const { id } = query;
   const id = (query.id as string[]) || [];
@@ -35,6 +35,7 @@ const Regeneret = () => {
     fetchGeneratedImages,
     setCanvasDisable,
     setLoader,
+    userId
   } = useAppState();
 
   // const [loder, setLoader] = useState(true);

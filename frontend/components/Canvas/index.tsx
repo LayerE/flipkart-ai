@@ -608,18 +608,6 @@ export default function CanvasBox({ proid, userId }) {
     };
   }, []);
 
-  // const saveCanvasToDatabasea = () => {};
-
-  const saveCanvasDataToLocal = () => {
-    // if(isReady){
-
-    // Serialize canvas data to JSON and save it to local storage
-    // if (!proid === undefined || !proid === " " || !proid === null) {
-    const canvasData = JSON.stringify(canvasInstance.current.toJSON());
-    // SaveProjexts(userId, proid, canvasData);
-    localStorage.setItem(proid, canvasData);
-    // }
-  };
 
   const generationBoxStyle = {
     left: `${activeSize.l * zoom}px`,
@@ -643,7 +631,7 @@ export default function CanvasBox({ proid, userId }) {
         setRegeneratePopup({ status: true, url: downloadImg });
         console.log("Success", downloadImg);
         // setActiveTab(6);
-        console.log("sdsfs");
+
       }, 500);
     }
   };

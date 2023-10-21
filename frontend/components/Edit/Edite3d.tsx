@@ -64,6 +64,7 @@ const Edit3d = () => {
     loader,
     romovepopu3d,
     setromovepopu3d,
+    userId
   } = useAppState();
 
   const { query, isReady } = useRouter();

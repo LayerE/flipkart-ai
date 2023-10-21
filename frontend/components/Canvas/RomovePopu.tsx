@@ -14,12 +14,12 @@ import { arrayBufferToDataURL, dataURLtoFile } from "@/utils/BufferToDataUrl";
 
 const RemoveBox = ({ type }) => {
   const session = useSession();
-  const [userId, setUserId] = useState<string | null>(null);
-  useEffect(() => {
-    if (session) {
-      setUserId(session.user.id);
-    }
-  }, [session]);
+  // const [userId, setUserId] = useState<string | null>(null);
+  // useEffect(() => {
+  //   if (session) {
+  //     setUserId(session.user.id);
+  //   }
+  // }, [session]);
 
   const {
     addimgToCanvasCropped,
@@ -32,6 +32,7 @@ const RemoveBox = ({ type }) => {
     selectedImg,
     romovepopu3d,
     downloadeImgFormate,
+    userId
   } = useAppState();
 
   // const [cropSize, setCropSize] = useState({ x: 0, y: 0 })

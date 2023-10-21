@@ -59,15 +59,11 @@ const Edit = () => {
     crop,
     setCrop,
     loader,
+    userId
   } = useAppState();
 
   const session = useSession();
-  const [userId, setUserId] = useState<string | null>(null);
-  useEffect(() => {
-    if (session) {
-      setUserId(session.user.id);
-    }
-  }, [session]);
+
 
   const { query, isReady } = useRouter();
   // const { id } = query;
@@ -186,6 +182,9 @@ const Edit = () => {
         ...pre,
         { url: data?.data[0], tool: "upscale" },
       ]);
+    }else{
+    setLoader(false);
+
     }
 
     setLoader(false);

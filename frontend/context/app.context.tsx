@@ -903,18 +903,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
   const fetchGeneratedImages = async (userId: any) => {
     try {
-      const response = await fetch(
-        `https://tvjjvhjhvxwpkohjqxld.supabase.co/rest/v1/public_images?select=*&order=created_at.desc&user_id=eq.${userId}`,
-        {
-          method: "GET",
-          headers: {
-            apikey:
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2amp2aGpodnh3cGtvaGpxeGxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTI4Njg5NDQsImV4cCI6MjAwODQ0NDk0NH0.dwKxNDrr7Jw5OjeHgIbk8RLyvJuQVwZ_48Bv71P1n3Y", // Replace with your actual API key
-          },
-        }
-      );
-      const data = await response.json();
-      if (data?.length) {
+      const data = await getSupabaseImage();
+      if (data) {
         setGeneratedImgList(await data);
       }
 
@@ -1180,8 +1170,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
             lora_type: loara,
             num_images: selectResult,
             caption: product,
-            project_id : proid
-
+            project_id: proid,
           }),
         });
 
@@ -1260,8 +1249,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
         // Set the source of the image to the original data URL
         img.src = screenshot;
-
-      
 
         const response = await fetch("/api/generate", {
           method: "POST",
@@ -1406,23 +1393,22 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         });
 
         const generate_response = await response.json();
+        if (generate_response) {
+          if (generate_response?.error) {
+            // alert(generate_response?.error);
+            toast.error(generate_response?.error);
 
-        if (generate_response?.error) {
-          // alert(generate_response?.error);
-          toast.error(generate_response?.error);
+            setLoader(false);
 
-          setLoader(false);
+            return false;
+          } else {
+            console.log("dsfffffffffffffff", generate_response?.job_id);
+            setJobIdOne([generate_response?.job_id]);
 
-          return false;
-        } else {
-        
-           
-              setJobIdOne([generate_response?.job_id]);
+            GetProjextById(proid);
 
-              GetProjextById(proid);
-         
             // window.open(`/generate/${datares?._id}`, "_self");
-      
+          }
         }
       } catch (error) {
         console.error("Error generating image:", error);
@@ -1454,8 +1440,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         let scaledDataURL;
         img.onload = async function () {
           // Scale down the image by setting its width and height to 0.5 times the original dimensions
-          img.width *= 0.5;
-          img.height *= 0.5;
+          img.width *= 1;
+          img.height *= 1;
 
           // Create a canvas to draw the scaled image
           var canvas = document.createElement("canvas");
@@ -1476,14 +1462,14 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              dataUrl: scaledDataURL,
+              dataUrl: screenshot,
               maskDataUrl: null,
               prompt: promtText.trim(),
               user_id: userId,
               category: category,
               lora_type: loara,
               num_images: selectResult,
-              is_3d : true
+              is_3d: true,
               // caption : product
             }),
           });
@@ -1501,23 +1487,22 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
             setLoader(true);
 
             try {
-            
-                setJobIdOne([generate_response?.job_id]);
+              setJobIdOne([generate_response?.job_id]);
 
-                // GetProjextById(proid);
-                axios
-                  .get(`${process.env.NEXT_PUBLIC_API}/user?id=${ueserId}`)
-                  .then((response) => {
-                    console.log(response?.data?.jobIds3D, "dsfgdgfd");
-                    setproject(response.data);
-                    setJobId(response?.data?.jobIds3D);
-                    // return response.data;
-                  })
-                  .catch((error) => {
-                    console.error(error);
-                    return error;
-                  });
-              
+              // GetProjextById(proid);
+              axios
+                .get(`${process.env.NEXT_PUBLIC_API}/user?id=${ueserId}`)
+                .then((response) => {
+                  console.log(response?.data?.jobIds3D, "dsfgdgfd");
+                  setproject(response.data);
+                  setJobId(response?.data?.jobIds3D);
+                  // return response.data;
+                })
+                .catch((error) => {
+                  console.error(error);
+                  return error;
+                });
+
               // window.open(`/generate/${datares?._id}`, "_self");
             } catch (error) {
               setLoader(false);
@@ -1617,11 +1602,11 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
       if (data.length > 0) {
         console.log(data, "dataaaaa");
+        setGeneratedImgList(data);
         return data;
       } else if (error) {
         return error;
       }
-
     } else {
       const { datas } = await supabase.auth.getSession();
       if (datas.session) {
@@ -1632,7 +1617,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           .order("created_at", { ascending: false });
 
         if (data.length > 0) {
-        console.log(data, "dataaaaa");
+          console.log(data, "dataaaaa");
+          setGeneratedImgList(data);
 
           return data;
         } else if (error) {

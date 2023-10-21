@@ -8,8 +8,6 @@ import { useRouter } from "next/router";
 import { supabase } from "@/utils/supabase";
 import QuickCanvas from "@/components/Canvas/Quick";
 
-
-
 const QuickGenerator = () => {
   const {
     outerDivRef,
@@ -22,6 +20,7 @@ const QuickGenerator = () => {
     setLoader,
     canvasInstance,
     modifidImageArray,
+    setGenerationLoader,
     setModifidImageArray,
     fetchGeneratedImages,
     regeneratePopup,
@@ -51,9 +50,8 @@ const QuickGenerator = () => {
     set3dMode,
     userId,
     setUserID,
-    getSupabaseImage
+    getSupabaseImage,
   } = useAppState();
-
 
   const { query, isReady } = useRouter();
   useEffect(() => {
@@ -63,14 +61,11 @@ const QuickGenerator = () => {
         if (data.session) {
           // router.push("/");
           setUserID(data.session.user.id);
-        
-        }else{
+        } else {
           // router.push("/sign-in");
-
         }
       };
       checkSession();
-      
     }
   }, []);
   const upateImage = (url) => {
@@ -91,18 +86,16 @@ const QuickGenerator = () => {
     return () => {
       clearInterval(times);
     };
-  }, [isReady,userId]);
+  }, [isReady, userId,jobIdOne,jobId]);
 
   const fetchAssetsImages = async () => {
     try {
-
       const data = await getSupabaseImage();
       if (data?.length) {
-        const filteredResults = await data?.filter((obj:any) =>
+        const filteredResults = await data?.filter((obj: any) =>
           jobIdOne?.includes(obj?.task_id)
         );
-
-
+console.log(jobIdOne)
         const filteredResultss = await data?.filter(
           (obj: any) => obj?.is_quick === true
         );
@@ -110,6 +103,7 @@ const QuickGenerator = () => {
 
         if (filteredResults?.length) {
           setLoader(false);
+          setGenerationLoader(false)
           setCanvasDisable(true);
 
           setJobIdOne([]);
@@ -127,47 +121,26 @@ const QuickGenerator = () => {
     <MainPages>
       <QuickBar />
       <div className="Editor">
-
-      {filteredArray?.length > 0 ? (
-            <div className="generatedBox">
-              <div className="itemsWrapper">
-                {filteredArray?.map((item, i) => (
-                  <div
-                    key={i}
-                    className="items"
-                    onClick={() => upateImage(item?.modified_image_url)}
-                  >
-                    <picture>
-                      <img src={item?.modified_image_url} alt="" />
-                    </picture>
-                  </div>
-                ))}
-                {/* {loader ? null : (
-                  <div
-                    className="itemsadd"
-                    onClick={() => generateImageHandeler(userId, id)}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="14"
-                      height="14"
-                      viewBox="0 0 14 14"
-                      fill="none"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        clipRule="evenodd"
-                        d="M7 0C7.26522 0 7.51957 0.105357 7.70711 0.292893C7.89464 0.48043 8 0.734784 8 1V6H13C13.2652 6 13.5196 6.10536 13.7071 6.29289C13.8946 6.48043 14 6.73478 14 7C14 7.26522 13.8946 7.51957 13.7071 7.70711C13.5196 7.89464 13.2652 8 13 8H8V13C8 13.2652 7.89464 13.5196 7.70711 13.7071C7.51957 13.8946 7.26522 14 7 14C6.73478 14 6.48043 13.8946 6.29289 13.7071C6.10536 13.5196 6 13.2652 6 13V8H1C0.734784 8 0.48043 7.89464 0.292893 7.70711C0.105357 7.51957 0 7.26522 0 7C0 6.73478 0.105357 6.48043 0.292893 6.29289C0.48043 6.10536 0.734784 6 1 6H6V1C6 0.734784 6.10536 0.48043 6.29289 0.292893C6.48043 0.105357 6.73478 0 7 0Z"
-                        fill="#585858"
-                      />
-                    </svg>
-                  </div>
-                )} */}
-              </div>
+        {filteredArray?.length > 0 ? (
+          <div className="generatedBox">
+            <div className="itemsWrapper">
+              {filteredArray?.map((item, i) => (
+                <div
+                  key={i}
+                  className="items"
+                  onClick={() => upateImage(item?.modified_image_url)}
+                >
+                  <picture>
+                    <img src={item?.modified_image_url} alt="" />
+                  </picture>
+                </div>
+              ))}
+             
             </div>
-          ) : null}
-        {/* <div className="outputbox"></div> */}
-        <QuickCanvas/>
+          </div>
+        ) : null}
+      
+        <QuickCanvas />
       </div>
     </MainPages>
   );

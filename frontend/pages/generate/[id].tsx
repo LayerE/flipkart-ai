@@ -177,7 +177,7 @@ export default function Home() {
       // const data = await response.json();
 
       const data = await getSupabaseImage();
-      console.log(data, "dsffffffffffffffffffffffffffffffffffdf");
+  
 
       if (data?.length) {
         const filteredResults = await data?.filter(
@@ -189,7 +189,7 @@ export default function Home() {
           (obj: any) => obj?.project_id == id
         );
         if (filteredResults?.length) {
-          console.log(filteredResults, "fddscvcvcvcgd", filteredResultss);
+       
           setLoader(false);
           setCanvasDisable(true);
 
