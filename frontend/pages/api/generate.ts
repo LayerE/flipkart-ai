@@ -33,7 +33,19 @@ export default async (req: NextRequest) => {
     }
 
     const body = await req.json();
-    const { dataUrl, prompt, maskDataUrl, user_id, num_images, lora_type, category, caption, is_3d } = body;
+    const {
+      dataUrl,
+      prompt,
+      maskDataUrl,
+      user_id,
+      num_images,
+      lora_type,
+      category,
+      caption,
+      is_3d,
+      is_quick_generation,
+      project_id,
+    } = body;
 
     if (!dataUrl) {
       return NextResponse.json({ error: "Missing dataUrl" });
@@ -72,6 +84,8 @@ export default async (req: NextRequest) => {
         is_dev_site: true,
         caption: caption,
         is_3d: is_3d,
+        is_quick_generation: is_quick_generation,
+        project_id: project_id,
       }),
     });
 
