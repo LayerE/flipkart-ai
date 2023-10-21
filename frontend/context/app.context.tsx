@@ -1371,7 +1371,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
         const subjectDataUrl = subjectCanvas.toDataURL({
           format: "png",
-          multiplier: 0.5,
+          multiplier: 4,
         });
         const subjectDataUrlJson = subjectCanvas.toJSON();
         const updatedObject = {
