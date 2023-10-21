@@ -12,8 +12,8 @@ const signIn = () => {
       email: email,
       options: {
         emailRedirectTo:
-          // "https://flipkart-ai-dev-production.up.railway.app/",
-          "http://localhost:3000/",
+          "https://flipkart-ai-dev-production.up.railway.app/",
+          // "http://localhost:3000/",
       },
     });
   }
