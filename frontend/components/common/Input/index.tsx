@@ -396,7 +396,7 @@ export const FileUploadQuick: React.FC = ({ type, title, uerId }) => {
 
     } else {
 
-    setassetLoader(true);
+    // setassetLoader(true);
 
     const selectedFile = event.target.files?.[0] || null;
     setFile(selectedFile);
@@ -413,46 +413,47 @@ export const FileUploadQuick: React.FC = ({ type, title, uerId }) => {
           } else {
             const filename = `img${Date.now()}`;
             // setLoader(true);
+            addimgToCanvasQuike(reader.result)
 
-            const response = await fetch("/api/removebg", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                dataUrl: reader.result,
-                user_id: uerId,
-                project_id: projectId,
-                // type: "product",
-              }),
-            });
-            console.log(response);
-            if (response?.status === 413) {
-              toast.error("Image exceeded 4mb limit");
+            // const response = await fetch("/api/removebg", {
+            //   method: "POST",
+            //   headers: { "Content-Type": "application/json" },
+            //   body: JSON.stringify({
+            //     dataUrl: reader.result,
+            //     user_id: uerId,
+            //     project_id: projectId,
+            //     // type: "product",
+            //   }),
+            // });
+            // console.log(response);
+            // if (response?.status === 413) {
+            //   toast.error("Image exceeded 4mb limit");
 
-              setassetLoader(false);
-            } else if (response?.status === 400) {
-              toast.error("Image is corrupted or unsupported dimensions");
+            //   setassetLoader(false);
+            // } else if (response?.status === 400) {
+            //   toast.error("Image is corrupted or unsupported dimensions");
 
-              setassetLoader(false);
-            } else if (response?.status !== 200 && response?.status !== 413) {
-              toast.error(response?.statusText);
+            //   setassetLoader(false);
+            // } else if (response?.status !== 200 && response?.status !== 413) {
+            //   toast.error(response?.statusText);
 
-              setassetLoader(false);
-            }
-            const data = await response.json();
-            console.log(data);
+            //   setassetLoader(false);
+            // }
+            // const data = await response.json();
+            // console.log(data);
 
-            // BgRemover(reader.result, filename);
-            if (data?.data) {
-              addimgToCanvasQuike(data.imageUrl)
-              setassetLoader(false);
-              // setLoader(false);
-              // setloadercarna(false);
-            } else {
-              console.log("bg not removed");
-              // setLoader(false);
-              // setloadercarna(false);
-              setassetLoader(false);
-            }
+            // // BgRemover(reader.result, filename);
+            // if (data?.data) {
+            //   addimgToCanvasQuike(data.imageUrl)
+            //   setassetLoader(false);
+            //   // setLoader(false);
+            //   // setloadercarna(false);
+            // } else {
+            //   console.log("bg not removed");
+            //   // setLoader(false);
+            //   // setloadercarna(false);
+            //   setassetLoader(false);
+            // }
 
             // setUploadedProductlist((prev) => [
             //   ...prev,

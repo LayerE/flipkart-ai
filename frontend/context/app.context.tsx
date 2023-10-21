@@ -1415,30 +1415,14 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
           return false;
         } else {
-          try {
-            const response = await fetch(
-              `${process.env.NEXT_PUBLIC_API}/jobIdQuick`,
-              {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  userId: ueserId,
-                  projectId: proid,
-                  jobId: generate_response?.job_id,
-                }),
-              }
-            );
-            const datares = await response;
-
-            if (datares.ok) {
+        
+           
               setJobIdOne([generate_response?.job_id]);
 
               GetProjextById(proid);
-            }
+         
             // window.open(`/generate/${datares?._id}`, "_self");
-          } catch (error) {}
+      
         }
       } catch (error) {
         console.error("Error generating image:", error);
@@ -1517,23 +1501,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
             setLoader(true);
 
             try {
-              const response = await fetch(
-                `${process.env.NEXT_PUBLIC_API}/jobId3d`,
-                {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({
-                    userId: userId,
-                    // projectId: proid,
-                    jobId: generate_response?.job_id,
-                  }),
-                }
-              );
-              const datares = await response;
-
-              if (datares.ok) {
+            
                 setJobIdOne([generate_response?.job_id]);
 
                 // GetProjextById(proid);
@@ -1549,7 +1517,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
                     console.error(error);
                     return error;
                   });
-              }
+              
               // window.open(`/generate/${datares?._id}`, "_self");
             } catch (error) {
               setLoader(false);
