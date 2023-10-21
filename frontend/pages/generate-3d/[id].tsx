@@ -120,7 +120,7 @@ export default function Home() {
 
   useEffect(() => {
     setprojectId(id);
-    setUserId(userId);
+    // setUserId(userId);
     setassetsActiveTab("product");
     // let filteredResult;
 

@@ -1180,6 +1180,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
             lora_type: loara,
             num_images: selectResult,
             caption: product,
+            project_id : proid
+
           }),
         });
 
@@ -1399,6 +1401,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
             lora_type: loara,
             num_images: selectResult,
             caption: product,
+            is_quick_generation: true,
           }),
         });
 
@@ -1496,7 +1499,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
               category: category,
               lora_type: loara,
               num_images: selectResult,
-              // is_3d : true
+              is_3d : true
               // caption : product
             }),
           });
