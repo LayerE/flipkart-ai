@@ -3,7 +3,7 @@ import Head from "next/head";
 import styled from "styled-components";
 import Header from "@/components/Header";
 import { useAppState } from "@/context/app.context";
-import Loader from "@/components/Loader";
+// import Loader from "@/components/Loader";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Script from "next/script";
@@ -19,7 +19,7 @@ const LayoutContentWrapper = styled.div`
 `;
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-  const { mainLoader, userId, setUserID } = useAppState();
+  const {   setUserID } = useAppState();
   const session = useSession();
   const router = useRouter();
 
@@ -33,7 +33,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       }
     };
     checkSession();
-  }, [session]);
+  }, [router,setUserID]);
   return (
     <>
       <Head>

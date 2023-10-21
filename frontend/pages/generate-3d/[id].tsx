@@ -159,60 +159,31 @@ export default function Home() {
 
   const fetchAssetsImages = async () => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API}/generated3dImg?userId=${userId}`,
-        {
-          method: "GET",
-        }
-      );
-      // const data = await response.json();
-      // // console.log(await data, "dfdd");
-      // console.log(data, "JOB");
-      // console.log(jobId, "JOBS");
       const data = await getSupabaseImage();
-      console.log(data, "dsffffffffffffffffffffffffffffffffffdf");
 
       if (data?.length) {
         const filteredResults = await data?.filter((obj: any) =>
           jobIdOne?.includes(obj?.task_id)
         );
-        // console.log(data?.length);
         const filteredResultss = await data?.filter(
           (obj: any) => obj?.is_3d === true
         );
-        // const filteredResultss = data?.map(
-        //          obj?.is_3d === true
-
-        // );
-        console.log(filteredResults, "dfd", filteredResultss);
-
         if (filteredResults?.length) {
-          // console.log(filteredResults,"fddscvcvcvcgd",jobIdOne)
           setLoader(false);
           setCanvasDisable(true);
-
           setJobIdOne([]);
         }
 
         setFilteredArray(filteredResultss);
       }
-
-      // setImages(data); // Update the state with the fetched images
-      // setGeneratedImgList(data)
-
-      // if(data[0]?.prompt === prompt){
-
-      // }
       return data;
     } catch (error) {
       console.error("Error fetching images:", error);
     }
   };
 
-  const firstUpdate = useRef(true);
-
   useEffect(() => {
-    const canvas1 = canvasInstance.current;
+    const canvas1 = canvasInstance?.current;
 
     const objects = canvas1?.getObjects();
     const subjectObjects = [];

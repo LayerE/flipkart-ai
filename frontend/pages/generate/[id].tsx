@@ -71,7 +71,8 @@ export default function Home() {
     TDMode,
     set3dMode,
     getSupabaseImage,
-    userId, setUserID
+    userId,
+    setUserID,
   } = useAppState();
   useEffect(() => {
     const checkSession = async () => {
@@ -79,7 +80,6 @@ export default function Home() {
       if (data.session) {
         // router.push("/");
         setUserID(data.session.user.id);
-      
       }
     };
     checkSession();
@@ -91,7 +91,7 @@ export default function Home() {
     // }
     if (isReady) {
       // setFilteredArray([])
-      console.log("setFilteredArray", id)
+      console.log("setFilteredArray", id);
       GetProjextById(id);
       //  fetchAssetsImages(userId, null);
       console.log(TDMode, "dddddddddddddddddddddddddddddddd");
@@ -115,7 +115,6 @@ export default function Home() {
     if (!loader) {
       addimgToCanvasGen(url);
       setSelectedImg({ status: true, image: url });
-      
     }
   };
 
@@ -176,43 +175,33 @@ export default function Home() {
         }
       );
       // const data = await response.json();
-      // console.log(await data, "dfdd");
-      // console.log(data, "JOB");
-      // console.log(jobId, "JOBS");
-      const data = await  getSupabaseImage()
-      console.log(data, "dsffffffffffffffffffffffffffffffffffdf")
+
+      const data = await getSupabaseImage();
+      console.log(data, "dsffffffffffffffffffffffffffffffffffdf");
 
       if (data?.length) {
-        const filteredResults = await data?.filter((obj) =>
-          jobIdOne?.includes(obj?.task_id)
+        const filteredResults = await data?.filter(
+          (obj) => jobIdOne?.includes(obj?.task_id)
           // obj?.project_id == id
         );
-    
 
+        const filteredResultss = await data?.filter(
+          (obj: any) => obj?.project_id == id
+        );
         if (filteredResults?.length) {
-          // console.log(filteredResults,"fddscvcvcvcgd",jobIdOne)
+          console.log(filteredResults, "fddscvcvcvcgd", filteredResultss);
           setLoader(false);
           setCanvasDisable(true);
 
           setJobIdOne([]);
         }
 
-        setFilteredArray(data);
+        setFilteredArray(filteredResultss);
       }
-
-      // setImages(data); // Update the state with the fetched images
-      // setGeneratedImgList(data)
-
-      // if(data[0]?.prompt === prompt){
-
-      // }
-      return data;
     } catch (error) {
       console.error("Error fetching images:", error);
     }
   };
-
-  const firstUpdate = useRef(true);
 
   useEffect(() => {
     const canvas1 = canvasInstance.current;

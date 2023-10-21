@@ -1261,7 +1261,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         // Set the source of the image to the original data URL
         img.src = screenshot;
 
-        console.log(scaledDataURL, "fsddsfds");
+      
 
         const response = await fetch("/api/generate", {
           method: "POST",
@@ -1387,13 +1387,13 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
         const promtText = promtFull;
 
-        const response = await fetch("/api/quickgenerate", {
+        const response = await fetch("/api/generate", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            image_url: subjectDataUrl,
+            dataUrl: subjectDataUrl,
             maskDataUrl: null,
             prompt: promtText.trim(),
             user_id: userId,
@@ -1660,7 +1660,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         const { data, error } = await supabase
           .from(IMG_TABLE)
           .select("*")
-          .eq("user_id", data.session.user.id)
+          .eq("user_id", data?.session.user.id)
           .order("created_at", { ascending: false });
 
         if (data.length > 0) {

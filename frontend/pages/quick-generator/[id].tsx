@@ -51,6 +51,7 @@ const QuickGenerator = () => {
     set3dMode,
     userId,
     setUserID,
+    getSupabaseImage
   } = useAppState();
 
 
@@ -83,9 +84,7 @@ const QuickGenerator = () => {
   useEffect(() => {
     const times = setInterval(() => {
       if (isReady && userId) {
-        // fetchGeneratedImages(userId);
         fetchAssetsImages();
-        console.log('dgfdfd')
       }
     }, 5000);
 
@@ -96,37 +95,27 @@ const QuickGenerator = () => {
 
   const fetchAssetsImages = async () => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API}/generatedQuickImg?userId=${userId}`,
-        {
-          method: "GET",
-        }
-      );
-      const data = await response.json();
-      // console.log(await data, "dfdd");
-      console.log(data, "JOB");
-      console.log(jobId, "JOBS");
 
+      const data = await getSupabaseImage();
       if (data?.length) {
-        const filteredResults = await data?.filter((obj) =>
+        const filteredResults = await data?.filter((obj:any) =>
           jobIdOne?.includes(obj?.task_id)
         );
-        // console.log(data?.length);
 
-        const filteredResultss = data?.map(
-          (obj) => obj?.task_id === jobIdOne[0]
+
+        const filteredResultss = await data?.filter(
+          (obj: any) => obj?.is_quick === true
         );
         console.log(filteredResults, "dfd", filteredResultss);
 
         if (filteredResults?.length) {
-          // console.log(filteredResults,"fddscvcvcvcgd",jobIdOne)
           setLoader(false);
           setCanvasDisable(true);
 
           setJobIdOne([]);
         }
 
-        setFilteredArray(data);
+        setFilteredArray(filteredResultss);
       }
 
       return data;
