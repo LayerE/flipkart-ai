@@ -93,12 +93,30 @@ const Assets3d: React.FC = () => {
     const name = slideName(url);
     setFile3dName({ name: name });
   };
+
+  function truncateString(inputString:string) {
+    // Check if the input string has at least 11 characters
+    if (inputString.length >= 11) {
+      // Extract the first 5 characters
+      const firstPart = inputString.slice(0, 15);
+      // Extract the last 5 characters
+      const lastPart = inputString.slice(-15);
+      // Create the truncated string with three dots in the middle
+      const truncatedString = `${firstPart}...${lastPart}`;
+      
+      return truncatedString;
+    } else {
+      // If the input string has less than 11 characters, return it as is
+      return inputString;
+    }
+  }
+  
   return (
     <div className="accest">
       {file3dName?.name && !assetL3doader ? (
         <Selectd className="gap">
           <div className="boxFile">
-            <div className="filenamer">{file3dName?.name}</div>
+            <div className="filenamer">{truncateString(file3dName?.name)}</div>
             <div
               className="colse"
               onClick={() => {
