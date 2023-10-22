@@ -20,26 +20,26 @@ const Tools = () => {
 
   const toolslist = [
     {
-      name: "Banner Generator",
+      name: "Banner Creator",
       route: false,
 
-      discription: "create a banner ",
+      discription: "Banners from your AI Generations ",
       url: "https://banner-production.up.railway.app/?userId=",
       img: "https://www.notion.so/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2Fa4336ca6-f4ed-458c-b743-2a86cc9620a1%2Fb9317de9-c1b7-4f6e-b553-c2c44f2577f3%2FUntitled.png?table=block&id=1ce4a0a1-78eb-4cba-96c9-e971ae054f63&spaceId=a4336ca6-f4ed-458c-b743-2a86cc9620a1&width=860&userId=4a875d3f-c33d-4324-9807-2fb21ead789e&cache=v2",
     },
     {
-      name: "3D Model",
+      name: "3D Product Photography      ",
       route: true,
 
-      discription: "convert 3D model into generated image",
+      discription: "Convert 3D Model into Generated Images      ",
       url: "/generate-3d/",
       img: "https://media.sketchfab.com/models/724f69d360e24cda99ba84fead2bed88/thumbnails/3bc8180aab6148778a75cde61100e6d4/915356641a0547a6907f0b8c89383780.jpeg",
     },
     {
-      name: "Quick  Generator",
+      name: "Simple AI Outputs      ",
       route: true,
 
-      discription: "Generator a background images",
+      discription: "Easy and Quick AI Photography",
       url: "/quick-generator/",
       img: "https://thumbs.dreamstime.com/b/space-background-galaxy-nebula-blue-orange-clouds-neural-network-ai-generated-art-271138821.jpg",
     },

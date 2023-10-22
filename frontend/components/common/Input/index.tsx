@@ -558,12 +558,12 @@ export const FileUpload3D: React.FC = ({ type, title, uerId }) => {
     setFile3dUrl,
     tdFormate,
     filsizeMorethan10, setfilsizeMorethan10,
-    file3dName, setFile3dName
+    file3dName, setFile3dName,
+  
   } = useAppState();
   const [file, setFile] = useState(null);
 
   const handleFileChange = (event) => {
-    setasset3dLoader(true);
 
     setFile3dUrl(null);
     const selectedFile = event.target.files[0];
@@ -576,6 +576,30 @@ export const FileUpload3D: React.FC = ({ type, title, uerId }) => {
 
     }
 
+    const fileSize = event.target.files[0].size
+    const maxSize =  100* 1024 * 1024; // 1MB
+    const filename = event.target.files[0].name
+    const format = filename.split('.').pop();
+
+    const removeFirstLetter = (input) => {
+      if (input.length > 1) {
+        return input.substring(1);
+      } else {
+        return '';
+      }
+    };
+    if (fileSize > maxSize) {
+  
+      toast.error('File size must be less than 25MB');
+
+      return false;
+    } else if(format !==  removeFirstLetter(tdFormate)) {
+      toast.error('Format not supported');
+
+
+    } else {
+      setasset3dLoader(true);
+
     const url = URL.createObjectURL(selectedFile);
     if (url) {
       setFile3dName(selectedFile)
@@ -584,10 +608,12 @@ export const FileUpload3D: React.FC = ({ type, title, uerId }) => {
 
       // setasset3dLoader(false);
 
-      console.log(selectedFile, "fdsfsdg");
+   
     } else {
       setasset3dLoader(false);
     }
+
+  }
   };
   const handleRemoveFile = () => {
     setFile(null);

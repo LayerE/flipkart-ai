@@ -35,7 +35,7 @@ const Regeneret = () => {
     fetchGeneratedImages,
     setCanvasDisable,
     setLoader,
-    userId
+    userId,
   } = useAppState();
 
   // const [loder, setLoader] = useState(true);

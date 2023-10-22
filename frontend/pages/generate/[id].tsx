@@ -94,7 +94,7 @@ export default function Home() {
       console.log("setFilteredArray", id);
       GetProjextById(id);
       //  fetchAssetsImages(userId, null);
-      console.log(TDMode, "dddddddddddddddddddddddddddddddd");
+
     }
     set3dMode(false);
   }, [id, isReady, TDMode]);
@@ -174,9 +174,9 @@ export default function Home() {
           method: "GET",
         }
       );
-      // const data = await response.json();
+      const data = await response.json();
 
-      const data = await getSupabaseImage();
+      // const data = await getSupabaseImage();
   
 
       if (data?.length) {
@@ -196,7 +196,7 @@ export default function Home() {
           setJobIdOne([]);
         }
 
-        setFilteredArray(filteredResultss);
+        setFilteredArray(data);
       }
     } catch (error) {
       console.error("Error fetching images:", error);

@@ -15,7 +15,7 @@ export const formate3d = [
     },
   
     {
-      tittle: "tds",
+      tittle: "3ds",
       formate: ".3ds"
 
     },
