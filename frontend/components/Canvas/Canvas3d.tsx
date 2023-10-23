@@ -128,11 +128,11 @@ const Canvas3d = () => {
         });
         // object.position.y = -0.5;
         // object.scale.setScalar(0.07);
-        container.add(object);
-        scene.add(container);
-        // scene.add(object);
+        // container.add(object);
+        // scene.add(container);
+        scene.add(object);
 
-        console.log("11sssssssssssss11");
+
 
         // Adjust the camera position and rotation to focus on the loaded object
         const boundingBox = new THREE.Box3().setFromObject(object);
@@ -163,7 +163,7 @@ const Canvas3d = () => {
         const maxDim = Math.max(size.x, size.y, size.z);
         const fov = camera.fov * (Math.PI / 180);
         const distance = Math.abs(maxDim / Math.sin(fov / 2));
-        console.log("1ssssssssssssssssssss111");
+
 
         // Set the camera position and look at the object
         camera.position.copy(center);
@@ -813,14 +813,8 @@ const Canvas3d = () => {
       {isMagic ? <PopupCanvas /> : null}
       {crop ? <CropperBox /> : null}
 
-      {romovepopu3d.status ? <RemoveBox  /> : null}
-      {
-        loader ?
-
-        <div className="divovelay"></div>
-
-        : null
-      }
+      {romovepopu3d.status ? <RemoveBox /> : null}
+      {loader ? <div className="divovelay"></div> : null}
 
       <div className="boxs3d">
         <div ref={containerRef} className="boxs">
@@ -886,49 +880,50 @@ const Canvas3d = () => {
 export default Canvas3d;
 
 const Cnavas3d = styled.div`
-  /* margin-top: 100px; */
   padding: 0 30px;
-  /* padding-top: 100px; */
   min-width: 100%;
+  height:100% ;
+  overflow: auto;
+ 
 
-  /* height: 100%; */
-  overflow-y: auto;
-  /* overflow-x: scroll; */
   &::-webkit-scrollbar {
     width: 10px;
     height: 10px;
+    display: none;
   }
   .boxs3d {
     display: flex;
-    transform: scale(0.4) translateX(-75%) translateY(-50%);
+    transform: scale(0.4) translateX(-75%) translateY(-30%);
     gap: 30px;
-    margin-right:30px;
+    margin-right: 30px;
+    width: 100%;
+    height: 100%;
+    
   }
   /* Track */
   &::-webkit-scrollbar-track {
     box-shadow: inset 0 0 5px grey;
     border-radius: 10px;
     height: 7px;
+  height:100% ;
+
   }
 
   /* Handle */
   &::-webkit-scrollbar-thumb {
     border-radius: 10px;
   }
-  .divovelay{
+  .divovelay {
     /* display: ${(props) => (props.canvasDisable ? "none" : "block")}; */
     z-index: 10;
-    position:absolute;
+    position: absolute;
     width: 100%;
     height: 100%;
     /* background-color: #000; */
   }
 
   .boxs {
-   
-
-/* pointer-events:${(props) => (props.canvasDisable ? "none" : "auto")} */
-
+    /* pointer-events:${(props) => (props.canvasDisable ? "none" : "auto")} */
 
     border: 2px solid rgba(249, 208, 13, 1);
     .tesxt {
@@ -968,7 +963,6 @@ const Cnavas3d = styled.div`
     border: 2px solid rgba(249, 208, 13, 1);
     padding: 5px 8px;
     background: rgba(249, 208, 13, 1) !important;
-   
 
     color: #000;
     font-size: 12px;

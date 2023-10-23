@@ -62,6 +62,7 @@ export default function Home() {
     setUserID,
     setListOfAssetsById,
     GetProjexts,
+    setActiveSize
   } = useAppState();
 
   // const [loadercarna, setloadercarna] = useState(true);
@@ -110,6 +111,17 @@ export default function Home() {
       setpromt("");
       setListOfAssetsById([]);
       setLoader(false);
+      setActiveSize({
+        id: 1,
+        title: "Default",
+        subTittle: "1024✕1024",
+        h: 1024,
+        w: 1024,
+        l: 100,
+        t: 240,
+        gl: 1152,
+        gt: 240,
+      })
 
       fetchAssetsImages(userId, null);
 
