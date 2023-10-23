@@ -71,7 +71,10 @@ const Header = () => {
 
   const logoutH = async () => {
     await supabase.auth.signOut();
+    setIsPopupOpen(false);
+
     setTimeout(() => {
+
       router.push("/sign-in");
       
     }, 500);
