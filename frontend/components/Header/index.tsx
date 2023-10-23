@@ -71,6 +71,10 @@ const Header = () => {
 
   const logoutH = async () => {
     await supabase.auth.signOut();
+    setTimeout(() => {
+      router.push("/sign-in");
+      
+    }, 500);
   };
 
   const handleButtonClick = (event: React.MouseEvent<HTMLDivElement>) => {
