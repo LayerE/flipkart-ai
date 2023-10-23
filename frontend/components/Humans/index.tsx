@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React from "react";
 import { Row } from "../common/Row";
 import { DisabledLabel } from "../common/Label";

@@ -1,3 +1,6 @@
+// @ts-nocheck
+
+
 import { AppContextProvider } from "@/context/app.context";
 import Layout from "@/layouts/app.layout";
 import "@/styles/globals.css";

@@ -1,4 +1,5 @@
 "use client";
+
 import Head from "next/head";
 import styled from "styled-components";
 import Header from "@/components/Header";
@@ -23,13 +24,21 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const session = useSession();
   const router = useRouter();
 
+  const isSignInPage = router.pathname === "/sign-in/[[...index]]";
+
+
   useEffect(() => {
+
+    console.log(isSignInPage)
     const checkSession = async () => {
       const { data } = await supabase.auth.getSession();
       if (data.session) {
         setUserID(data.session.user.id);
       } else {
-        router.push("/sign-in");
+        if(!isSignInPage){
+
+          router.push("/sign-in");
+        }
       }
     };
     checkSession();

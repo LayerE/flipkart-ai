@@ -87,13 +87,6 @@ export default function Home() {
     setSelectedImg(null);
 
     if (isReady && userId) {
-      // const getUser = localStorage.getItem("userId");
-      // if (!getUser) {
-      //   setTimeout(() => {}, 3000);
-      //   if (userId) localStorage.setItem("userId", userId);
-      // }
-
-      //  reset
       setActiveTab(1);
       setcategory(null);
       setpromtFull("");

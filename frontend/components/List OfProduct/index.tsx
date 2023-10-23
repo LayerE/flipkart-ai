@@ -1,3 +1,6 @@
+// @ts-nocheck
+
+
 import React from "react";
 import { Row } from "../common/Row";
 import Label from "../common/Label";

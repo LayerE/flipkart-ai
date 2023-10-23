@@ -1,7 +1,7 @@
 import React from "react";
 import { Row } from "../common/Row";
 import Label from "../common/Label";
-import { FileUpload, FileUpload1 } from "../common/Input";
+import { FileUpload } from "../common/Input";
 import { styled } from "styled-components";
 import { useAppState } from "@/context/app.context";
 import { elemest } from "@/store/listOfElement";
@@ -17,7 +17,7 @@ const Element: React.FC = () => {
             <Label>Product</Label>
           </Row>
           <Row>
-            <FileUpload type={"element"}   title={"Upload Element"}/>
+            <FileUpload type={"element"}   title={"Upload Element"} uerId={""}/>
           </Row>
         </div>
         <div className="gap">

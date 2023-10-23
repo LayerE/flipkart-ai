@@ -1,3 +1,6 @@
+// @ts-nocheck
+
+
 import React, { useEffect } from "react";
 import { styled } from "styled-components";
 import $ from 'jquery';

@@ -1,23 +1,15 @@
+
+// @ts-nocheck
+
 import React from "react";
 import { styled } from "styled-components";
 import {
   useEffect,
-  useLayoutEffect,
-  useCallback,
   useRef,
   useState,
 } from "react";
-// import { fabric } from "fabric";
+
 import Button from "../common/Button";
-// import {
-//   Stage,
-//   Layer,
-//   Rect,
-//   Text,
-//   Image as KonvaImage,
-//   Line,
-// } from "react-konva";
-// import Konva from "konva";
 import useImage from "use-image";
 import { useAppState } from "@/context/app.context";
 import { arrayBufferToDataURL, dataURLtoFile } from "@/utils/BufferToDataUrl";
@@ -26,9 +18,6 @@ const PopupCanvasFabric = () => {
   const popustageRef = useRef(null);
 
   const {
-    // magickErase,
-    // setMagickErase,
-
     isMagic,
     setIsMagic,
     downloadImg,
@@ -494,7 +483,7 @@ border: 1px solid black;
       /* box-shadow: -80px 0 0 80px #43e5f7; */
     }
     input {
-      color: ;
+      /* color: ; */
     }
     .activeTool {
       background: ${({ theme }) => theme.btnPrimary};

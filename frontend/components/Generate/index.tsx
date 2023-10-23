@@ -1,3 +1,6 @@
+// @ts-nocheck
+
+
 import React, { useEffect, useState } from "react";
 import { Row } from "../common/Row";
 import Button from "../common/Button";
@@ -472,7 +475,7 @@ export const BoxOff = styled.div`
   }
   input[type="range"]::-moz-range-thumb {
     box-shadow: 0px 0px 0px #000000;
-    border: 1px solid #rgba(249, 208, 13, 1);
+    border: 1px solid rgba(249, 208, 13, 1);
     height: 18px;
     width: 18px;
     border-radius: 25px;

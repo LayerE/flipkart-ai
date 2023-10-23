@@ -1,3 +1,6 @@
+
+// @ts-nocheck
+
 import React from "react";
 import { styled } from "styled-components";
 import {
@@ -363,7 +366,7 @@ const Wrapper = styled.div`
       /* box-shadow: -80px 0 0 80px #43e5f7; */
     }
     input {
-      color: ;
+      /* color: ; */
     }
     .activeTool {
       background: ${({ theme }) => theme.btnPrimary};

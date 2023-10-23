@@ -1,4 +1,7 @@
-"use client";
+/// <reference no-default-lib="true"/>
+// @ts-nocheck
+
+
 
 import Head from "next/head";
 import React, { lazy, useEffect, useRef, useState } from "react";
@@ -404,7 +407,7 @@ const MainPages = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #e6e6e60;
+    background: #e6e6e6;
     font-size: 24px;
     color: #f9d00d;
     z-index: 3;

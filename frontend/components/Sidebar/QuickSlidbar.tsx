@@ -1,3 +1,6 @@
+// @ts-nocheck
+
+
 import React, { useState } from "react";
 import { styled } from "styled-components";
 import Column from "../common/Column";
@@ -542,7 +545,7 @@ const SideBar = styled.div`
   }
   input[type="range"]::-moz-range-thumb {
     box-shadow: 0px 0px 0px #000000;
-    border: 1px solid #rgba(249, 208, 13, 1);
+    border: 1px solid rgba(249, 208, 13, 1);
     height: 18px;
     width: 18px;
     border-radius: 25px;

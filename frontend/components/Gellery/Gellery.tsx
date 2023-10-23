@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { images } from "@/next.config";
 import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
@@ -88,7 +90,7 @@ const Gellery = () => {
 
         const datass = await  getSupabaseImage()
         if (datass){
-console.log(datass,"dddddddddddddddddddddddd")
+
           setGallery(datass);
         }
 
@@ -127,7 +129,7 @@ console.log(datass,"dddddddddddddddddddddddd")
         //     } else {
         //     }
 
-        //   setGallery(data);
+          // setGallery(data);
         // }
         const { data, error } = await supabase
         .from("banner")

@@ -39,7 +39,7 @@ const Assets3d = () => {
     if (userId && isReady) {
       fetchAssetsImagesWithProjectId(userId, id);
     }
-  }, [isReady, userId, re, file3dUrl, file3d]);
+  }, [isReady, userId, re, file3dUrl, file3d, id,fetchAssetsImagesWithProjectId]);
 
   const [url, setUrl] = useState(null);
   function slideName(name : string) {

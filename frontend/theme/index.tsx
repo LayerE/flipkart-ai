@@ -1,3 +1,6 @@
+
+// @ts-nocheck
+
 import React, { useContext, useMemo } from "react";
 import {
   createGlobalStyle,

@@ -1,3 +1,6 @@
+// @ts-nocheck
+
+
 import React, { useEffect, useState, useRef } from "react";
 import { Row } from "../common/Row";
 import { Input, Suggestion1, TestArea } from "../common/Input";

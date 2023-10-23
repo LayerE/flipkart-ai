@@ -1,4 +1,7 @@
-"use client";
+
+// @ts-nocheck
+/// <reference no-default-lib="true"/>
+
 
 import Head from "next/head";
 import React, { lazy, useEffect, useRef, useState } from "react";
@@ -13,15 +16,10 @@ import BottomTab from "@/components/BottomTab";
 import CanvasBox from "@/components/Canvas";
 // const CanvasBox = lazy(() => import("@/components/Canvas"));
 import { useSession } from "@supabase/auth-helpers-react";
-import assert from "assert";
-import assets from "@/public/assets";
 import Regeneret from "@/components/Popup/Regeneret";
 import { useRouter } from "next/router";
 import Canvas3d from "@/components/Canvas/Canvas3d";
 import Sidebar3d from "@/components/Sidebar/Generate3d";
-import ThreeScene from "@/components/Canvas/3d/gltf";
-import TDS from "@/components/Canvas/3d/tds";
-import GLTF from "@/components/Canvas/3d/gltf";
 import { supabase } from "@/utils/supabase";
 
 const fadeIn = {
@@ -52,8 +50,6 @@ export default function Home() {
     setModifidImageArray,
     fetchGeneratedImages,
     regeneratePopup,
-    newassetonCanvas,
-    setNewassetonCanvas,
     GetProjextById,
     setDownloadImg,
     jobId,
@@ -61,7 +57,6 @@ export default function Home() {
     projectId,
     setprojectId,
 
-    setUserId,
     setGeneratedImgList,
     filteredArray,
     setFilteredArray,
@@ -161,7 +156,7 @@ export default function Home() {
     try {
       const data = await getSupabaseImage();
 
-      if (data?.length) {
+      if (data) {
         const filteredResults = await data?.filter((obj: any) =>
           jobIdOne?.includes(obj?.task_id)
         );

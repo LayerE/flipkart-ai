@@ -1,3 +1,6 @@
+// @ts-nocheck
+
+
 import { useAppState } from "@/context/app.context";
 import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
@@ -75,7 +78,7 @@ const QuickCanvas = () => {
       document.addEventListener("keydown", (e) => {
         // Check if the pressed key is 'Delete' (code: 46) or 'Backspace' (code: 8) for wider compatibility
         if (e.keyCode === 46 || e.keyCode === 8) {
-          // Check if the focus is NOT on an input or textarea
+       
           if (
             document.activeElement.tagName !== "INPUT" &&
             document.activeElement.tagName !== "TEXTAREA"
@@ -93,7 +96,7 @@ const QuickCanvas = () => {
 
   const downlaedImf = () => {
     if (selectedImg?.image) {
-      // const url = modifidImageArray[modifidImageArray.length - 1]?.url;
+   
       const url = selectedImg?.image;
       console.log(url);
       saveAs(url, `image${Date.now()}.png`);

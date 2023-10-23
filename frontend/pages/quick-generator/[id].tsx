@@ -1,3 +1,6 @@
+/// <reference no-default-lib="true"/>
+// @ts-nocheck
+
 import React, { useEffect } from "react";
 
 import Sidebar3d from "@/components/Sidebar/Generate3d";

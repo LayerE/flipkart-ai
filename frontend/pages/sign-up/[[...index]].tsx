@@ -9,13 +9,16 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string
 );
 
-const signIn = () => {
+const SignIn = () => {
   const router = useRouter();
+
+
   useEffect(() => {
     const checkSession = async () => {
       const { data } = await supabase.auth.getSession();
       if (data.session) {
-        router.push("/");
+       
+        // router.push("/");
         console.log(data.session);
       }
     };
@@ -41,4 +44,4 @@ const signIn = () => {
   );
 };
 
-export default signIn;
+export default SignIn;

@@ -36,10 +36,10 @@ const Assets: React.FC = () => {
     loader,
   } = useAppState();
   const { query, isReady } = useRouter();
-  // const { id } = query;
-  const id = (query.id as string[]) || [];
+  const { id } = query;
+  // const id = (query.id as string[]) || [];
 
-  const [filter, setFilter] = useState();
+ 
   const [re, setRe] = useState(1);
   useEffect(() => {
     if (re <= 10) {
@@ -49,9 +49,7 @@ const Assets: React.FC = () => {
       fetchAssetsImages(userId, id);
 
       // const filer = listofassetsById?.filter((item) => item.project_id === id);
-      console.log(listofassetsById, "listofassetsById");
-      // setFilter(listofassetsById);
-      console.log(listofassetsById, "dfdf");
+
     }
   }, [isReady, userId, re]);
 

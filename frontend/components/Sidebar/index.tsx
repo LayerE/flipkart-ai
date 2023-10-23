@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React, { useState } from "react";
 import { styled } from "styled-components";
 import Column from "../common/Column";

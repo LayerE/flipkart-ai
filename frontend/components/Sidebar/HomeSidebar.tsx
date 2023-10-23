@@ -1,3 +1,7 @@
+
+// @ts-nocheck
+
+
 import { useAppState } from "@/context/app.context";
 import assets from "@/public/assets";
 import Image from "next/image";

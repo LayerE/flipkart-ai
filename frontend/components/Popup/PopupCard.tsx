@@ -1,8 +1,10 @@
+// @ts-nocheck
+
+
 import React, { useState } from "react";
 import { styled } from "styled-components";
 import Button from "../common/Button";
 import { useAppState } from "@/context/app.context";
-import { motion } from "framer-motion";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 

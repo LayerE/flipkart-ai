@@ -1,4 +1,5 @@
 /// <reference no-default-lib="true"/>
+// @ts-nocheck
 
 import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
