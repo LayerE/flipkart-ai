@@ -1,3 +1,6 @@
+// @ts-nocheck
+/// <reference no-default-lib="true"/>
+
 import { images } from "@/next.config";
 import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";

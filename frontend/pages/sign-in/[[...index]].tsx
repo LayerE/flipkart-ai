@@ -1,3 +1,6 @@
+/// <reference no-default-lib="true"/>
+
+
 import { useEffect } from "react";
 import { supabase } from "../../utils/supabase";
 import { useRouter } from "next/navigation";

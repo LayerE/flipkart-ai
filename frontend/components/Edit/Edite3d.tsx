@@ -1,3 +1,6 @@
+
+/// <reference no-default-lib="true"/>
+
 import React, { useEffect, useState, useRef } from "react";
 import Label, { DisabledLabel } from "../common/Label";
 import { Row } from "../common/Row";
@@ -34,7 +37,6 @@ const Edit3d = () => {
     canvasInstance,
     addimgToCanvasGen,
     addimgToCanvasSubject,
-    git,
     modifidImageArray,
     isMagic,
     setIsMagic,
@@ -57,12 +59,9 @@ const Edit3d = () => {
     setMagicloder,
     setDownloadImg,
     selectedImg,
-
-    
     crop,
     setCrop,
     loader,
-    romovepopu3d,
     setromovepopu3d,
     userId
   } = useAppState();
@@ -561,7 +560,7 @@ const WrapperEdit = styled.div`
   }
   input[type="range"]::-moz-range-thumb {
     box-shadow: 0px 0px 0px #000000;
-    border: 1px solid #rgba(249, 208, 13, 1);
+    border: 1px solid rgba(249, 208, 13, 1);
     height: 18px;
     width: 18px;
     border-radius: 25px;

@@ -1,54 +1,37 @@
+/// <reference no-default-lib="true"/>
+
 import React, { useEffect } from "react";
 import { styled } from "styled-components";
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { useAppState } from "@/context/app.context";
 
 import Button from "../common/Button";
 import { saveAs } from "file-saver";
 import { AssetsLoader } from "../Loader/AssetsLoader";
 import { RemoveLoader } from "../Loader/RemoveLoader";
-import { useSession } from "@supabase/auth-helpers-react";
+
 import { toast } from "react-toastify";
 
 import { arrayBufferToDataURL, dataURLtoFile } from "@/utils/BufferToDataUrl";
 
-const RemoveBox = ({ type }) => {
-  const session = useSession();
-  // const [userId, setUserId] = useState<string | null>(null);
-  // useEffect(() => {
-  //   if (session) {
-  //     setUserId(session.user.id);
-  //   }
-  // }, [session]);
+const RemoveBox = ()=> {
+
+
 
   const {
-    addimgToCanvasCropped,
-    crop,
-    setCrop,
     downloadImg,
-    addimgToCanvasGen,
     TDMode,
     setromovepopu3d,
-    selectedImg,
     romovepopu3d,
     downloadeImgFormate,
     userId
   } = useAppState();
 
-  // const [cropSize, setCropSize] = useState({ x: 0, y: 0 })
   const [loader, setLoader] = useState(false);
-  const [updateImg, setupdateImg] = useState(null);
+  const [updateImg, setupdateImg] = useState<null | any>(null);
 
   const downloadH = async () => {
-    // const url = canvas.toDataURL("image/png");
-
     saveAs(updateImg, `image${Date.now()}.${downloadeImgFormate}`);
-
-    // setCrop(false)
-
-    // setIsMagic(false);
-
-    // return dataURL;
   };
 
   const HandelBG = async () => {
@@ -67,11 +50,6 @@ const RemoveBox = ({ type }) => {
       const data = await response.json();
       if (data) {
         setupdateImg(data?.data?.data[0]);
-        //   addimgToCanvasSubject(data?.data?.data[0]);
-        // addimgToCanvasGen(data?.data[0]);
-        // setSelectedImg({ status: true, image: data?.data[0] });
-        // addimgToCanvasGen(data);
-
         setLoader(false);
       }
     } catch (error) {
@@ -81,23 +59,8 @@ const RemoveBox = ({ type }) => {
       setupdateImg(null);
     }
     setLoader(false);
-    // setromovepopu3d(false);
-    // setLoader(false);
   };
-  async function toB64(imgUrl: string): Promise<string> {
-    const datas = await fetch(imgUrl)
-      .then((response) => response.blob())
-      .then((blob) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const base64data = reader.result;
-          return base64data;
 
-          // setBase64Image(base64data);
-        };
-        reader.readAsDataURL(blob);
-      });
-  }
 
   const upSacle = async (photo: string, filename: string): Promise<string> => {
     const form = new FormData();
@@ -119,8 +82,8 @@ const RemoveBox = ({ type }) => {
 
     const buffer = await response.arrayBuffer();
     const dataURL = await arrayBufferToDataURL(buffer);
-    localStorage.setItem("m-images", JSON.stringify(dataURL));
-    console.log(buffer, response, dataURL, "imgs");
+   
+    
 
     if (response.status === 402) {
       toast.error("Not enough credits to process the request");
@@ -145,30 +108,15 @@ const RemoveBox = ({ type }) => {
   const UpscaleBG = async () => {
     setLoader(true);
 
-    // const datatacke = {
-    //   image: await toB64(downloadImg),
-    //   scale: 2,
-    // };
-    // const response = await fetch("https://api.segmind.com/v1/esrgan", {
-    //   method: "POST",
-    //   headers: {
-    //     "x-api-key": "SG_86fe6533d0888ca0",
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(datatacke),
-    // });
-    // const data = await response;
-    // console.log(await data, "upscale ");
     try {
-      //   const data = await upSacle(downloadImg, "imger");
+
       const data = await upSacle(downloadImg, "imger");
 
       if (data) {
         console.log(updateImg);
-        // addimgToCanvasGen(data);
         setupdateImg(data);
 
-        //   setSelectedImg({ status: true, image: data });
+ 
       }
     } catch (error) {
       setLoader(false);

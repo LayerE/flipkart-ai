@@ -49,8 +49,7 @@ export default function Home() {
     regeneratePopup,
     generateImageHandeler,
     SaveProjexts,
-    newassetonCanvas,
-    setNewassetonCanvas,
+
     GetProjextById,
     setproject,
     project,
@@ -94,7 +93,7 @@ export default function Home() {
       console.log("setFilteredArray", id);
       GetProjextById(id);
       //  fetchAssetsImages(userId, null);
-
+      console.log(TDMode, "dddddddddddddddddddddddddddddddd");
     }
     set3dMode(false);
   }, [id, isReady, TDMode]);
@@ -120,15 +119,8 @@ export default function Home() {
 
   useEffect(() => {
     setprojectId(id);
-    // setUserId(userId);
+
     setassetsActiveTab("product");
-    // let filteredResult;
-
-    // filteredResult = generatedImgList.filter((obj) =>
-    //   jobId?.includes(obj?.task_id)
-    // );
-
-    // setFilteredArray(filteredResult);
 
     const canvas1 = canvasInstance.current;
 
@@ -140,13 +132,7 @@ export default function Home() {
       }
     });
 
-    // if (filteredResult?.length < jobId?.length) {
-    //   // addimgToCanvasGen(filteredResult[0]?.modified_image_url);
-    // }
 
-    return () => {
-      // setprojectId(null);
-    };
   }, [jobId, setGeneratedImgList, regeneratePopup]);
 
   useEffect(() => {
@@ -160,11 +146,7 @@ export default function Home() {
     };
   }, [isReady, userId, jobId]);
 
-  useEffect(() => {
-    return () => {
-      // setFilteredArray([]);
-    };
-  }, []);
+
 
   const fetchAssetsImages = async () => {
     try {
@@ -182,7 +164,6 @@ export default function Home() {
       if (data?.length) {
         const filteredResults = await data?.filter(
           (obj) => jobIdOne?.includes(obj?.task_id)
-          // obj?.project_id == id
         );
 
         const filteredResultss = await data?.filter(
@@ -196,42 +177,14 @@ export default function Home() {
           setJobIdOne([]);
         }
 
-        setFilteredArray(data);
+        setFilteredArray(filteredResultss);
       }
     } catch (error) {
       console.error("Error fetching images:", error);
     }
   };
 
-  useEffect(() => {
-    const canvas1 = canvasInstance.current;
 
-    const objects = canvas1?.getObjects();
-    const subjectObjects = [];
-    objects?.forEach((object) => {
-      if (object.category === "subject") {
-        subjectObjects.push(object);
-      }
-    });
-    const state = false;
-    setTimeout(() => {
-      if (subjectObjects.length <= 0 && newassetonCanvas !== null) {
-        console.log(
-          newassetonCanvas,
-          subjectObjects.length,
-          newassetonCanvas !== null
-        );
-        let state = true;
-        if (newassetonCanvas !== null && state) {
-          state = false;
-
-          addimgToCanvasSubject(newassetonCanvas);
-        }
-
-        setNewassetonCanvas(null);
-      }
-    }, 1000);
-  }, []);
 
   return (
     <MainPages>

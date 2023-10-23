@@ -1,3 +1,6 @@
+
+// @ts-nocheck
+
 import Image from "next/image";
 import { Inter } from "next/font/google";
 import { styled } from "styled-components";
@@ -36,7 +39,7 @@ export default function Home() {
   const id = (query.id as string[]) || [];
   const {
     activeTabHome,
-    setActiveTabHome,
+
     activeTab,
     popupImage,
     setUserID,
@@ -44,8 +47,7 @@ export default function Home() {
     projectlist,
     setMainLoader,
     setprojectlist,
-    uerId,
-    setUserId,
+   
     mainLoader,
     setFilteredArray,
     setActiveTab,
@@ -59,10 +61,12 @@ export default function Home() {
     fetchAssetsImages,
     popup,
     setSelectedImg,
+    setActiveTabHome
   } = useAppState();
   const router = useRouter();
 
   useEffect(() => {
+    setActiveTabHome(4)
     const checkSession = async () => {
       const { data } = await supabase.auth.getSession();
       if (data.session) {
@@ -107,7 +111,7 @@ export default function Home() {
       axios
         .get(`${process.env.NEXT_PUBLIC_API}/user?id=${userId}`)
         .then(async (response) => {
-          setUserId(response.data.userId);
+       
           const dataFecth = await fetchData(userId);
           console.log("dfd", await dataFecth);
 

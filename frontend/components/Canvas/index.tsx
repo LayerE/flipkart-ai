@@ -1,5 +1,5 @@
 // use client
-
+/// <reference no-default-lib="true"/>
 import React, { useRef, useState } from "react";
 import { useAppState } from "@/context/app.context";
 import { useEffect, useLayoutEffect, useCallback } from "react";
@@ -15,7 +15,7 @@ import CropperBox from "./Cropper";
 
 // import { useBeforeUnload } from "react-router-dom";
 
-export default function CanvasBox({ proid, userId }) {
+export default function CanvasBox({ proid, userId }: { proid:any, userId:string }) {
   const { query, isReady } = useRouter();
   const router = useRouter();
 
@@ -28,13 +28,7 @@ export default function CanvasBox({ proid, userId }) {
     setActiveTab,
     setSelectedColoreMode,
     downloadImg,
-    outerDivRef,
     setDownloadImg,
-    // newEditorBox
-    editorBox,
-    canvasHistoryRef,
-    currentStep,
-    setCurrentStep,
     RegenerateImageHandeler,
     GetProjextById,
     isMagic,
@@ -44,21 +38,18 @@ export default function CanvasBox({ proid, userId }) {
     PosisionbtnRef,
     regenerateRef,
     setRegeneratePopup,
-    btnVisible,
     previewBox,
     canvasHistory,
     currentCanvasIndex,
     generateBox,
     GetProjexts,
-    generateImageHandeler,
     SaveProjexts,
     project,
     loadercarna,
     setloadercarna,
     saveCanvasToDatabase,
     setRegenratedImgsJobid,
-    genRect,
-    setgenRect,
+
     positionBtn,
     newEditorBox,
     imageGenRect,
@@ -72,8 +63,7 @@ export default function CanvasBox({ proid, userId }) {
     canvasDisable,
     setCanvasDisable,
     loader,
-    TDMode,
-    regenratingId,
+
     setregeneraatingId,
 
     // canvasRef
@@ -610,10 +600,10 @@ export default function CanvasBox({ proid, userId }) {
 
 
   const generationBoxStyle = {
-    left: `${activeSize.l * zoom}px`,
-    top: `${activeSize.t * zoom}px`,
-    width: `${activeSize.w * zoom}px`, // Adjust the width based on canvas zoom
-    height: `${activeSize.h * zoom}px`, // Adjust the height based on canvas zoom
+    left: `${activeSize?.l * zoom}px`,
+    top: `${activeSize?.t * zoom}px`,
+    width: `${activeSize?.w * zoom}px`, // Adjust the width based on canvas zoom
+    height: `${activeSize?.h * zoom}px`, // Adjust the height based on canvas zoom
   };
   const PreviewBoxStyle = {
     left: `${activeSize.gl * zoom}px`,
@@ -622,6 +612,8 @@ export default function CanvasBox({ proid, userId }) {
     height: `${activeSize.h * zoom}px`, // Adjust the height based on canvas zoom
     backgroundColor: "rgba(249, 208, 13, 0.23)",
   };
+
+  
 
   const handelRegenrate = () => {
     if (downloadImg !== null) {
@@ -798,7 +790,7 @@ canvas {
     z-index: 10;
     display: flex;
     justify-content: center;
-    align-items
+
   }
   .selectone {
     border-radius: 4px;

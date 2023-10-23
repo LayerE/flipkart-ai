@@ -41,7 +41,7 @@ export default function Home() {
     projectlist,
     setMainLoader,
     setprojectlist,
-    setUserId,
+
     mainLoader,
     setFilteredArray,
     setActiveTab,
@@ -62,7 +62,7 @@ export default function Home() {
   } = useAppState();
 
   // const [loadercarna, setloadercarna] = useState(true);
-  const [rerenter, setre] = useState(false);
+  const [rerenter, setre] = useState(1);
   // const [userId, setUserID] = useState<string | null>(null);
 
   useEffect(() => {
@@ -116,7 +116,7 @@ export default function Home() {
       axios
         .get(`${process.env.NEXT_PUBLIC_API}/user?id=${userId}`)
         .then(async (response) => {
-          setUserId(response.data.userId);
+       
           const dataFecth = await fetchData(userId);
           console.log("dfd", await dataFecth);
 
@@ -157,7 +157,10 @@ export default function Home() {
 
   const handleDelete = () => {
     // Update the list of items by fetching data again
-    fetchData(userId);
+    if(userId){
+
+      fetchData(userId);
+    }
   };
 
   return (

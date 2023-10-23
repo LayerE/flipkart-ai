@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React, { useEffect, useState, useRef } from "react";
 import Label, { DisabledLabel } from "../common/Label";
 import { Row } from "../common/Row";
@@ -106,57 +108,7 @@ const Edit = () => {
     }
   };
 
-  function addColorOverlayToSelectedImage(color, mode) {
-    const canvas = canvasInstance.current;
-    const activeObject = canvas?.getActiveObject();
-
-    if (activeObject && activeObject.type === "image") {
-      activeObject.filters = []; // Clear existing filters
-
-      if (mode !== "none") {
-        let filter;
-        switch (mode) {
-          case "Overlay":
-            filter = new fabric.Image.filters.BlendColor({
-              color: color,
-              mode: "overlay",
-              alpha: 0.5,
-            });
-            break;
-          case "Multiply":
-            filter = new fabric.Image.filters.BlendColor({
-              color: color,
-              mode: "multiply",
-              alpha: 1,
-            });
-            break;
-          case "Add":
-            filter = new fabric.Image.filters.BlendColor({
-              color: color,
-              mode: "add",
-              alpha: 1,
-            });
-            break;
-          case "Tint":
-            filter = new fabric.Image.filters.Tint({
-              color: color,
-              opacity: 0.5,
-            });
-            break;
-        }
-
-        if (filter) {
-          activeObject.filters.push(filter);
-        }
-      }
-
-      activeObject.applyFilters();
-      canvas.renderAll();
-    } else {
-      // alert("Please select an image on the canvas first.");
-    }
-  }
-  /* eslint-disable */
+ 
 
   const HandelBG = async () => {
     setIsMagic(false);
@@ -174,14 +126,9 @@ const Edit = () => {
     const data = await response.json();
     if (data) {
       addimgToCanvasSubject(data?.data?.data[0]);
-      // addimgToCanvasGen(data?.data[0]);
-      // setSelectedImg({ status: true, image: data?.data[0] });
-      // addimgToCanvasGen(data);
 
-      setModifidImageArray((pre) => [
-        ...pre,
-        { url: data?.data[0], tool: "upscale" },
-      ]);
+
+   
     }else{
     setLoader(false);
 
@@ -260,13 +207,13 @@ const Edit = () => {
     // console.log(await data, "upscale ");
 
     const data = await upSacle(downloadImg, "imger");
-    console.log(data, "upscale ");
+
 
     if (data) {
       addimgToCanvasGen(data);
       setSelectedImg({ status: true, image: data });
 
-      setModifidImageArray((pre) => [...pre, { url: data, tool: "upscale" }]);
+   
     }
 
     setLoader(false);
@@ -285,7 +232,9 @@ const Edit = () => {
   const history = useRef([]);
   const historyIndex = useRef(-1);
   useEffect(() => {
+    // @ts-ignore
     canvasInstance.current.on("object:added", () => {
+      // @ts-ignore
       history.current.push(JSON.stringify(canvasInstance.current.toJSON()));
       historyIndex.current += 1;
     });
@@ -693,7 +642,7 @@ const WrapperEdit = styled.div`
   }
   input[type="range"]::-moz-range-thumb {
     box-shadow: 0px 0px 0px #000000;
-    border: 1px solid #rgba(249, 208, 13, 1);
+    border: 1px solid rgba(249, 208, 13, 1);
     height: 18px;
     width: 18px;
     border-radius: 25px;

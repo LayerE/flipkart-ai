@@ -1,9 +1,9 @@
+/// <reference no-default-lib="true"/>
+
 import { TextLoaderNo, TextLoaderNoRevove } from "@/components/Loader/text";
 import { useAppState } from "@/context/app.context";
-import { BgRemover } from "@/store/api";
 import React, { useState, useEffect, useRef } from "react";
 import { styled } from "styled-components";
-import { uid } from "uid";
 import { toast } from "react-toastify";
 
 export const Input = styled.input`
@@ -179,14 +179,13 @@ const InputFile1 = styled.div`
   }
 `;
 
-export const FileUpload: React.FC = ({ type, title, uerId }) => {
+export const FileUpload = ({ type, title, uerId }:{ type:any, title:string, uerId :any}) => {
   const {
     file,
     setFile,
     uploadedProductlist,
     setUploadedProductlist,
-    upladedArray,
-    setUpladedArray,
+
     setLoader,
     addimgToCanvas,
     setPopup,
@@ -197,7 +196,7 @@ export const FileUpload: React.FC = ({ type, title, uerId }) => {
     setassetLoader,
   } = useAppState();
 
-  const handleFileChange = (event) => {
+  const handleFileChange = (event :any) => {
 
     const fileSize = event.target.files[0].size
     const maxSize =  25* 1024 * 1024; // 1MB
@@ -210,7 +209,7 @@ export const FileUpload: React.FC = ({ type, title, uerId }) => {
       toast.error('File size must be less than 25MB');
 
       return false;
-    } else if(format !== 'png' && format !== 'webp' && format !== 'jpg') {
+    } else if(format !== 'png' && format !== 'webp' && format !== 'jpg'&& format !== 'jpeg') {
       toast.error('Format not supported');
 
 
@@ -358,14 +357,13 @@ export const FileUpload: React.FC = ({ type, title, uerId }) => {
 };
 
 
-export const FileUploadQuick: React.FC = ({ type, title, uerId }) => {
+export const FileUploadQuick= ({ type, title, uerId }:{ type:any, title:string, uerId :any}) => {
   const {
     file,
     setFile,
     uploadedProductlist,
     setUploadedProductlist,
-    upladedArray,
-    setUpladedArray,
+
     setLoader,
     addimgToCanvas,
     setPopup,
@@ -377,7 +375,7 @@ export const FileUploadQuick: React.FC = ({ type, title, uerId }) => {
     addimgToCanvasQuike
   } = useAppState();
 
-  const handleFileChange = (event) => {
+  const handleFileChange = (event: any) => {
 
     const fileSize = event.target.files[0].size
     const maxSize =  25* 1024 * 1024; // 1MB
@@ -534,7 +532,7 @@ export const FileUploadQuick: React.FC = ({ type, title, uerId }) => {
   );
 };
 
-export const FileUpload3D: React.FC = ({ type, title, uerId }) => {
+export const FileUpload3D = ({ type, title, uerId }:{ type:any, title:string, uerId :any}) => {
   const {
     // file,
     // setFile,
@@ -542,8 +540,7 @@ export const FileUpload3D: React.FC = ({ type, title, uerId }) => {
     setFile3d,
     uploadedProductlist,
     setUploadedProductlist,
-    upladedArray,
-    setUpladedArray,
+
     setLoader,
     addimgToCanvas,
     setPopup,
@@ -563,7 +560,7 @@ export const FileUpload3D: React.FC = ({ type, title, uerId }) => {
   } = useAppState();
   const [file, setFile] = useState(null);
 
-  const handleFileChange = (event) => {
+  const handleFileChange = (event: any) => {
 
     setFile3dUrl(null);
     const selectedFile = event.target.files[0];
@@ -581,7 +578,7 @@ export const FileUpload3D: React.FC = ({ type, title, uerId }) => {
     const filename = event.target.files[0].name
     const format = filename.split('.').pop();
 
-    const removeFirstLetter = (input) => {
+    const removeFirstLetter = (input: string) => {
       if (input.length > 1) {
         return input.substring(1);
       } else {

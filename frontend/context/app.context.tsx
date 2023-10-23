@@ -1,3 +1,5 @@
+/// <reference no-default-lib="true"/>
+// @ts-nocheck
 import { createContext, useContext, useState, useRef, useEffect } from "react";
 import { fabric } from "fabric";
 import { saveAs } from "file-saver";
@@ -16,6 +18,21 @@ type ContextProviderProps = {
 
 interface ContextITFC {
   canvasInstance: React.MutableRefObject<null> | null;
+  previewBox: React.MutableRefObject<null> | null;
+  canvasHistory: React.MutableRefObject<null> | null;
+  currentCanvasIndex: React.MutableRefObject<null> | null;
+  // stageRef: React.MutableRefObject<HTMLElement | null> | null;
+
+  stageRef: React.MutableRefObject<null> | null;
+  PosisionbtnRef: React.MutableRefObject<null> | null;
+  regenerateRef: React.MutableRefObject<null> | null;
+  genrateeRef: React.MutableRefObject<null> | null;
+  canvasHistoryRef: any | null;
+
+  canvasRef: React.MutableRefObject<null> | null;
+
+  generateBox: React.MutableRefObject<null> | null;
+
   canvasInstanceQuick: React.MutableRefObject<null> | null;
 
   outerDivRef: React.MutableRefObject<null> | null;
@@ -33,11 +50,14 @@ interface ContextITFC {
   activeTabHome: number | null;
   setActiveTabHome: (activeTabHome: number) => void;
   selectedImg: object | null;
-  setSelectedImg: (selectedImg: object) => void;
+  setSelectedImg: (selectedImg: object | null) => void;
   downloadImg: string | null;
   setDownloadImg: (downloadImg: string) => void;
   isMagic: boolean | null;
   setIsMagic: (isMagic: boolean) => void;
+  loadercarna: boolean | null;
+  setloadercarna: (loadercarna: boolean) => void;
+
   file: File | null;
   setFile: (file: File | null) => void;
   viewMore: object;
@@ -72,10 +92,14 @@ interface ContextITFC {
   setColore: (colore: string) => void;
   uploadedProductlist: string[];
   setUploadedProductlist: (uploadedProductlist: string[]) => void;
-  generatedImgList: string[];
-  setGeneratedImgList: (generatedImgList: string[]) => void;
+  generatedImgList: any[];
+  setGeneratedImgList: (generatedImgList: any[]) => void;
   previewLoader: boolean;
   setPriviewLoader: (previewLoader: boolean) => void;
+
+  mainLoader: boolean;
+  setMainLoader: (mainLoader: boolean) => void;
+
   generationLoader: boolean;
   setGenerationLoader: (generationLoader: boolean) => void;
   loader: boolean;
@@ -84,14 +108,27 @@ interface ContextITFC {
   setModifidImageArray: (modifidImageArray: string[]) => void;
   undoArray: string[];
   setUndoArray: (undoArray: string[]) => void;
-  EditorBox: any;
+  jobId: string[];
+  setJobId: (jobId: string[]) => void;
+
+  jobIdOne: string[];
+  setJobIdOne: (jobIdOne: string[]) => void;
+  // EditorBox: any;
   popup: object;
   setPopup: (popup: object) => void;
+  currentStep: number;
+  setCurrentStep: (currentStep: number) => void;
 
+  popupImage: object;
+  setPopupImage: (popupImage: object) => void;
+
+  regeneratePopup: object;
+  setRegeneratePopup: (regeneratePopup: object) => void;
+
+  romovepopu3d: object | boolean;
+  setromovepopu3d: (romovepopu3d: object | boolean) => void;
   activeTemplet: object | null;
-  setActiveTemplet: (activeTemplet: object) => void;
-
-  stageRef: React.MutableRefObject<HTMLElement | null> | null;
+  setActiveTemplet: (activeTemplet: object | null) => void;
 
   lines: any[];
   setLines: (lines: any[]) => void;
@@ -100,6 +137,9 @@ interface ContextITFC {
 
   mode: string;
   setMode: (generatedImgList: string) => void;
+
+  regenratedImgsJobId: string | null;
+  setRegenratedImgsJobid: (regenratedImgsJobId: string) => void;
   magicLoader: boolean;
   setMagicloder: React.Dispatch<React.SetStateAction<boolean>>;
   crop: boolean;
@@ -109,33 +149,100 @@ interface ContextITFC {
 
   canvasDisable: boolean;
   setCanvasDisable: (canvasDisable: boolean) => void;
+
+  assetLoader: boolean;
+  setassetLoader: (assetLoader: boolean) => void;
+
+  brandassetLoader: boolean;
+  setbrandassetLoader: (brandassetLoader: boolean) => void;
+
+  TDMode: boolean;
+  set3dMode: (TDMode: boolean) => void;
+
+  assetL3doader: boolean;
+  setasset3dLoader: (assetL3doader: boolean) => void;
+
   TdImage: any;
   set3DImage: (TdImage: any) => void;
+
+  filteredArray: any;
+  setFilteredArray: (filteredArray: any) => void;
+
   regenratingId: any;
+  newEditorBox: any;
+
   setregeneraatingId: (regenratingId: any) => void;
   tdFormate: string;
   setTdFormate: (tdFormate: string) => void;
+
+  promt: string;
+  setpromt: (promt: string) => void;
+
+  renderer: THREE.WebGLRenderer | null;
+  setRenderer: (renderer: THREE.WebGLRenderer) => void;
+
+  re: number;
+  setRe: (re: number) => void;
+
   file3dUrl: any;
   setFile3dUrl: (file3dUrl: any) => void;
   downloadImgEdit: any;
   setDownloadImgEdit: (downloadImgEdit: any) => void;
 
+  category: any | null;
+  setcategory: (category: any) => void;
+
   galleryActivTab: string;
   setgalleryActiveTab: (galleryActivTab: string) => void;
   addimgToCanvasCropped: (url: string) => void;
   changeRectangleSize: () => void;
+  getSupabaseImage: () => void;
+  positionBtn: (obj: any) => void;
 
   generate3dHandeler: (ueserId: any, proid: any) => void;
   generateQuikcHandeler: (ueserId: any, proid: any) => void;
+  generateImageHandeler: (ueserId: any, proid: any) => void;
+  addEditorBoxToCanvas: () => void;
+  fetchGeneratedImages: (userId: any) => void;
+  addimgToCanvasQuike: (url: any) => void;
+  RegenerateImageHandeler: (ueserId: any) => void;
+  handileDownload: (url: string) => void;
+  fetchAssetsImagesBrant: (userId: any, pro: any) => void;
+  fetchAssetsImagesWithProjectId: (userId: any, pro: any) => void;
 
+  GetProjextById: (getUser: any) => void;
+  saveCanvasToDatabase: () => void;
+
+  bringImageToFront: () => void;
+  sendImageToBack: () => void;
+  renameProject: (userId: any, projectId: any, name: any) => void;
+  fetchAssetsImages: (userId: any, pro: any) => void;
+
+  SaveProjexts: (userId: any, projectId: any, canvas: any) => void;
+  addtoRecntly: (ueserId: any, proid: any) => void;
+  GetProjexts: (getUser: string) => void;
   AssetsActivTab: string;
   setassetsActiveTab: (AssetsActivTab: string) => void;
+  loara: string;
+  setLoara: (loara: string) => void;
+  imageGenRect: any;
 
   userId: string | null;
   setUserID: (userId: string) => void;
+  downloadeImgFormate: string | null;
+  setDownloadeImgFormate: (downloadeImgFormate: string) => void;
+
+  promtFull: string | null;
+  setpromtFull: (promtFull: string) => void;
+
+  file3d: File | null | string;
+  setFile3d: (file3d: File | null | string) => void;
 
   magickErase: boolean;
   setmagickErase: (magickErase: boolean) => void;
+
+  projectId: string | null;
+  setprojectId: (projectId: string) => void;
   customsize: any;
   setCustomsize: (customsize: any) => void;
   zoom: number;
@@ -155,6 +262,23 @@ interface ContextITFC {
       gt: number;
     }>
   >;
+
+  listofassetsById: any[];
+  setListOfAssetsById: (listofassetsById: any[]) => void;
+  project: object[];
+  setproject: (project: object[]) => void;
+  projectlist: object[];
+  setprojectlist: (projectlist: object[]) => void;
+
+  templet: object | null;
+  setTemplet: (templet: object) => void;
+  file3dName: any;
+  setFile3dName: (file3dName: any | null) => void;
+
+  listofassetsBarand: any[] | null;
+  setListOfAssetsBrand: (listofassetsBarand: any[]) => void;
+  listofassets: any | null;
+  setListOfAssets: (listofassets: any) => void;
 }
 export const AppContext = createContext<ContextITFC>({
   activeTab: 1,
@@ -163,18 +287,41 @@ export const AppContext = createContext<ContextITFC>({
   setActiveTabHome: () => {},
   brushSize: 5,
   setBrushSize: () => {},
+  imageGenRect: "",
 
   selectedImg: null,
   setSelectedImg: () => {},
+  fetchAssetsImagesBrant: () => {},
+  GetProjextById: () => {},
+  SaveProjexts: () => {},
+  addtoRecntly: () => {},
+  renameProject: () => {},
+  saveCanvasToDatabase: () => {},
+
+  GetProjexts: () => {},
 
   downloadImg: null,
   setDownloadImg: () => {},
   isMagic: null,
   setIsMagic: () => {},
-  EditorBox: null,
+  // EditorBox: null,
   editorBox: null,
   setEditorBox: () => {},
   canvasInstance: null,
+  previewBox: null,
+  canvasHistory: null,
+  PosisionbtnRef: null,
+  regenerateRef: null,
+  genrateeRef: null,
+  canvasRef: null,
+  canvasHistoryRef: null,
+
+  generateBox: null,
+
+  currentCanvasIndex: null,
+  bringImageToFront: () => {},
+  sendImageToBack: () => {},
+
   canvasInstanceQuick: null,
   outerDivRef: null,
   addimgToCanvas: () => {},
@@ -184,14 +331,33 @@ export const AppContext = createContext<ContextITFC>({
   setModifidImageArray: (modifidImageArray: string[]) => {},
   undoArray: [],
   setUndoArray: (undoArray: string[]) => {},
+  jobId: [],
+  setJobId: (jobId: string[]) => {},
+  jobIdOne: [],
+  setJobIdOne: (jobIdOne: string[]) => {},
   getBase64FromUrl: () => {},
   file: null,
   setFile: () => {},
+  mainLoader: false,
+  setMainLoader: () => {},
+
+  assetLoader: false,
+  setassetLoader: () => {},
+
+  brandassetLoader: false,
+  setbrandassetLoader: () => {},
   viewMore: {},
   setViewMore: (viewMore: Object) => {},
-
+  currentStep: -1,
+  setCurrentStep: (currentStep: number) => {},
   activeTemplet: {},
-  setActiveTemplet: (activeTemplet: object) => {},
+  setActiveTemplet: () => {},
+
+  popupImage: {},
+  setPopupImage: (popupImage: object) => {},
+
+  fetchAssetsImagesWithProjectId: () => {},
+
   selectPlacement: "",
   setSelectedPlacement: (selectPlacement: string) => {},
   surroundingtype: "",
@@ -218,32 +384,70 @@ export const AppContext = createContext<ContextITFC>({
   setBackgrundTest: (backgrundTest: string) => "",
   surroundingTest: "",
   setSurroundingTest: (surroundingTest: string) => {},
+  file3d: null,
+  setFile3d: () => {},
+
   colore: "",
   setColore: () => {},
   uploadedProductlist: [],
   setUploadedProductlist: (uploadedProductlist: string[]) => {},
   generatedImgList: [],
-  setGeneratedImgList: (generatedImgList: string[]) => {},
+  setGeneratedImgList: (generatedImgList: any[]) => {},
 
+  assetL3doader: false,
+  setasset3dLoader: () => {},
   previewLoader: false,
   setPriviewLoader: () => {},
   generationLoader: false,
   setGenerationLoader: () => {},
+  TDMode: false,
+  set3dMode: () => {},
+  newEditorBox: {},
+
+  loadercarna: false,
+  setloadercarna: () => {},
+  renderer: null,
+  setRenderer: () => {},
+
   loader: false,
   setLoader: () => {},
 
+  category: null,
+  setcategory: () => {},
+
+  re: 1,
+  setRe: () => {},
+
   popup: {},
   setPopup: () => {},
+  regeneratePopup: {},
+  setRegeneratePopup: () => {},
+
+  romovepopu3d: {},
+  setromovepopu3d: () => {},
 
   stageRef: null,
   lines: [],
   setLines: () => {},
+
+  filteredArray: [],
+  setFilteredArray: () => {},
+
+  listofassetsById: [],
+  setListOfAssetsById: () => {},
+  file3dName: {},
+  setFile3dName: () => {},
+  listofassets: null,
+  setListOfAssets: () => {},
+
   linesHistory: [],
   setLinesHistory: () => {},
   // linesHistory: Array<YourTypeHere>; // Specify the type
   // setLinesHistory: React.Dispatch<React.SetStateAction<Array<YourTypeHere>>>;
   mode: "pen",
   setMode: (mode: string) => {},
+  regenratedImgsJobId: null,
+  setRegenratedImgsJobid: (regenratedImgsJobId: string) => {},
   magicLoader: false,
   setMagicloder: () => {},
   crop: false,
@@ -258,6 +462,9 @@ export const AppContext = createContext<ContextITFC>({
   setregeneraatingId: () => {},
   tdFormate: "",
   setTdFormate: (tdFormate: string) => {},
+  promt: "",
+  setpromt: (promt: string) => {},
+
   file3dUrl: "",
   setFile3dUrl: () => {},
   downloadImgEdit: "",
@@ -268,19 +475,45 @@ export const AppContext = createContext<ContextITFC>({
   changeRectangleSize: () => {},
   generate3dHandeler: () => {},
   generateQuikcHandeler: () => {},
+  positionBtn: () => {},
+  handileDownload: () => {},
+  generateImageHandeler: () => {},
+  addimgToCanvasQuike: () => {},
 
+  fetchAssetsImages: () => {},
+  fetchGeneratedImages: () => {},
+  RegenerateImageHandeler: () => {},
+  addEditorBoxToCanvas: () => {},
   AssetsActivTab: "",
   setassetsActiveTab: (AssetsActivTab: string) => {},
+  listofassetsBarand: null,
+  setListOfAssetsBrand: () => {},
   userId: "",
   setUserID: (userId: string) => {},
+  loara: "",
+  setLoara: (loara: string) => {},
+  promtFull: "",
+  setpromtFull: (promtFull: string) => {},
+
+  projectId: null,
+  setprojectId: (projectId: string) => {},
+  downloadeImgFormate: null,
+  setDownloadeImgFormate: (downloadeImgFormate: string) => {},
   magickErase: false,
   setmagickErase: () => {},
   customsize: "",
   setCustomsize: () => {},
   zoom: 0,
   setZoomCanvas: () => {},
+  getSupabaseImage: () => {},
   activeSize: {},
   setActiveSize: (activeSize: Object) => {},
+  templet: {},
+  setTemplet: (templet: Object) => {},
+  project: [],
+  setproject: (project: Object) => {},
+  projectlist: [],
+  setprojectlist: (projectlist: Object) => {},
 });
 
 export const AppContextProvider = ({ children }: ContextProviderProps) => {
@@ -290,7 +523,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [filteredArray, setFilteredArray] = useState([]);
 
   const outerDivRef = useRef(null);
-  const [mainLoader, setMainLoader] = useState(true);
+  const [mainLoader, setMainLoader] = useState<boolean>(true);
   const [selectedImg, setSelectedImg] = useState<object | null>(null);
   const [downloadImg, setDownloadImg] = useState<string | null>(null);
   const [downloadImgEdit, setDownloadImgEdit] = useState<string | null>(null);
@@ -299,9 +532,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [activeTab, setActiveTab] = useState<number | null>(1);
   const [activeTabHome, setActiveTabHome] = useState<number | null>(1);
   const [file, setFile] = useState<File | null>(null);
-  const [file3d, setFile3d] = useState<File | null>(null);
+  const [file3d, setFile3d] = useState<File | null | string>(null);
   const [file3dUrl, setFile3dUrl] = useState<string | null>(null);
-  const [file3dName, setFile3dName] = useState(null);
+  const [file3dName, setFile3dName] = useState<any | null>(null);
 
   const [viewMore, setViewMore] = useState<object>({});
   const [selectPlacement, setSelectedPlacement] = useState<string>("");
@@ -312,8 +545,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [selectResult, setSelectedresult] = useState<number>(4);
   const [selectRender, setSelectedRender] = useState<number>(4);
   const [loara, setLoara] = useState<string>("");
-  const [templet, setTemplet] = useState();
-  const [promt, setpromt] = useState("");
+  const [templet, setTemplet] = useState<object | null>(null);
+  const [promt, setpromt] = useState<string>("");
   const [promtFull, setpromtFull] = useState("");
   const [selectColoreStrength, setSelectedColoreStrength] = useState<number>(0);
   const [selectOutLline, setSelectedOutline] = useState<number>(0);
@@ -327,7 +560,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [generationLoader, setGenerationLoader] = useState<boolean>(false);
   const [loader, setLoader] = useState<boolean>(false);
   const [modifidImageArray, setModifidImageArray] = useState<string[]>([]);
-  const [romovepopu3d, setromovepopu3d] = useState<object>({});
+  const [romovepopu3d, setromovepopu3d] = useState<object | boolean>({});
 
   const [undoArray, setUndoArray] = useState<string[]>([]);
   const [editorBox, setEditorBox] = useState<fabric.Rect | null>(null);
@@ -340,31 +573,36 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [regeneratePopup, setRegeneratePopup] = useState<object>({});
   const [projectlist, setprojectlist] = useState<object[]>([]);
   const [project, setproject] = useState<object[]>([]);
-  const [generatedImgList, setGeneratedImgList] = useState<string[]>([]);
+  const [generatedImgList, setGeneratedImgList] = useState<any>([]);
   const [jobId, setJobId] = useState<string[]>([]);
   const [jobIdOne, setJobIdOne] = useState<string[]>([]);
   const [tdFormate, setTdFormate] = useState(".gltf");
   const [regenratingId, setregeneraatingId] = useState(null);
-  const PosisionbtnRef = useRef<HTMLElement | null>(null);
-  const regenerateRef = useRef<HTMLElement | null>(null);
-  const genrateeRef = useRef<HTMLElement | null>(null);
-  const generateBox = useRef<HTMLElement | null>(null);
-  const previewBox = useRef<HTMLElement | null>(null);
-  const [regenratedImgsJobId, setRegenratedImgsJobid] = useState(null);
-  const [projectId, setprojectId] = useState(null);
+  const PosisionbtnRef = useRef<any | null>(null);
+  const canvasRef = useRef<any | null>(null);
+  // const canvasHistoryRef = useRef<any | null>(null);
 
+  const regenerateRef = useRef<any | null>(null);
+  const genrateeRef = useRef<any | null>(null);
+  const generateBox = useRef<any | null>(null);
+  const previewBox = useRef<any | null>(null);
+  const canvasHistoryRef = useRef([]);
+  const [currentStep, setCurrentStep] = useState<number>(-1);
+  const canvasHistory = useRef<any | null>([]);
+  const currentCanvasIndex = useRef<any | null>(-1);
+  const stageRef = useRef<any | null>(null);
+  const [regenratedImgsJobId, setRegenratedImgsJobid] = useState<string | null>(
+    null
+  );
+  const [projectId, setprojectId] = useState<string | null>(null);
   const [category, setcategory] = useState(null);
   const [listofassets, setListOfAssets] = useState(null);
-  const [listofassetsBarand, setListOfAssetsBrand] = useState(null);
-  const [listofassetsById, setListOfAssetsById] = useState([]);
-  const [newassetonCanvas, setNewassetonCanvas] = useState(null);
-  const [genRect, setgenRect] = useState();
+  const [listofassetsBarand, setListOfAssetsBrand] = useState<any | null>(null);
+  const [listofassetsById, setListOfAssetsById] = useState<any[]>([]);
+
   const [assetLoader, setassetLoader] = useState(false);
   const [assetL3doader, setasset3dLoader] = useState(false);
   const [brandassetLoader, setbrandassetLoader] = useState(false);
-  const canvasHistory = useRef<any[]>([]);
-  const currentCanvasIndex = useRef(-1);
-  const canvasRef = useRef(null);
   const [activeTemplet, setActiveTemplet] = useState<null | object>(null);
   const [downloadeImgFormate, setDownloadeImgFormate] = useState("png");
   const [incremetPosition, setIncremetPosition] = useState(0);
@@ -382,7 +620,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [magicLoader, setMagicloder] = useState(false);
   const [crop, setCrop] = useState(false);
   const [filsizeMorethan10, setfilsizeMorethan10] = useState(false);
-  const stageRef = useRef<HTMLElement | null>(null);
   const [activeSize, setActiveSize] = useState<{
     id: number;
     title: string;
@@ -405,11 +642,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     gt: 240,
   });
   const [customsize, setCustomsize] = useState({ w: 1024, h: 1024 });
+  const [loadercarna, setloadercarna] = useState(false);
 
-  const [btnVisible, setBtnVisible] = useState(false);
-
-  const canvasHistoryRef = useRef([]);
-  const [currentStep, setCurrentStep] = useState(-1);
   const session = useSession();
   // const [userId, setUserID] = useState<string | null>(
   //   "34afa810-7f7e-4a35-be32-e9c561f35067"
@@ -569,7 +803,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     });
   };
 
-  const addimgToCanvasQuike = async (url: string) => {
+  const addimgToCanvasQuike = async (url: any) => {
     fabric.Image.fromURL(await getBase64FromUrl(url), function (img: any) {
       // Set the image's dimensions
       console.log("img", url);
@@ -905,7 +1139,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     try {
       const data = await getSupabaseImage();
       if (data) {
-        setGeneratedImgList(await data);
+        setGeneratedImgList(data);
       }
 
       return data;
@@ -1057,17 +1291,13 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     selectable: false,
     fill: "rgba(249, 208, 13, 0.23)",
     excludeFromExport: true,
-
-    // fill: "transparent",
   });
 
   const changeRectangleSize = () => {
-    // Set the new width and height for the rectangle
     newEditorBox.set({ width: activeSize.w, height: activeSize.h });
-
-    // Redraw the canvas
     canvasInstance?.current.renderAll();
   };
+
   const generateImageHandeler = async (ueserId: any, proid: any) => {
     var subjectCount = 0;
 
@@ -1085,14 +1315,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     } else if (subjectCount === 0 && !TDMode) {
       toast("Add product first");
     } else if (!TDMode) {
-      // console.log(promt);
       setLoader(true);
       setCanvasDisable(true);
       setGenerationLoader(true);
       const canvas1 = canvasInstance.current;
       try {
         addtoRecntly(ueserId, proid);
-
         const objects = canvas1.getObjects();
         const subjectObjects: any = [];
         objects.forEach((object: any) => {
@@ -1103,10 +1331,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
         // Make image with only the subject objects
         const subjectCanvas = new fabric.Canvas(null, {
-          // width: newEditorBox.width,
-          // height: newEditorBox.height,
-          // top: newEditorBox.top,
-          // left: newEditorBox.left,
           left: activeSize.l,
           top: activeSize.t,
           width: activeSize.w,
@@ -1128,13 +1352,10 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         });
         const subjectDataUrlJson = subjectCanvas.toJSON();
         const updatedObject = {
-          width: activeSize.w, // Add the new key-value pair
+          width: activeSize.w,
           height: activeSize.h,
-          ...subjectDataUrlJson, // Spread the existing object
+          ...subjectDataUrlJson,
         };
-        console.log(updatedObject, "dsfdf");
-
-        // const subjectDataUrl = subjectCanvas.toDataURL("image/png");
 
         subjectObjects.forEach((object: any) => {
           object.set({
@@ -1142,13 +1363,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
             top: object.top + activeSize.t,
           });
           subjectCanvas.remove(object);
-          // subjectCanvas.add(object);
-
           canvasInstance.current.remove(object);
-
           // maskCanvas.remove(object);
           canvasInstance.current.add(object);
-          // canvas.requestRenderAll();
           canvasInstance.current.renderAll();
         });
 
@@ -1175,13 +1392,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         });
 
         const generate_response = await response.json();
-
         if (generate_response?.error) {
-          // alert(generate_response?.error);
           toast.error(generate_response?.error);
-
           setLoader(false);
-
           return false;
         } else {
           try {
@@ -1203,10 +1416,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
             if (datares.ok) {
               setJobIdOne([generate_response?.job_id]);
-
               GetProjextById(proid);
             }
-            // window.open(`/generate/${datares?._id}`, "_self");
           } catch (error) {}
         }
       } catch (error) {
@@ -1215,97 +1426,83 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setGenerationLoader(false);
       }
     } else {
-      if (renderer === null) {
-      } else {
-        console.log("dsfdfgdg");
-        setLoader(true);
-
-        const promtText = promtFull;
-        const screenshot = renderer.domElement.toDataURL("image/png");
-        var img = new Image();
-
-        // Set an onload event handler
-        let scaledDataURL;
-        img.onload = function () {
-          // Scale down the image by setting its width and height to 0.5 times the original dimensions
-          img.width *= 0.5;
-          img.height *= 0.5;
-
-          // Create a canvas to draw the scaled image
-          var canvas = document.createElement("canvas");
-          canvas.width = img.width;
-          canvas.height = img.height;
-          var ctx = canvas.getContext("2d");
-          if (ctx) {
-            ctx.drawImage(img, 0, 0, img.width, img.height);
-          }
-
-          // Get the scaled data URL
-          scaledDataURL = canvas.toDataURL("image/png");
-
-          // Now, scaledDataURL contains the data URL of the image scaled down to 0.5 of its original size.
-          // You can use it as needed.
-        };
-
-        // Set the source of the image to the original data URL
-        img.src = screenshot;
-
-        const response = await fetch("/api/generate", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            dataUrl: scaledDataURL,
-            maskDataUrl: null,
-            prompt: promtText.trim(),
-            user_id: userId,
-            category: category,
-            lora_type: loara,
-            num_images: selectResult,
-          }),
-        });
-
-        const generate_response = await response.json();
-
-        if (generate_response?.error) {
-          // alert(generate_response?.error);
-          toast.error(generate_response?.error);
-
-          setLoader(false);
-
-          return false;
-        } else {
-          setLoader(true);
-
-          try {
-            const response = await fetch(
-              `${process.env.NEXT_PUBLIC_API}/jobId`,
-              {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  userId: userId,
-                  projectId: proid,
-                  jobId: generate_response?.job_id,
-                }),
-              }
-            );
-            const datares = await response;
-
-            if (datares.ok) {
-              setJobIdOne([generate_response?.job_id]);
-
-              GetProjextById(proid);
-            }
-            // window.open(`/generate/${datares?._id}`, "_self");
-          } catch (error) {
-            setLoader(false);
-          }
-        }
-      }
+      // if (renderer === null) {
+      // } else {
+      //   console.log("dsfdfgdg");
+      //   setLoader(true);
+      //   const promtText = promtFull;
+      //   const screenshot = renderer.domElement.toDataURL("image/png");
+      //   var img = new Image();
+      //   // Set an onload event handler
+      //   let scaledDataURL;
+      //   img.onload = function () {
+      //     // Scale down the image by setting its width and height to 0.5 times the original dimensions
+      //     img.width *= 0.5;
+      //     img.height *= 0.5;
+      //     // Create a canvas to draw the scaled image
+      //     var canvas = document.createElement("canvas");
+      //     canvas.width = img.width;
+      //     canvas.height = img.height;
+      //     var ctx = canvas.getContext("2d");
+      //     if (ctx) {
+      //       ctx.drawImage(img, 0, 0, img.width, img.height);
+      //     }
+      //     // Get the scaled data URL
+      //     scaledDataURL = canvas.toDataURL("image/png");
+      //     // Now, scaledDataURL contains the data URL of the image scaled down to 0.5 of its original size.
+      //     // You can use it as needed.
+      //   };
+      //   // Set the source of the image to the original data URL
+      //   img.src = screenshot;
+      //   const response = await fetch("/api/generate", {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify({
+      //       dataUrl: scaledDataURL,
+      //       maskDataUrl: null,
+      //       prompt: promtText.trim(),
+      //       user_id: userId,
+      //       category: category,
+      //       lora_type: loara,
+      //       num_images: selectResult,
+      //     }),
+      //   });
+      //   const generate_response = await response.json();
+      //   if (generate_response?.error) {
+      //     // alert(generate_response?.error);
+      //     toast.error(generate_response?.error);
+      //     setLoader(false);
+      //     return false;
+      //   } else {
+      //     setLoader(true);
+      //     try {
+      //       const response = await fetch(
+      //         `${process.env.NEXT_PUBLIC_API}/jobId`,
+      //         {
+      //           method: "POST",
+      //           headers: {
+      //             "Content-Type": "application/json",
+      //           },
+      //           body: JSON.stringify({
+      //             userId: userId,
+      //             projectId: proid,
+      //             jobId: generate_response?.job_id,
+      //           }),
+      //         }
+      //       );
+      //       const datares = await response;
+      //       if (datares.ok) {
+      //         setJobIdOne([generate_response?.job_id]);
+      //         GetProjextById(proid);
+      //       }
+      //       // window.open(`/generate/${datares?._id}`, "_self");
+      //     } catch (error) {
+      //       setLoader(false);
+      //     }
+      //   }
+      // }
     }
   };
 
@@ -1324,7 +1521,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     if (subjectCount === 0) {
       toast("Add product first");
     } else {
-      // console.log(promt);
       setLoader(true);
       setCanvasDisable(true);
       setGenerationLoader(true);
@@ -1342,12 +1538,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
         // Make image with only the subject objects
         const subjectCanvas = new fabric.Canvas(null, {
-          // width: newEditorBox.width,
-          // height: newEditorBox.height,
-          // top: newEditorBox.top,
-          // left: newEditorBox.left,
-          // left: activeSize.l,
-          // top: activeSize.t,
           width: 512,
           height: 512,
         } as any);
@@ -1362,15 +1552,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         });
         const subjectDataUrlJson = subjectCanvas.toJSON();
         const updatedObject = {
-          width: activeSize.w, // Add the new key-value pair
+          width: activeSize.w,
           height: activeSize.h,
-          ...subjectDataUrlJson, // Spread the existing object
+          ...subjectDataUrlJson,
         };
-        console.log(updatedObject, "dsfdf");
 
         // const subjectDataUrl = subjectCanvas.toDataURL("image/png");
-
-        console.log(subjectDataUrl, "subject");
 
         const promtText = promtFull;
 
@@ -1395,19 +1582,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         const generate_response = await response.json();
         if (generate_response) {
           if (generate_response?.error) {
-            // alert(generate_response?.error);
             toast.error(generate_response?.error);
-
             setLoader(false);
-
             return false;
           } else {
-            console.log("dsfffffffffffffff", generate_response?.job_id);
             setJobIdOne([generate_response?.job_id]);
-
             GetProjextById(proid);
-
-            // window.open(`/generate/${datares?._id}`, "_self");
           }
         }
       } catch (error) {
@@ -1428,14 +1608,10 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         toast("Add a 3d model");
       } else {
         setLoader(true);
-
         const promtText = promtFull;
-
         // const screenshot = renderer.domElement.toDataURL("image/png");
         const screenshot = renderer.domElement.toDataURL("image/png", 0.5);
-
         var img = new Image();
-
         // Set an onload event handler
         let scaledDataURL;
         img.onload = async function () {
@@ -1477,43 +1653,31 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           const generate_response = await response.json();
 
           if (generate_response?.error) {
-            // alert(generate_response?.error);
             toast.error(generate_response?.error);
-
             setLoader(false);
-
             return false;
           } else {
             setLoader(true);
 
             try {
               setJobIdOne([generate_response?.job_id]);
-
-              // GetProjextById(proid);
               axios
                 .get(`${process.env.NEXT_PUBLIC_API}/user?id=${ueserId}`)
                 .then((response) => {
                   console.log(response?.data?.jobIds3D, "dsfgdgfd");
                   setproject(response.data);
                   setJobId(response?.data?.jobIds3D);
-                  // return response.data;
                 })
                 .catch((error) => {
                   console.error(error);
                   return error;
                 });
-
-              // window.open(`/generate/${datares?._id}`, "_self");
             } catch (error) {
               setLoader(false);
             }
           }
-
-          // Now, scaledDataURL contains the data URL of the image scaled down to 0.5 of its original size.
-          // You can use it as needed.
         };
 
-        // Set the source of the image to the original data URL
         img.src = screenshot;
 
         console.log(scaledDataURL, "fsddsfds");
@@ -1524,11 +1688,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [reloder, setreLoader] = useState(true);
 
   // regenrate
-  const RegenerateImageHandeler = async (
-    ueserId: any,
-    proid: any,
-    img: any
-  ) => {
+  const RegenerateImageHandeler = async (ueserId: any) => {
     setLoader(true);
     setGenerationLoader(true);
     try {
@@ -1545,14 +1705,10 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           image_url: regenratingId,
           user_id: ueserId,
           category: category,
-
-          // lora_type: loara,
-          // num_images: 3,
         }),
       });
 
       const generate_response = await response.json();
-      console.log(generate_response, "generate_response");
 
       if (generate_response?.error) {
         toast.error(generate_response?.error);
@@ -1566,24 +1722,22 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           setreLoader(false);
 
           setRegenratedImgsJobid(generate_response?.job_id);
-
-          console.log(generate_response?.job_id);
         } catch (error) {
           setreLoader(false);
         }
       }
+      //  commet r
+      // setTimeout(async function () {
+      //   const loadeImge = await fetchGeneratedImages(ueserId);
 
-      setTimeout(async function () {
-        const loadeImge = await fetchGeneratedImages(ueserId);
+      //   setSelectedImg({
+      //     status: true,
+      //     image: loadeImge[0]?.modified_image_url,
+      //     modifiedImage: loadeImge[0]?.modified_image_url,
+      //   });
 
-        setSelectedImg({
-          status: true,
-          image: loadeImge[0]?.modified_image_url,
-          modifiedImage: loadeImge[0]?.modified_image_url,
-        });
-
-        setGeneratedImgList(loadeImge.slice(0, 20));
-      }, 30000);
+      //   setGeneratedImgList(loadeImge?.slice(0, 20));
+      // }, 30000);
     } catch (error) {
       console.error("Error generating image:", error);
     } finally {
@@ -1591,7 +1745,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     }
   };
 
-  const [loadercarna, setloadercarna] = useState(false);
   const getSupabaseImage = async () => {
     if (userId !== null) {
       const { data, error } = await supabase
@@ -1600,31 +1753,30 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         .eq("user_id", userId)
         .order("created_at", { ascending: false });
 
-      if (data.length > 0) {
-        console.log(data, "dataaaaa");
+      if (data) {
         setGeneratedImgList(data);
         return data;
       } else if (error) {
         return error;
       }
     } else {
-      const { datas } = await supabase.auth.getSession();
-      if (datas.session) {
-        const { data, error } = await supabase
-          .from(IMG_TABLE)
-          .select("*")
-          .eq("user_id", data?.session.user.id)
-          .order("created_at", { ascending: false });
+      // const  datass  = await supabase.auth.getSession();
+      // const  datas = await datass?.data
+      // if (datas?.session) {
+      const { data, error } = await supabase
+        .from(IMG_TABLE)
+        .select("*")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false });
 
-        if (data.length > 0) {
-          console.log(data, "dataaaaa");
-          setGeneratedImgList(data);
+      if (data) {
+        setGeneratedImgList(data);
 
-          return data;
-        } else if (error) {
-          return error;
-        }
+        return data;
+      } else if (error) {
+        return error;
       }
+      // }
     }
   };
   return (
@@ -1709,14 +1861,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setproject,
         saveCanvasToDatabase,
         generateBox,
-        canvasHistory,
         currentCanvasIndex,
         regeneratePopup,
         setRegeneratePopup,
         addtoRecntly,
-        btnVisible,
         generateImageHandeler,
-        setBtnVisible,
+
         PosisionbtnRef,
         regenerateRef,
         bringImageToFront,
@@ -1729,8 +1879,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         canvasInstance,
         addimgToCanvasGen,
         addimgToCanvasQuike,
-        genRect,
-        setgenRect,
         outerDivRef,
         addimgToCanvas,
         addimgToCanvasSubject,
@@ -1749,13 +1897,11 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setRegenratedImgsJobid,
         jobId,
         setJobId,
-        canvasHistoryRef,
         currentStep,
         setCurrentStep,
         popupImage,
         setPopupImage,
-        newassetonCanvas,
-        setNewassetonCanvas,
+
         jobIdOne,
         setJobIdOne,
         file,
@@ -1775,6 +1921,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         selectColoreMode,
         setSelectedColoreMode,
         selectResult,
+        canvasHistory,
         setSelectedresult,
         selectRender,
         setSelectedRender,
@@ -1842,6 +1989,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         assetL3doader,
         setasset3dLoader,
         newEditorBox,
+
+        canvasHistoryRef,
       }}
     >
       {children}

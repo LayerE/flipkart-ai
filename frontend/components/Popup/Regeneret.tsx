@@ -1,3 +1,6 @@
+
+/// <reference no-default-lib="true"/>
+
 import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import Button from "../common/Button";
@@ -6,16 +9,10 @@ import { fabric } from "fabric";
 import { useRouter } from "next/router";
 import { useSession } from "@supabase/auth-helpers-react";
 
-const Regeneret = () => {
+const Regeneret = ()=> {
   const session = useSession();
-  // const [userId, setUserId] = useState<string | null>(null);
-  // useEffect(() => {
-  //   if (session) {
-  //     setUserId(session.user.id);
-  //   }
-  // }, [session]);
+
   const { query, isReady } = useRouter();
-  // const { id } = query;
   const id = (query.id as string[]) || [];
 
   const {
@@ -25,8 +22,8 @@ const Regeneret = () => {
     positionBtn,
     canvasInstance,
     generatedImgList,
-    reloder,
-    setreLoader,
+
+
     GetProjextById,
     regenratedImgsJobId,
     setRegenratedImgsJobid,
@@ -38,15 +35,13 @@ const Regeneret = () => {
     userId,
   } = useAppState();
 
-  // const [loder, setLoader] = useState(true);
 
   const [selectedCards, setSelectedCards] = useState([]);
-  const [cards] = useState(["Card 1", "Card 2", "Card 3", "Card 4"]);
   const [filteredArray, setFilteredArray] = useState([]);
 
-  useEffect(() => {
+  useEffect(()=> {
     const filteredResult = generatedImgList.filter(
-      (obj) => obj?.task_id === regenratedImgsJobId
+      (obj)=> obj?.task_id === regenratedImgsJobId
     );
     setFilteredArray(filteredResult);
     console.log(generatedImgList, "dfd");
@@ -60,26 +55,26 @@ const Regeneret = () => {
     console.log(filteredResult, "sdfds", regenratedImgsJobId);
   }, [generatedImgList, regenratedImgsJobId]);
 
-  useEffect(() => {
-    const time = setInterval(() => {
+  useEffect(()=> {
+    const time = setInterval(()=> {
       fetchGeneratedImages(userId);
     }, 5000);
 
-    return () => {
+    return ()=> {
       clearInterval(time);
     };
   }, []);
 
-  const addimgToCanvasGen = async (url: string[]) => {
+  const addimgToCanvasGen = async (url: string[])=> {
     const gridSize = 2;
 
-    // Calculate cell width and height
+
     const cellWidth = canvasInstance.current.width / gridSize;
     const cellHeight = canvasInstance.current.height / gridSize;
     console.log(`dgf`, url);
     let incr = 0;
 
-    url.forEach(async (imageSrc, index) => {
+    url.forEach(async (imageSrc, index)=> {
       const row = Math.floor(index / gridSize);
       const col = index % gridSize;
       console.log(cellWidth, cellHeight, gridSize);
@@ -102,14 +97,14 @@ const Regeneret = () => {
           let scaledWidth = maxWidth;
           let scaledHeight = scaledWidth / imageAspectRatio;
 
-          img.on("moving", () => {
+          img.on("moving", ()=> {
             positionBtn(img);
           });
 
           img.on("scaling", function () {
             positionBtn(img);
           });
-          const getRandomPosition = (max) => Math.floor(Math.random() * max);
+          const getRandomPosition = (max)=> Math.floor(Math.random() * max);
 
           const randomLeft = getRandomPosition(
             canvasInstance?.current?.width / img.width
@@ -126,7 +121,6 @@ const Regeneret = () => {
           img.scaleToHeight(scaledHeight);
 
           console.log(img);
-          // canvasInstance.current.clear();
           canvasInstance.current.add(img);
           canvasInstance.current.setActiveObject(img);
           canvasInstance.current.renderAll();
@@ -136,20 +130,17 @@ const Regeneret = () => {
     });
   };
 
-  const handleCardChange = (image) => {
+  const handleCardChange = (image)=> {
     const selectedCard = image;
     if (selectedCards.includes(selectedCard)) {
-      setSelectedCards(selectedCards.filter((card) => card !== selectedCard));
+      setSelectedCards(selectedCards.filter((card)=> card !== selectedCard));
     } else {
       setSelectedCards([...selectedCards, selectedCard]);
     }
   };
 
-  const addImges = async () => {
+  const addImges = async ()=> {
     try {
-      // setSelectedresult(1);
-
-      // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
 
       const response = await fetch(`${process.env.NEXT_PUBLIC_API}/jobId`, {
         method: "POST",
@@ -162,24 +153,20 @@ const Regeneret = () => {
           jobId: regenratedImgsJobId,
         }),
       });
-      // // console.log(await response.json(), "dfvcvdfvdvcdsd");
       const datares = await response;
 
       if (datares.ok) {
         setJobId((pre) => [...pre, regenratedImgsJobId]);
-        // setRegenratedImgsJobid(generate_response?.job_id);
-        // localStorage.setItem("jobId", jobId);
         setCanvasDisable(false);
         setLoader(false);
-
         GetProjextById(id);
         addimgToCanvasGen(selectedCards);
         setRegeneratePopup({ statu: false });
-        // setActiveTab(1);
       }
-      // window.open(`/generate/${datares?._id}`, "_self");
+
     } catch (error) {
-      // Handle error
+      console.log(error);
+
     }
   };
 
@@ -188,7 +175,7 @@ const Regeneret = () => {
       <div className="wrapper">
         <div
           className="close"
-          onClick={() => {
+          onClick={()=> {
             setRegeneratePopup({ statu: false });
             setActiveTab(1);
             setCanvasDisable(false);
@@ -205,7 +192,7 @@ const Regeneret = () => {
           </svg>
         </div>
 
-        {filteredArray.length && !reloder ? (
+        {filteredArray.length  ? (
           <div className="gride">
             <div className={` griteitem`} onClick={() => ""}>
               <DaoderWarpperL></DaoderWarpperL>
@@ -241,7 +228,7 @@ const Regeneret = () => {
               <picture className="">
                 <img src={regeneratePopup.url} alt="image" />
 
-                {/* <img src={regeneratePopup?.url} alt="image" /> */}
+               
               </picture>
             </div>
             <div className={` griteitem`} onClick={() => ""}>
@@ -255,7 +242,7 @@ const Regeneret = () => {
               <picture className="griteitemLoading">
                 <img src={regeneratePopup.url} alt="image" />
 
-                {/* <img src={regeneratePopup?.url} alt="image" /> */}
+           
               </picture>
             </div>
             <div className={` griteitem`} onClick={() => ""}>
@@ -269,7 +256,7 @@ const Regeneret = () => {
               <picture className="griteitemLoading">
                 <img src={regeneratePopup.url} alt="image" />
 
-                {/* <img src={regeneratePopup?.url} alt="image" /> */}
+             
               </picture>
             </div>
             <div className={` griteitem`} onClick={() => ""}>
@@ -283,12 +270,12 @@ const Regeneret = () => {
               <picture className="griteitemLoading">
                 <img src={regeneratePopup.url} alt="image" />
 
-                {/* <img src={regeneratePopup?.url} alt="image" /> */}
+              
               </picture>
             </div>
           </div>
         )}
-        {}
+       
         <div className="btns">
           <div>
             {selectedCards?.length > 0 ? (

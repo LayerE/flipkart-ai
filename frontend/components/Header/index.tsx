@@ -17,6 +17,9 @@ const Header = () => {
 
   const router = useRouter();
   const isGeneratorRoute = router.pathname === "/generate";
+  const is3DGeneratorRoute = router.pathname === "/generate-3d/[id]";
+  const isqUICKGeneratorRoute = router.pathname === "/quick-generator/[id]";
+
   const [projectName, setProjectName] = useState("Untitled");
   const [back, setBAck] = useState(false);
   const [userData, setuserData] = useState();
@@ -24,8 +27,10 @@ const Header = () => {
 
   const currentRoute = router.pathname;
   useEffect(() => {
-   
+    console.log(router.pathname);
     if (currentRoute === "/generate-3d/[id]") {
+      setBAck(true);
+    } else if (currentRoute === "/quick-generator/[id]") {
       setBAck(true);
     } else {
       setBAck(false);
@@ -59,12 +64,11 @@ const Header = () => {
       }
     };
     checkSession();
-   
-  }, [ session]);
+  }, [session]);
 
-  const logoutH = async ()=> {
-    await supabase.auth.signOut()
-  }
+  const logoutH = async () => {
+    await supabase.auth.signOut();
+  };
 
   const handleButtonClick = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
@@ -82,7 +86,7 @@ const Header = () => {
     <Headers>
       <RowBetween>
         {back ? (
-          <Link href={"/"}>
+          <Link href={"/tools"}>
             <div className="backbt">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

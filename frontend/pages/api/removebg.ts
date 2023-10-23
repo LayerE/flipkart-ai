@@ -6,7 +6,7 @@ const { createCanvas, loadImage } = require("canvas");
 export const config = {
   api: {
     bodyParser: {
-      sizeLimit: "4mb", // Set desired value here
+      sizeLimit: "25mb", // Set desired value here
     },
   },
 };

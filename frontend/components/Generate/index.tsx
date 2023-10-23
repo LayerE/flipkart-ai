@@ -212,8 +212,8 @@ const Generate = () => {
               ref={genrateeRef}
               onClick={() =>
                 TDMode
-                  ? generate3dHandeler(session?.user?.id, id)
-                  : generateImageHandeler(session?.user?.id, id)
+                  ? generate3dHandeler(userId, id)
+                  : generateImageHandeler(userId, id)
               }
               disabled={promtFull === " " ? true : false}
             >

@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-key */
+/// <reference no-default-lib="true"/>
 import React,{useEffect} from "react";
 import { styled } from "styled-components";
 
@@ -14,7 +16,7 @@ import { useAppState } from "@/context/app.context";
 const Tools = () => {
   const session = useSession();
   const { userId } = useAppState();
-  // const [userId, setUserId] = useState<string | null>(null);
+ 
 
   const router = useRouter();
 
@@ -43,25 +45,10 @@ const Tools = () => {
       url: "/quick-generator/",
       img: "https://thumbs.dreamstime.com/b/space-background-galaxy-nebula-blue-orange-clouds-neural-network-ai-generated-art-271138821.jpg",
     },
-    // {
-    //   name: "Tool Name",
-    //   discription: "Discription about this tool",
-    // },
-    // {
-    //   name: "Tool Name",
-    //   discription: "Discription about this tool",
-    // },
-    // {
-    //   name: "Tool Name",
-    //   discription: "Discription about this tool",
-    // },
-    // {
-    //   name: "Tool Name",
-    //   discription: "Discription about this tool",
-    // },
+
   ];
 
-  const Redirect = (url, route) => {
+  const Redirect = (url:string, route: string) => {
     if (route) {
       router.push(url + userId);
     } else {
@@ -74,21 +61,22 @@ const Tools = () => {
         <div className="headerText">Tools</div>
 
         <div className="gridbox">
-          {toolslist?.map((tool: object[]) => (
+          {toolslist?.map((tool: any, i: key) => (
             <div
+            key={i}
               className="tool-cards"
-              onClick={() => Redirect(tool.url, tool.route)}
+              onClick={() => Redirect(tool?.url, tool?.route)}
             >
               <div className="imgeWrapper">
                 <div className="imgbox">
                   <picture>
-                    <img src={tool.img} alt="" />
+                    <img src={tool?.img} alt="" />
                   </picture>
                 </div>
               </div>
               <div className="tool-details">
-                <div className="name">{tool.name}</div>
-                <div className="discription">{tool.discription}</div>
+                <div className="name">{tool?.name}</div>
+                <div className="discription">{tool?.discription}</div>
               </div>
             </div>
           ))}

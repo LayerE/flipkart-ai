@@ -1,3 +1,5 @@
+/// <reference no-default-lib="true"/>
+
 import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OBJLoader } from "three/addons/loaders/OBJLoader.js";
@@ -810,7 +812,7 @@ const Canvas3d = () => {
       {isMagic ? <PopupCanvas /> : null}
       {crop ? <CropperBox /> : null}
 
-      {romovepopu3d.status ? <RemoveBox type={"bgRevcbvmove"} /> : null}
+      {romovepopu3d.status ? <RemoveBox  /> : null}
       {
         loader ?
 

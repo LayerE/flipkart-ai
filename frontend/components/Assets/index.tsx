@@ -102,7 +102,7 @@ const Assets: React.FC = () => {
 
         <ResponsiveRowWraptwo>
           {listofassets?.length
-            ? listofassets?.map((test, i) => (
+            ? listofassets?.map((test: any, i:number) => (
                 <div
                   key={i}
                   className={"imageBox"}

@@ -16,8 +16,7 @@ const PopupCard = () => {
     setPopupImage,
     handileDownload,
     GetProjexts,
-    newassetonCanvas,
-    setNewassetonCanvas,
+
     AssetsActivTab,
   } = useAppState();
 
@@ -50,7 +49,7 @@ const PopupCard = () => {
           // console.log(await response.json(), "dfvcvdfvdvcdsd");
           const datares = await response.json();
           if (datares?._id) {
-            setNewassetonCanvas(popupImage.list[currentIndex]?.image_url);
+           
 
             GetProjexts(popupImage.userId);
             setPopupImage({ statu: false });

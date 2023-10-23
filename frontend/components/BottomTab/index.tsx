@@ -1,3 +1,5 @@
+/// <reference no-default-lib="true"/>
+
 import { useAppState } from "@/context/app.context";
 import React, { useState } from "react";
 import { styled } from "styled-components";
@@ -15,18 +17,9 @@ const BottomTab = () => {
     canvasHistoryRef,
     canvasHistory,
     currentCanvasIndex,
-    zoom, setZoomCanvas,
-  
+    zoom,
+    setZoomCanvas,
   } = useAppState();
-
-  // canvs
-
-  //   const canvasRef = useRef(null);
-
-  // const [canvas, setCanvas] = useState(null);
-  // const [canvasHistory, setCanvasHistory] = useState([]);
-  // const [currentStep, setCurrentStep] = useState(-1);
-  // Initialize the canvas when the component mounts
 
   const handileUndo = () => {
     if (currentCanvasIndex.current > 0) {
@@ -36,27 +29,6 @@ const BottomTab = () => {
       );
       canvasInstance.current.renderAll();
     }
-    // if (modifidImageArray.length > 1) {
-    //   setUndoArray((pre) => [
-    //     ...pre,
-    //     modifidImageArray[modifidImageArray.length - 1],
-    //   ]);
-
-    //   setModifidImageArray((pre) => {
-    //     const lastElement = pre[pre.length - 1];
-    //     if (lastElement && lastElement.tool) {
-    //         setSelectedImg((prevState) => ({
-    //         ...prevState,
-    //         tools: {
-    //           ...prevState.tools,
-    //           [lastElement.tool]: false,
-    //         },
-    //       }));
-    //     }
-
-    //     return pre.slice(0, -1);
-    //   });
-    // }
   };
   const handilePre = () => {
     if (currentCanvasIndex.current < canvasHistory.current.length - 1) {
@@ -66,14 +38,11 @@ const BottomTab = () => {
       );
       canvasInstance.current.renderAll();
     }
-
   };
 
   return (
     <BottomTabWtapper>
       <div className="bottomTab">
-
-      
         <div className="right">
           <div className="undo" onClick={handileUndo}>
             <svg
@@ -124,28 +93,24 @@ const BottomTabWtapper = styled.div`
   padding: 0 50px;
   z-index: 100;
 
-  .serch{
+  .serch {
     width: 20px;
     height: 20px;
   }
-  .left{
+  .left {
     display: flex;
-      justify-content: start;
-      align-items: center;
-      width: 100%;
+    justify-content: start;
+    align-items: center;
+    width: 100%;
 
-    .zoom{
-    display: flex;
-    gap: 10px;
+    .zoom {
+      display: flex;
+      gap: 10px;
 
-    svg{
-      cursor: pointer;
+      svg {
+        cursor: pointer;
+      }
     }
-    
-     
-
-    }
-
   }
 
   .bottomTab {
@@ -170,11 +135,8 @@ const BottomTabWtapper = styled.div`
   .undo {
   }
 
-
-
-
-    /* Chrome, Safari, Edge, Opera */
-    input::-webkit-outer-spin-button,
+  /* Chrome, Safari, Edge, Opera */
+  input::-webkit-outer-spin-button,
   input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
@@ -231,7 +193,7 @@ const BottomTabWtapper = styled.div`
   }
   input[type="range"]::-moz-range-thumb {
     box-shadow: 0px 0px 0px #000000;
-    border: 1px solid #rgba(249, 208, 13, 1);
+    border: 1px solid rgba(249, 208, 13, 1);
     height: 18px;
     width: 18px;
     border-radius: 25px;

@@ -1,44 +1,23 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Row } from "../common/Row";
 import Label from "../common/Label";
-import { FileUpload, FileUpload3D, Input } from "../common/Input";
-import DropdownInput from "../common/Dropdown";
+import { FileUpload3D, Input } from "../common/Input";
 import { styled } from "styled-components";
-// import { category, test } from "@/store/dropdown";
 import { useAppState } from "@/context/app.context";
-import { productList } from "@/store/listOfElement";
 import { useRouter } from "next/router";
 import Button from "../common/Button";
 import { formate3d } from "@/store/format";
-import { useSession } from "@supabase/auth-helpers-react";
-// import { fabric } from "fabric";
 
-const Assets3d: React.FC = () => {
-  const session = useSession();
-  const [userId, setUserId] = useState<string | null>(null);
-    useEffect(() => {
-      if (session) {
-        setUserId(session.user.id);
-      }
-    }, [session]);
+
+const Assets3d = () => {
+
+ 
   const {
-    setProduct,
-    uploadedProductlist,
-
-    setUploadedProductlist,
-    // addimgToCanvas,
-    listofassets,
-    setListOfAssets,
-    fetchAssetsImages,
     fetchAssetsImagesWithProjectId,
     listofassetsById,
-    setListOfAssetsById,
-    addimgToCanvasSubject,
-    getBase64FromUrl,
-    assetLoader,
+
     file3dUrl,
     setFile3dUrl,
-    loader,
     setFile3d,
     file3dName,
     file3d,
@@ -46,30 +25,24 @@ const Assets3d: React.FC = () => {
     assetL3doader,
     setFile3dName,
     setTdFormate,
+    userId
   } = useAppState();
   const { query, isReady } = useRouter();
-  // const { id } = query;
-  const id = (query.id as string[]) || [];
 
-  const [filter, setFilter] = useState();
+  const id = (query.id as string[]) || [];
   const [re, setRe] = useState(1);
+
   useEffect(() => {
     if (re <= 10) {
       setRe(re + 1);
     }
     if (userId && isReady) {
       fetchAssetsImagesWithProjectId(userId, id);
-
-      const filer = listofassetsById?.filter((item) => item.project_id === id);
-      setFilter(filer);
-      console.log(listofassetsById, "dfdf");
-      console.log(file3dName, "dsfdccccccccccccccccccccccccccccccccccfdf");
     }
   }, [isReady, userId, re, file3dUrl, file3d]);
 
-  // listofassets
   const [url, setUrl] = useState(null);
-  function slideName(name: string) {
+  function slideName(name : string) {
     const maxLength = 8;
     let displayedName;
 
@@ -83,34 +56,30 @@ const Assets3d: React.FC = () => {
 
     return displayedName;
   }
-  const addUrl = (e) => {
+  const addUrl = (e: any) => {
     setUrl(e.target.value);
   };
   const HandileUrl = () => {
     setUrl(null);
     setFile3d(null);
     setFile3dUrl(url);
-    const name = slideName(url);
-    setFile3dName({ name: name });
+    if (url) {
+      const name = slideName(url);
+      setFile3dName({ name: name });
+    }
   };
 
-  function truncateString(inputString:string) {
-    // Check if the input string has at least 11 characters
+  function truncateString(inputString: string) {
     if (inputString.length >= 11) {
-      // Extract the first 5 characters
       const firstPart = inputString.slice(0, 15);
-      // Extract the last 5 characters
       const lastPart = inputString.slice(-15);
-      // Create the truncated string with three dots in the middle
       const truncatedString = `${firstPart}...${lastPart}`;
-      
       return truncatedString;
     } else {
-      // If the input string has less than 11 characters, return it as is
       return inputString;
     }
   }
-  
+
   return (
     <div className="accest">
       {file3dName?.name && !assetL3doader ? (
@@ -136,8 +105,9 @@ const Assets3d: React.FC = () => {
           </Row>
           <FormateBtnBox>
             <div className="formatfox">
-              {formate3d.map((formate) => (
+              {formate3d.map((formate, i) => (
                 <div
+                  key={i}
                   className={
                     tdFormate === formate.formate
                       ? "formatebtn activFormate"

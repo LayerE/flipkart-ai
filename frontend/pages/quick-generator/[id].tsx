@@ -26,8 +26,7 @@ const QuickGenerator = () => {
     regeneratePopup,
     generateImageHandeler,
     SaveProjexts,
-    newassetonCanvas,
-    setNewassetonCanvas,
+
     GetProjextById,
     setproject,
     project,
@@ -37,7 +36,6 @@ const QuickGenerator = () => {
     projectId,
     setprojectId,
 
-    setUserId,
     setGeneratedImgList,
     saveCanvasToDatabase,
     filteredArray,
@@ -68,7 +66,7 @@ const QuickGenerator = () => {
       checkSession();
     }
   }, []);
-  const upateImage = (url) => {
+  const upateImage = (url: string) => {
     if (!loader) {
       // addimgToCanvasGen(url);
       setSelectedImg({ status: true, image: url });
@@ -86,24 +84,23 @@ const QuickGenerator = () => {
     return () => {
       clearInterval(times);
     };
-  }, [isReady, userId,jobIdOne,jobId]);
+  }, [isReady, userId, jobIdOne, jobId]);
 
   const fetchAssetsImages = async () => {
     try {
       const data = await getSupabaseImage();
-      if (data?.length) {
+      if (data) {
         const filteredResults = await data?.filter((obj: any) =>
           jobIdOne?.includes(obj?.task_id)
         );
-console.log(jobIdOne)
+
         const filteredResultss = await data?.filter(
           (obj: any) => obj?.is_quick === true
         );
-        console.log(filteredResults, "dfd", filteredResultss);
 
         if (filteredResults?.length) {
           setLoader(false);
-          setGenerationLoader(false)
+          setGenerationLoader(false);
           setCanvasDisable(true);
 
           setJobIdOne([]);
@@ -124,7 +121,7 @@ console.log(jobIdOne)
         {filteredArray?.length > 0 ? (
           <div className="generatedBox">
             <div className="itemsWrapper">
-              {filteredArray?.map((item, i) => (
+              {filteredArray?.map((item: any, i: number) => (
                 <div
                   key={i}
                   className="items"
@@ -135,11 +132,10 @@ console.log(jobIdOne)
                   </picture>
                 </div>
               ))}
-             
             </div>
           </div>
         ) : null}
-      
+
         <QuickCanvas />
       </div>
     </MainPages>

@@ -182,35 +182,35 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {
-    const canvas1 = canvasInstance?.current;
+  // useEffect(() => {
+  //   const canvas1 = canvasInstance?.current;
 
-    const objects = canvas1?.getObjects();
-    const subjectObjects = [];
-    objects?.forEach((object: any) => {
-      if (object.category === "subject") {
-        subjectObjects.push(object);
-      }
-    });
-    const state = false;
-    setTimeout(() => {
-      if (subjectObjects.length <= 0 && newassetonCanvas !== null) {
-        console.log(
-          newassetonCanvas,
-          subjectObjects.length,
-          newassetonCanvas !== null
-        );
-        let state = true;
-        if (newassetonCanvas !== null && state) {
-          state = false;
+  //   const objects = canvas1?.getObjects();
+  //   const subjectObjects = [];
+  //   objects?.forEach((object: any) => {
+  //     if (object.category === "subject") {
+  //       subjectObjects.push(object);
+  //     }
+  //   });
+  //   const state = false;
+  //   setTimeout(() => {
+  //     if (subjectObjects.length <= 0 && newassetonCanvas !== null) {
+  //       console.log(
+  //         newassetonCanvas,
+  //         subjectObjects.length,
+  //         newassetonCanvas !== null
+  //       );
+  //       let state = true;
+  //       if (newassetonCanvas !== null && state) {
+  //         state = false;
 
-          addimgToCanvasSubject(newassetonCanvas);
-        }
+  //         addimgToCanvasSubject(newassetonCanvas);
+  //       }
 
-        setNewassetonCanvas(null);
-      }
-    }, 1000);
-  }, []);
+  //       setNewassetonCanvas(null);
+  //     }
+  //   }, 1000);
+  // }, []);
 
   return (
     <MainPages>

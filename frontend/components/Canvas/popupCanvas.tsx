@@ -27,8 +27,6 @@ const PopupCanvas = () => {
   const popucanvasRef = useRef(null);
 
   const {
-    // magickErase,
-    // setMagickErase,
 
     isMagic,
     setIsMagic,

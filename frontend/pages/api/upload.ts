@@ -1,3 +1,6 @@
+
+
+
 import { NextResponse, NextRequest } from "next/server";
 import axios from "axios";
 import FormData from "form-data";
@@ -104,14 +107,14 @@ export default async function handler(req: NextRequest, res: NextResponse) {
     const { url: imageUrl, height, width } = await uploadImage(dataUrl);
 
     if (image_type == "image") {
-
       // Add the image to the database
       await fetch(
         `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/${process.env.NEXT_PUBLIC_BACKGROUND_REMOVED_IMAGES_TABLE}`,
         {
           headers: {
             apikey: process.env.SUPABASE_SERVICE_KEY as string,
-            Authorization: `Bearer ${process.env.SUPABASE_SERVICE_KEY}` as string,
+            Authorization:
+              `Bearer ${process.env.SUPABASE_SERVICE_KEY}` as string,
             "Content-Type": "application/json",
           },
           method: "POST",
@@ -129,7 +132,8 @@ export default async function handler(req: NextRequest, res: NextResponse) {
         {
           headers: {
             apikey: process.env.SUPABASE_SERVICE_KEY as string,
-            Authorization: `Bearer ${process.env.SUPABASE_SERVICE_KEY}` as string,
+            Authorization:
+              `Bearer ${process.env.SUPABASE_SERVICE_KEY}` as string,
             "Content-Type": "application/json",
           },
           method: "POST",
