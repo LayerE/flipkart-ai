@@ -13,12 +13,7 @@ import { useSession } from "@supabase/auth-helpers-react";
 
 const Assets: React.FC = () => {
   const session = useSession();
-  const [userId, setUserId] = useState<string | null>(null);
-    useEffect(() => {
-      if (session) {
-        setUserId(session.user.id);
-      }
-    }, [session]);
+ 
   const {
     setProduct,
     uploadedProductlist,
@@ -34,6 +29,7 @@ const Assets: React.FC = () => {
     assetLoader,
     fetchAssetsImages,
     loader,
+    userId
   } = useAppState();
   const { query, isReady } = useRouter();
   const { id } = query;
