@@ -29,7 +29,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
 
-    console.log(isSignInPage)
+    
     const checkSession = async () => {
       const { data } = await supabase.auth.getSession();
       if (data.session) {
