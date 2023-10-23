@@ -11,26 +11,6 @@ export const config = {
   },
 };
 
-async function getImageDimensions(base64Url: string) {
-  const canvas = createCanvas();
-  const ctx = canvas.getContext("2d");
-
-  try {
-    const image = await loadImage(base64Url);
-    canvas.width = image.width;
-    canvas.height = image.height;
-    ctx.drawImage(image, 0, 0);
-    const dimensions = {
-      width: canvas.width,
-      height: canvas.height,
-    };
-    return dimensions;
-  } catch (error) {
-    console.error("Error:", error.message);
-    return { error: error.message };
-  }
-}
-
 const uploadImage = async (dataUrl: string) => {
   const formdata = new FormData();
   formdata.append("file", dataUrl);
@@ -75,6 +55,14 @@ export default async function handler(req: NextRequest, res: NextResponse) {
     const payload = body;
     const { user_id, dataUrl, project_id, type } = payload;
 
+    var fileExtension = "png";
+    if (dataUrl.includes("jpeg") || dataUrl.includes("jpg")) {
+      fileExtension = "jpeg";
+    }
+    if (dataUrl.includes("webp")) {
+      fileExtension = "webp";
+    }
+
     if (!user_id) {
       res.status(400).send("Missing user_id");
       return;
@@ -99,22 +87,6 @@ export default async function handler(req: NextRequest, res: NextResponse) {
       inputBase64Url = dataUrl;
     }
 
-    // Get the image dimensions of the image from its base64Url
-    const { width: img_width, height: img_height } = await getImageDimensions(
-      inputBase64Url
-    );
-
-    if (!img_width || !img_height) {
-      res.status(400).send("Image is corrupted or unsupported dimensions");
-      return;
-    }
-
-    // Check if image is less than 25MP
-    if (img_width * img_height > 25000000) {
-      res.status(400).send("Image is too big");
-      return;
-    }
-
     const useClipDrop = true;
     var outputBase64Url = "";
     var caption = "";
@@ -126,7 +98,8 @@ export default async function handler(req: NextRequest, res: NextResponse) {
         "base64"
       );
 
-      const caption_response = await fetch("https://dehiddenformodal--onlycaption-caption.modal.run",
+      const caption_response = await fetch(
+        "https://dehiddenformodal--onlycaption-caption.modal.run",
         {
           headers: {
             "Content-Type": "application/json",
@@ -140,8 +113,8 @@ export default async function handler(req: NextRequest, res: NextResponse) {
 
       let form = new FormData();
       form.append("image_file", inputBuffer, {
-        filename: "input.png",
-        contentType: "image/png",
+        filename: "input." + fileExtension,
+        contentType: "image/" + fileExtension,
       });
 
       let config = {
@@ -160,15 +133,17 @@ export default async function handler(req: NextRequest, res: NextResponse) {
 
       //  Get the caption
       const caption_data = await caption_response.json();
+
+      console.log(caption_data);
+
       caption = caption_data["caption"];
 
       // Get base64url from response
       const { data } = await response;
-      outputBase64Url = `data:image/png;base64,${data.toString(
-        "base64"
-      )}`;
+      outputBase64Url = `data:image/png;base64,${data.toString("base64")}`;
     } else {
-      const caption_bg_response = await fetch("https://dehiddenformodal--bgremove-caption-removebg-and-caption.modal.run",
+      const caption_bg_response = await fetch(
+        "https://dehiddenformodal--bgremove-caption-removebg-and-caption.modal.run",
         {
           headers: {
             "Content-Type": "application/json",
@@ -179,7 +154,7 @@ export default async function handler(req: NextRequest, res: NextResponse) {
           }),
         }
       );
-        
+
       const caption_bg_data = await caption_bg_response.json();
       outputBase64Url = caption_bg_data["image"];
       caption = caption_bg_data["caption"];
@@ -209,7 +184,7 @@ export default async function handler(req: NextRequest, res: NextResponse) {
 
     res.status(200).send(
       JSON.stringify({
-        data: { data: [outputBase64Url]},
+        data: { data: [outputBase64Url] },
         caption,
         imageUrl,
       })
