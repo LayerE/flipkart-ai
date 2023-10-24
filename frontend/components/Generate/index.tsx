@@ -79,12 +79,7 @@ const Generate = () => {
   const id = (query.id as string[]) || [];
 
   const [changeTab, setChangeTab] = useState(false);
-  // useEffect(() => {
-  //   if (session) {
-  //     setUserId(session.user.id);
-  //   }
-  // }, [session]);
-  // const [promtFull, setpromtFull] = useState();
+
 
 
 
