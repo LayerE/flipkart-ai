@@ -110,9 +110,9 @@ const Header = () => {
                   <path
                     d="M27.6622 23C25.9331 25.989 22.7014 28 19 28C13.4772 28 9 23.5228 9 18C9 12.4772 13.4772 8 19 8C22.7014 8 25.9331 10.011 27.6622 13M19.0001 14L15.0001 18M15.0001 18L19.0001 22M15.0001 18H29.0001"
                     stroke="#000"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     shape-rendering="crispEdges"
                   />
                 </g>

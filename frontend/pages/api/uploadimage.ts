@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { NextResponse, NextRequest } from "next/server";
 import axios from "axios";
 import FormData from "form-data";

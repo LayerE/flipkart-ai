@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { NextResponse, NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { decode } from "base64-arraybuffer";

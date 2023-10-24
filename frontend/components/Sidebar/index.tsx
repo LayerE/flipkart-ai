@@ -143,9 +143,9 @@ const Sidebar: React.FC = () => {
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    stroke-width="3"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     className="lucide lucide-chevron-left"
                   >
                     <polyline points="15 18 9 12 15 6"></polyline>
@@ -172,9 +172,9 @@ const Sidebar: React.FC = () => {
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    stroke-width="3"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     class="lucide lucide-chevron-left"
                   >
                     <polyline points="15 18 9 12 15 6"></polyline>
@@ -203,9 +203,9 @@ const Sidebar: React.FC = () => {
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    stroke-width="3"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     class="lucide lucide-chevron-left"
                   >
                     <polyline points="15 18 9 12 15 6"></polyline>
@@ -232,9 +232,9 @@ const Sidebar: React.FC = () => {
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    stroke-width="3"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     className="lucide lucide-chevron-left"
                   >
                     <polyline points="15 18 9 12 15 6"></polyline>
