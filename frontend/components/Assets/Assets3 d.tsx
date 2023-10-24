@@ -15,7 +15,7 @@ const Assets3d = () => {
   const {
     fetchAssetsImagesWithProjectId,
     listofassetsById,
-
+    loader,
     file3dUrl,
     setFile3dUrl,
     setFile3d,
@@ -89,9 +89,13 @@ const Assets3d = () => {
             <div
               className="colse"
               onClick={() => {
-                setFile3d(null);
-                setFile3dUrl(null);
-                setFile3dName(null);
+                if(!loader){
+
+
+                  setFile3d(null);
+                  setFile3dUrl(null);
+                  setFile3dName(null);
+                }
               }}
             >
               x

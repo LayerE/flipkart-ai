@@ -132,8 +132,6 @@ const Canvas3d = () => {
         // scene.add(container);
         scene.add(object);
 
-
-
         // Adjust the camera position and rotation to focus on the loaded object
         const boundingBox = new THREE.Box3().setFromObject(object);
         const center = boundingBox.getCenter(new THREE.Vector3());
@@ -163,7 +161,6 @@ const Canvas3d = () => {
         const maxDim = Math.max(size.x, size.y, size.z);
         const fov = camera.fov * (Math.PI / 180);
         const distance = Math.abs(maxDim / Math.sin(fov / 2));
-
 
         // Set the camera position and look at the object
         camera.position.copy(center);
@@ -882,9 +879,8 @@ export default Canvas3d;
 const Cnavas3d = styled.div`
   padding: 0 30px;
   min-width: 100%;
-  height:100% ;
+  height: 100%;
   overflow: auto;
- 
 
   &::-webkit-scrollbar {
     width: 10px;
@@ -898,15 +894,13 @@ const Cnavas3d = styled.div`
     margin-right: 30px;
     width: 100%;
     height: 100%;
-    
   }
   /* Track */
   &::-webkit-scrollbar-track {
     box-shadow: inset 0 0 5px grey;
     border-radius: 10px;
     height: 7px;
-  height:100% ;
-
+    height: 100%;
   }
 
   /* Handle */

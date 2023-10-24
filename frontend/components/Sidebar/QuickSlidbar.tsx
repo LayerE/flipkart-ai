@@ -89,6 +89,7 @@ const QuickBar: React.FC = () => {
     userId,
     setSelectedresult,
     setPlacementTest,
+  
   } = useAppState();
   const { query, isReady } = useRouter();
   const id = (query.id as string[]) || [];
@@ -161,6 +162,7 @@ const QuickBar: React.FC = () => {
                   max="4"
                   step="1"
                   value={selectResult}
+                  disabled={loader}
                   onChange={(e) =>
                     setSelectedresult(parseInt(e.target.value, 10))
                   }

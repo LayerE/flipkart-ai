@@ -194,6 +194,7 @@ export const FileUpload = ({ type, title, uerId }:{ type:any, title:string, uerI
     setloadercarna,
     assetLoader,
     setassetLoader,
+    loader
   } = useAppState();
 
   const handleFileChange = (event :any) => {
@@ -347,6 +348,7 @@ export const FileUpload = ({ type, title, uerId }:{ type:any, title:string, uerI
               style={{ display: "none" }}
               onChange={handleFileChange}
               accept=".webp, .png, .jpeg, .jpg"
+              disabled={loader}
             />
           </>
         )}
@@ -372,7 +374,8 @@ export const FileUploadQuick= ({ type, title, uerId }:{ type:any, title:string, 
     setloadercarna,
     assetLoader,
     setassetLoader,
-    addimgToCanvasQuike
+    addimgToCanvasQuike,
+    loader
   } = useAppState();
 
   const handleFileChange = (event: any) => {
@@ -523,6 +526,7 @@ export const FileUploadQuick= ({ type, title, uerId }:{ type:any, title:string, 
               style={{ display: "none" }}
               onChange={handleFileChange}
               accept=".webp, .png, .jpeg, .jpg"
+              disabled={loader}
             />
           </>
         )}

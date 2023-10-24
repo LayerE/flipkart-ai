@@ -63,6 +63,7 @@ const Assets: React.FC = () => {
             type={"product"}
             title={"Upload Product Photo"}
             uerId={userId}
+            
           />
         </Row>
         <Row>

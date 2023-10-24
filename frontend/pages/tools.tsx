@@ -1,4 +1,3 @@
-
 // @ts-nocheck
 
 import Image from "next/image";
@@ -31,8 +30,9 @@ import { useSession } from "@supabase/auth-helpers-react";
 import { supabase } from "@/utils/supabase";
 
 export default function Home() {
-  const session = useSession();
+
   // const [userId, setUserID] = useState<string | null>(null);
+  const [loadetool, setloadetool] = useState(false)
 
   const { query, isReady } = useRouter();
   // const { id } = query;
@@ -47,7 +47,7 @@ export default function Home() {
     projectlist,
     setMainLoader,
     setprojectlist,
-   
+
     mainLoader,
     setFilteredArray,
     setActiveTab,
@@ -62,32 +62,34 @@ export default function Home() {
     popup,
     setSelectedImg,
     setActiveTabHome,
-    setActiveSize
+    setActiveSize,
   } = useAppState();
   const router = useRouter();
 
+
+
   useEffect(() => {
-    setActiveTabHome(4)
     const checkSession = async () => {
       const { data } = await supabase.auth.getSession();
       if (data.session) {
         // router.push("/");
         setUserID(data.session.user.id);
-      
       }
     };
     checkSession();
-  }, [session]);
+  }, []);
   // const [loadercarna, setloadercarna] = useState(true);
-  const [rerenter, setre] = useState(false);
+  // const [rerenter, setre] = useState(false);
 
   useEffect(() => {
-    if (rerenter <= 6) {
-      setre(rerenter + 1);
-    }
-    setSelectedImg(null);
-
+    // if (rerenter <= 6) {
+    //   setre(rerenter + 1);
+    // }
+   
+    
+    
     if (isReady && userId) {
+      setloadetool(true)
       setActiveTab(1);
       setcategory(null);
       setpromtFull("");
@@ -106,59 +108,49 @@ export default function Home() {
         t: 240,
         gl: 1152,
         gt: 240,
-      })
-
-
-      fetchAssetsImages(userId, null);
+      });
+      setSelectedImg(null);
+      setMainLoader(false);
+      setActiveTabHome(4);
+  
+  
+      setTimeout(() => {
+        setloadetool(false)
+      }, 1000);
+      // fetchAssetsImages(userId, null);
 
       //
-      setMainLoader(true);
-      setFilteredArray(null);
-      axios
-        .get(`${process.env.NEXT_PUBLIC_API}/user?id=${userId}`)
-        .then(async (response) => {
-       
-          const dataFecth = await fetchData(userId);
-          console.log("dfd", await dataFecth);
+      // setFilteredArray(null);
+      // axios
+      //   .get(`${process.env.NEXT_PUBLIC_API}/user?id=${userId}`)
+      //   .then(async (response) => {
 
-          if (dataFecth.status === 200) {
-            setprojectlist(await dataFecth.data);
+      //     const dataFecth = await fetchData(userId);
+      //     console.log("dfd", await dataFecth);
 
-            setMainLoader(false);
-          }else{
-            setMainLoader(false);
+      //     if (dataFecth.status === 200) {
+      //       setprojectlist(await dataFecth.data);
 
-          }
-        })
-        .catch((error) => {
-          setMainLoader(false);
+      //       setMainLoader(false);
+      //     }else{
+      //       setMainLoader(false);
 
-          console.error(error);
-        });
+      //     }
+      //   })
+      //   .catch((error) => {
+      //     setMainLoader(false);
+
+      //     console.error(error);
+      //   });
     }
   }, [isReady, userId]);
 
-  const fetchData = async (getUser: string) => {
-    const data = await axios.get(
-      `${process.env.NEXT_PUBLIC_API}/getprojects?id=${getUser}`
-    );
-
-    return data;
-    // .then((response) => {
-    //   return response
-    //   // setloadercarna(false);
-    // })
-    // .catch((error) => {
-    //   console.error(error);
-    //   setloadercarna(false);
-    // });
-  };
 
   return (
     <MainPage>
       {popup?.status ? <PopupUpload /> : null}
 
-      {mainLoader ? <MainLoader /> : null}
+      {mainLoader ? <MainLoader  /> : null}
 
       <motion.div
         initial="hidden"
@@ -166,12 +158,12 @@ export default function Home() {
         variants={fadeIn}
         className="new"
       >
-        {popupImage.status ? <PopupCard /> : null}
+   
 
         <HomeSidebar />
 
         <div className="dashbaord">
-          <Tools />
+          <Tools loadetool={loadetool} />
         </div>
       </motion.div>
     </MainPage>
