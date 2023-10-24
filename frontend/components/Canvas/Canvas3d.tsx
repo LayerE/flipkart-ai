@@ -694,7 +694,7 @@ const Canvas3d = () => {
       containerRef.current.appendChild(renderer.domElement);
 
       // controls.enablePan = false;
-      // controls.enableDamping = true;
+      controls.enableDamping = true;
 
       // controls.target.set(0, 0, -0.2);
       // controls.minDistance = 2;
