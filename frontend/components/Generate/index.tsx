@@ -86,20 +86,7 @@ const Generate = () => {
   // }, [session]);
   // const [promtFull, setpromtFull] = useState();
 
-  // const promt =
-  //   product +
-  //   " " +
-  //   selectPlacement +
-  //   " " +
-  //   placementTest +
-  //   " " +
-  //   selectSurrounding +
-  //   " " +
-  //   surroundingTest +
-  //   " " +
-  //   selectBackground +
-  //   " " +
-  //   backgroundTest;
+
 
   useEffect(() => {
     const promts = product + " " + promt;
