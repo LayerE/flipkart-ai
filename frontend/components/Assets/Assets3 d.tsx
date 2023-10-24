@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Row } from "../common/Row";
-import Label from "../common/Label";
+import Label, { DisabledLabel } from "../common/Label";
 import { FileUpload3D, Input } from "../common/Input";
 import { styled } from "styled-components";
 import { useAppState } from "@/context/app.context";
@@ -82,7 +82,9 @@ const Assets3d = () => {
 
   return (
     <div className="accest">
-      {file3dName?.name && !assetL3doader ? (
+      {
+      file3dName?.name && 
+      !assetL3doader ? (
         <Selectd className="gap">
           <div className="boxFile">
             <div className="filenamer">{truncateString(file3dName?.name)}</div>
@@ -100,6 +102,12 @@ const Assets3d = () => {
             >
               x
             </div>
+          </div>
+          <div className="gap" style={{marginTop:"10px"}}>
+          <DisabledLabel>The model was uploaded successfully. You can rotate it using the mouse pointer and move it using Ctrl + mouse pointer.</DisabledLabel>
+          <div>
+
+          </div>
           </div>
         </Selectd>
       ) : (
