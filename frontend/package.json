@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "chmod +x ./setup.sh && sudo ./setup.sh && next build",
+    "build": "chmod +x ./setup.sh && ./setup.sh && next build",
     "start": "next start",
     "lint": "next lint",
     "export": "next export"
