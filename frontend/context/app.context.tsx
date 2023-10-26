@@ -784,7 +784,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         if (btn) {
           btn.style.display = "flex";
           positionBtn(img);
-       
         }
 
         // RegeneratepositionBtn(img);
@@ -806,7 +805,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const addimgToCanvasQuike = async (url: any) => {
     fabric.Image.fromURL(await getBase64FromUrl(url), function (img: any) {
       // Set the image's dimensions
-   
+
       // img.scaleToWidth(200);
       const canvasWidth = activeSize.w;
       const canvasHeight = activeSize.h;
@@ -832,7 +831,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       });
 
       img.set("category", "quick");
- 
+
       // canvasInstance.current.clear();
       canvasInstanceQuick?.current.add(img);
       canvasInstanceQuick?.current.setActiveObject(img);
@@ -897,7 +896,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         if (btn) {
           btn.style.display = "flex";
           positionBtn(img);
-     
         }
       });
 
@@ -937,7 +935,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   function RegeneratepositionBtn(obj: any) {
     var zooms = canvasInstance?.current.getZoom();
 
-  
     const btns = regenerateRef?.current as HTMLElement;
     const absCoords = canvasInstance?.current.getAbsoluteCoords(obj);
     btns.style.left =
@@ -962,8 +959,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const saveCanvasToDatabase = async () => {
     const canvasData = canvasInstance.current.toJSON(["category"]);
     if (canvasData.objects.length > 1 && !loadercarna) {
-   
-
       SaveProjexts(userId, projectId, canvasData);
       const filteredResult = generatedImgList.filter((obj: any) =>
         jobId?.includes(obj?.task_id)
@@ -1160,7 +1155,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         }),
       });
       const data = await response.json();
-     
 
       if (data?.data.length) {
         const revers = data.data.reverse();
@@ -1184,7 +1178,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         }),
       });
       const data = await response.json();
-    
 
       if (data?.length) {
         const revers = data.reverse();
@@ -1210,11 +1203,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         }),
       });
       const data = await response.json();
-    
 
       if (data?.data.length > 0) {
         setListOfAssetsById(data?.data);
-       
       }
 
       return data;
@@ -1325,9 +1316,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       setGenerationLoader(true);
       const canvas1 = canvasInstance.current;
       try {
-        console.log(templet)
-        if(templet?.title){
-
+        console.log(templet);
+        if (templet?.title) {
           addtoRecntly(ueserId, proid);
         }
         const objects = canvas1.getObjects();
@@ -1359,6 +1349,26 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           format: "png",
           multiplier: 4,
         });
+
+        const originalImageElement = new Image();
+        originalImageElement.src = subjectDataUrl;
+        originalImageElement.onload = () => {
+          const canvas = document.createElement("canvas");
+          const width = parseInt(widthRef.current.value, 10);
+          const height = parseInt(heightRef.current.value, 10);
+
+          canvas.width = width;
+          canvas.height = height;
+
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(originalImageElement, 0, 0, width, height);
+
+          const resizedBase64 = canvas.toDataURL("image/jpeg"); // You can choose the desired format
+
+          console.log("resizedBase64", resizedBase64);
+          console.log("subjectDataUrl", subjectDataUrl);
+        };
+
         const subjectDataUrlJson = subjectCanvas.toJSON();
         const updatedObject = {
           width: activeSize.w,
@@ -1408,7 +1418,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         } else {
           const endTime = new Date().getTime();
           const elapsedTime = endTime - startTime;
-        
+
           console.log(`Elapsed time: ${elapsedTime} milliseconds`);
           try {
             const response = await fetch(
@@ -1643,7 +1653,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
           // Get the scaled data URL
           scaledDataURL = canvas.toDataURL("image/png");
-      
 
           const response = await fetch("/api/generate", {
             method: "POST",
@@ -1677,7 +1686,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
               axios
                 .get(`${process.env.NEXT_PUBLIC_API}/user?id=${ueserId}`)
                 .then((response) => {
-              
                   setproject(response.data);
                   setJobId(response?.data?.jobIds3D);
                 })
@@ -1692,8 +1700,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         };
 
         img.src = screenshot;
-
-      
       }
     }
   };

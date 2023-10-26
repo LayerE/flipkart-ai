@@ -289,6 +289,7 @@ export const RecentWrapper = styled(Row)`
       display: flex;
       justify-content: center;
       align-items: center;
+      font-size: 14px;
       margin-top: 10px;
       font-weight: 500;
     }
