@@ -23,6 +23,7 @@ import MagicEraser from "../MagicErase";
 import RegenratTab from "../RegenrateTab";
 import Assets3d from "../Assets/Assets3 d";
 import Edit3d from "../Edit/Edite3d";
+import Generate3d from "../Generate/generate3d.tsx";
 const fadeIn = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 1 } },
@@ -145,7 +146,7 @@ const Sidebar3d: React.FC = () => {
             ) : activeTab === 2 && viewMore?.status == true ? (
               <ListOf />
             ) : activeTab === 2 ? (
-              <Generate />
+              <Generate3d />
             ) : activeTab === 3 ? (
               <Edit3d />
             ) : null}

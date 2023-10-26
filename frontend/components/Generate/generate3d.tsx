@@ -1,6 +1,5 @@
 // @ts-nocheck
 
-
 import React, { useEffect, useState } from "react";
 import { Row } from "../common/Row";
 import Button from "../common/Button";
@@ -30,9 +29,8 @@ import { useRouter } from "next/router";
 import DropdownInput, { DropdownNOBorder } from "../common/Dropdown";
 import { Input, TestArea } from "../common/Input";
 
-const Generate = () => {
+const Generate3d = () => {
   const session = useSession();
-
 
   const {
     product,
@@ -63,7 +61,6 @@ const Generate = () => {
     setPlacementTest,
     generateImageHandeler,
     promt,
-    setpromt,
     promtFull,
     setpromtFull,
     category,
@@ -72,41 +69,36 @@ const Generate = () => {
     genrateeRef,
     TDMode,
     generate3dHandeler,
-    userId, setUserId
+    userId,
+    setUserId,
+    setpromt,
+    setActiveTemplet,
+    activeTemplet
   } = useAppState();
 
   const { query, isReady } = useRouter();
   const id = (query.id as string[]) || [];
 
   const [changeTab, setChangeTab] = useState(false);
-  // useEffect(() => {
-  //   if (session) {
-  //     setUserId(session.user.id);
-  //   }
-  // }, [session]);
-  // const [promtFull, setpromtFull] = useState();
 
-  // const promt =
-  //   product +
-  //   " " +
-  //   selectPlacement +
-  //   " " +
-  //   placementTest +
-  //   " " +
-  //   selectSurrounding +
-  //   " " +
-  //   surroundingTest +
-  //   " " +
-  //   selectBackground +
-  //   " " +
-  //   backgroundTest;
+  function isEmpty(obj) {
+    if (obj) {
+      return Object.keys(obj).length === 0 && obj.constructor === Object;
+    }
+    return false;
+  }
 
   useEffect(() => {
     const promts = product + " " + promt;
-    setpromtFull(promts);
-  }, [product, promt]);
+    console.log(promt,promtFull,activeTemplet);
+    if (promt == activeTemplet?.promt ) {
+      setpromtFull(promt);
+    }
+  }, [product, promt, setpromtFull,activeTemplet]);
 
   const handelPromt = (e) => {
+    setpromt("");
+    setActiveTemplet({})
     setpromtFull(e.target.value);
   };
 
@@ -268,7 +260,7 @@ const Generate = () => {
   );
 };
 
-export default Generate;
+export default Generate3d;
 export const Box = styled.div`
   position: relative;
 
