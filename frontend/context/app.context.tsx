@@ -1305,7 +1305,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   }
   const generateImageHandeler = async (ueserId: any, proid: any) => {
     var subjectCount = 0;
-
+    const startTime = new Date().getTime();
     canvasInstance?.current.forEachObject(function (obj: any) {
       if (obj.category === "subject") {
         if (newEditorBox.intersectsWithObject(obj)) {
@@ -1325,7 +1325,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       setGenerationLoader(true);
       const canvas1 = canvasInstance.current;
       try {
-        if(isEmpty(templet)){
+        console.log(templet)
+        if(templet?.title){
 
           addtoRecntly(ueserId, proid);
         }
@@ -1405,6 +1406,10 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           setLoader(false);
           return false;
         } else {
+          const endTime = new Date().getTime();
+          const elapsedTime = endTime - startTime;
+        
+          console.log(`Elapsed time: ${elapsedTime} milliseconds`);
           try {
             const response = await fetch(
               `${process.env.NEXT_PUBLIC_API}/jobId`,
