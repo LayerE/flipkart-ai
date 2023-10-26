@@ -8,9 +8,10 @@ import * as THREE from "three";
 import { toast } from "react-toastify";
 import { arrayBufferToDataURL, dataURLtoFile } from "@/utils/BufferToDataUrl";
 import { useSession } from "@supabase/auth-helpers-react";
-
+import Jimp  from 'jimp'
 import { IMG_TABLE } from "@/store/table";
 import { supabase } from "@/utils/supabase";
+import { optimizeAndEncodeImage } from "@/lib/resize";
 
 type ContextProviderProps = {
   children: React.ReactNode;
@@ -1344,18 +1345,20 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           });
           subjectCanvas.add(gg);
         });
+        const subjectDataUrlq = subjectCanvas.toDataURL();
 
         const subjectDataUrl = subjectCanvas.toDataURL({
           format: "png",
-          multiplier: 4,
+          multiplier: 2,
         });
 
+      
         const originalImageElement = new Image();
         originalImageElement.src = subjectDataUrl;
         originalImageElement.onload = () => {
           const canvas = document.createElement("canvas");
-          const width = parseInt(widthRef.current.value, 10);
-          const height = parseInt(heightRef.current.value, 10);
+          const width = activeSize.w;
+          const height = activeSize.h;
 
           canvas.width = width;
           canvas.height = height;
@@ -1363,11 +1366,19 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           const ctx = canvas.getContext("2d");
           ctx.drawImage(originalImageElement, 0, 0, width, height);
 
-          const resizedBase64 = canvas.toDataURL("image/jpeg"); // You can choose the desired format
+          const resizedBase64 = canvas.toDataURL({
+            format: "webp",
+            multiplier: 4,
+          });
 
-          console.log("resizedBase64", resizedBase64);
-          console.log("subjectDataUrl", subjectDataUrl);
+          // console.log("resizedBase64", resizedBase64);
+          // console.log("subjectDataUrl", subjectDataUrl);
+          // console.log("subjectDataUrlq", subjectDataUrlq);
         };
+
+      //  const dd = await optimizeAndEncodeImage(subjectDataUrl, 23243)
+      //  console.log(dd)
+        // Example usage: 
 
         const subjectDataUrlJson = subjectCanvas.toJSON();
         const updatedObject = {

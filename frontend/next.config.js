@@ -30,11 +30,15 @@ const nextConfig = {
     unoptimized: true,
   },
   webpack: (config) => {
+    config.resolve.fallback = { fs: false };
+
     config.resolve.alias["styled-components"] = path.resolve(
       __dirname,
       "node_modules",
-      "styled-components"
+      "styled-components",
+      
     );
+
     
     return config;
   },

@@ -91,8 +91,8 @@ const Tamplates = () => {
     GetProjextById(id);
     // console.log(data, "dfvcvdf")
 
-    setfilterRecently(project?.recently?.reverse());
-  }, [isReady]);
+    setfilterRecently(project?.recently);
+  }, [isReady,setfilterRecently]);
 
   return (
     <motion.div
@@ -116,7 +116,7 @@ const Tamplates = () => {
                       status: true,
                       title: "Recently Used Templates",
                       index: 1,
-                      list: project?.recently,
+                      list: project?.recently?.reverse(),
                     })
                   }
                 >
@@ -125,7 +125,7 @@ const Tamplates = () => {
               </div>
             </div>
             <div className="horizontaScrollBox">
-              {filterRecently?.slice(0, 5).map((test, i) => (
+              {filterRecently?.slice(-10)?.reverse().map((test, i) => (
                 <div
                   key={i}
                   className={`imageBoxs ${
@@ -149,7 +149,7 @@ const Tamplates = () => {
                   <picture>
                     <img src={test?.image} alt="" />
                   </picture>
-                  <div className="head">{test?.title}</div>
+                  <div className="heads">{test?.title}</div>
                 </div>
               ))}
             </div>
@@ -290,6 +290,14 @@ export const RecentWrapper = styled(Row)`
       justify-content: center;
       align-items: center;
       font-size: 14px;
+      margin-top: 10px;
+      font-weight: 500;
+    }
+    .heads {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 12px;
       margin-top: 10px;
       font-weight: 500;
     }
