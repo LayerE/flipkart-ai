@@ -1297,7 +1297,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     newEditorBox.set({ width: activeSize.w, height: activeSize.h });
     canvasInstance?.current.renderAll();
   };
-
+  function isEmpty(obj) {
+    if (obj) {
+      return Object.keys(obj).length === 0 && obj.constructor === Object;
+    }
+    return false;
+  }
   const generateImageHandeler = async (ueserId: any, proid: any) => {
     var subjectCount = 0;
 
@@ -1320,7 +1325,10 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       setGenerationLoader(true);
       const canvas1 = canvasInstance.current;
       try {
-        addtoRecntly(ueserId, proid);
+        if(isEmpty(templet)){
+
+          addtoRecntly(ueserId, proid);
+        }
         const objects = canvas1.getObjects();
         const subjectObjects: any = [];
         objects.forEach((object: any) => {
@@ -1526,7 +1534,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       setGenerationLoader(true);
       const canvas1 = canvasInstanceQuick.current;
       try {
-        addtoRecntly(ueserId, proid);
+        // addtoRecntly(ueserId, proid);
 
         const objects = canvas1.getObjects();
         const subjectObjects: any = [];
