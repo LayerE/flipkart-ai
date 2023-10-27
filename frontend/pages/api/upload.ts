@@ -6,6 +6,7 @@ import { NextResponse, NextRequest } from "next/server";
 import axios from "axios";
 import FormData from "form-data";
 const { createCanvas, loadImage } = require("canvas");
+export const maxDuration = 50;
 
 export const config = {
   

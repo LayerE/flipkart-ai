@@ -6,6 +6,7 @@ import { createClient } from "@supabase/supabase-js";
 export const config = {
   runtime: "edge",
 };
+export const maxDuration = 50;
 
 export default async (req: NextRequest) => {
   try {
