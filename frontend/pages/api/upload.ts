@@ -1,15 +1,12 @@
-
 // @ts-nocheck
-
 
 import { NextResponse, NextRequest } from "next/server";
 import axios from "axios";
 import FormData from "form-data";
 const { createCanvas, loadImage } = require("canvas");
-export const maxDuration = 50;
+export const maxDuration = 300;
 
 export const config = {
-  
   api: {
     bodyParser: {
       sizeLimit: "25mb", // Set desired value here
