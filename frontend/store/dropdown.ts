@@ -814,6 +814,20 @@ export const TempletList = [
         lora: "RealisticNaturalScenery",
       },
       {
+        title: "Minimal Kitchen ",
+
+        image: "https://ik.imagekit.io/7urmiszfde/Untitled%20(1).webp?updatedAt=1698419042310",
+        promt: "Minimal Kitchen",
+        placementType: "",
+        surroundingType: "",
+        backgroundType: "",
+        product: "",
+        placement: "",
+        surrounding: "",
+        background: "",
+        lora: "RealisticNaturalScenery",
+      },
+      {
         title: "Home Gym ",
 
         image: "https://ik.imagekit.io/7urmiszfde/Home%20Gym.webp?updatedAt=1698316216433",
