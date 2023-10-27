@@ -1,35 +1,19 @@
+// @ts-nocheck
+
 import { NextResponse, NextRequest } from "next/server";
 import axios from "axios";
 import FormData from "form-data";
 const { createCanvas, loadImage } = require("canvas");
+export const maxDuration = 50;
 
 export const config = {
+  
   api: {
-      bodyParser: {
-          sizeLimit: '4mb' // Set desired value here
-      }
-  }
-}
-
-async function getImageDimensions(base64Url: string) {
-  const canvas = createCanvas();
-  const ctx = canvas.getContext("2d");
-
-  try {
-    const image = await loadImage(base64Url);
-    canvas.width = image.width;
-    canvas.height = image.height;
-    ctx.drawImage(image, 0, 0);
-    const dimensions = {
-      width: canvas.width,
-      height: canvas.height,
-    };
-    return dimensions;
-  } catch (error) {
-    console.error("Error:", error.message);
-    return { error: error.message };
-  }
-}
+    bodyParser: {
+      sizeLimit: "25mb", // Set desired value here
+    },
+  },
+};
 
 const uploadImage = async (dataUrl: string) => {
   const formdata = new FormData();
@@ -59,6 +43,11 @@ const uploadImage = async (dataUrl: string) => {
   }
 };
 
+function isUrl(url: string) {
+  const urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
+  return urlRegex.test(url);
+}
+
 export default async function handler(req: NextRequest, res: NextResponse) {
   try {
     if (req.method !== "POST") {
@@ -68,66 +57,118 @@ export default async function handler(req: NextRequest, res: NextResponse) {
 
     const { body } = req;
     const payload = body;
-    const { user_id, dataUrl, project_id } = payload;
+    const { user_id, dataUrl, project_id, type } = payload;
 
-    console.log(dataUrl);
+    var fileExtension = "png";
+    if (dataUrl.includes("jpeg") || dataUrl.includes("jpg")) {
+      fileExtension = "jpeg";
+    }
+    if (dataUrl.includes("webp")) {
+      fileExtension = "webp";
+    }
 
     if (!user_id) {
       res.status(400).send("Missing user_id");
       return;
     }
 
-    const inputBase64Url = dataUrl;
+    // If DataUrl is a website url, fetch the image and convert it to a base64Url
+    // Check if dataUrl is a url
+    const is_url = isUrl(dataUrl);
 
-    // Get the image dimensions of the image from its base64Url
-    const { width: img_width, height: img_height } = await getImageDimensions(inputBase64Url);
+    var inputBase64Url = "";
 
-    if (!img_width || !img_height) {
-      res.status(400).send("Image is corrupted or unsupported dimensions");
-      return;
+    if (is_url) {
+      const response = await axios.get(dataUrl, {
+        responseType: "arraybuffer",
+      });
+
+      const base64Url = `data:image/png;base64,${response.data.toString(
+        "base64"
+      )}`;
+      inputBase64Url = base64Url;
+    } else {
+      inputBase64Url = dataUrl;
     }
 
-    // Check if image is less than 25MP
-    if (img_width * img_height > 25000000) {
-      res.status(400).send("Image is too big");
-      return;
+    const useClipDrop = true;
+    var outputBase64Url = "";
+    var caption = "";
+
+    if (useClipDrop) {
+      // Encode the base64 data as a buffer
+      const inputBuffer = Buffer.from(
+        inputBase64Url.split(";base64,").pop(),
+        "base64"
+      );
+
+      const caption_response = await fetch(
+        "https://dehiddenformodal--onlycaption-caption.modal.run",
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+          body: JSON.stringify({
+            img: inputBase64Url,
+          }),
+        }
+      );
+
+      let form = new FormData();
+      form.append("image_file", inputBuffer, {
+        filename: "input." + fileExtension,
+        contentType: "image/" + fileExtension,
+      });
+
+      let config = {
+        method: "post",
+        maxBodyLength: 10 * 1024 * 1024,
+        url: "https://clipdrop-api.co/remove-background/v1",
+        headers: {
+          "x-api-key": process.env.CLIPDROP_API_KEY || null,
+          ...form.getHeaders(),
+        },
+        data: form,
+        responseType: "arraybuffer",
+      };
+
+      const response = axios.request(config);
+
+      //  Get the caption
+      const caption_data = await caption_response.json();
+
+      console.log(caption_data);
+
+      caption = caption_data["caption"];
+
+      // Get base64url from response
+      const { data } = await response;
+      outputBase64Url = `data:image/png;base64,${data.toString("base64")}`;
+    } else {
+      const caption_bg_response = await fetch(
+        "https://dehiddenformodal--bgremove-caption-removebg-and-caption.modal.run",
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+          body: JSON.stringify({
+            img: inputBase64Url,
+          }),
+        }
+      );
+
+      const caption_bg_data = await caption_bg_response.json();
+      outputBase64Url = caption_bg_data["image"];
+      caption = caption_bg_data["caption"];
     }
-
-    // Encode the base64 data as a buffer
-    const inputBuffer = Buffer.from(
-      inputBase64Url.split(";base64,").pop(),
-      "base64"
-    );
-
-    let form = new FormData();
-    form.append("image_file", inputBuffer, {
-      filename: "input.jpg",
-      contentType: "image/jpeg",
-    });
-
-    let config = {
-      method: "post",
-      maxBodyLength: 10 * 1024 * 1024,
-      url: "https://clipdrop-api.co/remove-background/v1",
-      headers: {
-        "x-api-key": process.env.CLIPDROP_API_KEY || null,
-        ...form.getHeaders(),
-      },
-      data: form,
-      responseType: "arraybuffer",
-    };
-
-    const response = axios.request(config);
-
-    // Get base64url from response
-    const { data } = await response;
-    const outputBase64Url = `data:image/png;base64,${data.toString("base64")}`;
 
     // Upload image to ImageKit
     const { url: imageUrl, height, width } = await uploadImage(outputBase64Url);
 
     // Add the image to the database
-    await fetch(
+    const respy = await fetch(
       `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/${process.env.NEXT_PUBLIC_BACKGROUND_REMOVED_IMAGES_TABLE}`,
       {
         headers: {
@@ -140,6 +181,7 @@ export default async function handler(req: NextRequest, res: NextResponse) {
           user_id,
           image_url: imageUrl,
           project_id: project_id || null,
+          type: type === null ? "image" : type,
         }),
       }
     );
@@ -147,12 +189,13 @@ export default async function handler(req: NextRequest, res: NextResponse) {
     res.status(200).send(
       JSON.stringify({
         data: { data: [outputBase64Url] },
+        caption,
         imageUrl,
       })
     );
     return;
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
     res.status(500).send("Error removing background");
     return;
   }

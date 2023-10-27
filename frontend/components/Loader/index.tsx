@@ -1,9 +1,12 @@
+// @ts-nocheck
+
+
 import React from "react";
 import { styled } from "styled-components";
 
-const Loader = () => {
+const Loader = ({h}) => {
   return (
-    <DaoderWarpper>
+    <DaoderWarpper h={h}>
       <div className="jumping-dots-loader">
         {" "}
         <span></span> <span></span> <span></span>{" "}
@@ -20,7 +23,7 @@ const DaoderWarpper = styled.div`
   left: 0;
   top: 0;
   width: 100%;
-  height: 100vh;
+  height: ${({h})=> h? "100%": "100vh"};
   position: absolute;
   z-index: 1000;
   background-color: #ffffff;

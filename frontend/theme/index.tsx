@@ -1,3 +1,6 @@
+
+// @ts-nocheck
+
 import React, { useContext, useMemo } from "react";
 import {
   createGlobalStyle,
@@ -258,6 +261,7 @@ line-height: 24px;
 margin-bottom:20px;
 
 }
+
   /* Remove all animations, transitions and smooth scroll for people that prefer not to see them */
   @media (prefers-reduced-motion: reduce) {
     html:focus-within {

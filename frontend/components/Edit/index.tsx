@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React, { useEffect, useState, useRef } from "react";
 import Label, { DisabledLabel } from "../common/Label";
 import { Row } from "../common/Row";
@@ -10,13 +12,13 @@ const fadeIn = {
   visible: { opacity: 1, transition: { duration: 1 } },
 };
 import { saveAs } from "file-saver";
-import { SketchPicker } from "react-color";
+// import { SketchPicker } from "react-color";
 import { motion } from "framer-motion";
 import { arrayBufferToDataURL, dataURLtoFile } from "@/utils/BufferToDataUrl";
 import { ImgFormate, coloreMode } from "@/store/dropdown";
 import { Input } from "../common/Input";
 import { Console } from "console";
-import { useAuth } from "@clerk/nextjs";
+import { useSession } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
 import { styled } from "styled-components";
 import { fabric } from "fabric";
@@ -55,12 +57,16 @@ const Edit = () => {
     setLines,
     magicLoader,
     setMagicloder,
-    HandleInpainting,
-    crop, setCrop,
-    loader
+    // HandleInpainting,
+    crop,
+    setCrop,
+    loader,
+    userId
   } = useAppState();
 
-  const { userId } = useAuth();
+  const session = useSession();
+
+
   const { query, isReady } = useRouter();
   // const { id } = query;
   const id = (query.id as string[]) || [];
@@ -102,57 +108,7 @@ const Edit = () => {
     }
   };
 
-  function addColorOverlayToSelectedImage(color, mode) {
-    const canvas = canvasInstance.current;
-    const activeObject = canvas?.getActiveObject();
-
-    if (activeObject && activeObject.type === "image") {
-      activeObject.filters = []; // Clear existing filters
-
-      if (mode !== "none") {
-        let filter;
-        switch (mode) {
-          case "Overlay":
-            filter = new fabric.Image.filters.BlendColor({
-              color: color,
-              mode: "overlay",
-              alpha: 0.5,
-            });
-            break;
-          case "Multiply":
-            filter = new fabric.Image.filters.BlendColor({
-              color: color,
-              mode: "multiply",
-              alpha: 1,
-            });
-            break;
-          case "Add":
-            filter = new fabric.Image.filters.BlendColor({
-              color: color,
-              mode: "add",
-              alpha: 1,
-            });
-            break;
-          case "Tint":
-            filter = new fabric.Image.filters.Tint({
-              color: color,
-              opacity: 0.5,
-            });
-            break;
-        }
-
-        if (filter) {
-          activeObject.filters.push(filter);
-        }
-      }
-
-      activeObject.applyFilters();
-      canvas.renderAll();
-    } else {
-      // alert("Please select an image on the canvas first.");
-    }
-  }
-  /* eslint-disable */
+ 
 
   const HandelBG = async () => {
     setIsMagic(false);
@@ -170,14 +126,12 @@ const Edit = () => {
     const data = await response.json();
     if (data) {
       addimgToCanvasSubject(data?.data?.data[0]);
-      // addimgToCanvasGen(data?.data[0]);
-      // setSelectedImg({ status: true, image: data?.data[0] });
-      // addimgToCanvasGen(data);
 
-      setModifidImageArray((pre) => [
-        ...pre,
-        { url: data?.data[0], tool: "upscale" },
-      ]);
+
+   
+    }else{
+    setLoader(false);
+
     }
 
     setLoader(false);
@@ -225,7 +179,7 @@ const Edit = () => {
     //   body: JSON.stringify({
     //     image_url: photo,
     //     user_id: userId,
-      
+
     //   }),
     // });
 
@@ -253,20 +207,20 @@ const Edit = () => {
     // console.log(await data, "upscale ");
 
     const data = await upSacle(downloadImg, "imger");
-    console.log(data, "upscale ");
+
 
     if (data) {
       addimgToCanvasGen(data);
       setSelectedImg({ status: true, image: data });
 
-      setModifidImageArray((pre) => [...pre, { url: data, tool: "upscale" }]);
+   
     }
 
     setLoader(false);
   };
   useEffect(() => {
-    addColorOverlayToSelectedImage(colore, selectColoreMode);
-  }, [selectColoreMode, addColorOverlayToSelectedImage, colore]);
+    // addColorOverlayToSelectedImage(colore, selectColoreMode);
+  }, [selectColoreMode, colore]);
 
   const handleChangeComplete = (color: string) => {
     setColore(color.hex);
@@ -278,7 +232,9 @@ const Edit = () => {
   const history = useRef([]);
   const historyIndex = useRef(-1);
   useEffect(() => {
+    // @ts-ignore
     canvasInstance.current.on("object:added", () => {
+      // @ts-ignore
       history.current.push(JSON.stringify(canvasInstance.current.toJSON()));
       historyIndex.current += 1;
     });
@@ -348,11 +304,10 @@ const Edit = () => {
     setLinesHistory(linesHistory.slice(0, linesHistory.length - 1));
   };
 
-  const HandelCrop = ()=>{
-    setCrop(true)
-    setIsMagic(false)
-
-  }
+  const HandelCrop = () => {
+    setCrop(true);
+    setIsMagic(false);
+  };
 
   return (
     <motion.div
@@ -409,16 +364,18 @@ const Edit = () => {
           <Label>Tools</Label>
 
           <div className="gaps">
-            <div className={isMagic ?  "selectTool activeTool" :"selectTool"} onClick={() => {setIsMagic(true); 
-    setCrop(false)
-            
-            }}>
+            <div
+              className={isMagic ? "selectTool activeTool" : "selectTool"}
+              onClick={() => {
+                setIsMagic(true);
+                setCrop(false);
+              }}
+            >
               <div className="mageic">
                 <div className="gaps">
-                  <Label>Magic Erase</Label>
+                  <Label>Erase</Label>
                   <DisabledLabel>
-                    Erase then click Generate to replace any unwanted parts of
-                    the background.
+                    Erase any unwanted parts of the background.
                   </DisabledLabel>
                 </div>
                 <div className="gaps">
@@ -434,8 +391,8 @@ const Edit = () => {
                           fill="none"
                         >
                           <path
-                            fill-rule="evenodd"
-                            clip-rule="evenodd"
+                            fillRule="evenodd"
+                            clipRule="evenodd"
                             d="M5.70679 0.292786C5.89426 0.480314 5.99957 0.734622 5.99957 0.999786C5.99957 1.26495 5.89426 1.51926 5.70679 1.70679L3.41379 3.99979H8.99979C10.8563 3.99979 12.6368 4.73728 13.9495 6.05004C15.2623 7.36279 15.9998 9.14327 15.9998 10.9998V12.9998C15.9998 13.265 15.8944 13.5194 15.7069 13.7069C15.5194 13.8944 15.265 13.9998 14.9998 13.9998C14.7346 13.9998 14.4802 13.8944 14.2927 13.7069C14.1051 13.5194 13.9998 13.265 13.9998 12.9998V10.9998C13.9998 9.6737 13.473 8.40193 12.5353 7.46425C11.5976 6.52657 10.3259 5.99979 8.99979 5.99979H3.41379L5.70679 8.29279C5.8023 8.38503 5.87848 8.49538 5.93089 8.61738C5.9833 8.73939 6.01088 8.87061 6.01204 9.00339C6.01319 9.13616 5.98789 9.26784 5.93761 9.39074C5.88733 9.51364 5.81307 9.62529 5.71918 9.71918C5.62529 9.81307 5.51364 9.88733 5.39074 9.93761C5.26784 9.98789 5.13616 10.0132 5.00339 10.012C4.87061 10.0109 4.73939 9.9833 4.61738 9.93089C4.49538 9.87848 4.38503 9.8023 4.29279 9.70679L0.292786 5.70679C0.105315 5.51926 0 5.26495 0 4.99979C0 4.73462 0.105315 4.48031 0.292786 4.29279L4.29279 0.292786C4.48031 0.105315 4.73462 0 4.99979 0C5.26495 0 5.51926 0.105315 5.70679 0.292786Z"
                             fill="black"
                           ></path>
@@ -454,10 +411,12 @@ const Edit = () => {
                       Erase
                     </div>
                     <div
-                      className={`btn ${mode === "eraser" ? "activBtn" : ""}`}
+                      className={`btnq ${mode === "eraser" ? "activBtn" : ""}`}
                       onClick={() => {
-                        undoLastDrawing()
-                        setMode("eraser");
+                        // undoLastDrawing()
+                        setLinesHistory([]);
+                        setLines([]);
+                        // setMode("eraser");
                         // clearDrawing();
                       }}
                     >
@@ -526,9 +485,7 @@ const Edit = () => {
               </div>
             </div>
             <div
-        
-            className={crop ?  "selectTool activeTool" :"selectTool"} 
-
+              className={crop ? "selectTool activeTool" : "selectTool"}
               onClick={() => {
                 HandelCrop();
               }}
@@ -593,6 +550,19 @@ const WrapperEdit = styled.div`
     cursor: pointer;
 
     text-align: center;
+    &:hover {
+      /* background: #f9d20d3f; */
+    }
+  }
+  .btnq {
+    width: 100%;
+    padding: 5px;
+    cursor: pointer;
+
+    text-align: center;
+    &:hover {
+      background: #f9d20d3f;
+    }
   }
 
   .activBtn {
@@ -672,7 +642,7 @@ const WrapperEdit = styled.div`
   }
   input[type="range"]::-moz-range-thumb {
     box-shadow: 0px 0px 0px #000000;
-    border: 1px solid #rgba(249, 208, 13, 1);
+    border: 1px solid rgba(249, 208, 13, 1);
     height: 18px;
     width: 18px;
     border-radius: 25px;

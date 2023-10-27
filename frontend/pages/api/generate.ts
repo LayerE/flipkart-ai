@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { NextResponse, NextRequest } from "next/server";
 
 export const config = {
@@ -33,7 +35,19 @@ export default async (req: NextRequest) => {
     }
 
     const body = await req.json();
-    const { dataUrl, prompt, maskDataUrl, user_id, num_images, lora_type, category } = body;
+    const {
+      dataUrl,
+      prompt,
+      maskDataUrl,
+      user_id,
+      num_images,
+      lora_type,
+      category,
+      caption,
+      is_3d,
+      is_quick_generation,
+      project_id,
+    } = body;
 
     if (!dataUrl) {
       return NextResponse.json({ error: "Missing dataUrl" });
@@ -47,11 +61,11 @@ export default async (req: NextRequest) => {
 
     const { url: imageUrl, height, width } = await uploadImage(dataUrl);
 
-    if (height > 768 || width > 768 || height < 256 || width < 256) {
-      return NextResponse.json({
-        error: "Image must be between 256px and 768px",
-      });
-    }
+    // if (height > 768 || width > 768 || height < 256 || width < 256) {
+    //   return NextResponse.json({
+    //     error: "Image must be between 256px and 768px",
+    //   });
+    // }
 
     console.log(dataUrl);
 
@@ -69,6 +83,11 @@ export default async (req: NextRequest) => {
         num_images: num_images,
         lora_type: lora_type,
         category: category,
+        is_dev_site: true,
+        caption: caption,
+        is_3d: is_3d,
+        is_quick_generation: is_quick_generation,
+        project_id: project_id,
       }),
     });
 

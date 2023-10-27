@@ -1,4 +1,7 @@
-"use client";
+/// <reference no-default-lib="true"/>
+// @ts-nocheck
+
+
 
 import Head from "next/head";
 import React, { lazy, useEffect, useRef, useState } from "react";
@@ -12,11 +15,13 @@ import Loader from "@/components/Loader";
 import BottomTab from "@/components/BottomTab";
 import CanvasBox from "@/components/Canvas";
 // const CanvasBox = lazy(() => import("@/components/Canvas"));
-import { useAuth } from "@clerk/nextjs";
+import { useSession } from "@supabase/auth-helpers-react";
 import assert from "assert";
 import assets from "@/public/assets";
 import Regeneret from "@/components/Popup/Regeneret";
 import { useRouter } from "next/router";
+import Canvas3d from "@/components/Canvas/Canvas3d";
+import { supabase } from "@/utils/supabase";
 
 const fadeIn = {
   hidden: { opacity: 0 },
@@ -24,7 +29,9 @@ const fadeIn = {
 };
 
 export default function Home() {
-  const { userId } = useAuth();
+  const session = useSession();
+  // const [userId, setUserID] = useState<string | null>(null);
+
   const { query, isReady } = useRouter();
   // const { id } = query;
   const id = (query.id as string[]) || [];
@@ -45,8 +52,7 @@ export default function Home() {
     regeneratePopup,
     generateImageHandeler,
     SaveProjexts,
-    newassetonCanvas,
-    setNewassetonCanvas,
+
     GetProjextById,
     setproject,
     project,
@@ -54,16 +60,32 @@ export default function Home() {
     addimgToCanvasSubject,
     projectId,
     setprojectId,
-    uerId,
+
     setUserId,
     setGeneratedImgList,
     saveCanvasToDatabase,
-    filteredArray, setFilteredArray,
-    jobIdOne, setJobIdOne,
-    setCanvasDisable
- 
+    filteredArray,
+    setFilteredArray,
+    jobIdOne,
+    setJobIdOne,
+    setCanvasDisable,
+    setassetsActiveTab,
+    TDMode,
+    set3dMode,
+    getSupabaseImage,
+    userId,
+    setUserID,
   } = useAppState();
-
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data } = await supabase.auth.getSession();
+      if (data.session) {
+        // router.push("/");
+        setUserID(data.session.user.id);
+      }
+    };
+    checkSession();
+  }, [session]);
   useEffect(() => {
     // const getUser = localStorage.getItem("userId");
     // if (!getUser) {
@@ -71,50 +93,37 @@ export default function Home() {
     // }
     if (isReady) {
       // setFilteredArray([])
+      console.log("setFilteredArray", id);
       GetProjextById(id);
+      //  fetchAssetsImages(userId, null);
+      console.log(TDMode, "dddddddddddddddddddddddddddddddd");
     }
-  }, [id, isReady]);
+    set3dMode(false);
+  }, [id, isReady, TDMode]);
 
   useEffect(() => {
-  
-   const times = setInterval(() => {
-      if (isReady && userId ) {
-
-    
-      fetchGeneratedImages(userId);
+    const times = setInterval(() => {
+      if (isReady && userId) {
+        fetchGeneratedImages(userId);
       }
     }, 5000);
 
-    return(() => {
-      clearInterval(times)
-  })
+    return () => {
+      clearInterval(times);
+    };
   }, []);
 
-
   const upateImage = (url) => {
-    if(!loader){
-
- 
-    addimgToCanvasGen(url);
-    setSelectedImg({ status: true, image: url });
-    setModifidImageArray((pre) => [
-      ...pre,
-      { url: url, tool: "generated-selected" },
-    ]);
-
-  }
+    if (!loader) {
+      addimgToCanvasGen(url);
+      setSelectedImg({ status: true, image: url });
+    }
   };
 
   useEffect(() => {
     setprojectId(id);
-    setUserId(userId);
-    // let filteredResult;
 
-    // filteredResult = generatedImgList.filter((obj) =>
-    //   jobId?.includes(obj?.task_id)
-    // );
-
-    // setFilteredArray(filteredResult);
+    setassetsActiveTab("product");
 
     const canvas1 = canvasInstance.current;
 
@@ -126,39 +135,21 @@ export default function Home() {
       }
     });
 
-    // if (filteredResult?.length < jobId?.length) {
-    //   // addimgToCanvasGen(filteredResult[0]?.modified_image_url);
-    // }
 
-    return () => {
-      // setprojectId(null);
-    };
   }, [jobId, setGeneratedImgList, regeneratePopup]);
 
   useEffect(() => {
     let time = setInterval(() => {
-      if (isReady && userId ) {
-
-    
-            fetchAssetsImages();
-           
-
-
+      if (isReady && userId) {
+        fetchAssetsImages();
       }
     }, 5000);
-    return(() => {
-      clearInterval(time)
-  })
- 
-  }, [isReady,userId, jobId]);
-
-  useEffect(() => {
-    
     return () => {
-      // setFilteredArray([]);
+      clearInterval(time);
+    };
+  }, [isReady, userId, jobId]);
 
-    }
-  }, []);
+
 
   const fetchAssetsImages = async () => {
     try {
@@ -169,80 +160,34 @@ export default function Home() {
         }
       );
       const data = await response.json();
-      // console.log(await data, "dfdd");
-      console.log(jobIdOne,"JOB")
-      console.log(jobId,"JOBS")
+
+      // const data = await getSupabaseImage();
+  
 
       if (data?.length) {
+        const filteredResults = await data?.filter(
+          (obj) => jobIdOne?.includes(obj?.task_id)
+        );
 
-        const filteredResults = await data?.filter((obj) =>
-        jobIdOne?.includes(obj?.task_id)
-        )
-        // console.log(data?.length);
-
-        const filteredResultss = data?.map((obj) =>
-          obj?.task_id === jobIdOne[0]
-        )
-        // console.log(filteredResults,"dfd", filteredResultss)
-
-        if(filteredResults?.length){
-
-          // console.log(filteredResults,"fddscvcvcvcgd",jobIdOne)
+        const filteredResultss = await data?.filter(
+          (obj: any) => obj?.project_id == id
+        );
+        if (filteredResults?.length) {
+       
           setLoader(false);
-      setCanvasDisable(true)
+          setCanvasDisable(true);
 
-          setJobIdOne([])
+          setJobIdOne([]);
         }
 
-        setFilteredArray(data);
-        
-
-        
+        setFilteredArray(filteredResultss);
       }
-
-      // setImages(data); // Update the state with the fetched images
-      // setGeneratedImgList(data)
-
-      // if(data[0]?.prompt === prompt){
-
-      // }
-      return data;
     } catch (error) {
       console.error("Error fetching images:", error);
     }
   };
 
-  const firstUpdate = useRef(true);
 
-  useEffect(() => {
-    const canvas1 = canvasInstance.current;
-
-    const objects = canvas1?.getObjects();
-    const subjectObjects = [];
-    objects?.forEach((object) => {
-      if (object.category === "subject") {
-        subjectObjects.push(object);
-      }
-    });
-    const state = false;
-    setTimeout(() => {
-      if (subjectObjects.length <= 0 && newassetonCanvas !== null) {
-        console.log(
-          newassetonCanvas,
-          subjectObjects.length,
-          newassetonCanvas !== null
-        );
-        let state = true;
-        if (newassetonCanvas !== null && state) {
-          state = false;
-
-          addimgToCanvasSubject(newassetonCanvas);
-        }
-
-        setNewassetonCanvas(null);
-      }
-    }, 1000);
-  }, []);
 
   return (
     <MainPages>
@@ -250,6 +195,7 @@ export default function Home() {
 
       <div className="news">
         {popup?.status ? <PopupUpload /> : null}
+
         <Sidebar />
         <div
           className="Editor"
@@ -319,8 +265,7 @@ export default function Home() {
             </div>
             
           </div> */}
-
-          <CanvasBox proid={id} userId={userId} />
+          {TDMode ? <Canvas3d /> : <CanvasBox proid={id} userId={userId} />}
         </div>
       </div>
     </MainPages>
@@ -330,13 +275,10 @@ export default function Home() {
 const MainPages = styled.div`
   position: relative;
   .generated {
-    /* width: 400px;
-    height: 440px; */
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    /* padding: 20px; */
     border: 2px solid rgba(249, 208, 13, 1);
     border-radius: 16px;
 
@@ -347,20 +289,13 @@ const MainPages = styled.div`
       height: 100%;
       border-radius: 6px;
       transition: all 0.3s ease;
-
-      /* &:hover{
-      transform: scale(1.01);
-    } */
     }
   }
   .canvase {
     display: grid;
     padding-right: 100px !important;
     grid-template-columns: 1fr 1fr;
-    /* justify-content: center; */
-    /* align-items: center; */
     height: 75%;
-    /* background-color: #13bba4; */
     gap: 2rem;
     padding: 20px;
     padding-top: 100px;
@@ -472,7 +407,7 @@ const MainPages = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #e6e6e60;
+    background: #e6e6e6;
     font-size: 24px;
     color: #f9d00d;
     z-index: 3;

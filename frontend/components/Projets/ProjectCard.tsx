@@ -1,19 +1,26 @@
+// @ts-nocheck
+
 import React, { useState, useRef, useEffect } from "react";
 import { styled } from "styled-components";
 import assets from "@/public/assets";
 import Link from "next/link";
 import { useAppState } from "@/context/app.context";
-import { useRouter } from 'next/router'
+import { useRouter } from "next/router";
 
-const ProjectCard = ({ data, setProjects, handleDelet, handleEdite, setprojectsLoader }) => {
+const ProjectCard = ({
+  data,
+  setProjects,
+  handleDelet,
+  handleEdite,
+  setprojectsLoader,
+}) => {
   const [open, setopen] = useState(false);
   const [rename, setRename] = useState(false);
   const inputRef = useRef(null);
-  const router = useRouter()
-
+  const router = useRouter();
 
   const [projectName, setProjectName] = useState(data.title);
-  const { setFilteredArray} = useAppState();
+  const { setFilteredArray } = useAppState();
 
   const handleRename = () => {
     setTimeout(() => {
@@ -35,25 +42,21 @@ const ProjectCard = ({ data, setProjects, handleDelet, handleEdite, setprojectsL
     setopen(false);
   };
 
-  const navigate =()=>{
-    setFilteredArray([])
+  const navigate = () => {
+    setFilteredArray([]);
 
-    setprojectsLoader(true)
-    router.push(`/generate/${data._id}`)
-
-
-  }
+    setprojectsLoader(true);
+    router.push(`/generate/${data._id}`);
+  };
 
   return (
-        <CardWrapper className="projectfile link" >
+    <CardWrapper className="projectfile link">
       {/* <div className="" > */}
-        <div className="img" onClick={()=>
-          navigate()
-        } >
-          {data?.previewImage !== "" ? (
-            <img src={data?.previewImage} alt="" />
-          ) : null}
-        </div>
+      <div className="img" onClick={() => navigate()}>
+        {data?.previewImage !== "" ? (
+          <img src={data?.previewImage} alt="" />
+        ) : null}
+      </div>
       {/* </div> */}
       <div className="testcreat">
         <div className="pro-name">
@@ -132,10 +135,10 @@ const ProjectCard = ({ data, setProjects, handleDelet, handleEdite, setprojectsL
 export default ProjectCard;
 
 const CardWrapper = styled.div`
-cursor: pointer;
-.link{
   cursor: pointer;
-}
+  .link {
+    cursor: pointer;
+  }
   .img {
     width: 100%;
     height: 100%;
@@ -150,7 +153,7 @@ cursor: pointer;
     }
   }
   width: 100%;
-  height: 100%;
+  height: 200px;
   border-radius: 16px;
   border: 1px solid #d9d9d9;
   position: relative;

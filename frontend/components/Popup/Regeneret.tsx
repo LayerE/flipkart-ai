@@ -1,15 +1,19 @@
+
+/// <reference no-default-lib="true"/>
+// @ts-nocheck
+
 import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import Button from "../common/Button";
 import { useAppState } from "@/context/app.context";
 import { fabric } from "fabric";
 import { useRouter } from "next/router";
-import { useAuth } from "@clerk/nextjs";
+import { useSession } from "@supabase/auth-helpers-react";
 
-const Regeneret = () => {
-  const { userId } = useAuth();
+const Regeneret = ()=> {
+  const session = useSession();
+
   const { query, isReady } = useRouter();
-  // const { id } = query;
   const id = (query.id as string[]) || [];
 
   const {
@@ -19,27 +23,29 @@ const Regeneret = () => {
     positionBtn,
     canvasInstance,
     generatedImgList,
-    reloder,
-    setreLoader,
+
+
     GetProjextById,
     regenratedImgsJobId,
     setRegenratedImgsJobid,
     setJobId,
     setActiveTab,
+    fetchGeneratedImages,
+    setCanvasDisable,
+    setLoader,
+    userId,
   } = useAppState();
 
-  const [loder, setLoader] = useState(true);
 
   const [selectedCards, setSelectedCards] = useState([]);
-  const [cards] = useState(["Card 1", "Card 2", "Card 3", "Card 4"]);
   const [filteredArray, setFilteredArray] = useState([]);
 
-  useEffect(() => {
+  useEffect(()=> {
     const filteredResult = generatedImgList.filter(
-      (obj) => obj?.task_id === regenratedImgsJobId
+      (obj)=> obj?.task_id === regenratedImgsJobId
     );
     setFilteredArray(filteredResult);
-    console.log(generatedImgList,"dfd");
+    console.log(generatedImgList, "dfd");
 
     if (filteredResult?.length) {
       setLoader(false);
@@ -50,14 +56,26 @@ const Regeneret = () => {
     console.log(filteredResult, "sdfds", regenratedImgsJobId);
   }, [generatedImgList, regenratedImgsJobId]);
 
-  const addimgToCanvasGen = async (url: string[]) => {
+  useEffect(()=> {
+    const time = setInterval(()=> {
+      fetchGeneratedImages(userId);
+    }, 5000);
+
+    return ()=> {
+      clearInterval(time);
+    };
+  }, []);
+
+  const addimgToCanvasGen = async (url: string[])=> {
     const gridSize = 2;
 
-    // Calculate cell width and height
+
     const cellWidth = canvasInstance.current.width / gridSize;
     const cellHeight = canvasInstance.current.height / gridSize;
+    console.log(`dgf`, url);
+    let incr = 0;
 
-    url.forEach(async (imageSrc, index) => {
+    url.forEach(async (imageSrc, index)=> {
       const row = Math.floor(index / gridSize);
       const col = index % gridSize;
       console.log(cellWidth, cellHeight, gridSize);
@@ -69,25 +87,25 @@ const Regeneret = () => {
         function (img: any) {
           // Set the image's dimensions
           img.scaleToWidth(200);
-          const canvasWidth = 380;
-          const canvasHeight = 380;
+          const canvasWidth = 440;
+          const canvasHeight = 440;
           const imageAspectRatio = img.width / img.height;
 
           // Calculate the maximum width and height based on the canvas size
           const maxWidth = canvasWidth;
           const maxHeight = canvasHeight;
           // Calculate the scaled width and height while maintaining the aspect ratio
-      let scaledWidth = maxWidth;
-      let scaledHeight = scaledWidth / imageAspectRatio;
+          let scaledWidth = maxWidth;
+          let scaledHeight = scaledWidth / imageAspectRatio;
 
-          img.on("moving", () => {
+          img.on("moving", ()=> {
             positionBtn(img);
           });
 
           img.on("scaling", function () {
             positionBtn(img);
           });
-          const getRandomPosition = (max) => Math.floor(Math.random() * max);
+          const getRandomPosition = (max)=> Math.floor(Math.random() * max);
 
           const randomLeft = getRandomPosition(
             canvasInstance?.current?.width / img.width
@@ -97,36 +115,33 @@ const Regeneret = () => {
           // Set the position of the image
           img.set("category", "generated");
           img.set({
-            left: randomLeft,
-            top: randomTop,
+            left: 100 + index * 100,
+            top: 150 + index * 50,
           });
           img.scaleToWidth(scaledWidth);
           img.scaleToHeight(scaledHeight);
 
           console.log(img);
-          // canvasInstance.current.clear();
           canvasInstance.current.add(img);
           canvasInstance.current.setActiveObject(img);
           canvasInstance.current.renderAll();
         }
       );
+      incr = incr + 50;
     });
   };
 
-  const handleCardChange = (image) => {
+  const handleCardChange = (image)=> {
     const selectedCard = image;
     if (selectedCards.includes(selectedCard)) {
-      setSelectedCards(selectedCards.filter((card) => card !== selectedCard));
+      setSelectedCards(selectedCards.filter((card)=> card !== selectedCard));
     } else {
       setSelectedCards([...selectedCards, selectedCard]);
     }
   };
 
-  const addImges = async () => {
+  const addImges = async ()=> {
     try {
-      // setSelectedresult(1);
-
-      // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
 
       const response = await fetch(`${process.env.NEXT_PUBLIC_API}/jobId`, {
         method: "POST",
@@ -139,21 +154,20 @@ const Regeneret = () => {
           jobId: regenratedImgsJobId,
         }),
       });
-      // // console.log(await response.json(), "dfvcvdfvdvcdsd");
       const datares = await response;
 
       if (datares.ok) {
         setJobId((pre) => [...pre, regenratedImgsJobId]);
-        // setRegenratedImgsJobid(generate_response?.job_id);
-        // localStorage.setItem("jobId", jobId);
+        setCanvasDisable(false);
+        setLoader(false);
         GetProjextById(id);
         addimgToCanvasGen(selectedCards);
         setRegeneratePopup({ statu: false });
-        // setActiveTab(1);
       }
-      // window.open(`/generate/${datares?._id}`, "_self");
+
     } catch (error) {
-      // Handle error
+      console.log(error);
+
     }
   };
 
@@ -162,9 +176,11 @@ const Regeneret = () => {
       <div className="wrapper">
         <div
           className="close"
-          onClick={() => {
+          onClick={()=> {
             setRegeneratePopup({ statu: false });
             setActiveTab(1);
+            setCanvasDisable(false);
+            setLoader(false);
           }}
         >
           <svg
@@ -177,7 +193,7 @@ const Regeneret = () => {
           </svg>
         </div>
 
-        {filteredArray.length && !reloder ? (
+        {filteredArray.length  ? (
           <div className="gride">
             <div className={` griteitem`} onClick={() => ""}>
               <DaoderWarpperL></DaoderWarpperL>
@@ -213,7 +229,7 @@ const Regeneret = () => {
               <picture className="">
                 <img src={regeneratePopup.url} alt="image" />
 
-                {/* <img src={regeneratePopup?.url} alt="image" /> */}
+               
               </picture>
             </div>
             <div className={` griteitem`} onClick={() => ""}>
@@ -227,7 +243,7 @@ const Regeneret = () => {
               <picture className="griteitemLoading">
                 <img src={regeneratePopup.url} alt="image" />
 
-                {/* <img src={regeneratePopup?.url} alt="image" /> */}
+           
               </picture>
             </div>
             <div className={` griteitem`} onClick={() => ""}>
@@ -241,7 +257,7 @@ const Regeneret = () => {
               <picture className="griteitemLoading">
                 <img src={regeneratePopup.url} alt="image" />
 
-                {/* <img src={regeneratePopup?.url} alt="image" /> */}
+             
               </picture>
             </div>
             <div className={` griteitem`} onClick={() => ""}>
@@ -255,12 +271,12 @@ const Regeneret = () => {
               <picture className="griteitemLoading">
                 <img src={regeneratePopup.url} alt="image" />
 
-                {/* <img src={regeneratePopup?.url} alt="image" /> */}
+              
               </picture>
             </div>
           </div>
         )}
-        {}
+       
         <div className="btns">
           <div>
             {selectedCards?.length > 0 ? (
@@ -310,7 +326,7 @@ const WrapperRegenerat = styled.div`
     justify-content: center;
     position: relative;
     width: 50vw !important;
-  min-height: 70vh;
+    min-height: 70vh;
     border: 2px solid #d9d9d9;
     border-radius: 8px !important;
     padding: 30px;
@@ -322,7 +338,6 @@ const WrapperRegenerat = styled.div`
       grid-template-columns: 1fr 1fr;
       gap: 12px;
       width: 100%;
-
     }
 
     .griteitem {
@@ -344,7 +359,6 @@ const WrapperRegenerat = styled.div`
       width: 100%;
       object-fit: cover;
       object-position: center;
-
     }
     .active {
       border: 2px solid rgba(249, 208, 13, 1);

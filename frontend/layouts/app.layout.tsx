@@ -4,10 +4,15 @@ import Head from "next/head";
 import styled from "styled-components";
 import Header from "@/components/Header";
 import { useAppState } from "@/context/app.context";
-import Loader from "@/components/Loader";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import Script from 'next/script'
+// import Loader from "@/components/Loader";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Script from "next/script";
+import { useEffect } from "react";
+import { useSession } from "@supabase/auth-helpers-react";
+import { useRouter } from "next/router";
+import { supabase } from "@/utils/supabase";
+
 const LayoutContentWrapper = styled.div`
   width: 100%;
   height: 100%;
@@ -15,8 +20,29 @@ const LayoutContentWrapper = styled.div`
 `;
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-  const { mainLoader } = useAppState();
+  const {   setUserID } = useAppState();
+  const session = useSession();
+  const router = useRouter();
 
+  const isSignInPage = router.pathname === "/sign-in/[[...index]]";
+
+
+  useEffect(() => {
+
+    
+    const checkSession = async () => {
+      const { data } = await supabase.auth.getSession();
+      if (data.session) {
+        setUserID(data.session.user.id);
+      } else {
+        if(!isSignInPage){
+
+          router.push("/sign-in");
+        }
+      }
+    };
+    checkSession();
+  }, [router,setUserID]);
   return (
     <>
       <Head>
@@ -27,20 +53,25 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       </Head>
 
       <LayoutContentWrapper>
-      <ToastContainer />
+        <ToastContainer />
         {/* {mainLoader ? (
           <Loader />
         ) : ( */}
-          <>
-            <Header />
-            {children}
-          </>
+        <>
+          <Header />
+          {children}
+        </>
         {/* )} */}
       </LayoutContentWrapper>
       <>
-      <Script src="https://unpkg.com/fabric@latest/dist/fabric.js" strategy="worker" />
-      <Script src="https://unpkg.com/fabric@latest/src/mixins/eraser_brush.mixin.js" strategy="worker" />
-
+        <Script
+          src="https://unpkg.com/fabric@latest/dist/fabric.js"
+          strategy="worker"
+        />
+        <Script
+          src="https://unpkg.com/fabric@latest/src/mixins/eraser_brush.mixin.js"
+          strategy="worker"
+        />
       </>
     </>
   );

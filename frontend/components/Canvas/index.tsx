@@ -1,12 +1,11 @@
 // use client
-
+/// <reference no-default-lib="true"/>
 import React, { useRef, useState } from "react";
 import { useAppState } from "@/context/app.context";
 import { useEffect, useLayoutEffect, useCallback } from "react";
 import { fabric } from "fabric";
 import { styled } from "styled-components";
 import { useRouter } from "next/router";
-import { useAuth } from "@clerk/nextjs";
 import axios from "axios";
 import Loader from "../Loader";
 import { setInterval } from "timers";
@@ -16,7 +15,13 @@ import CropperBox from "./Cropper";
 
 // import { useBeforeUnload } from "react-router-dom";
 
-export default function CanvasBox({ proid, userId }) {
+export default function CanvasBox({
+  proid,
+  userId,
+}: {
+  proid: any;
+  userId: string;
+}) {
   const { query, isReady } = useRouter();
   const router = useRouter();
 
@@ -28,14 +33,8 @@ export default function CanvasBox({ proid, userId }) {
     activeTab,
     setActiveTab,
     setSelectedColoreMode,
-    outerDivRef,
     downloadImg,
     setDownloadImg,
-    // newEditorBox
-    editorBox,
-    canvasHistoryRef,
-    currentStep,
-    setCurrentStep,
     RegenerateImageHandeler,
     GetProjextById,
     isMagic,
@@ -45,21 +44,18 @@ export default function CanvasBox({ proid, userId }) {
     PosisionbtnRef,
     regenerateRef,
     setRegeneratePopup,
-    btnVisible,
     previewBox,
     canvasHistory,
     currentCanvasIndex,
     generateBox,
     GetProjexts,
-    generateImageHandeler,
     SaveProjexts,
     project,
     loadercarna,
     setloadercarna,
     saveCanvasToDatabase,
     setRegenratedImgsJobid,
-    genRect,
-    setgenRect,
+
     positionBtn,
     newEditorBox,
     imageGenRect,
@@ -70,9 +66,11 @@ export default function CanvasBox({ proid, userId }) {
     setActiveSize,
     crop,
     setCrop,
-    canvasDisable, setCanvasDisable,
-    loader
+    canvasDisable,
+    setCanvasDisable,
+    loader,
 
+    setregeneraatingId,
 
     // canvasRef
   } = useAppState();
@@ -99,34 +97,16 @@ export default function CanvasBox({ proid, userId }) {
       // renderOnAddRemove: false,
     });
 
-    // setCanvas( new fabric.Canvas(canvasRef?.current, {
-    //   width: window.innerWidth,
-    //   height: window.innerHeight,
-    //   // transparentCorners: false,
-    //   originX: "center",
-    //   originY: "center",
-    //   renderOnAddRemove: false,
-    // }));
-    // canvasHistory.current.push(canvasInstance.current.toDatalessJSON());
-    // currentCanvasIndex.current++;
-    // }
-
     const canvasInstanceRef = canvasInstance.current;
     if (canvasInstanceRef) {
-      // Perform operations on canvasInstanceRef
-      // canvasInstanceRef.clear();
-      // Other canvas operations...
-    }
-
-    // getCanvs(project);
-
-    // Resize canvas when the window is resized
-    window.addEventListener("resize", () => {
-      canvasInstanceRef?.setDimensions({
-        width: window?.innerWidth,
-        height: window?.innerHeight,
+      // Resize canvas when the window is resized
+      window.addEventListener("resize", () => {
+        canvasInstanceRef?.setDimensions({
+          width: window?.innerWidth,
+          height: window?.innerHeight,
+        });
       });
-    });
+    }
 
     setTimeout(() => {
       setStar(true);
@@ -137,87 +117,27 @@ export default function CanvasBox({ proid, userId }) {
       setTimeout(() => {
         canvasInstanceRef?.dispose();
       }, 500);
-      // router.events.off("routeChangeStart", saveCanvasToDatabase);
-
-      // setTimeout(() => {
-      // }, 300);
     };
   }, [isReady, canvasInstance]);
-
-  // Load canvas data from the database when the component mounts
 
   const [re, setRe] = useState(1);
   const [state, setStar] = useState(false);
 
-  // useEffect(() => {
-  //   const canvasInstanceRef = canvasInstance?.current;
-  //   if (canvasInstance?.current) {
-  //     if (re <= 4) {
-  //       setRe(re + 1);
-  //     }
-  //     console.log(`fdsfgsf`);
-
-  //     // canvasInstanceRef.add(newEditorBox);
-  //     // canvasInstanceRef.add(imageGenRect);
-
-  //     // canvasInstanceRef.remove(newEditorBox);
-  //   }
-
-  //   return () => {
-  //     // canvasInstanceRef.remove(newEditorBox);
-  //     // canvasInstanceRef.remove(imageGenRect);
-  //   };
-  // }, [activeSize, re]);
-
   useEffect(() => {
     if (canvasInstance?.current && state && isReady) {
-      // if (re <= 2) {
-      //   setRe(re + 1);
-      // }
-      // canvasInstance?.current.clear();
-      // Other canvas operations...
       const canvasInstanceRef = canvasInstance?.current;
-
-      // canvasInstanceRef.renderAll();
       const btn = PosisionbtnRef.current;
       const rebtn = regenerateRef.current;
-      // const genBox = generateBox.current;
       const preBox = previewBox.current;
 
-      // canvasInstanceRef.add(newEditorBox);
-      // canvasInstanceRef.add(imageGenRect);
-
-      // newEditorBox.set({
-      //   width: activeSize.w,
-      //   height: activeSize.h,
-      //   left: activeSize.l,
-      //   top: activeSize.t,
-      // });
-      // imageGenRect.set({
-      //   width: activeSize.w,
-      //   height: activeSize.h,
-      //   left: activeSize.gl,
-      //   top: activeSize.gt,
-      //   zIndex: 0,
-      // });
-      // newEditorBox.set("zIndex", 0);
-      // imageGenRect.set("zIndex", 0);
-
-      // canvasInstance.current.sendBackwards(newEditorBox);
-      // canvasInstance.current.sendBackwards(imageGenRect);
-
-      // canvasInstance.current.discardActiveObject();
-      // // canvas.requestRenderAll();
-
       canvasInstance?.current.renderAll();
-
-      // Assuming you have a Fabric.js canvas object named 'canvas'
 
       // When a user clicks on an image on the canvas
       canvasInstanceRef.on("mouse:down", function (options) {
         if (options.target && options.target.type === "image") {
           let selectedObject;
           if (options.target._element instanceof Image) {
+            console.log(options.target.id, "option");
             // selectedObject = options.target._element.src;
             const img = new Image();
             img.src = options.target._element.src;
@@ -235,6 +155,9 @@ export default function CanvasBox({ proid, userId }) {
           }
 
           if (selectedObject) {
+            if (options.target.id) {
+              setregeneraatingId(options.target.id);
+            }
             setDownloadImg(selectedObject);
             setSelectedColoreMode("None");
           }
@@ -268,69 +191,17 @@ export default function CanvasBox({ proid, userId }) {
         fill: "rgba(0, 0, 0, 1)",
       });
 
-      // genBox.addEventListener("click", (e) => {
-      //   // Check if the pressed key is 'Delete' (code: 46) or 'Backspace' (code: 8) for wider compatibility
-      //   const dataURL = canvasInstanceRef.toDataURL({
-      //     format: "png",
-      //     // left: parseInt(genBox.style.left),
-      //     // top: parseInt(genBox.style.top),
-      //     // width: parseInt(genBox.style.width),
-      //     // height: parseInt(genBox.style.height),
-      //       left:newEditorBox.left,
-      //     top:newEditorBox.top,
-      //     width: newEditorBox.width,
-      //     height:newEditorBox.height,
-      //   });
-      //   // setDownloadImg(dataURL);
-      //   setDownloadImg(dataURL);
-      // });
-      // newEditorBox.on("mousedown", function () {
-      //   const originalStrokeColor = newEditorBox.stroke;
-      //   const originalStrokeWidth = newEditorBox.strokeWidth;
-
-      //   // Make the rectangle stroke transparent
-      //   newEditorBox.set("stroke", "transparent");
-      //   newEditorBox.set("strokeWidth", 0);
-      //   canvasInstanceRef.renderAll();
-      //   console.log(parseInt(newEditorBox.left), newEditorBox.top);
-
-      //   const dataURL = canvasInstanceRef.toDataURL({
-      //     format: "png",
-      //     left: newEditorBox.left,
-      //     top: newEditorBox.top,
-      //     width: 512,
-      //     height: 512,
-      //   });
-      //   // setDownloadImg(dataURL);
-      //   // setDownloadImg(dataURL);
-      //   setSelectedImg(dataURL);
-
-      //   //
-
-      //   // Reset the rectangle's stroke properties
-      //   newEditorBox.set("stroke", originalStrokeColor);
-      //   newEditorBox.set("strokeWidth", originalStrokeWidth);
-      //   canvasInstanceRef.renderAll();
-      // });
-
       const objects = canvasInstanceRef.getObjects();
 
       objects.forEach((object) => {
         // If the object is a mask, add it to the mask objects array
         if (object.category === "mask") {
           positionBtn(object);
-          // canvasInstance.current.bringToFront(imageGenRect);
-          // canvasInstance.current.discardActiveObject();
-          // canvasInstance.current.renderAll();
-          // maskObjects.push(object);
         }
         // If the object is a subject, add it to the subject objects array
         if (object.category === "subject") {
           // subjectObjects.push(object);
           positionBtn(object);
-          // canvasInstance.current.bringToFront(imageGenRect);
-          // canvasInstance.current.discardActiveObject();
-          // canvasInstance.current.renderAll();
         }
       });
 
@@ -366,19 +237,6 @@ export default function CanvasBox({ proid, userId }) {
         }
       });
 
-      // canvasInstanceRef.clipTo = function(ctx) {
-      //   ctx.save();
-      //   ctx.globalCompositeOperation = 'destination-in'; // This ensures drawing is clipped to the image
-
-      //   var activeObject = canvasInstanceRef.getActiveObject();
-      //   ctx.beginPath();
-      //   // Define your clipping path here (e.g., a rectangle)
-      //   ctx.rect(activeObject.left, activeObject.top, activeObject.width, activeObject.height);
-      //   ctx.closePath();
-      //   ctx.fill();
-      //   ctx.restore();
-      // };
-
       canvasInstanceRef.on("selection:created", (e) => {
         var selectedObjects = e.target;
         // var hasGenerated = selectedObjects.some(function (obj) {
@@ -406,8 +264,8 @@ export default function CanvasBox({ proid, userId }) {
         // if (hasGenerated) {
         rebtn.style.display = "none";
         // Show the additional button if at least one object has the category "generated"
-        // rebtn.style.display = "block";
         // }
+        // rebtn.style.display = "block";
         setDownloadImg(null);
 
         if (activeTab === 5) {
@@ -442,7 +300,7 @@ export default function CanvasBox({ proid, userId }) {
       // canvasInstance?.current.remove(newEditorBox);
       // canvasInstance?.current.remove(imageGenRect);
     };
-  }, [canvasInstance.current, state,activeSize]);
+  }, [canvasInstance.current, state, activeSize]);
   // , activeSize, setActiveSize, re, state
 
   const DeletIrem = () => {
@@ -520,12 +378,7 @@ export default function CanvasBox({ proid, userId }) {
       };
       setZoomCanvas(zooms);
     }
-  }, [canvasInstance.current,]);
-
- 
-
-
-
+  }, [canvasInstance.current]);
 
   useEffect(() => {
     // Fetch canvas data from your API and load it into the canvas
@@ -540,8 +393,6 @@ export default function CanvasBox({ proid, userId }) {
           project_id: proid,
         })
         .then((response) => {
-          console.log(response);
-          console.log(response?.data?.newData, "adsfnbdhjskgvyuifdsgh");
           if (canvasInstanceRef) {
             canvasInstanceRef.loadFromJSON(
               response?.data.newData.canvasdata,
@@ -609,31 +460,17 @@ export default function CanvasBox({ proid, userId }) {
     };
   }, []);
 
-
-  // const saveCanvasToDatabasea = () => {};
-
-  const saveCanvasDataToLocal = () => {
-    // if(isReady){
-
-    // Serialize canvas data to JSON and save it to local storage
-    // if (!proid === undefined || !proid === " " || !proid === null) {
-    const canvasData = JSON.stringify(canvasInstance.current.toJSON());
-    // SaveProjexts(userId, proid, canvasData);
-    localStorage.setItem(proid, canvasData);
-    // }
-  };
-
   const generationBoxStyle = {
-    left: `${activeSize.l * zoom}px`,
-    top: `${activeSize.t* zoom}px`,
-    width: `${activeSize.w *zoom}px`, // Adjust the width based on canvas zoom
-    height: `${activeSize.h*zoom}px`, // Adjust the height based on canvas zoom
+    left: `${activeSize?.l * zoom}px`,
+    top: `${activeSize?.t * zoom}px`,
+    width: `${activeSize?.w * zoom}px`, // Adjust the width based on canvas zoom
+    height: `${activeSize?.h * zoom}px`, // Adjust the height based on canvas zoom
   };
   const PreviewBoxStyle = {
-    left: `${activeSize.gl  * zoom}px`,
-    top: `${activeSize.gt  * zoom}px`,
-    width: `${activeSize.w  * zoom}px`, // Adjust the width based on canvas zoom
-    height: `${activeSize.h  * zoom}px`, // Adjust the height based on canvas zoom
+    left: `${activeSize.gl * zoom}px`,
+    top: `${activeSize.gt * zoom}px`,
+    width: `${activeSize.w * zoom}px`, // Adjust the width based on canvas zoom
+    height: `${activeSize.h * zoom}px`, // Adjust the height based on canvas zoom
     backgroundColor: "rgba(249, 208, 13, 0.23)",
   };
 
@@ -645,7 +482,6 @@ export default function CanvasBox({ proid, userId }) {
         setRegeneratePopup({ status: true, url: downloadImg });
         console.log("Success", downloadImg);
         // setActiveTab(6);
-        console.log("sdsfs");
       }, 500);
     }
   };
@@ -675,9 +511,7 @@ export default function CanvasBox({ proid, userId }) {
             className="leftbox"
             ref={generateBox}
             style={generationBoxStyle}
-          >
-            
-          </div>
+          ></div>
           <div
             className="rightbox"
             ref={previewBox}
@@ -696,14 +530,14 @@ export default function CanvasBox({ proid, userId }) {
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
-              stroke-width="1.5"
+              strokeWidth="1.5"
               stroke="currentColor"
               aria-hidden="true"
               className="delet"
             >
               <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
               ></path>
             </svg>
@@ -717,9 +551,9 @@ export default function CanvasBox({ proid, userId }) {
               className="delet"
             >
               <path
-                fill-rule="evenodd"
+                fillRule="evenodd"
                 d="M10 3a.75.75 0 01.75.75v10.638l3.96-4.158a.75.75 0 111.08 1.04l-5.25 5.5a.75.75 0 01-1.08 0l-5.25-5.5a.75.75 0 111.08-1.04l3.96 4.158V3.75A.75.75 0 0110 3z"
-                clip-rule="evenodd"
+                clipRule="evenodd"
               ></path>
             </svg>
           </button>
@@ -736,35 +570,33 @@ export default function CanvasBox({ proid, userId }) {
           <button className="selectone yello">Regenerate Product</button>
         </div>
 
-        {/* <div className="ss">
-            <button onClick={handleButtonClick}>,/fdvd</button>
-          <picture>
+        <div className="ss">
+          {/* <button onClick={handleButtonClick}>,/fdvd</button> */}
+          {/* <picture>
             <img
               onClick={() => saveCanvasToDatabase()}
               src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAYFBMVEX///8AAAD4+Pjv7+8aGhoTExOYmJiTk5P09PQICAiQkJD6+vp/f39WVlbGxsaurq5ubm6FhYUnJye8vLwfHx9oaGjR0dHq6urg4OB1dXWkpKS2trY0NDQpKSlNTU1fX19H7sBTAAADJUlEQVR4nO3d224iMRBFUbo7QLhDrkwyM/n/vxwhTR5AUDbUsV1Ee78iFSw5pIliN6MRERERERERERERERERxWvRn29xy7CTGVc9WqR+vVu9dOeb3jLwZMYx4vHk0YnEYNVPni7o6gi7uYRxuWeDpxHOEsLbniO7pQ2sIixK3CaAdYQFiakVrCUsRky8BysKC/266dPAasIyqziNJCyxir11HawvLLCK6wxgTaF+FXfRhPJVXIUTildxcenDdkOhdhVzrhXVhdJVjClUEoMKhcSoQh0xrFBGjCtUEQMLRReNyELNKoYWSoixhQpicKGAGF3oJ4YXuonxhd6Lxh0Inat4D0LfKt6FsPP88w0hQoQIf5Aw9V/uexTOp0cd7+f4EUIzhAjzQ4jw1hDWFur3D0QT/pLJvnsPJny4aYOp1UcwYfcpo/0vZ49LVaHrOc40vwpYRfh7kOlG1/6M1hF240/Ze3Gf3O3ZRNh1f17nE0HLv9f6qgkbhhBh/BAijB9ChPFDiDB+CBHGDyHC+CFEGD+ECOOHEGH8ECKMH0KE8UOIMH5VhF+bN+mWmtHwtvmKIxxPtbrvhsk4hnBbxndoyNo9VFq4kXnOtWkvfJZhzpdxv7iywrIreCi9ikWFWxnkcsn3YlFhjbvDFn0RqeHl7w17aNJQ+ChTWKV27hcUvsoQdq/NhB8yg11iW3RB4V5msNs3E77LDHaJAyblhLNyH0iPG1oJx9WE9t8YCK0Qygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxPC/VCnfSth91Ar+2V4hHnf6dy4F9ctjLO+l7txKw8w77vVG7dzCdetX35Ga5ewv+7+7y16cp7bmbYGJPOe2wl/EnjmXMKs839NE5x/XLY2mC39wIzzfw0TnX+Me1GUrOCh51lryvmEZ5D7Sbzr4tNUe4C1X+9WcT6Gv6x26xIHdBd9lORfTkRERERERERERERERESC/gF2IVePB+evpwAAAABJRU5ErkJggg=="
               alt=""
             />
-          </picture>
-        </div> */}
+          </picture> */}
+        </div>
 
-        <canvas  ref={canvasRef}   />
+        <canvas ref={canvasRef} />
       </div>
     </Wrapper>
   );
 }
 
 const Wrapper = styled.div`
-canvas {
-
-  pointer-events:${(props) => props.canvasDisable ? "none" : "auto"}
-  
-}
+  canvas {
+    pointer-events: ${(props) => (props.canvasDisable ? "none" : "auto")};
+  }
   .convas-continer {
     /* width: 1800px;
-  height: 1800px;
-  overflow: auto; */
+  height: 1800px; */
+    overflow: auto;
   }
-  .delet{
+  .delet {
     width: 20px;
     height: 20px;
   }
@@ -795,6 +627,7 @@ canvas {
     user-select: none;
     width: 100px;
     position: absolute;
+
     /* z-index: 200; */
   }
   .generationBox {
@@ -809,16 +642,15 @@ canvas {
     z-index: 10;
     display: flex;
     justify-content: center;
-    align-items
   }
   .selectone {
     border-radius: 4px;
     cursor: pointer;
-    border: 2px solid rgba(249, 208, 13, 1) ;
+    border: 2px solid rgba(249, 208, 13, 1);
     padding: 5px 8px;
     background: rgba(249, 208, 13, 1) !important;
 
-color: #000;
+    color: #000;
     font-size: 12px;
     font-weight: 500;
     transition: all 0.3 ease;
@@ -829,8 +661,6 @@ color: #000;
     }
   }
 
-  .yello{
-
-
+  .yello {
   }
 `;

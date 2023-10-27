@@ -26,6 +26,12 @@ import   Rocks from './image/Rocks.png'
 import  Room from './image/Room.png'
 import  Waterfalls from './image/Waterfalls.png'
 
+// import  Waterfasslls from '
+
+
+
+
+
 
 
 const icons = {
@@ -50,13 +56,16 @@ const images = {
     Waterfalls,
     Room,
     Rocks,
-    LivingRoom
+    LivingRoom,
+
+
 
 }
 
 const assets = {
     icons,
     images,
+
     
   };
   

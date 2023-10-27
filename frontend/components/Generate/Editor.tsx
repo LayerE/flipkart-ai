@@ -1,3 +1,6 @@
+// @ts-nocheck
+
+
 import React, { useEffect, useState, useRef } from "react";
 import { Row } from "../common/Row";
 import { Input, Suggestion1, TestArea } from "../common/Input";
@@ -20,7 +23,6 @@ import {
   renderStrength,
   resultList,
   surroundingList,
-  test,
 } from "@/store/dropdown";
 import { useAppState } from "@/context/app.context";
 import { styled } from "styled-components";
@@ -69,7 +71,7 @@ const EditorSection = () => {
     generationLoader,
     changeRectangleSize,
     setGenerationLoader,
-    loader
+    loader,
     
   } = useAppState();
 
@@ -101,7 +103,6 @@ const EditorSection = () => {
     (suggestion) =>
       suggestion.toLowerCase().includes(placementTest.toLowerCase())
   );
-
   const sizeList = [
     {
       id: 1,
@@ -109,9 +110,9 @@ const EditorSection = () => {
       subTittle: "512X512",
       h: 512,
       w: 512,
-      l: 100,
+      l: 50,
       t: 160,
-      gl: 652,
+      gl: 592,
       gt: 160,
     },
     {
@@ -120,10 +121,10 @@ const EditorSection = () => {
       subTittle: "560✕560",
       h: 560,
       w: 560,
-      l: 100,
+      l: 50,
       t: 160,
-      gl: 690,
-      gt: 160
+      gl: 640,
+      gt: 160,
     },
     {
       id: 3,
@@ -131,10 +132,10 @@ const EditorSection = () => {
       subTittle: "560✕720",
       h: 720,
       w: 560,
-      l: 100,
+      l: 50,
       t: 160,
-      gl: 690,
-      gt: 160
+      gl: 640,
+      gt: 160,
     },
     {
       id: 4,
@@ -142,10 +143,10 @@ const EditorSection = () => {
       subTittle: "440✕520",
       h: 520,
       w: 440,
-      l: 100,
+      l: 50,
       t: 160,
-      gl: 570,
-      gt: 160
+      gl: 520,
+      gt: 160,
     },
     {
       id: 5,
@@ -153,10 +154,10 @@ const EditorSection = () => {
       subTittle: "712✕560",
       h: 560,
       w: 712,
-      l: 100,
+      l: 50,
       t: 160,
-      gl: 842,
-      gt: 160
+      gl: 792,
+      gt: 160,
     },
     {
       id: 6,
@@ -164,10 +165,10 @@ const EditorSection = () => {
       subTittle: "520✕720",
       h: 720,
       w: 520,
-      l: 100,
+      l: 50,
       t: 160,
-      gl: 650,
-      gt: 160
+      gl: 600,
+      gt: 160,
     },
     // {
     //   id: 7,
@@ -182,6 +183,86 @@ const EditorSection = () => {
     //   custom: true,
     // },
   ];
+  // const sizeList = [
+  //   {
+  //     id: 1,
+  //     title: "Default",
+  //     subTittle: "1024✕1024",
+  //     h: 1024,
+  //     w: 1024,
+  //     l: 100,
+  //     t: 240,
+  //     gl: 1152,
+  //     gt: 240,
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "Instagram Post",
+  //     subTittle: "1120✕1120",
+  //     h: 1120,
+  //     w: 1120,
+  //     l: 100,
+  //     t: 240,
+  //     gl: 1250,
+  //     gt: 240,
+  //   },
+  //   {
+  //     id: 3,
+  //     title: "Instagram Story",
+  //     subTittle: "1120✕1440",
+  //     h: 1440,
+  //     w: 1120,
+  //     l: 100,
+  //     t: 240,
+  //     gl:1250,
+  //     gt: 240,
+  //   },
+  //   {
+  //     id: 4,
+  //     title: "Facebook Post",
+  //     subTittle: "880✕1120",
+  //     h: 1120,
+  //     w: 880,
+  //     l: 100,
+  //     t: 240,
+  //     gl: 1010,
+  //     gt: 240,
+  //   },
+  //   {
+  //     id: 5,
+  //     title: "16:9",
+  //     subTittle: "1424✕1120",
+  //     h: 1120,
+  //     w: 1424,
+  //     l: 100,
+  //     t: 240,
+  //     gl: 1544,
+  //     gt: 240,
+  //   },
+  //   {
+  //     id: 6,
+  //     title: "9:16",
+  //     subTittle: "1040✕1440",
+  //     h: 1440,
+  //     w: 1040,
+  //     l: 100,
+  //     t: 240,
+  //     gl: 1170,
+  //     gt: 240,
+  //   },
+  //   // {
+  //   //   id: 7,
+  //   //   title: "Custom",
+  //   //   subTittle: "1024✕1024",
+  //   //   h: 1024,
+  //   //   w: 1024,
+  //   //   l: 100,
+  //   //   t: 160,
+  //   //   gl: 1224,
+  //   //   gt: 160,
+  //   //   custom: true,
+  //   // },
+  // ];
 
   return (
     <motion.div
@@ -191,11 +272,8 @@ const EditorSection = () => {
       className="accest"
     >
       <BoxOff className="boxof">
-        {loader ?  
-        
-        <div className="dis"></div>
-      :null}
-      <div className="gaps">
+        {loader ? <div className="dis"></div> : null}
+        <div className="gaps">
           <div className="two">
             <Label>No. of images to generate</Label>
             <div className="rangeValue">
@@ -221,11 +299,11 @@ const EditorSection = () => {
               <div
                 key={i}
                 className={`items ${
-                  activeSize.id === item.id ? "actives" : ""
+                  activeSize?.id === item.id ? "actives" : ""
                 }`}
                 onClick={() => {
                   setActiveSize(item);
-                  changeRectangleSize()
+                  changeRectangleSize();
                 }}
               >
                 <div className="tittl">{item.title}</div>
@@ -236,7 +314,7 @@ const EditorSection = () => {
                       readOnly={activeSize.id === item.id ? "" : "readOnly"}
                       value={customsize.w}
                       onChange={(e) =>
-                        setCustomsize((pre) => ({ ...pre, w: e.target.value }))
+                        setCustomsize((pre:any) => ({ ...pre, w: e.target.value }))
                       }
                     />
                     X
@@ -244,7 +322,7 @@ const EditorSection = () => {
                       type="number"
                       value={customsize.h}
                       onChange={(e) =>
-                        setCustomsize((pre) => ({ ...pre, h: e.target.value }))
+                        setCustomsize((pre:any) => ({ ...pre, h: e.target.value }))
                       }
                     />
                   </div>
@@ -255,8 +333,6 @@ const EditorSection = () => {
             ))}
           </div>
         </div>
-
-      
 
         {/* <div className="filde gap">
         <DisabledLabel>Product</DisabledLabel>
@@ -384,13 +460,13 @@ export const BoxOff = styled.div`
   /* height: 100%; */
   /* overflow: hidden; */
   position: relative;
-  .dis{
+  .dis {
     background: transparent !important;
     position: absolute;
     width: 100%;
     height: 100%;
   }
-  .gaps{
+  .gaps {
     margin-top: 20px;
   }
   .two {
@@ -524,7 +600,7 @@ export const BoxOff = styled.div`
   }
   input[type="range"]::-moz-range-thumb {
     box-shadow: 0px 0px 0px #000000;
-    border: 1px solid #rgba(249, 208, 13, 1);
+    border: 1px solid rgba(249, 208, 13, 1);
     height: 18px;
     width: 18px;
     border-radius: 25px;
