@@ -8,10 +8,7 @@ import { useRouter } from "next/router";
 import Button from "../common/Button";
 import { formate3d } from "@/store/format";
 
-
 const Assets3d = () => {
-
- 
   const {
     fetchAssetsImagesWithProjectId,
     listofassetsById,
@@ -25,7 +22,7 @@ const Assets3d = () => {
     assetL3doader,
     setFile3dName,
     setTdFormate,
-    userId
+    userId,
   } = useAppState();
   const { query, isReady } = useRouter();
 
@@ -39,10 +36,18 @@ const Assets3d = () => {
     if (userId && isReady) {
       fetchAssetsImagesWithProjectId(userId, id);
     }
-  }, [isReady, userId, re, file3dUrl, file3d, id,fetchAssetsImagesWithProjectId]);
+  }, [
+    isReady,
+    userId,
+    re,
+    file3dUrl,
+    file3d,
+    id,
+    fetchAssetsImagesWithProjectId,
+  ]);
 
   const [url, setUrl] = useState(null);
-  function slideName(name : string) {
+  function slideName(name: string) {
     const maxLength = 8;
     let displayedName;
 
@@ -82,18 +87,14 @@ const Assets3d = () => {
 
   return (
     <div className="accest">
-      {
-      file3dName?.name && 
-      !assetL3doader ? (
+      {file3dName?.name && !assetL3doader ? (
         <Selectd className="gap">
           <div className="boxFile">
             <div className="filenamer">{truncateString(file3dName?.name)}</div>
             <div
               className="colse"
               onClick={() => {
-                if(!loader){
-
-
+                if (!loader) {
                   setFile3d(null);
                   setFile3dUrl(null);
                   setFile3dName(null);
@@ -103,11 +104,12 @@ const Assets3d = () => {
               x
             </div>
           </div>
-          <div className="gap" style={{marginTop:"10px"}}>
-          <DisabledLabel>The model was uploaded successfully. You can rotate it using the mouse pointer and move it using Ctrl + mouse pointer.</DisabledLabel>
-          <div>
-
-          </div>
+          <div className="gap" style={{ marginTop: "10px" }}>
+            <DisabledLabel>
+              The model was uploaded successfully. You can rotate it using the
+              mouse pointer and move it using Ctrl + mouse pointer.
+            </DisabledLabel>
+            <div></div>
           </div>
         </Selectd>
       ) : (
