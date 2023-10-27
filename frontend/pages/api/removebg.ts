@@ -34,6 +34,9 @@ const uploadImage = async (dataUrl: string) => {
     const { data } = response;
     const { url, name, height, width } = data;
 
+    console.log("Image uploaded to ImageKit");
+    console.log(url);
+
     return { url, name, height, width };
   } catch (error) {
     // Handle errors here
@@ -113,6 +116,7 @@ export default async function handler(req: NextRequest, res: NextResponse) {
           body: JSON.stringify({
             img: inputBase64Url,
           }),
+          timeout: 10000,
         }
       );
     console.log(caption_response)
@@ -137,13 +141,17 @@ export default async function handler(req: NextRequest, res: NextResponse) {
       };
 
       const response = axios.request(config);
+      var caption_data = null;
 
-      //  Get the caption
-      const caption_data = await caption_response.json();
+      try {
+        //  Get the caption
+        caption_data = await caption_response.json();
+        caption = caption_data["caption"];
+      } catch (error) {
+        console.log(error.message);
+      }
 
       console.log(caption_data);
-
-      caption = caption_data["caption"];
 
       // Get base64url from response
       const { data } = await response;
