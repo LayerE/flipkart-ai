@@ -11,7 +11,6 @@ import { formate3d } from "@/store/format";
 const Assets3d = () => {
   const {
     fetchAssetsImagesWithProjectId,
-    listofassetsById,
     loader,
     file3dUrl,
     setFile3dUrl,
