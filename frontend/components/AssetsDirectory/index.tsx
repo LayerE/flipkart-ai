@@ -174,7 +174,7 @@ const AssetsDir = () => {
               response?.status !== 413 &&
               response?.status !== 201
             ) {
-              toast.error(response?.statusText);
+              toast.error("uploading failed");
 
               setbrandassetLoader(false);
             }
