@@ -102,12 +102,12 @@ export default function Home() {
         id: 1,
         title: "Default",
         subTittle: "1024✕1024",
-        h: 1024,
-        w: 1024,
-        l: 100,
-        t: 240,
-        gl: 1152,
-        gt: 240,
+        h: 512,
+        w: 512,
+        l: 50,
+        t: 160,
+        gl: 592,
+        gt: 160,
       });
       setSelectedImg(null);
       setMainLoader(false);

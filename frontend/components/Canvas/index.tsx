@@ -15,7 +15,13 @@ import CropperBox from "./Cropper";
 
 // import { useBeforeUnload } from "react-router-dom";
 
-export default function CanvasBox({ proid, userId }: { proid:any, userId:string }) {
+export default function CanvasBox({
+  proid,
+  userId,
+}: {
+  proid: any;
+  userId: string;
+}) {
   const { query, isReady } = useRouter();
   const router = useRouter();
 
@@ -91,34 +97,16 @@ export default function CanvasBox({ proid, userId }: { proid:any, userId:string 
       // renderOnAddRemove: false,
     });
 
-    // setCanvas( new fabric.Canvas(canvasRef?.current, {
-    //   width: window.innerWidth,
-    //   height: window.innerHeight,
-    //   // transparentCorners: false,
-    //   originX: "center",
-    //   originY: "center",
-    //   renderOnAddRemove: false,
-    // }));
-    // canvasHistory.current.push(canvasInstance.current.toDatalessJSON());
-    // currentCanvasIndex.current++;
-    // }
-
     const canvasInstanceRef = canvasInstance.current;
     if (canvasInstanceRef) {
-      // Perform operations on canvasInstanceRef
-      // canvasInstanceRef.clear();
-      // Other canvas operations...
-    }
-
-    // getCanvs(project);
-
-    // Resize canvas when the window is resized
-    window.addEventListener("resize", () => {
-      canvasInstanceRef?.setDimensions({
-        width: window?.innerWidth,
-        height: window?.innerHeight,
+      // Resize canvas when the window is resized
+      window.addEventListener("resize", () => {
+        canvasInstanceRef?.setDimensions({
+          width: window?.innerWidth,
+          height: window?.innerHeight,
+        });
       });
-    });
+    }
 
     setTimeout(() => {
       setStar(true);
@@ -129,81 +117,20 @@ export default function CanvasBox({ proid, userId }: { proid:any, userId:string 
       setTimeout(() => {
         canvasInstanceRef?.dispose();
       }, 500);
-      // router.events.off("routeChangeStart", saveCanvasToDatabase);
-
-      // setTimeout(() => {
-      // }, 300);
     };
   }, [isReady, canvasInstance]);
-
-  // Load canvas data from the database when the component mounts
 
   const [re, setRe] = useState(1);
   const [state, setStar] = useState(false);
 
-  // useEffect(() => {
-  //   const canvasInstanceRef = canvasInstance?.current;
-  //   if (canvasInstance?.current) {
-  //     if (re <= 4) {
-  //       setRe(re + 1);
-  //     }
-  //     console.log(`fdsfgsf`);
-
-  //     // canvasInstanceRef.add(newEditorBox);
-  //     // canvasInstanceRef.add(imageGenRect);
-
-  //     // canvasInstanceRef.remove(newEditorBox);
-  //   }
-
-  //   return () => {
-  //     // canvasInstanceRef.remove(newEditorBox);
-  //     // canvasInstanceRef.remove(imageGenRect);
-  //   };
-  // }, [activeSize, re]);
-
   useEffect(() => {
     if (canvasInstance?.current && state && isReady) {
-      // if (re <= 2) {
-      //   setRe(re + 1);
-      // }
-      // canvasInstance?.current.clear();
-      // Other canvas operations...
       const canvasInstanceRef = canvasInstance?.current;
-
-      // canvasInstanceRef.renderAll();
       const btn = PosisionbtnRef.current;
       const rebtn = regenerateRef.current;
-      // const genBox = generateBox.current;
       const preBox = previewBox.current;
 
-      // canvasInstanceRef.add(newEditorBox);
-      // canvasInstanceRef.add(imageGenRect);
-
-      // newEditorBox.set({
-      //   width: activeSize.w,
-      //   height: activeSize.h,
-      //   left: activeSize.l,
-      //   top: activeSize.t,
-      // });
-      // imageGenRect.set({
-      //   width: activeSize.w,
-      //   height: activeSize.h,
-      //   left: activeSize.gl,
-      //   top: activeSize.gt,
-      //   zIndex: 0,
-      // });
-      // newEditorBox.set("zIndex", 0);
-      // imageGenRect.set("zIndex", 0);
-
-      // canvasInstance.current.sendBackwards(newEditorBox);
-      // canvasInstance.current.sendBackwards(imageGenRect);
-
-      // canvasInstance.current.discardActiveObject();
-      // // canvas.requestRenderAll();
-
       canvasInstance?.current.renderAll();
-
-      // Assuming you have a Fabric.js canvas object named 'canvas'
 
       // When a user clicks on an image on the canvas
       canvasInstanceRef.on("mouse:down", function (options) {
@@ -242,7 +169,7 @@ export default function CanvasBox({ proid, userId }: { proid:any, userId:string 
       const EditorBoxText = new fabric.Text("Place Your Product Here", {
         left: newEditorBox.left + 20, // center of the rectangle
         top: newEditorBox.top + 20, // center of the rectangle
-        fontSize: 42,
+        fontSize: 24,
         // originX: "center",
         // originY: "center",
         selectable: false,
@@ -264,69 +191,17 @@ export default function CanvasBox({ proid, userId }: { proid:any, userId:string 
         fill: "rgba(0, 0, 0, 1)",
       });
 
-      // genBox.addEventListener("click", (e) => {
-      //   // Check if the pressed key is 'Delete' (code: 46) or 'Backspace' (code: 8) for wider compatibility
-      //   const dataURL = canvasInstanceRef.toDataURL({
-      //     format: "png",
-      //     // left: parseInt(genBox.style.left),
-      //     // top: parseInt(genBox.style.top),
-      //     // width: parseInt(genBox.style.width),
-      //     // height: parseInt(genBox.style.height),
-      //       left:newEditorBox.left,
-      //     top:newEditorBox.top,
-      //     width: newEditorBox.width,
-      //   }); 
-      //     height:newEditorBox.height,
-      //   // setDownloadImg(dataURL);
-      //   setDownloadImg(dataURL);
-      // });
-      // newEditorBox.on("mousedown", function () {
-      //   const originalStrokeColor = newEditorBox.stroke;
-      //   const originalStrokeWidth = newEditorBox.strokeWidth;
-
-      //   // Make the rectangle stroke transparent
-      //   newEditorBox.set("stroke", "transparent");
-      //   newEditorBox.set("strokeWidth", 0);
-      //   canvasInstanceRef.renderAll();
-      //   console.log(parseInt(newEditorBox.left), newEditorBox.top);
-
-      //   const dataURL = canvasInstanceRef.toDataURL({
-      //     format: "png",
-      //     left: newEditorBox.left,
-      //     top: newEditorBox.top,
-      //     width: 512,
-      //   });
-      //     height: 512,
-      //   // setDownloadImg(dataURL);
-      //   // setDownloadImg(dataURL);
-      //   setSelectedImg(dataURL);
-
-      //   //
-
-      //   // Reset the rectangle's stroke properties
-      //   newEditorBox.set("stroke", originalStrokeColor);
-      //   newEditorBox.set("strokeWidth", originalStrokeWidth);
-      //   canvasInstanceRef.renderAll();
-      // });
-
       const objects = canvasInstanceRef.getObjects();
 
       objects.forEach((object) => {
         // If the object is a mask, add it to the mask objects array
         if (object.category === "mask") {
           positionBtn(object);
-          // canvasInstance.current.bringToFront(imageGenRect);
-          // canvasInstance.current.discardActiveObject();
-          // canvasInstance.current.renderAll();
-          // maskObjects.push(object);
         }
         // If the object is a subject, add it to the subject objects array
         if (object.category === "subject") {
           // subjectObjects.push(object);
           positionBtn(object);
-          // canvasInstance.current.bringToFront(imageGenRect);
-          // canvasInstance.current.discardActiveObject();
-          // canvasInstance.current.renderAll();
         }
       });
 
@@ -361,19 +236,6 @@ export default function CanvasBox({ proid, userId }: { proid:any, userId:string 
           canvasInstanceRef.renderAll();
         }
       });
-
-      // canvasInstanceRef.clipTo = function(ctx) {
-      //   ctx.save();
-      //   ctx.globalCompositeOperation = 'destination-in'; // This ensures drawing is clipped to the image
-
-      //   var activeObject = canvasInstanceRef.getActiveObject();
-      //   ctx.beginPath();
-      //   // Define your clipping path here (e.g., a rectangle)
-      //   ctx.rect(activeObject.left, activeObject.top, activeObject.width, activeObject.height);
-      //   ctx.closePath();
-      //   ctx.fill();
-      //   ctx.restore();
-      // };
 
       canvasInstanceRef.on("selection:created", (e) => {
         var selectedObjects = e.target;
@@ -598,7 +460,6 @@ export default function CanvasBox({ proid, userId }: { proid:any, userId:string 
     };
   }, []);
 
-
   const generationBoxStyle = {
     left: `${activeSize?.l * zoom}px`,
     top: `${activeSize?.t * zoom}px`,
@@ -613,8 +474,6 @@ export default function CanvasBox({ proid, userId }: { proid:any, userId:string 
     backgroundColor: "rgba(249, 208, 13, 0.23)",
   };
 
-  
-
   const handelRegenrate = () => {
     if (downloadImg !== null) {
       RegenerateImageHandeler(userId, proid, downloadImg);
@@ -623,7 +482,6 @@ export default function CanvasBox({ proid, userId }: { proid:any, userId:string 
         setRegeneratePopup({ status: true, url: downloadImg });
         console.log("Success", downloadImg);
         // setActiveTab(6);
-
       }, 500);
     }
   };
@@ -713,7 +571,7 @@ export default function CanvasBox({ proid, userId }: { proid:any, userId:string 
         </div>
 
         <div className="ss">
-            {/* <button onClick={handleButtonClick}>,/fdvd</button> */}
+          {/* <button onClick={handleButtonClick}>,/fdvd</button> */}
           {/* <picture>
             <img
               onClick={() => saveCanvasToDatabase()}
@@ -730,19 +588,15 @@ export default function CanvasBox({ proid, userId }: { proid:any, userId:string 
 }
 
 const Wrapper = styled.div`
-
-canvas {
-
-  pointer-events:${(props) => (props.canvasDisable ? "none" : "auto")}
-  
-}
+  canvas {
+    pointer-events: ${(props) => (props.canvasDisable ? "none" : "auto")};
+  }
   .convas-continer {
     /* width: 1800px;
   height: 1800px; */
-  overflow: auto;
-  
+    overflow: auto;
   }
-  .delet{
+  .delet {
     width: 20px;
     height: 20px;
   }
@@ -754,7 +608,6 @@ canvas {
     cursor: pointer;
     width: 25px;
     height: 25px;
-    
 
     transition: all 0.2s ease-in-out;
     &:hover {
@@ -783,23 +636,21 @@ canvas {
     /* z-index: 200; */
     display: flex;
     gap: 20px;
-
   }
   #inline-btn {
     position: absolute;
     z-index: 10;
     display: flex;
     justify-content: center;
-
   }
   .selectone {
     border-radius: 4px;
     cursor: pointer;
-    border: 2px solid rgba(249, 208, 13, 1) ;
+    border: 2px solid rgba(249, 208, 13, 1);
     padding: 5px 8px;
     background: rgba(249, 208, 13, 1) !important;
 
-color: #000;
+    color: #000;
     font-size: 12px;
     font-weight: 500;
     transition: all 0.3 ease;
@@ -810,8 +661,6 @@ color: #000;
     }
   }
 
-  .yello{
-
-
+  .yello {
   }
 `;

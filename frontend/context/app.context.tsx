@@ -565,7 +565,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
   const [undoArray, setUndoArray] = useState<string[]>([]);
   const [editorBox, setEditorBox] = useState<fabric.Rect | null>(null);
-  const [zoom, setZoomCanvas] = useState<number>(0.4);
+  const [zoom, setZoomCanvas] = useState<number>(0.7);
 
   const [canvasDisable, setCanvasDisable] = useState<boolean>(false);
 
@@ -634,13 +634,20 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   }>({
     id: 1,
     title: "Default",
-    subTittle: "1024✕1024",
-    h: 1024,
-    w: 1024,
-    l: 100,
-    t: 240,
-    gl: 1152,
-    gt: 240,
+    // subTittle: "1024✕1024",
+    // h: 1024,
+    // w: 1024,
+    // l: 100,
+    // t: 240,
+    // gl: 1152,
+    // gt: 240,
+    subTittle: "512X512",
+    h: 512,
+    w: 512,
+    l: 50,
+    t: 160,
+    gl: 592,
+    gt: 160,
   });
   const [customsize, setCustomsize] = useState({ w: 1024, h: 1024 });
   const [loadercarna, setloadercarna] = useState(false);
@@ -1349,7 +1356,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
         const subjectDataUrl = subjectCanvas.toDataURL({
           format: "png",
-          multiplier: 2,
+          multiplier: 4,
         });
 
       
@@ -1542,6 +1549,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
   const generateQuikcHandeler = async (ueserId: any, proid: any) => {
     var subjectCount = 0;
+    const startTime = new Date().getTime();
 
     canvasInstanceQuick?.current.forEachObject(function (obj: any) {
       if (obj.category === "quick") {
@@ -1590,7 +1598,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           height: activeSize.h,
           ...subjectDataUrlJson,
         };
-
+console.log(subjectDataUrl)
         // const subjectDataUrl = subjectCanvas.toDataURL("image/png");
 
         const promtText = promtFull;
@@ -1620,6 +1628,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
             setLoader(false);
             return false;
           } else {
+          const endTime = new Date().getTime();
+
+          const elapsedTime = endTime - startTime;
+
+          console.log(`Elapsed time: ${elapsedTime} milliseconds`);
+
             setJobIdOne([generate_response?.job_id]);
             GetProjextById(proid);
           }
@@ -1633,6 +1647,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   };
 
   const generate3dHandeler = async (ueserId: any, proid: any) => {
+    const startTime = new Date().getTime();
+
     if (category === null) {
       toast("Select your product category first !");
     } else if (!file3dUrl && !file3d) {
@@ -1644,14 +1660,14 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setLoader(true);
         const promtText = promtFull;
         // const screenshot = renderer.domElement.toDataURL("image/png");
-        const screenshot = renderer.domElement.toDataURL("image/png", 0.5);
+        const screenshot = renderer.domElement.toDataURL("image/png", 4);
         var img = new Image();
         // Set an onload event handler
         let scaledDataURL;
         img.onload = async function () {
           // Scale down the image by setting its width and height to 0.5 times the original dimensions
-          img.width *= 1;
-          img.height *= 1;
+          img.width *= 2;
+          img.height *= 2;
 
           // Create a canvas to draw the scaled image
           var canvas = document.createElement("canvas");
@@ -1661,9 +1677,11 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           if (ctx) {
             ctx.drawImage(img, 0, 0, img.width, img.height);
           }
+          console.log(screenshot)
 
           // Get the scaled data URL
           scaledDataURL = canvas.toDataURL("image/png");
+          console.log(scaledDataURL)
 
           const response = await fetch("/api/generate", {
             method: "POST",
@@ -1671,7 +1689,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              dataUrl: screenshot,
+              dataUrl: scaledDataURL,
               maskDataUrl: null,
               prompt: promtText.trim(),
               user_id: userId,
@@ -1693,6 +1711,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
             setLoader(true);
 
             try {
+          const endTime = new Date().getTime();
+
+          const elapsedTime = endTime - startTime;
+
+          console.log(`Elapsed time: ${elapsedTime} milliseconds`);
+
               setJobIdOne([generate_response?.job_id]);
               axios
                 .get(`${process.env.NEXT_PUBLIC_API}/user?id=${ueserId}`)

@@ -889,7 +889,7 @@ const Cnavas3d = styled.div`
   }
   .boxs3d {
     display: flex;
-    transform: scale(0.4) translateX(-75%) translateY(-30%);
+    transform: scale(0.7) translateX(-23%) translateY(5%);
     gap: 30px;
     margin-right: 30px;
     width: 100%;
@@ -923,7 +923,7 @@ const Cnavas3d = styled.div`
     .tesxt {
       color: #000;
       margin: 10px;
-      font-size: 42px;
+      font-size: 24px;
       font-size: 500;
     }
   }
@@ -969,7 +969,7 @@ const Cnavas3d = styled.div`
     }
   }
   .delet {
-    width: 60px;
-    height: 60px;
+    width: 30px;
+    height: 30px;
   }
 `;
