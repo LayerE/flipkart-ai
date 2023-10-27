@@ -1,12 +1,4 @@
-import assets from "@/public/assets";
-import Beach from "@/public/assets/image/Beach.png";
-import Kitchen from "@/public/assets/image/Kitchen.png";
-import Livingroom from "@/public/assets/image/Living Room.png";
-import LivingRoom from "@/public/assets/image/LivingRoom.png";
-import Minimal from "@/public/assets/image/Minimal.png";
-import Rocks from "@/public/assets/image/Rocks.png";
-import Room from "@/public/assets/image/Room.png";
-import Waterfalls from "@/public/assets/image/Waterfalls.png";
+
 export const categoryList = ["Large Appliances", "Apparel & Footwear", "Mobile & Laptops", "Furniture & Decor", "Other" ];
 
 export const placementList = [
