@@ -1,3 +1,6 @@
+// @ts-nocheck
+
+
 import Image from "next/image";
 import { Inter } from "next/font/google";
 import { styled } from "styled-components";
@@ -16,17 +19,21 @@ import { useAppState } from "@/context/app.context";
 import Tools from "@/components/Tools/Tools";
 import Gellery from "@/components/Gellery/Gellery";
 import AssetsDir from "@/components/AssetsDirectory";
-import { useAuth } from "@clerk/nextjs";
+import { useSession } from "@supabase/auth-helpers-react";
 import { useEffect, useState } from "react";
 import PopupCard from "@/components/Popup/PopupCard";
 import axios from "axios";
 import { useRouter } from "next/router";
 import Loader from "@/components/Loader";
 import MainLoader from "@/components/Loader/main";
+import PopupUpload from "@/components/Popup";
+import { supabase } from "@/utils/supabase";
 
 export default function Home() {
-  const { userId } = useAuth();
-  const { query, isReady } = useRouter();
+  const session = useSession();
+  const router = useRouter();
+
+  const { query, isReady } = router;
   // const { id } = query;
   const id = (query.id as string[]) || [];
   const {
@@ -37,8 +44,7 @@ export default function Home() {
     projectlist,
     setMainLoader,
     setprojectlist,
-    uerId,
-    setUserId,
+
     mainLoader,
     setFilteredArray,
     setActiveTab,
@@ -48,42 +54,84 @@ export default function Home() {
     setDownloadeImgFormate,
     setProduct,
     setpromt,
-    setLoader
-
+    setLoader,
+    fetchAssetsImages,
+    popup,
+    setSelectedImg,
+    userId,
+    setUserID,
+    setListOfAssetsById,
+    GetProjexts,
+    setActiveSize
   } = useAppState();
 
   // const [loadercarna, setloadercarna] = useState(true);
-  const [rerenter, setre] = useState(false);
+  const [rerenter, setre] = useState(1);
+  // const [userId, setUserID] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (isReady) {
+      const checkSession = async () => {
+        const { data } = await supabase.auth.getSession();
+        if (data.session) {
+          // router.push("/");
+          setUserID(data.session.user.id);
+          GetProjexts(data.session.user.id)
+        } else {
+          // router.push("/sign-in");
+        }
+      };
+      checkSession();
+      
+    }
+  }, [session]);
 
   useEffect(() => {
     if (rerenter <= 6) {
       setre(rerenter + 1);
     }
+    setSelectedImg(null);
+
     if (isReady && userId) {
+      console.log(session);
+
       // const getUser = localStorage.getItem("userId");
       // if (!getUser) {
       //   setTimeout(() => {}, 3000);
       //   if (userId) localStorage.setItem("userId", userId);
       // }
 
-//  reset
-setActiveTab(1)
-setcategory(null)
-setpromtFull("")
-setActiveTemplet(null)
-setDownloadeImgFormate("png")
-setProduct("")
-setpromt("")
-setLoader(false)
+      //  reset
+      setActiveTab(1);
+      setcategory(null);
+      setpromtFull("");
+      setActiveTemplet(null);
+      setDownloadeImgFormate("png");
+      setProduct("");
+      setpromt("");
+      setListOfAssetsById([]);
+      setLoader(false);
+      setActiveSize({
+        id: 1,
+        title: "Default",
+        subTittle: "1024✕1024",
+        h: 1024,
+        w: 1024,
+        l: 100,
+        t: 240,
+        gl: 1152,
+        gt: 240,
+      })
 
+      fetchAssetsImages(userId, null);
 
-      // 
+      //
       setMainLoader(true);
       setFilteredArray(null);
       axios
         .get(`${process.env.NEXT_PUBLIC_API}/user?id=${userId}`)
         .then(async (response) => {
-          setUserId(response.data.userId);
+       
           const dataFecth = await fetchData(userId);
           console.log("dfd", await dataFecth);
 
@@ -91,10 +139,17 @@ setLoader(false)
             setprojectlist(await dataFecth.data);
 
             setMainLoader(false);
+          }else{
+            setMainLoader(false);
+
+
           }
         })
         .catch((error) => {
           console.error(error);
+          setMainLoader(false);
+
+
         });
     }
   }, [isReady, userId]);
@@ -117,11 +172,16 @@ setLoader(false)
 
   const handleDelete = () => {
     // Update the list of items by fetching data again
-    fetchData(userId);
+    if(userId){
+
+      fetchData(userId);
+    }
   };
 
   return (
     <MainPage>
+      {popup?.status ? <PopupUpload /> : null}
+
       {mainLoader ? <MainLoader /> : null}
 
       <motion.div

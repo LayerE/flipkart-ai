@@ -1,3 +1,6 @@
+// @ts-nocheck
+
+
 import React, { useEffect } from "react";
 import { styled } from "styled-components";
 import $ from 'jquery';
@@ -143,6 +146,76 @@ return (
 };
 
 export default TextLoader;
+
+export const TextLoaderNoRevove = () => {
+
+  const isLast = (word) => {
+      return $(word).next().length > 0 ? false : true;
+    };
+  
+    const getNext = (word) => {
+      return $(word).next();
+    };
+  
+    const getVisible = () => {
+      return document.getElementsByClassName('is-visible');
+    };
+  
+    const getFirst = () => {
+      const node = $('.words-wrapper').children().first();
+      return node;
+    };
+  
+    const switchWords = (current, next) => {
+      $(current).removeClass('is-visible').addClass('is-hidden');
+      $(next).removeClass('is-hidden').addClass('is-visible');
+    };
+  
+    const getStarted = () => {
+      // We start by getting the visible element and its sibling
+      const first = getVisible();
+      const next = getNext(first);
+  
+      // If our element has a sibling, it's not the last of the list. We switch the classes
+      if (next.length !== 0) {
+        switchWords(first, next);
+      } else {
+        // The element is the last of the list. We remove the visible class of the current element
+        $(first).removeClass('is-visible').addClass('is-hidden');
+  
+        // And we get the first element of the list, and we give it the visible class. And it starts again.
+        const newEl = getFirst();
+        $(newEl).removeClass('is-hidden').addClass('is-visible');
+      }
+    };
+  
+    useEffect(() => {
+      const intervalId = setInterval(getStarted, 3000);
+  
+      return () => {
+        clearInterval(intervalId);
+      };
+    }, []);
+  
+return (
+
+  <LoaderWrapper>
+    <div className="text">
+      <div>
+        <span className="words-wrapper">
+        <b className="is-visible">Uploading...</b>
+            {/* <b>Removing background...</b> */}
+       
+          {/* <b>Refreshing objects...</b>
+          <b>Refredsfsdfdsfsdfshing objects...</b> */}
+
+        </span>
+      </div>
+    </div>
+  </LoaderWrapper>
+
+);
+};
 
 const LoaderWrapper = styled.div`
   

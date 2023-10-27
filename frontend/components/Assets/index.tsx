@@ -7,12 +7,13 @@ import { styled } from "styled-components";
 // import { category, test } from "@/store/dropdown";
 import { useAppState } from "@/context/app.context";
 import { productList } from "@/store/listOfElement";
-import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/router";
+import { useSession } from "@supabase/auth-helpers-react";
 // import { fabric } from "fabric";
 
 const Assets: React.FC = () => {
-  const { userId } = useAuth();
+  const session = useSession();
+ 
   const {
     setProduct,
     uploadedProductlist,
@@ -20,34 +21,33 @@ const Assets: React.FC = () => {
     setUploadedProductlist,
     // addimgToCanvas,
     listofassets,
-    setListOfAssets,
-    fetchAssetsImages,
     fetchAssetsImagesWithProjectId,
-    listofassetsById, setListOfAssetsById,
+    listofassetsById,
+    setListOfAssetsById,
     addimgToCanvasSubject,
     getBase64FromUrl,
     assetLoader,
-    loader
+    fetchAssetsImages,
+    loader,
+    userId
   } = useAppState();
   const { query, isReady } = useRouter();
-  // const { id } = query;
-  const id = (query.id as string[]) || [];
+  const { id } = query;
+  // const id = (query.id as string[]) || [];
 
-  const [filter, setFilter] = useState()
-  const [re, setRe] = useState(1)
+ 
+  const [re, setRe] = useState(1);
   useEffect(() => {
-    if(re <=10){
-      setRe(re+1)
+    if (re <= 10) {
+      setRe(re + 1);
     }
     if (userId && isReady) {
-       fetchAssetsImagesWithProjectId(userId, id);
-    
-      const filer = listofassetsById?.filter((item)=> item.project_id === id )
-      setFilter(filer)
-      console.log(listofassetsById,"dfdf")
+      fetchAssetsImages(userId, id);
+
+      // const filer = listofassetsById?.filter((item) => item.project_id === id);
+
     }
-  }, [isReady,userId,re]);
-  
+  }, [isReady, userId, re]);
 
   // listofassets
 
@@ -59,7 +59,12 @@ const Assets: React.FC = () => {
         </Row>
 
         <Row>
-          <FileUpload  type={"product"}  title={"Upload Product Photo"} uerId={userId} />
+          <FileUpload
+            type={"product"}
+            title={"Upload Product Photo"}
+            uerId={userId}
+            
+          />
         </Row>
         <Row>
           <Label>Or use sample products</Label>
@@ -70,13 +75,10 @@ const Assets: React.FC = () => {
               key={i}
               className={"imageBox"}
               onClick={() => {
-
-                if(!assetLoader && !loader){
-                addimgToCanvasSubject(test.img);
-                setProduct(test.title)
+                if (!assetLoader && !loader) {
+                  addimgToCanvasSubject(test.img);
+                  setProduct(test.title);
                 }
-                
-               
               }}
             >
               <picture>
@@ -87,39 +89,33 @@ const Assets: React.FC = () => {
         </ResponsiveRowWraptwo>
       </div>
       <div className="gap">
-        {listofassetsById?.length ? (
+        {listofassets?.length ? (
           <Row>
             <Label>Uploaded Products</Label>
           </Row>
         ) : null}
 
         <ResponsiveRowWraptwo>
-          {listofassetsById?.map((test, i) => (
-            <div
-              key={i}
-              className={
-                "imageBox"
-              }
-              onClick={() => {
-                if(!assetLoader && !loader){
-
-                addimgToCanvasSubject(test?.url.url);
-                setProduct(test.url.product)
-
-                }
-
-
-               
-              }}
-            >
-              <picture>
-                <img src={test.url.url} alt="" />
-              </picture>
-            </div>
-          ))}
+          {listofassets?.length
+            ? listofassets?.map((test: any, i:number) => (
+                <div
+                  key={i}
+                  className={"imageBox"}
+                  onClick={() => {
+                    if (!assetLoader && !loader) {
+                      addimgToCanvasSubject(test?.image_url);
+                      setProduct(test?.caption);
+                    }
+                  }}
+                >
+                  <picture>
+                    <img src={test?.image_url} alt="" />
+                  </picture>
+                </div>
+              ))
+            : null}
         </ResponsiveRowWraptwo>
       </div>
-     
     </div>
   );
 };

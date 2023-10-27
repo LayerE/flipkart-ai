@@ -1,17 +1,20 @@
-const {  Model, model, Schema } = require("mongoose");
+const { Model, model, Schema } = require("mongoose");
 
-const userSchema = new Schema({
-  userId: String,
-  jobIds: Array,
-  asserts: Array,
+const userSchema = new Schema(
+  {
+    userId: String,
+    jobIds: Array,
+    jobIds3D: Array,
+    jobIdsQuike: Array,
 
-  
-},
-{
-  timestamps: true,
-}
+    allJobIs: Array,
+
+    asserts: Array,
+  },
+  {
+    timestamps: true,
+  }
 );
-
 
 const Users = model("Users", userSchema);
 

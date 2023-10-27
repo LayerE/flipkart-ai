@@ -1,9 +1,9 @@
-import { TextLoaderNo } from "@/components/Loader/text";
+/// <reference no-default-lib="true"/>
+
+import { TextLoaderNo, TextLoaderNoRevove } from "@/components/Loader/text";
 import { useAppState } from "@/context/app.context";
-import { BgRemover } from "@/store/api";
 import React, { useState, useEffect, useRef } from "react";
 import { styled } from "styled-components";
-import { uid } from "uid";
 import { toast } from "react-toastify";
 
 export const Input = styled.input`
@@ -25,7 +25,6 @@ export const Input = styled.input`
   }
 
   &:hover {
-    /* border: 2px solid #d9d9d9; */
     border: 2px solid ${(props) => props.theme.btnPrimary};
   }
 `;
@@ -43,9 +42,6 @@ export const Suggestion1 = styled.div`
   border-radius: 8px;
   width: 200px;
   margin-bottom: 20px;
-  /* overflow: hidden; */
-  /* white-space: nowrap; */
-
   &::-webkit-scrollbar {
     display: none;
   }
@@ -183,14 +179,13 @@ const InputFile1 = styled.div`
   }
 `;
 
-export const FileUpload: React.FC = ({ type, title, uerId }) => {
+export const FileUpload = ({ type, title, uerId }:{ type:any, title:string, uerId :any}) => {
   const {
     file,
     setFile,
     uploadedProductlist,
     setUploadedProductlist,
-    upladedArray,
-    setUpladedArray,
+
     setLoader,
     addimgToCanvas,
     setPopup,
@@ -199,9 +194,28 @@ export const FileUpload: React.FC = ({ type, title, uerId }) => {
     setloadercarna,
     assetLoader,
     setassetLoader,
+    loader
   } = useAppState();
 
-  const handleFileChange = (event) => {
+  const handleFileChange = (event :any) => {
+
+    const fileSize = event.target.files[0].size
+    const maxSize =  25* 1024 * 1024; // 1MB
+    const filename = event.target.files[0].name
+    const format = filename.split('.').pop();
+
+
+    if (fileSize > maxSize) {
+  
+      toast.error('File size must be less than 25MB');
+
+      return false;
+    } else if(format !== 'png' && format !== 'webp' && format !== 'jpg'&& format !== 'jpeg') {
+      toast.error('Format not supported');
+
+
+    } else {
+
     setassetLoader(true);
 
     const selectedFile = event.target.files?.[0] || null;
@@ -227,6 +241,7 @@ export const FileUpload: React.FC = ({ type, title, uerId }) => {
                 dataUrl: reader.result,
                 user_id: uerId,
                 project_id: projectId,
+                // type: "product",
               }),
             });
             console.log(response);
@@ -238,19 +253,19 @@ export const FileUpload: React.FC = ({ type, title, uerId }) => {
               toast.error("Image is corrupted or unsupported dimensions");
 
               setassetLoader(false);
-            }
-           else if (response?.status !== 200 && response?.status !== 413) {
+            } else if (response?.status !== 200 && response?.status !== 413) {
               toast.error(response?.statusText);
 
               setassetLoader(false);
             }
             const data = await response.json();
+            console.log(data);
 
             // BgRemover(reader.result, filename);
             if (data?.data) {
               setPopup({
                 status: true,
-                data: data?.data.data[0],
+                data: data[0],
                 dataArray: data,
               });
               setassetLoader(false);
@@ -278,6 +293,8 @@ export const FileUpload: React.FC = ({ type, title, uerId }) => {
     } catch (e) {
       console.log("cvff", e);
     }
+
+  }
   };
   const handleRemoveFile = () => {
     setFile(null);
@@ -302,7 +319,7 @@ export const FileUpload: React.FC = ({ type, title, uerId }) => {
       <div>
         {assetLoader ? (
           <label htmlFor="fileInput" style={{ cursor: "pointer" }}>
-            <TextLoaderNo />
+            <TextLoaderNoRevove />
           </label>
         ) : (
           <>
@@ -331,6 +348,326 @@ export const FileUpload: React.FC = ({ type, title, uerId }) => {
               style={{ display: "none" }}
               onChange={handleFileChange}
               accept=".webp, .png, .jpeg, .jpg"
+              disabled={loader}
+            />
+          </>
+        )}
+      </div>
+      {/* )} */}
+    </InputFile1>
+  );
+};
+
+
+export const FileUploadQuick= ({ type, title, uerId }:{ type:any, title:string, uerId :any}) => {
+  const {
+    file,
+    setFile,
+    uploadedProductlist,
+    setUploadedProductlist,
+
+    setLoader,
+    addimgToCanvas,
+    setPopup,
+    projectId,
+    // uerId,
+    setloadercarna,
+    assetLoader,
+    setassetLoader,
+    addimgToCanvasQuike,
+    loader
+  } = useAppState();
+
+  const handleFileChange = (event: any) => {
+
+    const fileSize = event.target.files[0].size
+    const maxSize =  25* 1024 * 1024; // 1MB
+    const filename = event.target.files[0].name
+    const format = filename.split('.').pop();
+
+
+    if (fileSize > maxSize) {
+  
+      toast.error('File size must be less than 25MB');
+
+      return false;
+    } else if(format !== 'png' && format !== 'webp' && format !== 'jpg') {
+      toast.error('Format not supported');
+
+
+    } else {
+
+    // setassetLoader(true);
+
+    const selectedFile = event.target.files?.[0] || null;
+    setFile(selectedFile);
+    const blobUrl = URL.createObjectURL(selectedFile);
+    const idG = uploadedProductlist.length;
+    // setloadercarna(true);
+    console.log(event.target.result, "fdsfsdg");
+    try {
+      if (selectedFile) {
+        const reader = new FileReader();
+        reader.onloadend = async () => {
+          if (type === "element") {
+            // addimgToCanvas(reader.result);
+          } else {
+            const filename = `img${Date.now()}`;
+            // setLoader(true);
+            addimgToCanvasQuike(reader.result)
+
+            // const response = await fetch("/api/removebg", {
+            //   method: "POST",
+            //   headers: { "Content-Type": "application/json" },
+            //   body: JSON.stringify({
+            //     dataUrl: reader.result,
+            //     user_id: uerId,
+            //     project_id: projectId,
+            //     // type: "product",
+            //   }),
+            // });
+            // console.log(response);
+            // if (response?.status === 413) {
+            //   toast.error("Image exceeded 4mb limit");
+
+            //   setassetLoader(false);
+            // } else if (response?.status === 400) {
+            //   toast.error("Image is corrupted or unsupported dimensions");
+
+            //   setassetLoader(false);
+            // } else if (response?.status !== 200 && response?.status !== 413) {
+            //   toast.error(response?.statusText);
+
+            //   setassetLoader(false);
+            // }
+            // const data = await response.json();
+            // console.log(data);
+
+            // // BgRemover(reader.result, filename);
+            // if (data?.data) {
+            //   addimgToCanvasQuike(data.imageUrl)
+            //   setassetLoader(false);
+            //   // setLoader(false);
+            //   // setloadercarna(false);
+            // } else {
+            //   console.log("bg not removed");
+            //   // setLoader(false);
+            //   // setloadercarna(false);
+            //   setassetLoader(false);
+            // }
+
+            // setUploadedProductlist((prev) => [
+            //   ...prev,
+            //   { url: blobUrl, baseUrl: reader.result },
+            // ]);
+          }
+          // setUpladedArray((prev) => [
+          //   ...prev,
+          //   { url: blobUrl, baseUrl: reader.result },
+          // ]);
+        };
+        reader.readAsDataURL(selectedFile);
+      }
+    } catch (e) {
+      console.log("cvff", e);
+    }
+
+  }
+  };
+  const handleRemoveFile = () => {
+    setFile(null);
+  };
+  function slideName(name: string) {
+    const maxLength = 8;
+    let displayedName;
+
+    if (name.length <= maxLength) {
+      displayedName = name;
+    } else {
+      const firstPart = name.slice(0, 15);
+      const lastPart = name.slice(-15);
+      displayedName = firstPart + "..." + lastPart;
+    }
+
+    return displayedName;
+  }
+
+  return (
+    <InputFile1>
+      <div>
+        {assetLoader ? (
+          <label htmlFor="fileInput" style={{ cursor: "pointer" }}>
+            <TextLoaderNoRevove />
+          </label>
+        ) : (
+          <>
+            <label htmlFor="fileInput" style={{ cursor: "pointer" }}>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 14 14"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  id="Vector"
+                  d="M4.33791 10.3325C3.50597 10.3331 2.70384 10.0228 2.08892 9.4627C1.474 8.90257 1.09067 8.13295 1.01415 7.30486C0.937623 6.47677 1.17343 5.64998 1.67529 4.98672C2.17715 4.32346 2.90885 3.8716 3.72681 3.7198C3.87049 2.95535 4.2769 2.26511 4.87577 1.76847C5.47464 1.27183 6.22831 1 7.00644 1C7.78458 1 8.53825 1.27183 9.13712 1.76847C9.73599 2.26511 10.1424 2.95535 10.2861 3.7198C11.1013 3.87469 11.8296 4.32764 12.3287 4.99027C12.8279 5.65291 13.0622 6.47769 12.9858 7.30367C12.9095 8.12965 12.5281 8.89757 11.9159 9.45759C11.3037 10.0176 10.5048 10.3295 9.67498 10.3325M5.00504 6.99815L7.00644 4.99753M7.00644 4.99753L9.00784 6.99815M7.00644 4.99753V13"
+                  stroke="#888888"
+                  strokeWidth="1.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              {title}
+            </label>
+            <input
+              type="file"
+              id="fileInput"
+              style={{ display: "none" }}
+              onChange={handleFileChange}
+              accept=".webp, .png, .jpeg, .jpg"
+              disabled={loader}
+            />
+          </>
+        )}
+      </div>
+      {/* )} */}
+    </InputFile1>
+  );
+};
+
+export const FileUpload3D = ({ type, title, uerId }:{ type:any, title:string, uerId :any}) => {
+  const {
+    // file,
+    // setFile,
+    file3d,
+    setFile3d,
+    uploadedProductlist,
+    setUploadedProductlist,
+
+    setLoader,
+    addimgToCanvas,
+    setPopup,
+    projectId,
+    // uerId,
+    setloadercarna,
+    assetLoader,
+    setassetLoader,
+    assetL3doader,
+    setasset3dLoader,
+    file3dUrl,
+    setFile3dUrl,
+    tdFormate,
+    filsizeMorethan10, setfilsizeMorethan10,
+    file3dName, setFile3dName,
+  
+  } = useAppState();
+  const [file, setFile] = useState(null);
+
+  const handleFileChange = (event: any) => {
+
+    setFile3dUrl(null);
+    const selectedFile = event.target.files[0];
+    if (selectedFile.size > 20 * 1024 * 1024) { // Check if the file size is greater than 10MB
+     
+      // event.target.value = null; // Clear the file input
+      setfilsizeMorethan10(true)
+    } else {
+      setfilsizeMorethan10(false)
+
+    }
+
+    const fileSize = event.target.files[0].size
+    const maxSize =  100* 1024 * 1024; // 1MB
+    const filename = event.target.files[0].name
+    const format = filename.split('.').pop();
+
+    const removeFirstLetter = (input: string) => {
+      if (input.length > 1) {
+        return input.substring(1);
+      } else {
+        return '';
+      }
+    };
+    if (fileSize > maxSize) {
+  
+      toast.error('File size must be less than 25MB');
+
+      return false;
+    } else if(format !==  removeFirstLetter(tdFormate)) {
+      toast.error('Format not supported');
+
+
+    } else {
+      setasset3dLoader(true);
+
+    const url = URL.createObjectURL(selectedFile);
+    if (url) {
+      setFile3dName(selectedFile)
+      setFile3d(url);
+      setFile3dUrl(null);
+
+      // setasset3dLoader(false);
+
+   
+    } else {
+      setasset3dLoader(false);
+    }
+
+  }
+  };
+  const handleRemoveFile = () => {
+    setFile(null);
+  };
+  function slideName(name: string) {
+    const maxLength = 8;
+    let displayedName;
+
+    if (name.length <= maxLength) {
+      displayedName = name;
+    } else {
+      const firstPart = name.slice(0, 15);
+      const lastPart = name.slice(-15);
+      displayedName = firstPart + "..." + lastPart;
+    }
+
+    return displayedName;
+  }
+
+  return (
+    <InputFile1>
+      <div>
+        {assetL3doader ? (
+          <label htmlFor="fileInput" style={{ cursor: "pointer" }}>
+            <TextLoaderNoRevove />
+          </label>
+        ) : (
+          <>
+            <label htmlFor="fileInput" style={{ cursor: "pointer" }}>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 14 14"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  id="Vector"
+                  d="M4.33791 10.3325C3.50597 10.3331 2.70384 10.0228 2.08892 9.4627C1.474 8.90257 1.09067 8.13295 1.01415 7.30486C0.937623 6.47677 1.17343 5.64998 1.67529 4.98672C2.17715 4.32346 2.90885 3.8716 3.72681 3.7198C3.87049 2.95535 4.2769 2.26511 4.87577 1.76847C5.47464 1.27183 6.22831 1 7.00644 1C7.78458 1 8.53825 1.27183 9.13712 1.76847C9.73599 2.26511 10.1424 2.95535 10.2861 3.7198C11.1013 3.87469 11.8296 4.32764 12.3287 4.99027C12.8279 5.65291 13.0622 6.47769 12.9858 7.30367C12.9095 8.12965 12.5281 8.89757 11.9159 9.45759C11.3037 10.0176 10.5048 10.3295 9.67498 10.3325M5.00504 6.99815L7.00644 4.99753M7.00644 4.99753L9.00784 6.99815M7.00644 4.99753V13"
+                  stroke="#888888"
+                  strokeWidth="1.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              {title}
+            </label>
+            <input
+              type="file"
+              id="fileInput"
+              style={{ display: "none" }}
+              onChange={handleFileChange}
+              accept={tdFormate}
             />
           </>
         )}

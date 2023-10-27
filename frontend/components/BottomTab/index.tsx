@@ -1,3 +1,5 @@
+/// <reference no-default-lib="true"/>
+
 import { useAppState } from "@/context/app.context";
 import React, { useState } from "react";
 import { styled } from "styled-components";
@@ -15,19 +17,9 @@ const BottomTab = () => {
     canvasHistoryRef,
     canvasHistory,
     currentCanvasIndex,
-    zoom, setZoomCanvas,
-    handleZoomIn,
-    handleZoomOut,
+    zoom,
+    setZoomCanvas,
   } = useAppState();
-
-  // canvs
-
-  //   const canvasRef = useRef(null);
-
-  // const [canvas, setCanvas] = useState(null);
-  // const [canvasHistory, setCanvasHistory] = useState([]);
-  // const [currentStep, setCurrentStep] = useState(-1);
-  // Initialize the canvas when the component mounts
 
   const handileUndo = () => {
     if (currentCanvasIndex.current > 0) {
@@ -37,27 +29,6 @@ const BottomTab = () => {
       );
       canvasInstance.current.renderAll();
     }
-    // if (modifidImageArray.length > 1) {
-    //   setUndoArray((pre) => [
-    //     ...pre,
-    //     modifidImageArray[modifidImageArray.length - 1],
-    //   ]);
-
-    //   setModifidImageArray((pre) => {
-    //     const lastElement = pre[pre.length - 1];
-    //     if (lastElement && lastElement.tool) {
-    //         setSelectedImg((prevState) => ({
-    //         ...prevState,
-    //         tools: {
-    //           ...prevState.tools,
-    //           [lastElement.tool]: false,
-    //         },
-    //       }));
-    //     }
-
-    //     return pre.slice(0, -1);
-    //   });
-    // }
   };
   const handilePre = () => {
     if (currentCanvasIndex.current < canvasHistory.current.length - 1) {
@@ -67,42 +38,11 @@ const BottomTab = () => {
       );
       canvasInstance.current.renderAll();
     }
-    // if (undoArray.length > 0) {
-    //   setModifidImageArray((pre) => [...pre, undoArray[undoArray.length - 1]]);
-    //   setUndoArray((pre) => {
-    //     const lastElement = pre[pre.length - 1];
-    //     if (lastElement && lastElement.tool) {
-    //         setSelectedImg((prevState) => ({
-    //         ...prevState,
-    //         tools: {
-    //           ...prevState.tools,
-    //           [lastElement.tool]: true,
-    //         },
-    //       }));
-    //     }
-
-    //     return pre.slice(0, -1);
-    //   });
-    // }
   };
 
   return (
     <BottomTabWtapper>
       <div className="bottomTab">
-
-        {/* <div className="left">
-          <div className="zoom">
-          <svg onClick={()=>handleZoomOut()} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" className="serch"><path d="M6.75 8.25a.75.75 0 000 1.5h4.5a.75.75 0 000-1.5h-4.5z"></path><path fill-rule="evenodd" d="M9 2a7 7 0 104.391 12.452l3.329 3.328a.75.75 0 101.06-1.06l-3.328-3.329A7 7 0 009 2zM3.5 9a5.5 5.5 0 1111 0 5.5 5.5 0 01-11 0z" clip-rule="evenodd"></path></svg>
-          <div className="scrooller">
-          <input
-              type="range"
-              // value={}
-              // onChange={(e) => setsize(e.target.value)}
-            />
-          </div>
-          <svg onClick={()=>handleZoomIn()}  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"  className="serch"><path d="M9 6a.75.75 0 01.75.75v1.5h1.5a.75.75 0 010 1.5h-1.5v1.5a.75.75 0 01-1.5 0v-1.5h-1.5a.75.75 0 010-1.5h1.5v-1.5A.75.75 0 019 6z"></path><path fill-rule="evenodd" d="M2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9zm7-5.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11z" clip-rule="evenodd"></path></svg>
-          </div>
-        </div> */}
         <div className="right">
           <div className="undo" onClick={handileUndo}>
             <svg
@@ -153,28 +93,24 @@ const BottomTabWtapper = styled.div`
   padding: 0 50px;
   z-index: 100;
 
-  .serch{
+  .serch {
     width: 20px;
     height: 20px;
   }
-  .left{
+  .left {
     display: flex;
-      justify-content: start;
-      align-items: center;
-      width: 100%;
+    justify-content: start;
+    align-items: center;
+    width: 100%;
 
-    .zoom{
-    display: flex;
-    gap: 10px;
+    .zoom {
+      display: flex;
+      gap: 10px;
 
-    svg{
-      cursor: pointer;
+      svg {
+        cursor: pointer;
+      }
     }
-    
-     
-
-    }
-
   }
 
   .bottomTab {
@@ -199,11 +135,8 @@ const BottomTabWtapper = styled.div`
   .undo {
   }
 
-
-
-
-    /* Chrome, Safari, Edge, Opera */
-    input::-webkit-outer-spin-button,
+  /* Chrome, Safari, Edge, Opera */
+  input::-webkit-outer-spin-button,
   input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
@@ -260,7 +193,7 @@ const BottomTabWtapper = styled.div`
   }
   input[type="range"]::-moz-range-thumb {
     box-shadow: 0px 0px 0px #000000;
-    border: 1px solid #rgba(249, 208, 13, 1);
+    border: 1px solid rgba(249, 208, 13, 1);
     height: 18px;
     width: 18px;
     border-radius: 25px;

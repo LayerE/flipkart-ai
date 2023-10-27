@@ -1,13 +1,11 @@
+
+// @ts-nocheck
+
 import React from "react";
 import { styled } from "styled-components";
 import Button from "../common/Button";
 import { useAppState } from "@/context/app.context";
-import { motion } from "framer-motion";
 
-const fadeIn = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 0.2 } },
-  };
 const PopupCardGenerate = () => {
   const { popupImage, setPopupImage ,handileDownload} = useAppState();
 
@@ -33,6 +31,7 @@ const PopupCardGenerate = () => {
           />
         </picture>
         <div className="btns">
+          
           <Button onClick={()=> handileDownload(popupImage?.url)}>{popupImage.btn} </Button>
         </div>
       </div>

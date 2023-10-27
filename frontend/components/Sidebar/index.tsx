@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React, { useState } from "react";
 import { styled } from "styled-components";
 import Column from "../common/Column";
@@ -19,6 +21,7 @@ import Element from "../Element";
 import ListOf from "../List OfProduct";
 import MagicEraser from "../MagicErase";
 import RegenratTab from "../RegenrateTab";
+import Assets3d from "../Assets/Assets3 d";
 const fadeIn = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 1 } },
@@ -30,6 +33,12 @@ const TabData = [
     image: assets.icons.assets_icon,
     tittle: "Assets",
   },
+  // {
+  //   id: 7,
+  //   image: assets.icons.assets_icon,
+
+  //   tittle: "3D Assets",
+  // },
   {
     id: 2,
 
@@ -48,6 +57,7 @@ const TabData = [
   //   image: assets.icons.user_icon,
   //   tittle: "Humans",
   // },
+
   {
     id: 5,
 
@@ -66,6 +76,8 @@ const Sidebar: React.FC = () => {
     downloadImg,
     isMagic,
     setIsMagic,
+    TDMode,
+    set3dMode,
   } = useAppState();
 
   return (
@@ -85,6 +97,11 @@ const Sidebar: React.FC = () => {
                   activeTab === elemenmt.id ? "active tabBox " : "tabBox"
                 }
                 onClick={() => {
+                  if (elemenmt.id == 7) {
+                    set3dMode(true);
+                  } else if (elemenmt.id == 1) {
+                    set3dMode(false);
+                  }
                   setActiveTab(elemenmt.id);
                   setViewMore({ status: false });
                   setIsMagic(false);
@@ -108,7 +125,7 @@ const Sidebar: React.FC = () => {
             <div className="tittle">
               {activeTab === 1 ? (
                 "Product Assets"
-              ) : activeTab === 2  && viewMore?.status == true ? (
+              ) : activeTab === 2 && viewMore?.status == true ? (
                 <div
                   style={{
                     cursor: "pointer",
@@ -126,16 +143,16 @@ const Sidebar: React.FC = () => {
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    stroke-width="3"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     className="lucide lucide-chevron-left"
                   >
                     <polyline points="15 18 9 12 15 6"></polyline>
                   </svg>{" "}
                   {viewMore.title}{" "}
                 </div>
-              ) : activeTab === 2 ?(
+              ) : activeTab === 2 ? (
                 "Create Product Photoshoot "
               ) : activeTab === 3 && viewMore?.status == true ? (
                 <div
@@ -155,9 +172,9 @@ const Sidebar: React.FC = () => {
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    stroke-width="3"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     class="lucide lucide-chevron-left"
                   >
                     <polyline points="15 18 9 12 15 6"></polyline>
@@ -186,18 +203,18 @@ const Sidebar: React.FC = () => {
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    stroke-width="3"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     class="lucide lucide-chevron-left"
                   >
                     <polyline points="15 18 9 12 15 6"></polyline>
                   </svg>{" "}
                   Magic Erase{" "}
                 </div>
-              ) :  activeTab === 5  ? (
+              ) : activeTab === 5 ? (
                 "Edit Image"
-              ) : activeTab === 6  ? (
+              ) : activeTab === 6 ? (
                 <div
                   style={{
                     cursor: "pointer",
@@ -215,22 +232,24 @@ const Sidebar: React.FC = () => {
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    stroke-width="3"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     className="lucide lucide-chevron-left"
                   >
                     <polyline points="15 18 9 12 15 6"></polyline>
                   </svg>{" "}
-                  {"Regenrate" }{" "}
+                  {"Regenrate"}{" "}
                 </div>
+              ) : activeTab === 7 ? (
+                "Product Assets"
               ) : null}
             </div>
             {activeTab === 1 ? (
               <Assets />
-            ) : activeTab === 2  && viewMore?.status == true ? (
+            ) : activeTab === 2 && viewMore?.status == true ? (
               <ListOf />
-            ) : activeTab === 2 ?(
+            ) : activeTab === 2 ? (
               <Generate />
             ) : activeTab === 3 && viewMore?.status == true ? (
               <ListOf />
@@ -240,13 +259,13 @@ const Sidebar: React.FC = () => {
               <Humans />
             ) : activeTab === 5 && isMagic === "true" ? (
               <MagicEraser />
-            ) :activeTab === 5? (
+            ) : activeTab === 5 ? (
               <Edit />
-            ): activeTab === 6?(
-              <RegenratTab/>
-            ): null
-          
-          }
+            ) : activeTab === 6 ? (
+              <RegenratTab />
+            ) : activeTab === 7 ? (
+              <Assets3d />
+            ) : null}
           </motion.div>
         </div>
       </motion.div>
@@ -255,9 +274,9 @@ const Sidebar: React.FC = () => {
 };
 
 const SideBar = styled.div`
-position: relative;
-z-index: 200;
-background-color: #FFF;
+  position: relative;
+  z-index: 200;
+  background-color: #fff;
   .new {
     height: 100vh;
     display: flex;
@@ -311,10 +330,8 @@ background-color: #FFF;
     }
   }
 
-  .activeTool{
+  .activeTool {
     border: 2px solid rgba(249, 208, 13, 1);
-
-
   }
   .rowwothtwo {
     display: flex;

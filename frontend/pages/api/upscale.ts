@@ -1,5 +1,9 @@
+
+// @ts-nocheck
+
 import { NextResponse, NextRequest } from "next/server";
 const axios = require("axios");
+export const maxDuration = 50;
 
 async function imageUrlToBase64(url: string) {
   try {

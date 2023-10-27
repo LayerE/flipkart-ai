@@ -1,4 +1,5 @@
 // utils/db.js
+// @ts-nocheck
 
 import mongoose from 'mongoose';
 

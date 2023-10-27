@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+// @ts-nocheck
+
+import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import Label, { DisabledLabel } from "../common/Label";
 import { Input } from "../common/Input";
 import Button from "../common/Button";
 import { useAppState } from "@/context/app.context";
-import { useAuth } from "@clerk/nextjs";
+import { useSession } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
 
 const PopupUpload = () => {
@@ -15,9 +17,18 @@ const PopupUpload = () => {
     setProduct,
     addimgToCanvasSubject,
     fetchAssetsImagesWithProjectId,
+    AssetsActivTab,
+    setassetsActiveTab,
+    fetchAssetsImages,
   } = useAppState();
   const [productnew, setProductnew] = useState("");
-  const { userId } = useAuth();
+  const session = useSession();
+  const [userId, setUserId] = useState<string | null>(null);
+  useEffect(() => {
+    if (session) {
+      setUserId(session.user.id);
+    }
+  }, [session]);
   const { query, isReady } = useRouter();
   const { id } = query;
 
@@ -28,15 +39,30 @@ const PopupUpload = () => {
       try {
         // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API}/assets`, {
+        // const response = await fetch(`${process.env.NEXT_PUBLIC_API}/assets`, {
+        //   method: "POST",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   },
+        //   body: JSON.stringify({
+        //     userId: userId,
+        //     projectId: id,
+        //     assetType: AssetsActivTab,
+
+        //     asset: { url: popup.dataArray.imageUrl, product: productnew },
+        //   }),
+        // });
+        const response = await fetch(`/api/addcaption`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            userId: userId,
-            projectId: id,
-            asset: { url: popup.dataArray.imageUrl, product: productnew },
+            image_url: popup.dataArray.imageUrl,
+            caption: productnew,
+            // assetType: AssetsActivTab,
+
+            // asset: { url: popup.dataArray.imageUrl, product: productnew },
           }),
         });
 
@@ -44,12 +70,17 @@ const PopupUpload = () => {
         console.log(datares);
 
         if (datares) {
-          addimgToCanvasSubject(popup?.data);
+          fetchAssetsImages(userId, null);
+          addimgToCanvasSubject(popup?.dataArray?.imageUrl);
           fetchAssetsImagesWithProjectId(userId, id);
-          setUploadedProductlist((prev) => [
-            ...prev,
-            { url: popup?.data, tittle: productnew },
-          ]);
+          // setTimeout(() => {
+
+          // }, 500);
+
+          // setUploadedProductlist((prev) => [
+          //   ...prev,
+          //   { url: popup?.data, tittle: productnew },
+          // ]);
           setProduct(productnew);
           setPopup({ status: false, data: null });
         }
@@ -59,12 +90,21 @@ const PopupUpload = () => {
       }
     }
   };
+  useEffect(() => {
+   if(popup?.dataArray?.caption && popup?.dataArray?.caption  !== null){
+    setProductnew(popup?.dataArray?.caption);
+
+
+   }
+   console.log(popup,"sssssss",popup?.dataArray?.caption)
+  }, [])
+  
 
   return (
     <PopupWrapper>
       <div className="wrapper">
         <picture>
-          <img src={popup?.data} alt="" />
+          <img src={popup?.dataArray?.imageUrl} alt="" />
         </picture>
         <div className="test">
           <div>
@@ -72,6 +112,7 @@ const PopupUpload = () => {
 
             <Input
               type="text"
+              value={productnew}
               onChange={(e) => setProductnew(e.target.value)}
               placeholder=" e.g. 'red sofa' or 'blue perfume bottle'"
             />

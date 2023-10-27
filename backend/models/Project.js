@@ -4,6 +4,8 @@ const projectSchema = new Schema({
   userId: String,
   title: String,
   jobIds: Array,
+  jobIds3D: Array,
+
   previewImage: String,
   canvas: Object,
   canvasHistory: Object,

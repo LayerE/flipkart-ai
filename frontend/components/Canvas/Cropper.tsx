@@ -13,9 +13,20 @@ import ReactCrop, {
 } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 import Button from "../common/Button";
+import { saveAs } from "file-saver";
 
 const CropperBox = () => {
-  const { addimgToCanvasCropped, crop, setCrop, downloadImg ,addimgToCanvasGen} = useAppState();
+  const {
+    addimgToCanvasCropped,
+    crop,
+    setCrop,
+    downloadImg,
+    addimgToCanvasGen,
+    TDMode,
+    downloadeImgFormate,
+    downloadImgEdit, setDownloadImgEdit,
+    canvasInstance
+  } = useAppState();
 
   // const [cropSize, setCropSize] = useState({ x: 0, y: 0 })
   const [cropSize, setCropSize] = useState();
@@ -24,54 +35,105 @@ const CropperBox = () => {
   const [zoom, setZoom] = useState(1);
   const [aspect, setAspect] = useState<number | undefined>(1);
 
-
-
-  const HandleCrope =async ()=>{
-
-    console.log("dfg")
+  const HandleCrope = async () => {
+    console.log("dfg");
     if (cropSize.width && cropSize.height) {
-         console.log("dfg")
+      console.log("dfg");
 
-        const canvas = document.createElement('canvas');
-        const image = document.getElementById('img');
-        const scaleX = image.naturalWidth / image.width;
-        const scaleY = image.naturalHeight / image.height;
-    
-        canvas.width = cropSize.width;
-        canvas.height = cropSize.height;
-    
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(
-          image,
-          cropSize.x * scaleX,
-          cropSize.y * scaleY,
-          cropSize.width * scaleX,
-          cropSize.height * scaleY,
-          0,
-          0,
-          cropSize.width,
-          cropSize.height
-        );
-    
-        const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
-        const url = URL.createObjectURL(blob);
-    
-        // const link = document.createElement('a');
-        // link.href = url;
-        // link.download = 'cropped_image.png';
-        // document.body.appendChild(link);
-        // link.click();
-        // document.body.removeChild(link);
+      const canvas = document.createElement("canvas");
+      const image = document.getElementById("img");
+      const scaleX = image.naturalWidth / image.width;
+      const scaleY = image.naturalHeight / image.height;
 
-        addimgToCanvasGen(url)
-        setCrop(false)
+      canvas.width = cropSize.width;
+      canvas.height = cropSize.height;
+
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(
+        image,
+        cropSize.x * scaleX,
+        cropSize.y * scaleY,
+        cropSize.width * scaleX,
+        cropSize.height * scaleY,
+        0,
+        0,
+        cropSize.width,
+        cropSize.height
+      );
+
+      const blob = await new Promise((resolve) =>
+        canvas.toBlob(resolve, "image/png")
+      );
+      const url = URL.createObjectURL(blob);
+
+      // const link = document.createElement('a');
+      // link.href = url;
+      // link.download = 'cropped_image.png';
+      // document.body.appendChild(link);
+      // link.click();
+      // document.body.removeChild(link);
+      DeletIrem()
+
+      addimgToCanvasGen(url);
+      setCrop(false);
+    }
+  };
+  const downloadH = async () => {
+    console.log("dfg");
+    if (cropSize.width && cropSize.height) {
+      console.log("dfg");
+
+      const canvas = document.createElement("canvas");
+      const image = document.getElementById("img");
+      image.setAttribute("crossOrigin", "anonymous");
+      const scaleX = image.naturalWidth / image.width;
+      const scaleY = image.naturalHeight / image.height;
+
+      canvas.width = cropSize.width;
+      canvas.height = cropSize.height;
+
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(
+        image,
+        cropSize.x * scaleX,
+        cropSize.y * scaleY,
+        cropSize.width * scaleX,
+        cropSize.height * scaleY,
+        0,
+        0,
+        cropSize.width,
+        cropSize.height
+      );
+
+      // const blob = await new Promise((resolve) =>
+      // );
+      const url = canvas.toDataURL();
+      // const url = URL.createObjectURL(blob);
+
+      // const link = document.createElement('a');
+      // link.href = url;
+      // link.download = 'cropped_image.png';
+      // document.body.appendChild(link);
+      // link.click();
+      // document.body.removeChild(link);
+
+      saveAs(url, `image${Date.now()}.${downloadeImgFormate}`);
+
+      // setCrop(false)
     }
 
+    // setIsMagic(false);
 
+    // return dataURL;
+  };
 
-  }
-
-  
+  const DeletIrem = () => {
+    const activeObject = canvasInstance?.current?.getActiveObject();
+    if (activeObject) {
+      canvasInstance?.current?.remove(activeObject);
+      canvasInstance?.current?.renderAll();
+    }
+  };
   return (
     <Wrapper>
       <div className="cropperbox">
@@ -89,21 +151,26 @@ const CropperBox = () => {
           crop={cropSize}
           onChange={(c) => setCropSize(c)}
           onComplete={(c) => setCompletedCrop(c)}
-            aspect={aspect}
-            
+          aspect={aspect}
           minWidth={50}
-            minHeight={50}
+          minHeight={50}
         >
           <img className="nm" src={downloadImg} id="img" />
         </ReactCrop>
 
         <div className="flex">
-        <Button onClick={()=> HandleCrope()}>
-        Done
-        </Button>
-        <Button onClick={()=>   setCrop(false)}>
-            Close
-        </Button>
+          {TDMode ? (
+            <Button
+              onClick={() => downloadH()}
+              //   disabled={linesHistory.length === 0 ? true : false}
+            >
+              Download
+            </Button>
+          ) : (
+            <Button onClick={() => HandleCrope()}>Done</Button>
+          )}
+
+          <Button onClick={() => setCrop(false)}>Close</Button>
         </div>
       </div>
     </Wrapper>
@@ -113,19 +180,19 @@ const CropperBox = () => {
 export default CropperBox;
 
 const Wrapper = styled.div`
-.nm{
+  .nm {
     object-fit: contain;
     width: 1005;
-}
+  }
 
-.flex{
+  .flex {
     display: flex;
     justify-content: end;
     gap: 20px;
-    button{
-        max-width: fit-content;
+    button {
+      max-width: fit-content;
     }
-}
+  }
   border: 1px solid black;
   display: flex;
   flex-direction: column;

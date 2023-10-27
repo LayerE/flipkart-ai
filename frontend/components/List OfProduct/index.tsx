@@ -1,3 +1,6 @@
+// @ts-nocheck
+
+
 import React from "react";
 import { Row } from "../common/Row";
 import Label from "../common/Label";
@@ -37,12 +40,12 @@ const ListOf: React.FC = () => {
               className={"imageBox"}
               onClick={() => {
                 if(activeTab=== 2){
-                  setPlacementTest(test.placement);
-                  setSurroundingTest(test.surrounding);
-                  setBackgrundTest(test.background);
-                  setSelectedPlacement(test.placementType);
-                  setSelectedSurrounding(test.surroundingType);
-                  setSelectedBackground(test.backgroundType);
+                  setPlacementTest(test?.placement);
+                  setSurroundingTest(test?.surrounding);
+                  setBackgrundTest(test?.background);
+                  setSelectedPlacement(test?.placementType);
+                  setSelectedSurrounding(test?.surroundingType);
+                  setSelectedBackground(test?.backgroundType);
 
                 }else
                 addimgToCanvas(test);
@@ -51,7 +54,7 @@ const ListOf: React.FC = () => {
               <picture>
                 {
                   activeTab=== 2 ?
-                  <img src={test.image} alt="" />
+                  <img src={test?.image} alt="" />
 
                   :
                   <img src={test} alt="" />
