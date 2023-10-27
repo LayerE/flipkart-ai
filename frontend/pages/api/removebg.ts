@@ -6,8 +6,7 @@ import FormData from "form-data";
 const { createCanvas, loadImage } = require("canvas");
 
 export const config = {
-  runtime: "edge",
-
+  
   api: {
     bodyParser: {
       sizeLimit: "25mb", // Set desired value here
