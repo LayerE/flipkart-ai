@@ -171,6 +171,8 @@ const Edit = () => {
     const dataURL = await arrayBufferToDataURL(buffer);
     localStorage.setItem("m-images", JSON.stringify(dataURL));
     console.log(buffer, response, dataURL, "imgs");
+    // console.log(photo, "imgs");
+
     // const response = await fetch("/api/upscale", {
     //   method: "POST",
     //   headers: {
@@ -182,6 +184,7 @@ const Edit = () => {
 
     //   }),
     // });
+    // console.log(await response.json(), "imgs");
 
     return dataURL;
   };

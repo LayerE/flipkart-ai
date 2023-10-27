@@ -734,7 +734,7 @@ export const TempletList = [
         title: "Luxury Bedroom  ",
 
         image: "https://ik.imagekit.io/7urmiszfde/Luxury%20Bedroom.webp?updatedAt=1698316216393",
-        promt: "in an minimal bedroom setting with simple wall, wooden flooring and minor decor.",
+        promt: "  in an opulent and lavish bedroom ambiance with stylish decor and clam environment.",
         placementType: "",
         surroundingType: "",
         backgroundType: "",
@@ -748,7 +748,7 @@ export const TempletList = [
         title: "High floor Balcony",
 
         image: "https://ik.imagekit.io/7urmiszfde/High%20floor%20Balcony.webp?updatedAt=1698316218759",
-        promt: "within a simple minimal decorated home balcony space, natural sunlight.",
+        promt: " in a minimal balcony space, overlooking a cityscape, natural sunlight.",
         placementType: "",
         surroundingType: "",
         backgroundType: "",
@@ -817,7 +817,7 @@ export const TempletList = [
         title: "Minimal Kitchen ",
 
         image: "https://ik.imagekit.io/7urmiszfde/Untitled%20(1).webp?updatedAt=1698419042310",
-        promt: "Minimal Kitchen",
+        promt: "in a simple kitchen, minimalistic, clean, sleek, simple, stripped of excessive decoration",
         placementType: "",
         surroundingType: "",
         backgroundType: "",
@@ -887,6 +887,34 @@ export const TempletList = [
 
         image: "https://ik.imagekit.io/7urmiszfde/Home%20Theater.webp?updatedAt=1698316215601",
         promt: "in a dedicated home theater room plush seating.",
+        placementType: "",
+        surroundingType: "",
+        backgroundType: "",
+        product: "",
+        placement: "",
+        surrounding: "",
+        background: "",
+        lora: "RealisticNaturalScenery",
+      },
+      {
+        title: "Bathroom",
+
+        image: "https://ik.imagekit.io/7urmiszfde/Bathroom.webp?updatedAt=1698432644096",
+        promt: "in a minimalistic sophistication to this bathroom space, accompanied by a gentle and understated ambient light.",
+        placementType: "",
+        surroundingType: "",
+        backgroundType: "",
+        product: "",
+        placement: "",
+        surrounding: "",
+        background: "",
+        lora: "RealisticNaturalScenery",
+      },
+      {
+        title: "Luxury Bathroom",
+
+        image: "https://ik.imagekit.io/7urmiszfde/lBathroom.webp?updatedAt=1698432644280",
+        promt: "  in a luxurious bathroom space into an oasis of opulence and style, bathed in a gentle and inviting ambient light.",
         placementType: "",
         surroundingType: "",
         backgroundType: "",
@@ -1004,7 +1032,7 @@ export const TempletList = [
         title: "Dense Forest ",
 
         image: "https://ik.imagekit.io/7urmiszfde/Dense%20Forest.webp?updatedAt=1698316245243",
-        promt: "in dense forest, surrounded by towering trees.",
+        promt: " in dense forest, surrounded by towering trees, natural sunlight",
         placementType: "on",
         surroundingType: "",
         backgroundType: "",
@@ -1164,7 +1192,7 @@ export const TempletList = [
         title: "Rustic Wodeen  ",
 
         image: "https://ik.imagekit.io/7urmiszfde/Rustic%20Wodeen.webp?updatedAt=1698333525271",
-        promt: "placed on a rustic wooden platform",
+        promt: " placed on a rustic wooden platform, natural sunlight",
         placementType: "on",
         surroundingType: "",
         backgroundType: "",
@@ -1175,10 +1203,10 @@ export const TempletList = [
         lora: "RealisticNaturalScenery",
       },
       {
-        title: "Sand ",
+        title: "Sea Sand ",
 
         image: "https://ik.imagekit.io/7urmiszfde/Sand.webp?updatedAt=1698333524431",
-        promt: "buried in the sand surrounded with few shells and flowers.",
+        promt: "buried in the sea sand surrounded with few shells and flowers.",
         placementType: "on",
         surroundingType: "",
         backgroundType: "",
@@ -1338,7 +1366,7 @@ export const TempletList = [
         title: "Staricase",
 
         image: "https://ik.imagekit.io/7urmiszfde/Staricase.webp?updatedAt=1698333521734",
-        promt: "on on a marble staircase.  ",
+        promt: "on on a marble staircase, natural lighting  ",
         placementType: "",
         surroundingType: "",
         backgroundType: "",
@@ -1351,7 +1379,7 @@ export const TempletList = [
         title: "Kitchen Counter",
 
         image: "https://ik.imagekit.io/7urmiszfde/Kitchen%20Counter.webp?updatedAt=1698333527026",
-        promt: "on a modern kitchen counter.  ",
+        promt: "on a modern kitchen counter, minimal decor, modern lighting  ",
         placementType: "",
         surroundingType: "",
         backgroundType: "",
