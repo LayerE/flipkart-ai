@@ -4,7 +4,7 @@ import { NextResponse, NextRequest } from "next/server";
 import axios from "axios";
 import FormData from "form-data";
 const { createCanvas, loadImage } = require("canvas");
-export const maxDuration = 100;
+export const maxDuration = 300;
 
 export const config = {
   api: {
@@ -57,6 +57,8 @@ export default async function handler(req: NextRequest, res: NextResponse) {
     const { body } = req;
     const payload = body;
     const { user_id, dataUrl, project_id, type } = payload;
+
+    console.log(payload)
 
     var fileExtension = "png";
     if (dataUrl.includes("jpeg") || dataUrl.includes("jpg")) {
@@ -113,6 +115,8 @@ export default async function handler(req: NextRequest, res: NextResponse) {
           }),
         }
       );
+    console.log(caption_response)
+
 
       let form = new FormData();
       form.append("image_file", inputBuffer, {
