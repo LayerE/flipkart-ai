@@ -8,7 +8,7 @@ import * as THREE from "three";
 import { toast } from "react-toastify";
 import { arrayBufferToDataURL, dataURLtoFile } from "@/utils/BufferToDataUrl";
 import { useSession } from "@supabase/auth-helpers-react";
-import Jimp  from 'jimp'
+import Pica from "pica";
 import { IMG_TABLE } from "@/store/table";
 import { supabase } from "@/utils/supabase";
 import { optimizeAndEncodeImage } from "@/lib/resize";
@@ -281,6 +281,45 @@ interface ContextITFC {
   listofassets: any | null;
   setListOfAssets: (listofassets: any) => void;
 }
+
+async function scaleDownImage(base64URL) {
+  const pica = new Pica();
+
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = "Anonymous";
+    img.onload = async function () {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width / 2;
+      canvas.height = img.height / 2;
+      const ctx = canvas.getContext("2d");
+
+      try {
+        await pica.resize(img, canvas, {
+          unsharpAmount: 150, // Adjusted unsharpAmount for increased sharpness
+          unsharpRadius: 0.8, // Adjusted unsharpRadius for increased sharpness
+          unsharpThreshold: 3, // Adjusted unsharpThreshold for increased sharpness
+        });
+        canvas.toBlob(
+          function (blob) {
+            const reader = new FileReader();
+            reader.onload = function () {
+              const scaledBase64 = reader.result.split(",")[1];
+              resolve(scaledBase64);
+            };
+            reader.readAsDataURL(blob);
+          },
+          "image/png",
+          1.0
+        );
+      } catch (error) {
+        reject(error);
+      }
+    };
+    img.src = base64URL;
+  });
+}
+
 export const AppContext = createContext<ContextITFC>({
   activeTab: 1,
   setActiveTab: () => {},
@@ -1354,12 +1393,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         });
         const subjectDataUrlq = subjectCanvas.toDataURL();
 
-        const subjectDataUrl = subjectCanvas.toDataURL({
+        const originalsubjectDataUrl = subjectCanvas.toDataURL({
           format: "png",
           multiplier: 4,
         });
+        const subjectDataUrl = await scaleDownImage(originalsubjectDataUrl);
 
-      
         const originalImageElement = new Image();
         originalImageElement.src = subjectDataUrl;
         originalImageElement.onload = () => {
@@ -1383,9 +1422,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           // console.log("subjectDataUrlq", subjectDataUrlq);
         };
 
-      //  const dd = await optimizeAndEncodeImage(subjectDataUrl, 23243)
-      //  console.log(dd)
-        // Example usage: 
+        //  const dd = await optimizeAndEncodeImage(subjectDataUrl, 23243)
+        //  console.log(dd)
+        // Example usage:
 
         const subjectDataUrlJson = subjectCanvas.toJSON();
         const updatedObject = {
@@ -1588,17 +1627,18 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           subjectCanvas.add(object);
         });
 
-        const subjectDataUrl = subjectCanvas.toDataURL({
+        const originalsubjectDataUrl = subjectCanvas.toDataURL({
           format: "png",
           multiplier: 4,
         });
+        const subjectDataUrl = await scaleDownImage(originalsubjectDataUrl);
         const subjectDataUrlJson = subjectCanvas.toJSON();
         const updatedObject = {
           width: activeSize.w,
           height: activeSize.h,
           ...subjectDataUrlJson,
         };
-console.log(subjectDataUrl)
+        console.log(subjectDataUrl);
         // const subjectDataUrl = subjectCanvas.toDataURL("image/png");
 
         const promtText = promtFull;
@@ -1628,11 +1668,11 @@ console.log(subjectDataUrl)
             setLoader(false);
             return false;
           } else {
-          const endTime = new Date().getTime();
+            const endTime = new Date().getTime();
 
-          const elapsedTime = endTime - startTime;
+            const elapsedTime = endTime - startTime;
 
-          console.log(`Elapsed time: ${elapsedTime} milliseconds`);
+            console.log(`Elapsed time: ${elapsedTime} milliseconds`);
 
             setJobIdOne([generate_response?.job_id]);
             GetProjextById(proid);
@@ -1677,11 +1717,11 @@ console.log(subjectDataUrl)
           if (ctx) {
             ctx.drawImage(img, 0, 0, img.width, img.height);
           }
-          console.log(screenshot)
+          console.log(screenshot);
 
           // Get the scaled data URL
           scaledDataURL = canvas.toDataURL("image/png");
-          console.log(scaledDataURL)
+          console.log(scaledDataURL);
 
           const response = await fetch("/api/generate", {
             method: "POST",
@@ -1711,11 +1751,11 @@ console.log(subjectDataUrl)
             setLoader(true);
 
             try {
-          const endTime = new Date().getTime();
+              const endTime = new Date().getTime();
 
-          const elapsedTime = endTime - startTime;
+              const elapsedTime = endTime - startTime;
 
-          console.log(`Elapsed time: ${elapsedTime} milliseconds`);
+              console.log(`Elapsed time: ${elapsedTime} milliseconds`);
 
               setJobIdOne([generate_response?.job_id]);
               axios
