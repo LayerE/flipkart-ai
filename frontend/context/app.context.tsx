@@ -692,9 +692,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [loadercarna, setloadercarna] = useState(false);
 
   const session = useSession();
-  // const [userId, setUserID] = useState<string | null>(
-  //   "34afa810-7f7e-4a35-be32-e9c561f35067"
-  // );
+
   const [userId, setUserID] = useState<string | null>(null);
 
   useEffect(() => {
