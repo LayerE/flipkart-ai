@@ -95,13 +95,7 @@ export default function Home() {
     if (isReady && userId) {
       console.log(session);
 
-      // const getUser = localStorage.getItem("userId");
-      // if (!getUser) {
-      //   setTimeout(() => {}, 3000);
-      //   if (userId) localStorage.setItem("userId", userId);
-      // }
-
-      //  reset
+    
       setActiveTab(1);
       setcategory(null);
       setpromtFull("");
