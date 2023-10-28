@@ -34,6 +34,7 @@ const Generate3d = () => {
 
   const {
     product,
+    setProduct,
     placementTest,
     backgroundTest,
     surroundingTest,
@@ -127,68 +128,19 @@ const Generate3d = () => {
         </Box>
       </div>
       <div className="gap">
+        <DisabledLabel>What is your object </DisabledLabel>
+        <Input
+        value={product}
+          onChange={(e) => setProduct(e.target.value)}
+          readonly={loader ? "readonly" : false} />
+
+
+        </div>
+      <div className="gap">
         <DisabledLabel>Describe your photo </DisabledLabel>
 
         <Row>
-          {/* <PromtGeneratePreview className="generatePreview">
-            {product !== null && product !== "" ? (
-              <label
-                htmlFor="prompt-editor-subject-0-input"
-                className="promtText"
-              >
-                {product}
-                {", "}
-              </label>
-            ) : null}
-            {selectPlacement !== null && selectPlacement !== "" ? (
-              <label
-                htmlFor="prompt-editor-subject-1-input"
-                className="promtText"
-              >
-                {selectPlacement}{" "}
-              </label>
-            ) : null}
-            {placementTest !== null && placementTest !== "" ? (
-              <label
-                htmlFor="prompt-editor-subject-1-input"
-                className="promtText"
-              >
-                {placementTest}{" "}
-              </label>
-            ) : null}
-            {selectSurrounding !== null && selectSurrounding !== "" ? (
-              <label
-                htmlFor="prompt-editor-subject-1-input"
-                className="promtText"
-              >
-                {selectSurrounding}{" "}
-              </label>
-            ) : null}
-            {surroundingTest !== null && surroundingTest !== "" ? (
-              <label
-                htmlFor="prompt-editor-subject-2-input"
-                className="promtText"
-              >
-                {surroundingTest}{" "}
-              </label>
-            ) : null}
-            {selectBackground !== null && selectBackground !== "" ? (
-              <label
-                htmlFor="prompt-editor-subject-1-input"
-                className="promtText"
-              >
-                {selectBackground}{" "}
-              </label>
-            ) : null}
-            {backgroundTest !== null && backgroundTest !== "" ? (
-              <label
-                htmlFor="prompt-editor-subject-3-input"
-                className="promtText"
-              >
-                {","} {backgroundTest}{" "}
-              </label>
-            ) : null}
-          </PromtGeneratePreview> */}
+          
           <TestArea
             value={promtFull}
             onChange={(e) => handelPromt(e)}

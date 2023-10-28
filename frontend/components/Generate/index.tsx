@@ -134,6 +134,7 @@ const Generate = () => {
           ></DropdownInput>
         </Box>
       </div>
+  
       <div className="gap">
         <DisabledLabel>Describe your photo </DisabledLabel>
 

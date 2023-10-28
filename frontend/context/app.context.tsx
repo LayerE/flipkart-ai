@@ -1686,12 +1686,27 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
   const generate3dHandeler = async (ueserId: any, proid: any) => {
     const startTime = new Date().getTime();
+    console.log(product,"sdfdsgdfg")
 
     if (category === null) {
       toast("Select your product category first !");
     } else if (!file3dUrl && !file3d) {
       toast("Add a 3d model");
-    } else {
+    }
+    
+    else if (product === null) {
+      toast("Enter your 3d model name ");
+    } 
+    else if (product === "") {
+      toast("Enter your 3d model name ");
+    } 
+    else if (promtFull === null) {
+      toast("Select one templet or Enter custom promt ");
+    } 
+    else if (promtFull === "") {
+      toast("Select one templet or Enter custom promt");
+    }
+    else {
       if (renderer === null) {
         toast("Add a 3d model");
       } else {
@@ -1729,7 +1744,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
             body: JSON.stringify({
               dataUrl: scaledDataURL,
               maskDataUrl: null,
-              prompt: promtText.trim(),
+              prompt: product.trim() + " " + promtText.trim(),
               user_id: userId,
               category: category,
               lora_type: loara,
