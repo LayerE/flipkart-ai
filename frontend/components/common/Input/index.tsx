@@ -6,6 +6,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { styled } from "styled-components";
 import { toast } from "react-toastify";
 
+
+
 export const Input = styled.input`
   padding: 0.5rem 0.75rem;
   border: 2px solid #d9d9d9;
@@ -194,7 +196,8 @@ export const FileUpload = ({ type, title, uerId }:{ type:any, title:string, uerI
     setloadercarna,
     assetLoader,
     setassetLoader,
-    loader
+    loader,
+    scaleDownImage
   } = useAppState();
 
   const handleFileChange = (event :any) => {
@@ -233,12 +236,16 @@ export const FileUpload = ({ type, title, uerId }:{ type:any, title:string, uerI
           } else {
             const filename = `img${Date.now()}`;
             // setLoader(true);
+            const dataimage =  await scaleDownImage(reader.result)
+            console.log(dataimage,"ress")
+            console.log(reader.result,"noress")
+
 
             const response = await fetch("/api/removebg", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
-                dataUrl: reader.result,
+                dataUrl: dataimage,
                 user_id: uerId,
                 project_id: projectId,
                 // type: "product",

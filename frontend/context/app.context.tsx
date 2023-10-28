@@ -2008,7 +2008,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setCurrentStep,
         popupImage,
         setPopupImage,
-
+        scaleDownImage,
         jobIdOne,
         setJobIdOne,
         file,
