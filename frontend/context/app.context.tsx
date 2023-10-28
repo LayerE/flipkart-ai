@@ -1744,13 +1744,13 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
             body: JSON.stringify({
               dataUrl: scaledDataURL,
               maskDataUrl: null,
-              prompt: product.trim() + " " + promtText.trim(),
+              prompt:   promtText.trim(),
               user_id: userId,
               category: category,
               lora_type: loara,
               num_images: selectResult,
               is_3d: true,
-              // caption : product
+              caption : product
             }),
           });
 
