@@ -1415,9 +1415,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
             multiplier: 4,
           });
 
-          // console.log("resizedBase64", resizedBase64);
-          // console.log("subjectDataUrl", subjectDataUrl);
-          // console.log("subjectDataUrlq", subjectDataUrlq);
+        
         };
 
         //  const dd = await optimizeAndEncodeImage(subjectDataUrl, 23243)
