@@ -52,7 +52,7 @@ const PopupUpload = () => {
         //     asset: { url: popup.dataArray.imageUrl, product: productnew },
         //   }),
         // });
-        await fetch(`/api/addcaption`, {
+        const response =  await fetch(`/api/addcaption`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -66,10 +66,10 @@ const PopupUpload = () => {
           }),
         });
 
-        // const datares = await response;
+        const datares = await response;
         // console.log(datares);
 
-        // if (datares) {
+        if (datares) {
           fetchAssetsImages(userId, null);
           addimgToCanvasSubject(popup?.dataArray?.imageUrl);
           fetchAssetsImagesWithProjectId(userId, id);
@@ -83,7 +83,7 @@ const PopupUpload = () => {
           // ]);
           setProduct(productnew);
           setPopup({ status: false, data: null });
-        // }
+        }
       } catch (error) {
         // Handle error
         setPopup({ status: false, data: null });

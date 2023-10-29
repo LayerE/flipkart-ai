@@ -582,7 +582,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [surroundingtype, setSurroundingtype] = useState<string>("");
   const [selectBackground, setSelectedBackground] = useState<string>("");
   const [selectColoreMode, setSelectedColoreMode] = useState<string>("");
-  const [selectResult, setSelectedresult] = useState<number>(4);
+  const [selectResult, setSelectedresult] = useState<number>(2);
   const [selectRender, setSelectedRender] = useState<number>(4);
   const [loara, setLoara] = useState<string>("");
   const [templet, setTemplet] = useState<object | null>(null);
