@@ -18,19 +18,25 @@ const BottomTab = () => {
     canvasHistory,
     currentCanvasIndex,
     zoom,
+    loader,
     setZoomCanvas,
   } = useAppState();
 
   const handileUndo = () => {
-    if (currentCanvasIndex.current > 0) {
-      currentCanvasIndex.current--;
-      canvasInstance.current.loadFromJSON(
-        canvasHistory.current[currentCanvasIndex.current]
-      );
-      canvasInstance.current.renderAll();
+    if(!loader){
+
+      if (currentCanvasIndex.current > 0) {
+        currentCanvasIndex.current--;
+        canvasInstance.current.loadFromJSON(
+          canvasHistory.current[currentCanvasIndex.current]
+        );
+        canvasInstance.current.renderAll();
+      }
     }
   };
   const handilePre = () => {
+    if(!loader){
+
     if (currentCanvasIndex.current < canvasHistory.current.length - 1) {
       currentCanvasIndex.current++;
       canvasInstance.current.loadFromJSON(
@@ -38,6 +44,7 @@ const BottomTab = () => {
       );
       canvasInstance.current.renderAll();
     }
+  }
   };
 
   return (
