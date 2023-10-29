@@ -504,6 +504,7 @@ export default function CanvasBox({
 
       {isMagic ? <PopupCanvas /> : null}
       {crop ? <CropperBox /> : null}
+      {loader ? <div className="divovelay"></div> : null}
 
       <div className="convas-continer">
         <div className="generationBox">
@@ -588,6 +589,15 @@ export default function CanvasBox({
 }
 
 const Wrapper = styled.div`
+
+.divovelay {
+    /* display: ${(props) => (props.canvasDisable ? "none" : "block")}; */
+    z-index: 10;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    /* background-color: #000; */
+  }
   canvas {
     pointer-events: ${(props) => (props.canvasDisable ? "none" : "auto")};
   }
@@ -639,7 +649,7 @@ const Wrapper = styled.div`
   }
   #inline-btn {
     position: absolute;
-    z-index: 10;
+    z-index: 8;
     display: flex;
     justify-content: center;
   }
