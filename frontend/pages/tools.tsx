@@ -63,6 +63,7 @@ export default function Home() {
     setSelectedImg,
     setActiveTabHome,
     setActiveSize,
+    seTelevatedSurface
   } = useAppState();
   const router = useRouter();
 
@@ -91,6 +92,7 @@ export default function Home() {
     if (isReady && userId) {
       setloadetool(true)
       setActiveTab(1);
+      seTelevatedSurface(false)
       setcategory(null);
       setpromtFull("");
       setActiveTemplet(null);

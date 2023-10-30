@@ -44,7 +44,7 @@ export default function Home() {
     projectlist,
     setMainLoader,
     setprojectlist,
-
+    seTelevatedSurface,
     mainLoader,
     setFilteredArray,
     setActiveTab,
@@ -94,7 +94,7 @@ export default function Home() {
 
     if (isReady && userId) {
       console.log(session);
-
+      seTelevatedSurface(false)
     
       setActiveTab(1);
       setcategory(null);

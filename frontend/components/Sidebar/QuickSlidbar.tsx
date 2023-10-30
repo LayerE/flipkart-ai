@@ -63,6 +63,7 @@ const QuickBar: React.FC = () => {
     downloadImg,
     isMagic,
     setIsMagic,
+    elevatedSurface, seTelevatedSurface,
 
     generationLoader,
     setGenerationLoader,
@@ -134,6 +135,22 @@ const QuickBar: React.FC = () => {
                 />
               </Row>
               <Row>
+          <DATA>
+          <div>
+              <DisabledLabel>
+              Is model on elevated surface
+              </DisabledLabel>
+            </div>
+          <div
+              className={`toggle-switch ${elevatedSurface ? "on" : "off"}`}
+              onClick={() => seTelevatedSurface(!elevatedSurface)}
+            >
+              <div className="circle"></div>
+            </div>
+           
+          </DATA>
+        </Row>
+              <Row>
                 {loader ? (
                   <TextLoader />
                 ) : (
@@ -175,6 +192,41 @@ const QuickBar: React.FC = () => {
     </SideBar>
   );
 };
+
+export const DATA = styled.div`
+width: 100%;
+display: flex; 
+justify-content: space-between;
+  .toggle-switch {
+    width: 46px;
+    height: 22px;
+    border: 1px solid ${(props) => props.theme.btnPrimary};
+    background-color: #e0e0e0;
+    border-radius: 15px;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .toggle-switch .circle {
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: left 0.3s;
+  }
+
+  .toggle-switch.on {
+    background-color: ${(props) => props.theme.btnPrimary}; /* Based on the image you provided */
+  }
+
+  .toggle-switch.on .circle {
+    left: 25px;
+  }
+`;
 
 const SideBar = styled.div`
   position: relative;

@@ -575,6 +575,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [file3d, setFile3d] = useState<File | null | string>(null);
   const [file3dUrl, setFile3dUrl] = useState<string | null>(null);
   const [file3dName, setFile3dName] = useState<any | null>(null);
+  const [elevatedSurface, seTelevatedSurface] = useState(false);
 
   const [viewMore, setViewMore] = useState<object>({});
   const [selectPlacement, setSelectedPlacement] = useState<string>("");
@@ -1482,6 +1483,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
             num_images: selectResult,
             caption: product,
             project_id: proid,
+            is_elevated: elevatedSurface
+
           }),
         });
 
@@ -1676,6 +1679,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
             num_images: selectResult,
             caption: product,
             is_quick_generation: true,
+            is_elevated: elevatedSurface
           }),
         });
 
@@ -1765,6 +1769,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
               num_images: selectResult,
               is_3d: true,
               caption: product,
+            is_elevated: elevatedSurface
+
             }),
           });
 
@@ -2110,7 +2116,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         assetL3doader,
         setasset3dLoader,
         newEditorBox,
-
+        elevatedSurface, seTelevatedSurface,
         canvasHistoryRef,
       }}
     >

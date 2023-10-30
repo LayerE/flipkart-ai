@@ -1,6 +1,5 @@
 // @ts-nocheck
 
-
 import React, { useEffect, useState } from "react";
 import { Row } from "../common/Row";
 import Button from "../common/Button";
@@ -32,7 +31,6 @@ import { Input, TestArea } from "../common/Input";
 
 const Generate = () => {
   const session = useSession();
-
 
   const {
     product,
@@ -72,17 +70,15 @@ const Generate = () => {
     genrateeRef,
     TDMode,
     generate3dHandeler,
-    userId, setUserId
+    userId,
+    setUserId,
+    elevatedSurface, seTelevatedSurface
   } = useAppState();
 
   const { query, isReady } = useRouter();
   const id = (query.id as string[]) || [];
 
-   const [isChecked, setIsChecked] = useState(false)
 
-  const handleCheckboxChange = () => {
-    setIsChecked(!isChecked)
-  }
 
   const [changeTab, setChangeTab] = useState(false);
   // useEffect(() => {
@@ -140,7 +136,7 @@ const Generate = () => {
           ></DropdownInput>
         </Box>
       </div>
-  
+
       <div className="gap">
         <DisabledLabel>Describe your photo </DisabledLabel>
 
@@ -214,26 +210,22 @@ const Generate = () => {
           />
           {/* <input type="text" className="generatePreview" /> */}
         </Row>
-        {/* <Row>
-        <>
-      <label className='flex cursor-pointer select-none items-center'>
-        <div className='relative'>
-          <input
-            type='checkbox'
-            checked={isChecked}
-            onChange={handleCheckboxChange}
-            className='sr-only'
-          />
-          <div className='box bg-primary block h-8 w-14 rounded-full'></div>
+        <Row>
+          <DATA>
+          <div>
+              <DisabledLabel>
+              Is model on elevated surface
+              </DisabledLabel>
+            </div>
           <div
-            className={`dot absolute left-1 top-1 flex h-6 w-6 items-center justify-center rounded-full transition  ${
-              isChecked ? '!bg-white' : 'bg-white'
-            }`}
-          ></div>
-        </div>
-      </label>
-    </>
-    </Row> */}
+              className={`toggle-switch ${elevatedSurface ? "on" : "off"}`}
+              onClick={() => seTelevatedSurface(!elevatedSurface)}
+            >
+              <div className="circle"></div>
+            </div>
+           
+          </DATA>
+        </Row>
         <Row>
           {loader ? (
             <TextLoader />
@@ -296,13 +288,43 @@ const Generate = () => {
 };
 
 export default Generate;
+export const DATA = styled.div`
+width: 100%;
+display: flex; 
+justify-content: space-between;
+  .toggle-switch {
+    width: 46px;
+    height: 22px;
+    border: 1px solid ${(props) => props.theme.btnPrimary};
+    background-color: #e0e0e0;
+    border-radius: 15px;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .toggle-switch .circle {
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: left 0.3s;
+  }
+
+  .toggle-switch.on {
+    background-color: ${(props) => props.theme.btnPrimary}; /* Based on the image you provided */
+  }
+
+  .toggle-switch.on .circle {
+    left: 25px;
+  }
+`;
 export const Box = styled.div`
   position: relative;
-/* Toggle A */
-input:checked ~ .dot {
-  transform: translateX(100%);
-  background-color: #48bb78;
-}
+  /* Toggle A */
 
   .dis {
     position: absolute;
