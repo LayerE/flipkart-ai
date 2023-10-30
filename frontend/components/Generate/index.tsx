@@ -78,6 +78,12 @@ const Generate = () => {
   const { query, isReady } = useRouter();
   const id = (query.id as string[]) || [];
 
+   const [isChecked, setIsChecked] = useState(false)
+
+  const handleCheckboxChange = () => {
+    setIsChecked(!isChecked)
+  }
+
   const [changeTab, setChangeTab] = useState(false);
   // useEffect(() => {
   //   if (session) {
@@ -208,6 +214,26 @@ const Generate = () => {
           />
           {/* <input type="text" className="generatePreview" /> */}
         </Row>
+        {/* <Row>
+        <>
+      <label className='flex cursor-pointer select-none items-center'>
+        <div className='relative'>
+          <input
+            type='checkbox'
+            checked={isChecked}
+            onChange={handleCheckboxChange}
+            className='sr-only'
+          />
+          <div className='box bg-primary block h-8 w-14 rounded-full'></div>
+          <div
+            className={`dot absolute left-1 top-1 flex h-6 w-6 items-center justify-center rounded-full transition  ${
+              isChecked ? '!bg-white' : 'bg-white'
+            }`}
+          ></div>
+        </div>
+      </label>
+    </>
+    </Row> */}
         <Row>
           {loader ? (
             <TextLoader />
@@ -272,6 +298,11 @@ const Generate = () => {
 export default Generate;
 export const Box = styled.div`
   position: relative;
+/* Toggle A */
+input:checked ~ .dot {
+  transform: translateX(100%);
+  background-color: #48bb78;
+}
 
   .dis {
     position: absolute;

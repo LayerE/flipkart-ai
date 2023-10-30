@@ -1412,7 +1412,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           });
           subjectCanvas.add(gg);
         });
-        const subjectDataUrlq = subjectCanvas.toDataURL();
+       
 
         const originalsubjectDataUrl = subjectCanvas.toDataURL({
           format: "png",
