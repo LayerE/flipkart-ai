@@ -852,8 +852,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       // Set the image's dimensions
 
       // img.scaleToWidth(200);
-      const canvasWidth = activeSize.w;
-      const canvasHeight = activeSize.h;
+      const canvasWidth = 512;
+      const canvasHeight = 512;
       const imageAspectRatio = img.width / img.height;
 
       // Calculate the maximum width and height based on the canvas size
@@ -864,21 +864,44 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       let scaledWidth = maxWidth;
       let scaledHeight = scaledWidth / imageAspectRatio;
 
-      img.scaleToWidth(512 / 2);
-      img.scaleToHeight(512 / 2);
+      img.scaleToWidth(500 );
+      // img.scaleToHeight(512 );
       // Set the position of the image
       img.set({
-        left: 100,
-        top: 100,
+        left: 6,
+        top: 6,
 
         // scaleX: scaleX,
         // scaleY: scaleY,
       });
+      // canvas.add(img);
+      
+      canvasInstanceQuick?.current.add(img);
+      img.on('scaling', function() {
+        var maxWidth = 800,
+            minWidth = 450,
+            width = img.width * img.scaleX;
 
+        if (width > maxWidth) {
+            img.scaleX = maxWidth / img.width;
+            img.scaleY = img.scaleX;
+        } else if (width < minWidth) {
+            img.scaleX = minWidth / img.width;
+            img.scaleY = img.scaleX;
+        }
+    });
+
+    //   img.on('scaling', function() {
+    //     if (img.width * img.scaleX > 800) {
+    //       img.scaleX = 800 / img.width;
+    //     }
+    //     if (img.height * img.scaleY > 512) {
+    //       img.scaleY = 512 / img.height;
+    //     }
+    // });
       img.set("category", "quick");
 
       // canvasInstance.current.clear();
-      canvasInstanceQuick?.current.add(img);
       canvasInstanceQuick?.current.setActiveObject(img);
       canvasInstanceQuick?.current.renderAll();
     });

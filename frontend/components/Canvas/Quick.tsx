@@ -53,7 +53,7 @@ const QuickCanvas = () => {
             canvas.height = 710;
             const ctx = canvas.getContext("2d");
             ctx.drawImage(img, 0, 0, 710, 710);
-
+            ctx.fillStyle = "white";
             // Convert the canvas to a data URL
             selectedObject = canvas.toDataURL("image/png");
           } else if (options.target._element instanceof HTMLCanvasElement) {
