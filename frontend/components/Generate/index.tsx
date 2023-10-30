@@ -119,7 +119,7 @@ const Generate = () => {
       variants={fadeIn}
       className="accest"
     >
-      <div className="gap">
+      {/* <div className="gap">
         <DisabledLabel> Select your product category </DisabledLabel>
 
         <Box className="disBox">
@@ -135,7 +135,7 @@ const Generate = () => {
             style={{ width: "100%", pointerEvents: "none" }}
           ></DropdownInput>
         </Box>
-      </div>
+      </div> */}
 
       <div className="gap">
         <DisabledLabel>Describe your photo </DisabledLabel>
@@ -210,8 +210,8 @@ const Generate = () => {
           />
           {/* <input type="text" className="generatePreview" /> */}
         </Row>
-        <Row>
-          <DATA>
+        {/* <Row>
+            <DATA>
           <div>
               <DisabledLabel>
               Is model on elevated surface
@@ -225,7 +225,7 @@ const Generate = () => {
             </div>
            
           </DATA>
-        </Row>
+        </Row> */}
         <Row>
           {loader ? (
             <TextLoader />

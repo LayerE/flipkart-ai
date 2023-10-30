@@ -1375,9 +1375,10 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       }
     });
 
-    if (category === null) {
-      toast("Select your product category first !");
-    } else if (subjectCount === 0 && !TDMode) {
+    // if (category === null) {
+    //   toast("Select your product category first !");
+    // } else 
+    if (subjectCount === 0 && !TDMode) {
       toast("Add product first");
     } else if (!TDMode) {
       setLoader(true);
@@ -1478,12 +1479,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
             maskDataUrl: null,
             prompt: promtText.trim(),
             user_id: userId,
-            category: category,
+            // category: category,
             lora_type: loara,
             num_images: selectResult,
             caption: product,
             project_id: proid,
-            is_elevated: elevatedSurface
+            // is_elevated: elevatedSurface
 
           }),
         });
@@ -1674,12 +1675,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
             maskDataUrl: null,
             prompt: promtText.trim(),
             user_id: userId,
-            category: category,
+            // category: category,
             lora_type: loara,
             num_images: selectResult,
             caption: product,
             is_quick_generation: true,
-            is_elevated: elevatedSurface
+            // is_elevated: elevatedSurface
           }),
         });
 
@@ -1712,9 +1713,10 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     const startTime = new Date().getTime();
     console.log(product, "sdfdsgdfg");
 
-    if (category === null) {
-      toast("Select your product category first !");
-    } else if (!file3dUrl && !file3d) {
+    // if (category === null) {
+    //   toast("Select your product category first !");
+    // } else 
+    if (!file3dUrl && !file3d) {
       toast("Add a 3d model");
     } else if (product === null) {
       toast("Enter your 3d model name ");
@@ -1764,12 +1766,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
               maskDataUrl: null,
               prompt: promtText.trim(),
               user_id: userId,
-              category: category,
+              // category: category,
               lora_type: loara,
               num_images: selectResult,
               is_3d: true,
               caption: product,
-            is_elevated: elevatedSurface
+            // is_elevated: elevatedSurface
 
             }),
           });
@@ -1831,7 +1833,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         body: JSON.stringify({
           image_url: regenratingId,
           user_id: ueserId,
-          category: category,
+          // category: category,
         }),
       });
 

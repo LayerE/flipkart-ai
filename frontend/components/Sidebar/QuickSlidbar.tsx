@@ -134,7 +134,7 @@ const QuickBar: React.FC = () => {
                   // suggetion={PlacementSuggestionsFilter}
                 />
               </Row>
-              <Row>
+              {/* <Row>
           <DATA>
           <div>
               <DisabledLabel>
@@ -149,7 +149,7 @@ const QuickBar: React.FC = () => {
             </div>
            
           </DATA>
-        </Row>
+        </Row> */}
               <Row>
                 {loader ? (
                   <TextLoader />
