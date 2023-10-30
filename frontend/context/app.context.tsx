@@ -864,7 +864,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       let scaledWidth = maxWidth;
       let scaledHeight = scaledWidth / imageAspectRatio;
 
-      img.scaleToWidth(500 );
+      img.scaleToWidth(500);
       // img.scaleToHeight(512 );
       // Set the position of the image
       img.set({
@@ -875,30 +875,30 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         // scaleY: scaleY,
       });
       // canvas.add(img);
-      
+
       canvasInstanceQuick?.current.add(img);
-      img.on('scaling', function() {
+      img.on("scaling", function () {
         var maxWidth = 800,
-            minWidth = 450,
-            width = img.width * img.scaleX;
+          minWidth = 450,
+          width = img.width * img.scaleX;
 
         if (width > maxWidth) {
-            img.scaleX = maxWidth / img.width;
-            img.scaleY = img.scaleX;
+          img.scaleX = maxWidth / img.width;
+          img.scaleY = img.scaleX;
         } else if (width < minWidth) {
-            img.scaleX = minWidth / img.width;
-            img.scaleY = img.scaleX;
+          img.scaleX = minWidth / img.width;
+          img.scaleY = img.scaleX;
         }
-    });
+      });
 
-    //   img.on('scaling', function() {
-    //     if (img.width * img.scaleX > 800) {
-    //       img.scaleX = 800 / img.width;
-    //     }
-    //     if (img.height * img.scaleY > 512) {
-    //       img.scaleY = 512 / img.height;
-    //     }
-    // });
+      //   img.on('scaling', function() {
+      //     if (img.width * img.scaleX > 800) {
+      //       img.scaleX = 800 / img.width;
+      //     }
+      //     if (img.height * img.scaleY > 512) {
+      //       img.scaleY = 512 / img.height;
+      //     }
+      // });
       img.set("category", "quick");
 
       // canvasInstance.current.clear();
@@ -1402,6 +1402,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           top: activeSize.t,
           width: activeSize.w,
           height: activeSize.h,
+          backgroundColor: "white",
         } as any);
 
         subjectObjects.forEach((object: any) => {
@@ -1437,8 +1438,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
             format: "webp",
             multiplier: 4,
           });
-
-        
         };
 
         //  const dd = await optimizeAndEncodeImage(subjectDataUrl, 23243)
@@ -1707,27 +1706,21 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
   const generate3dHandeler = async (ueserId: any, proid: any) => {
     const startTime = new Date().getTime();
-    console.log(product,"sdfdsgdfg")
+    console.log(product, "sdfdsgdfg");
 
     if (category === null) {
       toast("Select your product category first !");
     } else if (!file3dUrl && !file3d) {
       toast("Add a 3d model");
-    }
-    
-    else if (product === null) {
+    } else if (product === null) {
       toast("Enter your 3d model name ");
-    } 
-    else if (product === "") {
+    } else if (product === "") {
       toast("Enter your 3d model name ");
-    } 
-    else if (promtFull === null) {
+    } else if (promtFull === null) {
       toast("Select one templet or Enter custom promt ");
-    } 
-    else if (promtFull === "") {
+    } else if (promtFull === "") {
       toast("Select one templet or Enter custom promt");
-    }
-    else {
+    } else {
       if (renderer === null) {
         toast("Add a 3d model");
       } else {
@@ -1765,13 +1758,13 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
             body: JSON.stringify({
               dataUrl: scaledDataURL,
               maskDataUrl: null,
-              prompt:   promtText.trim(),
+              prompt: promtText.trim(),
               user_id: userId,
               category: category,
               lora_type: loara,
               num_images: selectResult,
               is_3d: true,
-              caption : product
+              caption: product,
             }),
           });
 

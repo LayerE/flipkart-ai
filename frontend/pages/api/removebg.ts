@@ -61,7 +61,7 @@ export default async function handler(req: NextRequest, res: NextResponse) {
     const payload = body;
     const { user_id, dataUrl, project_id, type } = payload;
 
-    console.log(payload)
+    console.log(payload);
 
     var fileExtension = "png";
     if (dataUrl.includes("jpeg") || dataUrl.includes("jpg")) {
@@ -106,21 +106,24 @@ export default async function handler(req: NextRequest, res: NextResponse) {
         "base64"
       );
 
-      const caption_response = await fetch(
-        "https://dehiddenformodal--onlycaption-caption.modal.run",
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          method: "POST",
-          body: JSON.stringify({
-            img: inputBase64Url,
-          }),
-          timeout: 10000,
-        }
-      );
-    console.log(caption_response)
+      const useCaption = false;
+      var caption_response: { json: () => any };
 
+      if (useCaption) {
+        caption_response = await fetch(
+          "https://dehiddenformodal--onlycaption-caption.modal.run",
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            method: "POST",
+            body: JSON.stringify({
+              img: inputBase64Url,
+            }),
+            timeout: 10000,
+          }
+        );
+      }
 
       let form = new FormData();
       form.append("image_file", inputBuffer, {
@@ -143,15 +146,16 @@ export default async function handler(req: NextRequest, res: NextResponse) {
       const response = axios.request(config);
       var caption_data = null;
 
-      try {
-        //  Get the caption
-        caption_data = await caption_response.json();
-        caption = caption_data["caption"];
-      } catch (error) {
-        console.log(error.message);
+      if (useCaption) {
+        try {
+          //  Get the caption
+          caption_data = await caption_response.json();
+          caption = caption_data["caption"];
+        } catch (error) {
+          console.log(error.message);
+        }
+        console.log(caption_data);
       }
-
-      console.log(caption_data);
 
       // Get base64url from response
       const { data } = await response;
