@@ -143,10 +143,29 @@ export default function CanvasBox({
             img.src = options.target._element.src;
             // Resize the image to 512x521 pixels
             const canvas = document.createElement("canvas");
-            canvas.width = 710;
-            canvas.height = 710;
+
+            let containerWidth = 712;
+            let containerHeight = 712;
+
+            const imageWidths = img ? img.width : 0;
+            const imageHeights = img ? img.height : 0;
+            let scales = 1;
+
+            if (
+              imageWidths > containerWidth ||
+              imageHeights > containerHeight
+            ) {
+              const widthScale = containerWidth / imageWidths;
+              const heightScale = containerHeight / imageHeights;
+              scales = Math.min(widthScale, heightScale);
+            }
+            const scaledWidth = imageWidths * scales;
+            const scaledHeight = imageHeights * scales;
+
+            canvas.width = scaledWidth;
+            canvas.height = scaledHeight;
             const ctx = canvas.getContext("2d");
-            ctx.drawImage(img, 0, 0, 710, 710);
+            ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
 
             // Convert the canvas to a data URL
             selectedObject = canvas.toDataURL("image/png");
@@ -589,8 +608,7 @@ export default function CanvasBox({
 }
 
 const Wrapper = styled.div`
-
-.divovelay {
+  .divovelay {
     /* display: ${(props) => (props.canvasDisable ? "none" : "block")}; */
     z-index: 10;
     position: absolute;

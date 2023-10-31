@@ -1,4 +1,3 @@
-
 // @ts-nocheck
 
 import React from "react";
@@ -30,7 +29,6 @@ const PopupCanvas = () => {
   const popucanvasRef = useRef(null);
 
   const {
-
     isMagic,
     setIsMagic,
     downloadImg,
@@ -47,7 +45,7 @@ const PopupCanvas = () => {
     stageRef,
     TDMode,
     downloadeImgFormate,
-  
+
     addimgToCanvasSubject,
     canvasInstance,
 
@@ -56,38 +54,44 @@ const PopupCanvas = () => {
 
   const [previewLoader, setpreviewLoader] = useState(false);
 
-  const [imageWidth, setImageWidth] = useState(0);
-  const [imageHeight, setImageHeight] = useState(0);
+  const [containerWidth, setImageWidth] = useState(300);
+  const [containerHeight, setImageHeight] = useState(300);
   const [drawing, setDrawing] = useState(false);
   // const [scale, setScale] = useState(1);
   const imgRef = useRef(null);
 
-  
   const [img, status] = useImage(downloadImg, "Anonymous");
-  const [img2, status2] = useImage("https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80", "Anonymous");
+  const [img2, status2] = useImage(
+    "https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80",
+    "Anonymous"
+  );
 
-
-
-  let containerWidth = 300;
-  let containerHeight = 300;
-  const imageWidths = img ? img.width : 0;
-const imageHeights = img ? img.height : 0;
-if(img?.width !== img?.height ){
-  containerHeight = 200
-}
-  let scales = 1;
   
+  // let containerWidth = 300;
+  // let containerHeight = 300;
+  const imageWidths = img ? img.width : 0;
+  const imageHeights = img ? img.height : 0;
+  // if (img?.width !== img?.height) {
+  //   containerHeight = 200;
+  // }
+  let scales = 1;
+
   if (imageWidths > containerWidth || imageHeights > containerHeight) {
     const widthScale = containerWidth / imageWidths;
     const heightScale = containerHeight / imageHeights;
     scales = Math.min(widthScale, heightScale);
   }
-  
+
+  useEffect(() => {
+    console.log(img?.width, img?.height)
+    if (img?.width !== img?.height) {
+      // setImageWidth(200)
+    }
+  }, [img])
+
   const scaledWidth = imageWidths * scales;
   const scaledHeight = imageHeights * scales;
-  
 
-  
   const handleMouseDown = () => {
     setDrawing(true);
     const pos = stageRef.current.getPointerPosition();
@@ -161,7 +165,7 @@ if(img?.width !== img?.height ){
     const stage = stageRef?.current;
 
     const dataURL = stage.toDataURL();
-    DeletIrem()
+    DeletIrem();
 
     addimgToCanvasSubject(dataURL);
     setLinesHistory([]);
@@ -231,20 +235,20 @@ if(img?.width !== img?.height ){
             // onWheel={handleWheel}
             ref={stageRef}
           >
-            
             <Layer>
               {/* <Rect
                       width={imageWidth}
                       height={imageHeight}
                       fill={bgColor}
                     /> */}
-              <KonvaImage image={img}
+              <KonvaImage
+                image={img}
                 // x={100}
                 // y={100}
                 x={(containerWidth - scaledWidth) / 2}
-          y={(containerHeight - scaledHeight) / 2}
-          width={scaledWidth}
-          height={scaledHeight}
+                y={(containerHeight - scaledHeight) / 2}
+                width={scaledWidth}
+                height={scaledHeight}
                 // onClick={handleImageClick}
                 // draggable
                 // onTransform={handleResize} // Handle resizing
@@ -255,7 +259,7 @@ if(img?.width !== img?.height ){
                 //   }
                 // }}
               />
-              
+
               {lines.map((line, i) => (
                 <Line
                   key={i}
@@ -270,7 +274,6 @@ if(img?.width !== img?.height ){
                 />
               ))}
             </Layer>
-           
           </Stage>
           {/* <img
                   src="https://preview.redd.it/need-an-npm-package-that-lets-you-create-an-image-mask-v0-12kzpoiivwha1.png?width=512&format=png&auto=webp&s=e19be5fdbd7406757e148f419eca861b7ae7f2dd"
