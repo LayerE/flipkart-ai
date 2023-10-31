@@ -72,13 +72,14 @@ const Generate = () => {
     generate3dHandeler,
     userId,
     setUserId,
-    elevatedSurface, seTelevatedSurface
+    elevatedSurface,
+    seTelevatedSurface,
+    activeTemplet,
+    setActiveTemplet
   } = useAppState();
 
   const { query, isReady } = useRouter();
   const id = (query.id as string[]) || [];
-
-
 
   const [changeTab, setChangeTab] = useState(false);
   // useEffect(() => {
@@ -105,10 +106,16 @@ const Generate = () => {
 
   useEffect(() => {
     const promts = product + " " + promt;
-    setpromtFull(promts);
-  }, [product, promt]);
+    console.log(promt,promtFull,activeTemplet);
+    if (promt == activeTemplet?.promt ) {
+      setpromtFull(promt);
+    }
+    // setpromtFull(promts);
+  }, [product, promt,activeTemplet,setpromtFull]);
 
   const handelPromt = (e) => {
+    setpromt("");
+    setActiveTemplet({})
     setpromtFull(e.target.value);
   };
 
@@ -289,9 +296,9 @@ const Generate = () => {
 
 export default Generate;
 export const DATA = styled.div`
-width: 100%;
-display: flex; 
-justify-content: space-between;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
   .toggle-switch {
     width: 46px;
     height: 22px;
@@ -315,7 +322,8 @@ justify-content: space-between;
   }
 
   .toggle-switch.on {
-    background-color: ${(props) => props.theme.btnPrimary}; /* Based on the image you provided */
+    background-color: ${(props) =>
+      props.theme.btnPrimary}; /* Based on the image you provided */
   }
 
   .toggle-switch.on .circle {

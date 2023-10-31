@@ -67,6 +67,27 @@ const PopupCanvas = () => {
   const [img2, status2] = useImage("https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80", "Anonymous");
 
 
+
+  let containerWidth = 300;
+  let containerHeight = 300;
+  const imageWidths = img ? img.width : 0;
+const imageHeights = img ? img.height : 0;
+if(img?.width !== img?.height ){
+  containerHeight = 200
+}
+  let scales = 1;
+  
+  if (imageWidths > containerWidth || imageHeights > containerHeight) {
+    const widthScale = containerWidth / imageWidths;
+    const heightScale = containerHeight / imageHeights;
+    scales = Math.min(widthScale, heightScale);
+  }
+  
+  const scaledWidth = imageWidths * scales;
+  const scaledHeight = imageHeights * scales;
+  
+
+  
   const handleMouseDown = () => {
     setDrawing(true);
     const pos = stageRef.current.getPointerPosition();
@@ -198,10 +219,10 @@ const PopupCanvas = () => {
         <div style={{ margin: "20px" }}>
           {previewLoader ? <div className="loaderq">Loading...</div> : null}
           <Stage
-            width={300}
-            height={300}
-            scaleX={scale}
-            scaleY={scale}
+            width={containerWidth}
+            height={containerHeight}
+            // scaleX={scale}
+            // scaleY={scale}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
@@ -217,7 +238,23 @@ const PopupCanvas = () => {
                       height={imageHeight}
                       fill={bgColor}
                     /> */}
-              <KonvaImage image={img} width={300} height={300} />
+              <KonvaImage image={img}
+                // x={100}
+                // y={100}
+                x={(containerWidth - scaledWidth) / 2}
+          y={(containerHeight - scaledHeight) / 2}
+          width={scaledWidth}
+          height={scaledHeight}
+                // onClick={handleImageClick}
+                // draggable
+                // onTransform={handleResize} // Handle resizing
+                // ref={node => {
+                //   // Reference to the KonvaImage element
+                //   if (node) {
+                //     node.getStage().on('click', () => setSelectedImage(null)); // Deselect when clicking on the stage
+                //   }
+                // }}
+              />
               
               {lines.map((line, i) => (
                 <Line
