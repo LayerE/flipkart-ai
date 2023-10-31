@@ -208,7 +208,7 @@ export default function Home() {
         >
           {regeneratePopup.status ? <Regeneret /> : null}
 
-          <BottomTab />
+          {/* <BottomTab /> */}
 
           {filteredArray?.length > 0 ? (
             <div className="generatedBox">
@@ -305,7 +305,7 @@ const MainPages = styled.div`
     width: 100%;
     display: flex;
     position: absolute;
-    bottom: 40px;
+    bottom: 0px;
     padding-right: 30px;
     left: 20px;
     /* right: 20px; */
