@@ -75,6 +75,7 @@ const Generate = () => {
     elevatedSurface,
     seTelevatedSurface,
     activeTemplet,
+    setProduct,
     setActiveTemplet
   } = useAppState();
 
@@ -105,18 +106,52 @@ const Generate = () => {
   //   backgroundTest;
 
   useEffect(() => {
-    const promts = product + " " + promt;
     console.log(promt,promtFull,activeTemplet);
-    if (promt == activeTemplet?.promt ) {
-      setpromtFull(promt);
-    }
+    // if (promt == activeTemplet?.promt   ) {
+      const words = promtFull.split(' ');
+      const newPro = words[0]
+
+      const words1 = product.split(' ');
+      const newPro1 = words1[0]
+
+      if(newPro1 === newPro ){
+        const promts = product + " " + promt;
+        setpromtFull(promt)
+      }
+      
+      else{
+        const promts = product + " " + promt;
+        setpromtFull(promts);
+      }
+    
+    // }
     // setpromtFull(promts);
-  }, [product, promt,activeTemplet,setpromtFull]);
+  }, [product,activeTemplet]);
+  useEffect(() => {
+   
+    if (promt == activeTemplet?.promt ) {
+      const promts = product + " " + promt;
+
+      setpromtFull(promts);
+    }
+ 
+     
+        // setpromtFull(promts);
+    
+     
+ 
+    
+    // }
+    // setpromtFull(promts);
+  }, [ activeTemplet]);
 
   const handelPromt = (e) => {
     setpromt("");
-    setActiveTemplet({})
-    setpromtFull(e.target.value);
+    // setProduct("")
+    // setActiveTemplet({})
+    const promts = e.target.value;
+    setpromt(promts)
+    setpromtFull(promts);
   };
 
   return (
