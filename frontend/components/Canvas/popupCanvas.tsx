@@ -54,8 +54,8 @@ const PopupCanvas = () => {
 
   const [previewLoader, setpreviewLoader] = useState(false);
 
-  const [containerWidth, setImageWidth] = useState(300);
-  const [containerHeight, setImageHeight] = useState(300);
+  const [containerWidth, setImageWidth] = useState(350);
+  const [containerHeight, setImageHeight] = useState(350);
   const [drawing, setDrawing] = useState(false);
   // const [scale, setScale] = useState(1);
   const imgRef = useRef(null);
@@ -66,7 +66,6 @@ const PopupCanvas = () => {
     "Anonymous"
   );
 
-  
   // let containerWidth = 300;
   // let containerHeight = 300;
   const imageWidths = img ? img.width : 0;
@@ -83,11 +82,11 @@ const PopupCanvas = () => {
   }
 
   useEffect(() => {
-    console.log(img?.width, img?.height)
+    console.log(img?.width, img?.height);
     if (img?.width !== img?.height) {
       // setImageWidth(200)
     }
-  }, [img])
+  }, [img]);
 
   const scaledWidth = imageWidths * scales;
   const scaledHeight = imageHeights * scales;
@@ -208,106 +207,108 @@ const PopupCanvas = () => {
       </div> */}
 
       {/* {magickErase ? ( */}
-      <div className="tgrideOne">
-        <div className="clo" onClick={() => closeHanddler()}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            x="0px"
-            y="0px"
-            viewBox="0 0 30 30"
-          >
-            <path d="M 7 4 C 6.744125 4 6.4879687 4.0974687 6.2929688 4.2929688 L 4.2929688 6.2929688 C 3.9019687 6.6839688 3.9019687 7.3170313 4.2929688 7.7070312 L 11.585938 15 L 4.2929688 22.292969 C 3.9019687 22.683969 3.9019687 23.317031 4.2929688 23.707031 L 6.2929688 25.707031 C 6.6839688 26.098031 7.3170313 26.098031 7.7070312 25.707031 L 15 18.414062 L 22.292969 25.707031 C 22.682969 26.098031 23.317031 26.098031 23.707031 25.707031 L 25.707031 23.707031 C 26.098031 23.316031 26.098031 22.682969 25.707031 22.292969 L 18.414062 15 L 25.707031 7.7070312 C 26.098031 7.3170312 26.098031 6.6829688 25.707031 6.2929688 L 23.707031 4.2929688 C 23.316031 3.9019687 22.682969 3.9019687 22.292969 4.2929688 L 15 11.585938 L 7.7070312 4.2929688 C 7.5115312 4.0974687 7.255875 4 7 4 z"></path>
-          </svg>
-        </div>
+      <div className="rr">
+        <div className="tgrideOne">
+          <div className="clo" onClick={() => closeHanddler()}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              x="0px"
+              y="0px"
+              viewBox="0 0 30 30"
+            >
+              <path d="M 7 4 C 6.744125 4 6.4879687 4.0974687 6.2929688 4.2929688 L 4.2929688 6.2929688 C 3.9019687 6.6839688 3.9019687 7.3170313 4.2929688 7.7070312 L 11.585938 15 L 4.2929688 22.292969 C 3.9019687 22.683969 3.9019687 23.317031 4.2929688 23.707031 L 6.2929688 25.707031 C 6.6839688 26.098031 7.3170313 26.098031 7.7070312 25.707031 L 15 18.414062 L 22.292969 25.707031 C 22.682969 26.098031 23.317031 26.098031 23.707031 25.707031 L 25.707031 23.707031 C 26.098031 23.316031 26.098031 22.682969 25.707031 22.292969 L 18.414062 15 L 25.707031 7.7070312 C 26.098031 7.3170312 26.098031 6.6829688 25.707031 6.2929688 L 23.707031 4.2929688 C 23.316031 3.9019687 22.682969 3.9019687 22.292969 4.2929688 L 15 11.585938 L 7.7070312 4.2929688 C 7.5115312 4.0974687 7.255875 4 7 4 z"></path>
+            </svg>
+          </div>
 
-        <div style={{ margin: "20px" }}>
-          {previewLoader ? <div className="loaderq">Loading...</div> : null}
-          <Stage
-            width={containerWidth}
-            height={containerHeight}
-            // scaleX={scale}
-            // scaleY={scale}
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            // x={stagePos.x}
-            // y={stagePos.y}
-            // onWheel={handleWheel}
-            ref={stageRef}
-          >
-            <Layer>
-              {/* <Rect
+          <div style={{ margin: "20px" }}>
+            {previewLoader ? <div className="loaderq">Loading...</div> : null}
+            <Stage
+              width={containerWidth}
+              height={containerHeight}
+              // scaleX={scale}
+              // scaleY={scale}
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              // x={stagePos.x}
+              // y={stagePos.y}
+              // onWheel={handleWheel}
+              ref={stageRef}
+            >
+              <Layer>
+                {/* <Rect
                       width={imageWidth}
                       height={imageHeight}
                       fill={bgColor}
                     /> */}
-              <KonvaImage
-                image={img}
-                // x={100}
-                // y={100}
-                x={(containerWidth - scaledWidth) / 2}
-                y={(containerHeight - scaledHeight) / 2}
-                width={scaledWidth}
-                height={scaledHeight}
-                // onClick={handleImageClick}
-                // draggable
-                // onTransform={handleResize} // Handle resizing
-                // ref={node => {
-                //   // Reference to the KonvaImage element
-                //   if (node) {
-                //     node.getStage().on('click', () => setSelectedImage(null)); // Deselect when clicking on the stage
-                //   }
-                // }}
-              />
-
-              {lines.map((line, i) => (
-                <Line
-                  key={i}
-                  points={line.points}
-                  stroke={line.mode !== "pen" ? "white" : "white"}
-                  strokeWidth={line.brushSize}
-                  tension={0.5}
-                  lineCap="round"
-                  globalCompositeOperation={
-                    line.mode === "pen" ? "destination-out" : "source-over"
-                  }
+                <KonvaImage
+                  image={img}
+                  // x={100}
+                  // y={100}
+                  x={(containerWidth - scaledWidth) / 2}
+                  y={(containerHeight - scaledHeight) / 2}
+                  width={scaledWidth}
+                  height={scaledHeight}
+                  // onClick={handleImageClick}
+                  // draggable
+                  // onTransform={handleResize} // Handle resizing
+                  // ref={node => {
+                  //   // Reference to the KonvaImage element
+                  //   if (node) {
+                  //     node.getStage().on('click', () => setSelectedImage(null)); // Deselect when clicking on the stage
+                  //   }
+                  // }}
                 />
-              ))}
-            </Layer>
-          </Stage>
-          {/* <img
+
+                {lines.map((line, i) => (
+                  <Line
+                    key={i}
+                    points={line.points}
+                    stroke={line.mode !== "pen" ? "white" : "white"}
+                    strokeWidth={line.brushSize}
+                    tension={0.5}
+                    lineCap="round"
+                    globalCompositeOperation={
+                      line.mode === "pen" ? "destination-out" : "source-over"
+                    }
+                  />
+                ))}
+              </Layer>
+            </Stage>
+            {/* <img
                   src="https://preview.redd.it/need-an-npm-package-that-lets-you-create-an-image-mask-v0-12kzpoiivwha1.png?width=512&format=png&auto=webp&s=e19be5fdbd7406757e148f419eca861b7ae7f2dd"
                   alt="hidden"
                   ref={imgRef}
                   style={{ display: "none" }}
                 /> */}
+          </div>
         </div>
-      </div>
-      <div className="bvtns">
-        {TDMode ? (
-          <Button
-            onClick={() => downloadH()}
-            //   disabled={linesHistory.length === 0 ? true : false}
-          >
-            Download
-          </Button>
-        ) : (
-          <Button
-            onClick={() => saveImage()}
-            //   disabled={linesHistory.length === 0 ? true : false}
-          >
-            Done
-          </Button>
-        )}
+        <div className="bvtns">
+          {TDMode ? (
+            <Button
+              onClick={() => downloadH()}
+              //   disabled={linesHistory.length === 0 ? true : false}
+            >
+              Download
+            </Button>
+          ) : (
+            <Button
+              onClick={() => saveImage()}
+              //   disabled={linesHistory.length === 0 ? true : false}
+            >
+              Done
+            </Button>
+          )}
 
-        {/* <Button
+          {/* <Button
                       onClick={() => saveImage()}
                     //   disabled={linesHistory.length === 0 ? true : false}
                     >
                      Close
                     </Button> */}
+        </div>
+        {/* ) : null} */}
       </div>
-      {/* ) : null} */}
     </Wrapper>
   );
 };
@@ -316,6 +317,11 @@ export default PopupCanvas;
 const Wrapper = styled.div`
   .bvtns {
     display: flex;
+    margin-top: 20px;
+  }
+  .rr {
+    position: absolute;
+    top: 110px;
   }
   border: 1px solid black;
   display: flex;
