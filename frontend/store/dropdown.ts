@@ -689,7 +689,7 @@ export const TempletList = [
         lora: "RealisticNaturalScenery",
       },
       {
-        title: "modern office",
+        title: "Modern office",
 
         image: "https://ik.imagekit.io/7urmiszfde/Office%20Space.webp?updatedAt=1698316221138",
         promt: "in an office with cubicles, muted silver tones, soft lighting, and large windows overlooking a cityscape.",
