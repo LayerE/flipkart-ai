@@ -1376,7 +1376,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     } else if (!TDMode) {
       setLoader(true);
       setCanvasDisable(true);
-      setGenerationLoader(true);
+      // setGenerationLoader(true);
       const canvas1 = canvasInstance.current;
       try {
         console.log(templet);
@@ -1438,12 +1438,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         //  console.log(dd)
         // Example usage:
 
-        const subjectDataUrlJson = subjectCanvas.toJSON();
-        const updatedObject = {
-          width: activeSize.w,
-          height: activeSize.h,
-          ...subjectDataUrlJson,
-        };
+        // const subjectDataUrlJson = subjectCanvas.toJSON();
+        // const updatedObject = {
+        //   width: activeSize.w,
+        //   height: activeSize.h,
+        //   ...subjectDataUrlJson,
+        // };
 
         subjectObjects.forEach((object: any) => {
           object.set({
@@ -1459,7 +1459,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
         console.log(subjectDataUrl, "subject");
 
-        const promtText = promtFull;
+        const promtText = promt;
 
         const response = await fetch("/api/generate", {
           method: "POST",
@@ -1620,7 +1620,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     } else {
       setLoader(true);
       setCanvasDisable(true);
-      setGenerationLoader(true);
+      // setGenerationLoader(true);
       const canvas1 = canvasInstanceQuick.current;
       try {
         // addtoRecntly(ueserId, proid);
@@ -1653,7 +1653,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         console.log(subjectDataUrl);
         // const subjectDataUrl = subjectCanvas.toDataURL("image/png");
 
-        const promtText = promtFull;
+        const promtText = promt;
 
         const response = await fetch("/api/generate", {
           method: "POST",
@@ -1721,7 +1721,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         toast("Add a 3d model");
       } else {
         setLoader(true);
-        const promtText = promtFull;
+        const promtText = promt;
         // const screenshot = renderer.domElement.toDataURL("image/png");
         const screenshot = renderer.domElement.toDataURL("image/png", 4);
         var img = new Image();
