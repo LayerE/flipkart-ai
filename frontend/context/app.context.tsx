@@ -883,17 +883,16 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           minWidth = 450,
           width = img.width * img.scaleX;
 
-      //   // if (width > maxWidth) {
-      //   //   img.scaleX = maxWidth / img.width;
-      //   //   img.scaleY = img.scaleX;
-      //   // } else 
+        //   // if (width > maxWidth) {
+        //   //   img.scaleX = maxWidth / img.width;
+        //   //   img.scaleY = img.scaleX;
+        //   // } else
         if (width < minWidth) {
           img.scaleX = minWidth / img.width;
           img.scaleY = img.scaleX;
         }
       });
 
-      
       img.set("category", "quick");
 
       // canvasInstance.current.clear();
@@ -1371,7 +1370,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
     // if (category === null) {
     //   toast("Select your product category first !");
-    // } else 
+    // } else
     if (subjectCount === 0 && !TDMode) {
       toast("Add product first");
     } else if (!TDMode) {
@@ -1398,7 +1397,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           top: activeSize.t,
           width: activeSize.w,
           height: activeSize.h,
-          backgroundColor: "white",
+          backgroundColor: "#fdf5cf",
         } as any);
 
         subjectObjects.forEach((object: any) => {
@@ -1409,7 +1408,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           });
           subjectCanvas.add(gg);
         });
-       
 
         const originalsubjectDataUrl = subjectCanvas.toDataURL({
           format: "png",
@@ -1479,7 +1477,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
             caption: product,
             project_id: proid,
             // is_elevated: elevatedSurface
-
           }),
         });
 
@@ -1645,7 +1642,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         subjectObjects.forEach((object: any) => {
           subjectCanvas.add(object);
           canvas1.add(object);
-
         });
 
         const originalsubjectDataUrl = subjectCanvas.toDataURL({
@@ -1653,7 +1649,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           multiplier: 4,
         });
         const subjectDataUrl = await scaleDownImage(originalsubjectDataUrl);
-  
+
         console.log(subjectDataUrl);
         // const subjectDataUrl = subjectCanvas.toDataURL("image/png");
 
@@ -1709,7 +1705,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
     // if (category === null) {
     //   toast("Select your product category first !");
-    // } else 
+    // } else
     if (!file3dUrl && !file3d) {
       toast("Add a 3d model");
     } else if (product === null) {
@@ -1765,8 +1761,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
               num_images: selectResult,
               is_3d: true,
               caption: product,
-            // is_elevated: elevatedSurface
-
+              // is_elevated: elevatedSurface
             }),
           });
 
@@ -2112,7 +2107,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         assetL3doader,
         setasset3dLoader,
         newEditorBox,
-        elevatedSurface, seTelevatedSurface,
+        elevatedSurface,
+        seTelevatedSurface,
         canvasHistoryRef,
       }}
     >
