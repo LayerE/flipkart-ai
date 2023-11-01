@@ -22,6 +22,8 @@ const PopupUpload = () => {
     fetchAssetsImages,
   } = useAppState();
   const [productnew, setProductnew] = useState("");
+  const [btnisable, setbtnisable] = useState(false);
+
   const session = useSession();
   const [userId, setUserId] = useState<string | null>(null);
   useEffect(() => {
@@ -35,23 +37,10 @@ const PopupUpload = () => {
   const HandileUpload = async () => {
     if (productnew !== "") {
       console.log(popup.dataArray);
+      setbtnisable(true)
 
       try {
-        // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
 
-        // const response = await fetch(`${process.env.NEXT_PUBLIC_API}/assets`, {
-        //   method: "POST",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //   },
-        //   body: JSON.stringify({
-        //     userId: userId,
-        //     projectId: id,
-        //     assetType: AssetsActivTab,
-
-        //     asset: { url: popup.dataArray.imageUrl, product: productnew },
-        //   }),
-        // });
         const response =  await fetch(`/api/addcaption`, {
           method: "POST",
           headers: {
@@ -60,9 +49,7 @@ const PopupUpload = () => {
           body: JSON.stringify({
             image_url: popup.dataArray.imageUrl,
             caption: productnew,
-            // assetType: AssetsActivTab,
 
-            // asset: { url: popup.dataArray.imageUrl, product: productnew },
           }),
         });
 
@@ -85,6 +72,7 @@ const PopupUpload = () => {
           setPopup({ status: false, data: null });
         }
       } catch (error) {
+        setbtnisable(false)
         // Handle error
         setPopup({ status: false, data: null });
       }
@@ -117,7 +105,14 @@ const PopupUpload = () => {
               placeholder=" e.g. 'red sofa' or 'blue perfume bottle'"
             />
           </div>
+          {
+            btnisable ?
+            <Button disabled onClick={""}>Adding... </Button>
+
+            :
+
           <Button onClick={HandileUpload}>Add image </Button>
+          }
           <Button
             onClick={() => setPopup({ status: false, data: null })}
             style={{ backgroundColor: "rgba(249, 208, 13, 0.23)" }}

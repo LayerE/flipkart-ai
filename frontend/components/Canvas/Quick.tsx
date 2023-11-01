@@ -1,6 +1,5 @@
 // @ts-nocheck
 
-
 import { useAppState } from "@/context/app.context";
 import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
@@ -9,20 +8,27 @@ import { fabric } from "fabric";
 import { useRouter } from "next/router";
 
 const QuickCanvas = () => {
-  const { activeSize, selectedImg,setSelectedImg,setDownloadImg, loader, addimgToCanvasQuike, canvasInstanceQuick } =
-    useAppState();
+  const {
+    activeSize,
+    selectedImg,
+    setSelectedImg,
+    setDownloadImg,
+    loader,
+    addimgToCanvasQuike,
+    canvasInstanceQuick,
+  } = useAppState();
   const canvasRef = useRef(null);
   const canvasBox = useRef(null);
   const { query, isReady } = useRouter();
 
   // const canvasInstanceQuick = useRef(null);
-  const h = 512;
-  const w = 512;
+  const h = 712;
+  const w = 712;
 
   useEffect(() => {
     canvasInstanceQuick.current = new fabric.Canvas(canvasRef?.current, {
-      width: 512,
-      height: 512,
+      width: w,
+      height: h,
       preserveObjectStacking: true,
     });
     const canvasInstanceQuickRef = canvasInstanceQuick?.current;
@@ -78,7 +84,6 @@ const QuickCanvas = () => {
       document.addEventListener("keydown", (e) => {
         // Check if the pressed key is 'Delete' (code: 46) or 'Backspace' (code: 8) for wider compatibility
         if (e.keyCode === 46 || e.keyCode === 8) {
-       
           if (
             document.activeElement.tagName !== "INPUT" &&
             document.activeElement.tagName !== "TEXTAREA"
@@ -96,7 +101,6 @@ const QuickCanvas = () => {
 
   const downlaedImf = () => {
     if (selectedImg?.image) {
-   
       const url = selectedImg?.image;
       console.log(url);
       saveAs(url, `image${Date.now()}.png`);
@@ -104,8 +108,8 @@ const QuickCanvas = () => {
     }
   };
   const DeletIrem = () => {
-     setSelectedImg(null);
-     setDownloadImg(null);
+    setSelectedImg(null);
+    setDownloadImg(null);
   };
   return (
     <CnavasQuick canvasDisable={loader}>
@@ -115,7 +119,7 @@ const QuickCanvas = () => {
           ref={canvasBox}
           style={{ minWidth: w, height: h }}
         >
-          <canvas ref={canvasRef} width={512} height={512} />
+          <canvas ref={canvasRef} width={712} height={712} />
         </div>
         <div style={{ minWidth: w, height: h }} className="outputbox">
           {selectedImg?.image ? (
@@ -186,14 +190,12 @@ const CnavasQuick = styled.div`
   height: 100%;
   /* overflow: scroll; */
   canvas {
-
-pointer-events:${(props) => (props.canvasDisable ? "none" : "auto")}
-
-}
+    pointer-events: ${(props) => (props.canvasDisable ? "none" : "auto")};
+  }
   .boxsss {
     display: flex;
     gap: 20px;
-    transform: scale(0.8) translateX(-10%) translateY(-15%);
+    transform: scale(0.6) translateX(-31%) translateY(-35%);
 
     /* overflow: scroll; */
   }
@@ -205,38 +207,38 @@ pointer-events:${(props) => (props.canvasDisable ? "none" : "auto")}
     border: 2px solid rgba(249, 208, 13, 1);
     position: relative;
     .btn {
-    position: absolute;
-    z-index: 100;
-    right: 10px;
-    top: 10px;
-  }
-  .selectone {
-    border-radius: 4px;
-    cursor: pointer;
-    border: 2px solid rgba(249, 208, 13, 1);
-    padding: 5px 8px;
-    background: rgba(249, 208, 13, 1) !important;
-
-    color: #000;
-    font-size: 12px;
-    font-weight: 500;
-    transition: all 0.3 ease;
-    margin-right: 3px;
-
-    &:hover {
-      border: 2px solid rgba(249, 208, 13, 1);
+      position: absolute;
+      z-index: 100;
+      right: 10px;
+      top: 10px;
     }
-  }
-  .delet {
-    width: 20px;
-    height: 20px;
-  }
-    picture{
+    .selectone {
+      border-radius: 4px;
+      cursor: pointer;
+      border: 2px solid rgba(249, 208, 13, 1);
+      padding: 5px 8px;
+      background: rgba(249, 208, 13, 1) !important;
+
+      color: #000;
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.3 ease;
+      margin-right: 3px;
+
+      &:hover {
+        border: 2px solid rgba(249, 208, 13, 1);
+      }
+    }
+    .delet {
+      width: 50px;
+      height: 50px;
+    }
+    picture {
       width: 100%;
       height: 100%;
-      img{
+      img {
         width: 100%;
-      height: 100%;
+        height: 100%;
       }
     }
   }

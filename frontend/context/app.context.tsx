@@ -878,28 +878,22 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       // canvas.add(img);
 
       canvasInstanceQuick?.current.add(img);
-      img.on("scaling", function () {
-        var maxWidth = 800,
-          minWidth = 450,
-          width = img.width * img.scaleX;
+      // img.on("scaling", function () {
+      //   var maxWidth = 800,
+      //     minWidth = 450,
+      //     width = img.width * img.scaleX;
 
-        if (width > maxWidth) {
-          img.scaleX = maxWidth / img.width;
-          img.scaleY = img.scaleX;
-        } else if (width < minWidth) {
-          img.scaleX = minWidth / img.width;
-          img.scaleY = img.scaleX;
-        }
-      });
-
-      //   img.on('scaling', function() {
-      //     if (img.width * img.scaleX > 800) {
-      //       img.scaleX = 800 / img.width;
-      //     }
-      //     if (img.height * img.scaleY > 512) {
-      //       img.scaleY = 512 / img.height;
-      //     }
+      //   // if (width > maxWidth) {
+      //   //   img.scaleX = maxWidth / img.width;
+      //   //   img.scaleY = img.scaleX;
+      //   // } else 
+      //   // if (width < minWidth) {
+      //   //   img.scaleX = minWidth / img.width;
+      //   //   img.scaleY = img.scaleX;
+      //   // }
       // });
+
+      
       img.set("category", "quick");
 
       // canvasInstance.current.clear();
@@ -1641,8 +1635,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
         // Make image with only the subject objects
         const subjectCanvas = new fabric.Canvas(null, {
-          width: 512,
-          height: 512,
+          width: 712,
+          height: 712,
         } as any);
 
         subjectObjects.forEach((object: any) => {

@@ -323,8 +323,8 @@ export const SwchichBtn = styled(Row)`
   }
 `;
 export const Wrapper = styled.div`
-  /* max-height: 600px;
-  overflow-y: scroll; */
+  max-height: calc(100vh - 400px);
+  overflow-y: scroll;
 `;
 export const BoxOff = styled.div`
   /* height: 100%; */

@@ -83,27 +83,7 @@ const Generate = () => {
   const id = (query.id as string[]) || [];
 
   const [changeTab, setChangeTab] = useState(false);
-  // useEffect(() => {
-  //   if (session) {
-  //     setUserId(session.user.id);
-  //   }
-  // }, [session]);
-  // const [promtFull, setpromtFull] = useState();
 
-  // const promt =
-  //   product +
-  //   " " +
-  //   selectPlacement +
-  //   " " +
-  //   placementTest +
-  //   " " +
-  //   selectSurrounding +
-  //   " " +
-  //   surroundingTest +
-  //   " " +
-  //   selectBackground +
-  //   " " +
-  //   backgroundTest;
 
   useEffect(() => {
     console.log(promt,promtFull,activeTemplet);
@@ -183,65 +163,7 @@ const Generate = () => {
         <DisabledLabel>Describe your photo </DisabledLabel>
 
         <Row>
-          {/* <PromtGeneratePreview className="generatePreview">
-            {product !== null && product !== "" ? (
-              <label
-                htmlFor="prompt-editor-subject-0-input"
-                className="promtText"
-              >
-                {product}
-                {", "}
-              </label>
-            ) : null}
-            {selectPlacement !== null && selectPlacement !== "" ? (
-              <label
-                htmlFor="prompt-editor-subject-1-input"
-                className="promtText"
-              >
-                {selectPlacement}{" "}
-              </label>
-            ) : null}
-            {placementTest !== null && placementTest !== "" ? (
-              <label
-                htmlFor="prompt-editor-subject-1-input"
-                className="promtText"
-              >
-                {placementTest}{" "}
-              </label>
-            ) : null}
-            {selectSurrounding !== null && selectSurrounding !== "" ? (
-              <label
-                htmlFor="prompt-editor-subject-1-input"
-                className="promtText"
-              >
-                {selectSurrounding}{" "}
-              </label>
-            ) : null}
-            {surroundingTest !== null && surroundingTest !== "" ? (
-              <label
-                htmlFor="prompt-editor-subject-2-input"
-                className="promtText"
-              >
-                {surroundingTest}{" "}
-              </label>
-            ) : null}
-            {selectBackground !== null && selectBackground !== "" ? (
-              <label
-                htmlFor="prompt-editor-subject-1-input"
-                className="promtText"
-              >
-                {selectBackground}{" "}
-              </label>
-            ) : null}
-            {backgroundTest !== null && backgroundTest !== "" ? (
-              <label
-                htmlFor="prompt-editor-subject-3-input"
-                className="promtText"
-              >
-                {","} {backgroundTest}{" "}
-              </label>
-            ) : null}
-          </PromtGeneratePreview> */}
+         
           <TestArea
             value={promtFull}
             onChange={(e) => handelPromt(e)}
@@ -425,8 +347,8 @@ export const SwchichBtn = styled(Row)`
   }
 `;
 export const Wrapper = styled.div`
-  /* max-height: 600px;
-  overflow-y: scroll; */
+  max-height: calc(100vh - 400px);
+  overflow-y: scroll;
 `;
 export const BoxOff = styled.div`
   /* height: 100%; */

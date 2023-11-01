@@ -333,35 +333,7 @@ export default function CanvasBox({
   useEffect(() => {
     if (canvasInstance?.current && loadercarna) {
       const canvasInstanceRef = canvasInstance?.current;
-      // canvasInstanceRef.on("mouse:wheel", function (opt) {
-      //   var delta = opt.e.deltaY;
-      //   var zooms = canvasInstanceRef.getZoom();
-
-      //   zooms *= 0.999 ** delta;
-      //   if (zooms > 2) zooms = 2;
-      //   if (zooms < 0.3) zooms = 0.3;
-      //   canvasInstanceRef.zoomToPoint(
-      //     { x: opt.e.offsetX, y: opt.e.offsetY },
-      //     zooms
-      //   );
-      //   setZoomCanvas(zooms)
-
-      //   console.log(zoom)
-
-      //   // genBox.style.transform = `scale(${zoom})`;
-      //   // genBox.style.transform = `scale(${zoom}) translate(${newEditorBox.x}px, ${newEditorBox.y}px)`;
-      //   // Get the coordinates of the inner rectangle
-
-      //   // Update the position and zoom of the outer div
-      //   // genBox.style.transform = `scale(${zoom})`;
-      //   // genBox.style.left = `${innerRectCoords.left * zoom}px`;
-      //   // genBox.style.top = `${innerRectCoords.top * zoom}px`;
-      //   // Calculate the adjusted position for the outer div
-      //   // var canvasContainer = document.getElementById('canvas-container');
-
-      //   opt.e.preventDefault();
-      //   opt.e.stopPropagation();
-      // });
+  
 
       fabric.Object.prototype.transparentCorners = false;
       // fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
@@ -434,38 +406,7 @@ export default function CanvasBox({
           return error;
         });
 
-      // try {
-
-      //   if (canvasInstanceRef) {
-      //     const canvasInstanceRef = canvasInstance.current;
-      //     canvasInstance.current.clear();
-
-      //     const savedCanvasDataLocal = localStorage.getItem(proid);
-      //     const savedCanvasDB = project?.canvas;
-      //     // console.log(savedCanvasDataLocal, "dfdsf");
-      //     if (savedCanvasDB && !savedCanvasDataLocal) {
-      //       localStorage.setItem(proid, savedCanvasDB);
-      //     }
-      //     if (savedCanvasDataLocal) {
-      //       // console.log(savedCanvas,"dfdfsdgfdgfd")
-      //       canvasInstanceRef.clear();
-      //       canvasInstanceRef.isDrawingMode = false;
-
-      //       canvasInstanceRef.loadFromJSON(
-      //         savedCanvasDataLocal,
-      //         canvasInstanceRef.renderAll.bind(canvasInstanceRef),
-      //         function (o, object) {
-      //           console.log(o, object);
-      //         }
-      //       );
-      //     }
-      //     setloadercarna(false);
-      //   }
-      // } catch (error) {
-      //   console.error("An error occurred:", error);
-      // }
-
-      // console.log("canvasInstance",canvasInstanceRef)
+  
     }
   }, [isReady, userId]);
 
