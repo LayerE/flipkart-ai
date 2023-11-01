@@ -1358,6 +1358,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   }
   const generateImageHandeler = async (ueserId: any, proid: any) => {
     var subjectCount = 0;
+    setLoader(false);
+    setCanvasDisable(false);
+
     const startTime = new Date().getTime();
     canvasInstance?.current.forEachObject(function (obj: any) {
       if (obj.category === "subject") {
@@ -1499,7 +1502,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
                   "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                  userId: ueserId,
+                  userId: userId,
                   projectId: proid,
                   jobId: generate_response?.job_id,
                 }),
@@ -1679,6 +1682,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           if (generate_response?.error) {
             toast.error(generate_response?.error);
             setLoader(false);
+      setCanvasDisable(false);
+
             return false;
           } else {
             const endTime = new Date().getTime();
