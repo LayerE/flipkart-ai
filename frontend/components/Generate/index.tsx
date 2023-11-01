@@ -203,7 +203,8 @@ const Generate = () => {
               }
               disabled={promtFull === " " ? true : false}
             >
-              {generationLoader ? "Loading..." : "Generate"}
+              Generate
+              {/* {generationLoader ? "Loading..." : "Generate"} */}
             </Button>
           )}
         </Row>

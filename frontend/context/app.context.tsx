@@ -1514,12 +1514,15 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
               setJobIdOne([generate_response?.job_id]);
               GetProjextById(proid);
             }
-          } catch (error) {}
+          } catch (error) {
+            toast.error("something went wrong");
+            setLoader(false)
+          }
         }
       } catch (error) {
         console.error("Error generating image:", error);
-      } finally {
-        setGenerationLoader(false);
+        toast.error("something went wrong");
+        setLoader(false)
       }
     } else {
       // if (renderer === null) {
