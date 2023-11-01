@@ -878,20 +878,20 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       // canvas.add(img);
 
       canvasInstanceQuick?.current.add(img);
-      // img.on("scaling", function () {
-      //   var maxWidth = 800,
-      //     minWidth = 450,
-      //     width = img.width * img.scaleX;
+      img.on("scaling", function () {
+        var maxWidth = 800,
+          minWidth = 450,
+          width = img.width * img.scaleX;
 
       //   // if (width > maxWidth) {
       //   //   img.scaleX = maxWidth / img.width;
       //   //   img.scaleY = img.scaleX;
       //   // } else 
-      //   // if (width < minWidth) {
-      //   //   img.scaleX = minWidth / img.width;
-      //   //   img.scaleY = img.scaleX;
-      //   // }
-      // });
+        if (width < minWidth) {
+          img.scaleX = minWidth / img.width;
+          img.scaleY = img.scaleX;
+        }
+      });
 
       
       img.set("category", "quick");
@@ -1417,24 +1417,24 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         });
         const subjectDataUrl = await scaleDownImage(originalsubjectDataUrl);
 
-        const originalImageElement = new Image();
-        originalImageElement.src = subjectDataUrl;
-        originalImageElement.onload = () => {
-          const canvas = document.createElement("canvas");
-          const width = activeSize.w;
-          const height = activeSize.h;
+        // const originalImageElement = new Image();
+        // originalImageElement.src = subjectDataUrl;
+        // originalImageElement.onload = () => {
+        //   const canvas = document.createElement("canvas");
+        //   const width = activeSize.w;
+        //   const height = activeSize.h;
 
-          canvas.width = width;
-          canvas.height = height;
+        //   canvas.width = width;
+        //   canvas.height = height;
 
-          const ctx = canvas.getContext("2d");
-          ctx.drawImage(originalImageElement, 0, 0, width, height);
+        //   const ctx = canvas.getContext("2d");
+        //   ctx.drawImage(originalImageElement, 0, 0, width, height);
 
-          const resizedBase64 = canvas.toDataURL({
-            format: "webp",
-            multiplier: 4,
-          });
-        };
+        //   const resizedBase64 = canvas.toDataURL({
+        //     format: "webp",
+        //     multiplier: 4,
+        //   });
+        // };
 
         //  const dd = await optimizeAndEncodeImage(subjectDataUrl, 23243)
         //  console.log(dd)
@@ -1634,13 +1634,15 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         });
 
         // Make image with only the subject objects
-        const subjectCanvas = new fabric.Canvas(null, {
+        const subjectCanvas = new fabric.StaticCanvas(null, {
           width: 712,
           height: 712,
         } as any);
 
         subjectObjects.forEach((object: any) => {
           subjectCanvas.add(object);
+          canvas1.add(object);
+
         });
 
         const originalsubjectDataUrl = subjectCanvas.toDataURL({
@@ -1648,12 +1650,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           multiplier: 4,
         });
         const subjectDataUrl = await scaleDownImage(originalsubjectDataUrl);
-        const subjectDataUrlJson = subjectCanvas.toJSON();
-        const updatedObject = {
-          width: activeSize.w,
-          height: activeSize.h,
-          ...subjectDataUrlJson,
-        };
+  
         console.log(subjectDataUrl);
         // const subjectDataUrl = subjectCanvas.toDataURL("image/png");
 

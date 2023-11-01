@@ -30,6 +30,7 @@ const QuickCanvas = () => {
       width: w,
       height: h,
       preserveObjectStacking: true,
+      
     });
     const canvasInstanceQuickRef = canvasInstanceQuick?.current;
 
@@ -45,41 +46,44 @@ const QuickCanvas = () => {
       const canvasInstanceQuickRef = canvasInstanceQuick?.current;
 
       // When a user clicks on an image on the canvas
-      canvasInstanceQuickRef.on("mouse:down", function (options) {
-        if (options.target && options.target.type === "image") {
-          let selectedObject;
-          if (options.target._element instanceof Image) {
-            console.log(options.target.id, "option");
-            // selectedObject = options.target._element.src;
-            const img = new Image();
-            img.src = options.target._element.src;
-            // Resize the image to 512x521 pixels
-            const canvas = document.createElement("canvas");
-            canvas.width = 710;
-            canvas.height = 710;
-            const ctx = canvas.getContext("2d");
-            ctx.drawImage(img, 0, 0, 710, 710);
-            ctx.fillStyle = "white";
-            // Convert the canvas to a data URL
-            selectedObject = canvas.toDataURL("image/png");
-          } else if (options.target._element instanceof HTMLCanvasElement) {
-            selectedObject = options.target._element.toDataURL();
-          }
+      // canvasInstanceQuickRef.on("mouse:down", function (options) {
+      //   if (options.target && options.target.type === "image") {
+      //     let selectedObject;
+      //     if (options.target._element instanceof Image) {
+      //       // console.log(options.target.id, "option");
+      //       // selectedObject = options.target._element.src;
+      //       const img = new Image();
+      //       img.src = options.target._element.src;
+      //       // Resize the image to 512x521 pixels
+      //       const canvas = document.createElement("canvas");
+      //       canvas.width = 712;
+      //       canvas.height = 712;
+      //       const ctx = canvas.getContext("2d");
+      //       ctx.drawImage(img, 0, 0, 712, 712);
+      //       ctx.fillStyle = "white";
+      //       // Convert the canvas to a data URL
+      //       selectedObject = canvas.toDataURL("image/png");
+      //     } else if (options.target._element instanceof HTMLCanvasElement) {
+      //       selectedObject = options.target._element.toDataURL();
+      //     }
 
-          if (selectedObject) {
-            // setDownloadImg(selectedObject);
-          }
-        }
-      });
+      //     if (selectedObject) {
+      //       // setDownloadImg(selectedObject);
+      //     }
+      //   }
+      // });
 
       canvasInstanceQuickRef.on("object:moving", function (event) {
         const movedObject = event.target;
       });
       canvasInstanceQuickRef.on("selection:created", (e) => {
         var selectedObjects = e.target;
-
         // If the object is a subject, add it to the subject objects array
       });
+
+      canvasInstanceQuickRef?.renderAll();
+
+    
 
       document.addEventListener("keydown", (e) => {
         // Check if the pressed key is 'Delete' (code: 46) or 'Backspace' (code: 8) for wider compatibility
@@ -90,6 +94,7 @@ const QuickCanvas = () => {
           ) {
             const activeObject = canvasInstanceQuickRef?.getActiveObject();
             if (activeObject) {
+              canvasInstanceQuickRef.clear()
               canvasInstanceQuickRef?.remove(activeObject);
               canvasInstanceQuickRef?.renderAll();
             }
