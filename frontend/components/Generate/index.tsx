@@ -141,6 +141,10 @@ const Generate = () => {
       variants={fadeIn}
       className="accest"
     >
+       <AllWrapper>
+      <div className="padding-s">
+
+    
       {/* <div className="gap">
         <DisabledLabel> Select your product category </DisabledLabel>
 
@@ -223,7 +227,7 @@ const Generate = () => {
           ></DropdownNOBorder>
         </div>
       </div> */}
-
+  </div>
       <div className="bigGap">
         {/* <Label>Edit the the prompt in the form below.</Label> */}
       </div>
@@ -248,13 +252,25 @@ const Generate = () => {
       <Wrapper className="wrappper">
         {changeTab ? <EditorSection /> : <Tamplates />}
       </Wrapper>
+     </AllWrapper>
     </motion.div>
   );
 };
 
 export default Generate;
+
+export const AllWrapper = styled.div`
+
+.padding-s{
+    padding-left: 15px;
+    padding-right: 15px;
+    /* background-color: red; */
+}
+ 
+
+`
 export const DATA = styled.div`
-  width: 100%;
+ width: 100%;
   display: flex;
   justify-content: space-between;
   .toggle-switch {
@@ -302,6 +318,7 @@ export const Box = styled.div`
 `;
 
 export const PromtGeneratePreview = styled.div`
+
   border: 2px solid #d9d9d9;
   padding: 10px;
   border-radius: 8px;
@@ -348,6 +365,8 @@ export const SwchichBtn = styled(Row)`
   }
 `;
 export const Wrapper = styled.div`
+/* position: absolute; */
+padding: 15px;
   max-height: calc(100vh - 400px);
   overflow-y: scroll;
 `;

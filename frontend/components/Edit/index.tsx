@@ -320,6 +320,8 @@ const Edit = () => {
       className={downloadImg && !loader ? "accest" : "accest blure"}
       style={{ paddingBottom: "50px" }}
     >
+      <AllWrapper>
+
       <WrapperEdit>
         {/* <div className="gap"></div> */}
         <div className="gaps">
@@ -525,12 +527,21 @@ const Edit = () => {
           </Button>
         </Row>
       </WrapperEdit>
+      </AllWrapper>
+
     </motion.div>
   );
 };
 
 export default Edit;
+export const AllWrapper = styled.div`
 
+
+    padding-left: 15px;
+    padding-right: 15px;
+
+
+ `
 const WrapperEdit = styled.div`
   .gaps {
     margin-bottom: 10px;

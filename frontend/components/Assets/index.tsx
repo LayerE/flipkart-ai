@@ -53,6 +53,8 @@ const Assets: React.FC = () => {
 
   return (
     <div className="accest">
+      <AllWrapper>
+
       <div className="gap">
         <Row>
           <Label>Product</Label>
@@ -116,9 +118,19 @@ const Assets: React.FC = () => {
             : null}
         </ResponsiveRowWraptwo>
       </div>
+      </AllWrapper>
+
     </div>
   );
 };
+export const AllWrapper = styled.div`
+
+
+    padding-left: 15px;
+    padding-right: 15px;
+
+
+ `
 
 export const ResponsiveRowWraptwo = styled(Row)`
   display: grid !important;

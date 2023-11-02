@@ -87,6 +87,7 @@ const QuickBar: React.FC = () => {
     genrateeRef,
     promtFull,
     setpromtFull,
+    setpromt,
     userId,
     setSelectedresult,
     setPlacementTest,
@@ -96,6 +97,8 @@ const QuickBar: React.FC = () => {
   const id = (query.id as string[]) || [];
 
   const handelPromt = (e) => {
+    setpromt(e.target.value);
+
     setpromtFull(e.target.value);
   };
   return (
@@ -174,6 +177,7 @@ const QuickBar: React.FC = () => {
               </div>
               <div className="rangebox">
                 <input
+                id="myinput"
                   type="range"
                   min="1"
                   max="4"
@@ -553,13 +557,35 @@ const SideBar = styled.div`
     -moz-appearance: textfield;
   }
 
-  input[type="range"] {
+  input[type='range'] {
+      overflow: hidden;
+      width: 100%;
+      accent-color: rgba(249, 208, 13, 1);
+      /* -webkit-appearance: none; */
+      background-color: #9a905d;
+      /* background: linear-gradient(to right, #82CFD0 0%, #82CFD0 50%, #fff 50%, #fff 100%); */
+    }
+    
+  
+     
+    input[type='range']::-webkit-slider-thumb {
+      width: 10px;
+      -webkit-appearance: none;
+      height: 10px;
+      cursor: ew-resize;
+      background: #cc2626;
+      /* box-shadow: -170px 0 0 170px #43e5f7;
+     }  
+
+  /* input[type="range"] {
     height: 20px;
     -webkit-appearance: none;
-    /* margin: 10px 0; */
+
     width: 100%;
     background: #fff;
   }
+
+  
   input[type="range"]:focus {
     outline: none;
   }
@@ -568,13 +594,13 @@ const SideBar = styled.div`
     height: 5px;
     cursor: pointer;
     animate: 0.2s;
-    /* box-shadow: 0px 0px 0px #000000; */
+
     background: rgba(249, 208, 13, 1);
     border-radius: 1px;
     border: 0px solid #000000;
   }
   input[type="range"]::-webkit-slider-thumb {
-    /* box-shadow: 0px 0px 0px #000000; */
+  
     border: 1px solid rgba(249, 208, 13, 1);
     height: 15px;
     width: 15px;
@@ -586,8 +612,8 @@ const SideBar = styled.div`
   }
   input[type="range"]:focus::-webkit-slider-runnable-track {
     background: rgba(249, 208, 13, 1);
-  }
-  input[type="range"]::-moz-range-track {
+  } */
+  /* input[type="range"]::-moz-range-track {
     width: 100%;
     height: 5px;
     cursor: pointer;
@@ -596,8 +622,8 @@ const SideBar = styled.div`
     background: rgba(249, 208, 13, 1);
     border-radius: 1px;
     border: 0px solid #000000;
-  }
-  input[type="range"]::-moz-range-thumb {
+  } */
+  /* input[type="range"]::-moz-range-thumb {
     box-shadow: 0px 0px 0px #000000;
     border: 1px solid rgba(249, 208, 13, 1);
     height: 18px;
@@ -605,43 +631,11 @@ const SideBar = styled.div`
     border-radius: 25px;
     background: rgba(249, 208, 13, 1);
     cursor: pointer;
-  }
-  input[type="range"]::-ms-track {
-    width: 100%;
-    height: 5px;
-    cursor: pointer;
-    animate: 0.2s;
-    background: transparent;
-    border-color: transparent;
-    color: transparent;
-  }
-  input[type="range"]::-ms-fill-lower {
-    background: rgba(249, 208, 13, 1);
-    border: 0px solid #000000;
-    border-radius: 2px;
-    /* box-shadow: 0px 0px 0px #000000; */
-  }
-  input[type="range"]::-ms-fill-upper {
-    background: rgba(249, 208, 13, 1);
-    border: 0px solid #000000;
-    border-radius: 2px;
-    /* box-shadow: 0px 0px 0px #000000; */
-  }
-  input[type="range"]::-ms-thumb {
-    margin-top: 1px;
-    /* box-shadow: 0px 0px 0px #000000; */
-    border: 1px solid rgba(249, 208, 13, 1);
-    height: 18px;
-    width: 18px;
-    border-radius: 25px;
-    background: rgba(249, 208, 13, 1);
-    cursor: pointer;
-  }
-  input[type="range"]:focus::-ms-fill-lower {
-    background: rgba(249, 208, 13, 1);
-  }
-  input[type="range"]:focus::-ms-fill-upper {
-    background: rgba(249, 208, 13, 1);
-  }
+  } */
+
+  
+
+
+
 `;
 export default QuickBar;

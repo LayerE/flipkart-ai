@@ -274,6 +274,9 @@ const Sidebar: React.FC = () => {
 };
 
 const SideBar = styled.div`
+.tittle{
+  margin-left: 15px;
+}
   position: relative;
   z-index: 200;
   background-color: #fff;
@@ -454,10 +457,11 @@ const SideBar = styled.div`
   `}
   .larfer {
     width: 380px;
+    position: relative;
   }
   .tapExpanded {
-    padding-left: 15px;
-    padding-right: 15px;
+    /* padding-left: 15px; */
+    /* padding-right: 15px; */
     padding-top: 30px;
     /* padding-bottom: 70px; */
     border-right: 2px solid ${({ theme }) => theme.bgBorder};

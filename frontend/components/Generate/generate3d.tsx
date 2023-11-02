@@ -102,6 +102,8 @@ const Generate3d = () => {
   const handelPromt = (e) => {
     setpromt("");
     setActiveTemplet({})
+    setpromt(e.target.value)
+
     setpromtFull(e.target.value);
   };
 
@@ -112,6 +114,8 @@ const Generate3d = () => {
       variants={fadeIn}
       className="accest"
     >
+     <AllWrapper>
+
       {/* <div className="gap">
         <DisabledLabel> Select your product category </DisabledLabel>
 
@@ -202,6 +206,7 @@ const Generate3d = () => {
           ></DropdownNOBorder>
         </div>
       </div> */}
+     </AllWrapper>
 
       <div className="bigGap">
         {/* <Label>Edit the the prompt in the form below.</Label> */}
@@ -232,6 +237,16 @@ const Generate3d = () => {
 };
 
 export default Generate3d;
+export const AllWrapper = styled.div`
+
+
+    padding-left: 15px;
+    padding-right: 15px;
+    /* background-color: red; */
+
+ 
+
+`
 export const Box = styled.div`
   position: relative;
 
@@ -326,6 +341,8 @@ export const SwchichBtn = styled(Row)`
 export const Wrapper = styled.div`
   max-height: calc(100vh - 400px);
   overflow-y: scroll;
+  padding-left: 15px;
+    padding-right: 15px;
 `;
 export const BoxOff = styled.div`
   /* height: 100%; */

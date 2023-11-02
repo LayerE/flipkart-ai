@@ -450,6 +450,8 @@ const Edit3d = () => {
 export default Edit3d;
 
 const WrapperEdit = styled.div`
+ padding-left: 15px;
+    padding-right: 15px;
   .gaps {
     margin-bottom: 10px;
   }

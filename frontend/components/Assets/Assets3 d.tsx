@@ -87,6 +87,7 @@ const Assets3d = () => {
 
   return (
     <div className="accest">
+      <AllWrapper>
       {file3dName?.name && !assetL3doader ? (
         <Selectd className="gap">
           <div className="boxFile">
@@ -171,9 +172,20 @@ const Assets3d = () => {
           </Row>
         </div>
       )}
+      </AllWrapper>
     </div>
   );
 };
+
+export const AllWrapper = styled.div`
+
+
+    padding-left: 15px;
+    padding-right: 15px;
+
+
+ `
+
 
 export const Selectd = styled.div`
   .boxFile {
