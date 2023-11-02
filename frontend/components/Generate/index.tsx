@@ -95,12 +95,12 @@ const Generate = () => {
       const newPro1 = words1[0]
 
       if(newPro1 === newPro ){
-        const promts = product + " " + promt;
+        const promts =  promt;
         setpromtFull(promt)
       }
       
       else{
-        const promts = product + " " + promt;
+        const promts = promt;
         setpromtFull(promts);
       }
     
@@ -110,7 +110,7 @@ const Generate = () => {
   useEffect(() => {
    
     if (promt == activeTemplet?.promt ) {
-      const promts = product + " " + promt;
+      const promts =  promt;
 
       setpromtFull(promts);
     }
@@ -162,7 +162,15 @@ const Generate = () => {
           ></DropdownInput>
         </Box>
       </div> */}
+ <div className="gap">
+        <DisabledLabel>What is your Product </DisabledLabel>
+        <Input
+        value={product}
+          onChange={(e) => setProduct(e.target.value)}
+          readonly={loader ? "readonly" : false} />
 
+
+        </div>
       <div className="gap">
         <DisabledLabel>Describe your photo </DisabledLabel>
 
