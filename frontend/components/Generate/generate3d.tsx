@@ -339,7 +339,7 @@ export const SwchichBtn = styled(Row)`
   }
 `;
 export const Wrapper = styled.div`
-  max-height: calc(100vh - 400px);
+  max-height: calc(100vh - 320px);
   overflow-y: scroll;
   padding-left: 15px;
     padding-right: 15px;

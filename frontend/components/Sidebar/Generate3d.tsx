@@ -353,6 +353,15 @@ const SideBar = styled.div`
     height: 100%;
     overflow: auto;
   }
+  .tapExpanded::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.tapExpanded {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
   ${({ theme }) => theme.mediaWidth.upToMedium`
   .tapExpanded{
   display: none;

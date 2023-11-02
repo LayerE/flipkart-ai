@@ -76,7 +76,7 @@ const Generate = () => {
     seTelevatedSurface,
     activeTemplet,
     setProduct,
-    setActiveTemplet
+    setActiveTemplet,
   } = useAppState();
 
   const { query, isReady } = useRouter();
@@ -84,53 +84,45 @@ const Generate = () => {
 
   const [changeTab, setChangeTab] = useState(false);
 
-
   useEffect(() => {
-    console.log(promt,promtFull,activeTemplet);
+    console.log(promt, promtFull, activeTemplet);
     // if (promt == activeTemplet?.promt   ) {
-      const words = promtFull.split(' ');
-      const newPro = words[0]
+    const words = promtFull.split(" ");
+    const newPro = words[0];
 
-      const words1 = product.split(' ');
-      const newPro1 = words1[0]
+    const words1 = product.split(" ");
+    const newPro1 = words1[0];
 
-      if(newPro1 === newPro ){
-        const promts =  promt;
-        setpromtFull(promt)
-      }
-      
-      else{
-        const promts = promt;
-        setpromtFull(promts);
-      }
-    
+    if (newPro1 === newPro) {
+      const promts = promt;
+      setpromtFull(promt);
+    } else {
+      const promts = promt;
+      setpromtFull(promts);
+    }
+
     // }
     // setpromtFull(promts);
-  }, [product,activeTemplet]);
+  }, [product, activeTemplet]);
   useEffect(() => {
-   
-    if (promt == activeTemplet?.promt ) {
-      const promts =  promt;
+    if (promt == activeTemplet?.promt) {
+      const promts = promt;
 
       setpromtFull(promts);
     }
- 
-     
-        // setpromtFull(promts);
-    
-     
- 
-    
+
+    // setpromtFull(promts);
+
     // }
     // setpromtFull(promts);
-  }, [ activeTemplet]);
+  }, [activeTemplet]);
 
   const handelPromt = (e) => {
     setpromt("");
     // setProduct("")
     // setActiveTemplet({})
     const promts = e.target.value;
-    setpromt(promts)
+    setpromt(promts);
     setpromtFull(promts);
   };
 
@@ -141,11 +133,9 @@ const Generate = () => {
       variants={fadeIn}
       className="accest"
     >
-       <AllWrapper>
-      <div className="padding-s">
-
-    
-      {/* <div className="gap">
+      <AllWrapper>
+        <div className="padding-s">
+          {/* <div className="gap">
         <DisabledLabel> Select your product category </DisabledLabel>
 
         <Box className="disBox">
@@ -162,31 +152,29 @@ const Generate = () => {
           ></DropdownInput>
         </Box>
       </div> */}
- <div className="gap">
-        <DisabledLabel>What is your Product </DisabledLabel>
-        <Input
-        value={product}
-          onChange={(e) => setProduct(e.target.value)}
-          readonly={loader ? "readonly" : false} />
+          <div className="gap">
+            <DisabledLabel>What is your Product </DisabledLabel>
+            <Input
+              value={product}
+              onChange={(e) => setProduct(e.target.value)}
+              readonly={loader ? "readonly" : false}
+            />
+          </div>
+          <div className="gap">
+            <DisabledLabel>Describe your photo </DisabledLabel>
 
-
-        </div>
-      <div className="gap">
-        <DisabledLabel>Describe your photo </DisabledLabel>
-
-        <Row>
-         
-          <TestArea
-            value={promt}
-            onChange={(e) => handelPromt(e)}
-            readonly={loader ? "readonly" : false}
-            // value={placementTest}
-            // setValue={setPlacementTest}
-            // suggetion={PlacementSuggestionsFilter}
-          />
-          {/* <input type="text" className="generatePreview" /> */}
-        </Row>
-        {/* <Row>
+            <Row>
+              <TestArea
+                value={promt}
+                onChange={(e) => handelPromt(e)}
+                readonly={loader ? "readonly" : false}
+                // value={placementTest}
+                // setValue={setPlacementTest}
+                // suggetion={PlacementSuggestionsFilter}
+              />
+              {/* <input type="text" className="generatePreview" /> */}
+            </Row>
+            {/* <Row>
             <DATA>
           <div>
               <DisabledLabel>
@@ -202,27 +190,27 @@ const Generate = () => {
            
           </DATA>
         </Row> */}
-        <Row>
-          {loader ? (
-            <TextLoader />
-          ) : (
-            <Button
-              ref={genrateeRef}
-              onClick={() =>
-                TDMode
-                  ? generate3dHandeler(userId, id)
-                  : generateImageHandeler(userId, id)
-              }
-              disabled={promt === "" ? true : false}
-            >
-              Generate
-              {/* {generationLoader ? "Loading..." : "Generate"} */}
-            </Button>
-          )}
-        </Row>
-      </div>
+            <Row>
+              {loader ? (
+                <TextLoader />
+              ) : (
+                <Button
+                  ref={genrateeRef}
+                  onClick={() =>
+                    TDMode
+                      ? generate3dHandeler(userId, id)
+                      : generateImageHandeler(userId, id)
+                  }
+                  disabled={promt === "" ? true : false}
+                >
+                  Generate
+                  {/* {generationLoader ? "Loading..." : "Generate"} */}
+                </Button>
+              )}
+            </Row>
+          </div>
 
-      {/* <div className="rowwothtwo" style={{ marginBottom: "0px" }}>
+          {/* <div className="rowwothtwo" style={{ marginBottom: "0px" }}>
         <DisabledLabel>Number of results</DisabledLabel>
         <div className="two-side">
          
@@ -235,32 +223,32 @@ const Generate = () => {
           ></DropdownNOBorder>
         </div>
       </div> */}
-  </div>
-      <div className="bigGap">
-        {/* <Label>Edit the the prompt in the form below.</Label> */}
-      </div>
-      {/* <div className="gap"></div> */}
-      <SwchichBtn className="swich">
-        <div
-          className={changeTab ? "btnswitch " : "btnswitch activeSwitch"}
-          onClick={() => setChangeTab(false)}
-        >
-          Templates
         </div>
+        <div className="bigGap">
+          {/* <Label>Edit the the prompt in the form below.</Label> */}
+        </div>
+        {/* <div className="gap"></div> */}
+        <SwchichBtn className="swich">
+          <div
+            className={changeTab ? "btnswitch " : "btnswitch activeSwitch"}
+            onClick={() => setChangeTab(false)}
+          >
+            Templates
+          </div>
 
-        <div
-          className={changeTab ? "btnswitch activeSwitch" : "btnswitch "}
-          onClick={() => {
-            setChangeTab(true);
-          }}
-        >
-          Settings
-        </div>
-      </SwchichBtn>
-      <Wrapper className="wrappper">
-        {changeTab ? <EditorSection /> : <Tamplates />}
-      </Wrapper>
-     </AllWrapper>
+          <div
+            className={changeTab ? "btnswitch activeSwitch" : "btnswitch "}
+            onClick={() => {
+              setChangeTab(true);
+            }}
+          >
+            Settings
+          </div>
+        </SwchichBtn>
+        <Wrapper className="wrappper">
+          {changeTab ? <EditorSection /> : <Tamplates />}
+        </Wrapper>
+      </AllWrapper>
     </motion.div>
   );
 };
@@ -268,17 +256,14 @@ const Generate = () => {
 export default Generate;
 
 export const AllWrapper = styled.div`
-
-.padding-s{
+  .padding-s {
     padding-left: 15px;
     padding-right: 15px;
     /* background-color: red; */
-}
- 
-
-`
+  }
+`;
 export const DATA = styled.div`
- width: 100%;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   .toggle-switch {
@@ -326,7 +311,6 @@ export const Box = styled.div`
 `;
 
 export const PromtGeneratePreview = styled.div`
-
   border: 2px solid #d9d9d9;
   padding: 10px;
   border-radius: 8px;
@@ -373,9 +357,9 @@ export const SwchichBtn = styled(Row)`
   }
 `;
 export const Wrapper = styled.div`
-/* position: absolute; */
-padding: 15px;
-  max-height: calc(100vh - 400px);
+  /* position: absolute; */
+  padding: 15px;
+  max-height: calc(100vh - 320px);
   overflow-y: scroll;
 `;
 export const BoxOff = styled.div`

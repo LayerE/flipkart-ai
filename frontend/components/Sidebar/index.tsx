@@ -462,14 +462,23 @@ const SideBar = styled.div`
   .tapExpanded {
     /* padding-left: 15px; */
     /* padding-right: 15px; */
-    padding-top: 30px;
+    padding-top: 100px;
     /* padding-bottom: 70px; */
     border-right: 2px solid ${({ theme }) => theme.bgBorder};
-    padding-top: ${({ theme }) => theme.paddings.paddingTop};
+    /* padding-top: ${({ theme }) => theme.paddings.paddingTop}; */
     width: 100% !important;
     height: 100%;
     overflow: auto;
   }
+  .tapExpanded::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.tapExpanded {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
   ${({ theme }) => theme.mediaWidth.upToMedium`
   .tapExpanded{
   display: none;
