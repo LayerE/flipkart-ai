@@ -553,11 +553,19 @@ export const BoxOff = styled.div`
   input[type="number"] {
     -moz-appearance: textfield;
   }
-
-  input[type="range"] {
+  input[type='range'] {
+      overflow: hidden;
+      width: 100%;
+      accent-color: rgba(249, 208, 13, 1);
+      /* -webkit-appearance: none; */
+      background-color: #9a905d;
+      /* background: linear-gradient(to right, #82CFD0 0%, #82CFD0 50%, #fff 50%, #fff 100%); */
+    }
+    
+  /* input[type="range"] {
     height: 20px;
     -webkit-appearance: none;
-    /* margin: 10px 0; */
+    
     width: 100%;
     background: #fff;
   }
@@ -569,13 +577,13 @@ export const BoxOff = styled.div`
     height: 5px;
     cursor: pointer;
     animate: 0.2s;
-    /* box-shadow: 0px 0px 0px #000000; */
+
     background: rgba(249, 208, 13, 1);
     border-radius: 1px;
     border: 0px solid #000000;
   }
   input[type="range"]::-webkit-slider-thumb {
-    /* box-shadow: 0px 0px 0px #000000; */
+
     border: 1px solid rgba(249, 208, 13, 1);
     height: 15px;
     width: 15px;
@@ -620,17 +628,17 @@ export const BoxOff = styled.div`
     background: rgba(249, 208, 13, 1);
     border: 0px solid #000000;
     border-radius: 2px;
-    /* box-shadow: 0px 0px 0px #000000; */
+
   }
   input[type="range"]::-ms-fill-upper {
     background: rgba(249, 208, 13, 1);
     border: 0px solid #000000;
     border-radius: 2px;
-    /* box-shadow: 0px 0px 0px #000000; */
+ 
   }
   input[type="range"]::-ms-thumb {
     margin-top: 1px;
-    /* box-shadow: 0px 0px 0px #000000; */
+
     border: 1px solid rgba(249, 208, 13, 1);
     height: 18px;
     width: 18px;
@@ -643,7 +651,7 @@ export const BoxOff = styled.div`
   }
   input[type="range"]:focus::-ms-fill-upper {
     background: rgba(249, 208, 13, 1);
-  }
+  } */
 `;
 export const ResponsiveRowWraptwo = styled(Row)`
   display: grid !important;

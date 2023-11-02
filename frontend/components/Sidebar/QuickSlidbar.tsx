@@ -573,7 +573,7 @@ const SideBar = styled.div`
       -webkit-appearance: none;
       height: 10px;
       cursor: ew-resize;
-      background: #cc2626;
+      /* background: #cc2626; */
       /* box-shadow: -170px 0 0 170px #43e5f7;
      }  
 
