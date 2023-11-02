@@ -177,7 +177,7 @@ const Generate = () => {
         <Row>
          
           <TestArea
-            value={promtFull}
+            value={promt}
             onChange={(e) => handelPromt(e)}
             readonly={loader ? "readonly" : false}
             // value={placementTest}
@@ -213,7 +213,7 @@ const Generate = () => {
                   ? generate3dHandeler(userId, id)
                   : generateImageHandeler(userId, id)
               }
-              disabled={promtFull === " " ? true : false}
+              disabled={promt === "" ? true : false}
             >
               Generate
               {/* {generationLoader ? "Loading..." : "Generate"} */}

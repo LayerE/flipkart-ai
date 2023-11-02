@@ -1376,7 +1376,19 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     // } else
     if (subjectCount === 0 && !TDMode) {
       toast("Add product first");
-    } else if (!TDMode) {
+    }else if(product === ""|| product === null ||product === " "){
+      toast("Add product Name");
+
+
+    }
+    else if(promt === "" || promt === null ||promt === " "){
+      toast("Select a templet or Describe your promt  ");
+
+      
+    }
+    
+    
+    else if (!TDMode) {
       setLoader(true);
       setCanvasDisable(true);
       // setGenerationLoader(true);
