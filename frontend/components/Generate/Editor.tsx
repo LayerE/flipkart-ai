@@ -7,6 +7,8 @@ import { Input, Suggestion1, TestArea } from "../common/Input";
 import Button from "../common/Button";
 import Label, { DisabledLabel } from "../common/Label";
 import DropdownInput, { DropdownNOBorder } from "../common/Dropdown";
+import RangeSlider from 'react-range-slider-input';
+import 'react-range-slider-input/dist/style.css';
 import {
   BackgroundList,
   BackgroundSuggestions,
@@ -559,6 +561,8 @@ export const BoxOff = styled.div`
       accent-color: rgba(249, 208, 13, 1);
       /* -webkit-appearance: none; */
       background-color: #9a905d;
+      outline: none;
+    border: none;
       /* background: linear-gradient(to right, #82CFD0 0%, #82CFD0 50%, #fff 50%, #fff 100%); */
     }
     
@@ -568,10 +572,12 @@ export const BoxOff = styled.div`
     
     width: 100%;
     background: #fff;
-  }
-  input[type="range"]:focus {
+  }*/
+   input[type="range"]:focus {
     outline: none;
-  }
+    border: none;
+  } 
+  /*
   input[type="range"]::-webkit-slider-runnable-track {
     width: 100%;
     height: 5px;
