@@ -86,12 +86,6 @@ export const TestArea = styled.textarea`
       color: #fff7f7 !important;
     }
   }
-  /* &:disabled {
-    color: #fff7f7 !important;
-    &::placeholder {
-      color: #fff7f7 !important;
-    }
-  } */
 
   &:hover {
     /* border: 2px solid #d9d9d9; */
@@ -187,12 +181,10 @@ export const FileUpload = ({ type, title, uerId }:{ type:any, title:string, uerI
     setFile,
     uploadedProductlist,
     setUploadedProductlist,
-
     setLoader,
     addimgToCanvas,
     setPopup,
     projectId,
-    // uerId,
     setloadercarna,
     assetLoader,
     setassetLoader,
@@ -207,40 +199,25 @@ export const FileUpload = ({ type, title, uerId }:{ type:any, title:string, uerI
     const filename = event.target.files[0].name
     const format = filename.split('.').pop();
 
-
     if (fileSize > maxSize) {
-  
-      toast.error('File size must be less than 25MB');
-
+    toast.error('File size must be less than 25MB');
       return false;
     } else if(format !== 'png' && format !== 'webp' && format !== 'jpg'&& format !== 'jpeg') {
       toast.error('Format not supported');
-
-
     } else {
-
     setassetLoader(true);
-
     const selectedFile = event.target.files?.[0] || null;
     setFile(selectedFile);
     const blobUrl = URL.createObjectURL(selectedFile);
     const idG = uploadedProductlist.length;
-    // setloadercarna(true);
-    console.log(event.target.result, "fdsfsdg");
     try {
       if (selectedFile) {
         const reader = new FileReader();
         reader.onloadend = async () => {
           if (type === "element") {
-            // addimgToCanvas(reader.result);
           } else {
             const filename = `img${Date.now()}`;
-            // setLoader(true);
             const dataimage =  await scaleDownImage(reader.result)
-            console.log(dataimage,"ress")
-            console.log(reader.result,"noress")
-
-
             const response = await fetch("/api/removebg", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -266,9 +243,6 @@ export const FileUpload = ({ type, title, uerId }:{ type:any, title:string, uerI
               setassetLoader(false);
             }
             const data = await response.json();
-            console.log(data);
-
-            // BgRemover(reader.result, filename);
             if (data?.data) {
               setPopup({
                 status: true,
@@ -276,29 +250,19 @@ export const FileUpload = ({ type, title, uerId }:{ type:any, title:string, uerI
                 dataArray: data,
               });
               setassetLoader(false);
-              // setLoader(false);
-              // setloadercarna(false);
             } else {
               console.log("bg not removed");
-              // setLoader(false);
-              // setloadercarna(false);
+
               setassetLoader(false);
             }
 
-            // setUploadedProductlist((prev) => [
-            //   ...prev,
-            //   { url: blobUrl, baseUrl: reader.result },
-            // ]);
           }
-          // setUpladedArray((prev) => [
-          //   ...prev,
-          //   { url: blobUrl, baseUrl: reader.result },
-          // ]);
+
         };
         reader.readAsDataURL(selectedFile);
       }
     } catch (e) {
-      console.log("cvff", e);
+      console.log(e);
     }
 
   }
@@ -360,7 +324,7 @@ export const FileUpload = ({ type, title, uerId }:{ type:any, title:string, uerI
           </>
         )}
       </div>
-      {/* )} */}
+
     </InputFile1>
   );
 };
@@ -372,12 +336,10 @@ export const FileUploadQuick= ({ type, title, uerId }:{ type:any, title:string, 
     setFile,
     uploadedProductlist,
     setUploadedProductlist,
-
     setLoader,
     addimgToCanvas,
     setPopup,
     projectId,
-    // uerId,
     setloadercarna,
     assetLoader,
     setassetLoader,
@@ -404,74 +366,24 @@ export const FileUploadQuick= ({ type, title, uerId }:{ type:any, title:string, 
 
     } else {
 
-    // setassetLoader(true);
 
     const selectedFile = event.target.files?.[0] || null;
     setFile(selectedFile);
     const blobUrl = URL.createObjectURL(selectedFile);
     const idG = uploadedProductlist.length;
-    // setloadercarna(true);
-    console.log(event.target.result, "fdsfsdg");
     try {
       if (selectedFile) {
         const reader = new FileReader();
         reader.onloadend = async () => {
           if (type === "element") {
-            // addimgToCanvas(reader.result);
+
           } else {
             const filename = `img${Date.now()}`;
-            // setLoader(true);
             addimgToCanvasQuike(reader.result)
 
-            // const response = await fetch("/api/removebg", {
-            //   method: "POST",
-            //   headers: { "Content-Type": "application/json" },
-            //   body: JSON.stringify({
-            //     dataUrl: reader.result,
-            //     user_id: uerId,
-            //     project_id: projectId,
-            //     // type: "product",
-            //   }),
-            // });
-            // console.log(response);
-            // if (response?.status === 413) {
-            //   toast.error("Image exceeded 4mb limit");
-
-            //   setassetLoader(false);
-            // } else if (response?.status === 400) {
-            //   toast.error("Image is corrupted or unsupported dimensions");
-
-            //   setassetLoader(false);
-            // } else if (response?.status !== 200 && response?.status !== 413) {
-            //   toast.error(response?.statusText);
-
-            //   setassetLoader(false);
-            // }
-            // const data = await response.json();
-            // console.log(data);
-
-            // // BgRemover(reader.result, filename);
-            // if (data?.data) {
-            //   addimgToCanvasQuike(data.imageUrl)
-            //   setassetLoader(false);
-            //   // setLoader(false);
-            //   // setloadercarna(false);
-            // } else {
-            //   console.log("bg not removed");
-            //   // setLoader(false);
-            //   // setloadercarna(false);
-            //   setassetLoader(false);
-            // }
-
-            // setUploadedProductlist((prev) => [
-            //   ...prev,
-            //   { url: blobUrl, baseUrl: reader.result },
-            // ]);
+            
           }
-          // setUpladedArray((prev) => [
-          //   ...prev,
-          //   { url: blobUrl, baseUrl: reader.result },
-          // ]);
+         
         };
         reader.readAsDataURL(selectedFile);
       }
@@ -538,25 +450,22 @@ export const FileUploadQuick= ({ type, title, uerId }:{ type:any, title:string, 
           </>
         )}
       </div>
-      {/* )} */}
+
     </InputFile1>
   );
 };
 
 export const FileUpload3D = ({ type, title, uerId }:{ type:any, title:string, uerId :any}) => {
   const {
-    // file,
-    // setFile,
+
     file3d,
     setFile3d,
     uploadedProductlist,
     setUploadedProductlist,
-
     setLoader,
     addimgToCanvas,
     setPopup,
     projectId,
-    // uerId,
     setloadercarna,
     assetLoader,
     setassetLoader,
@@ -614,9 +523,6 @@ export const FileUpload3D = ({ type, title, uerId }:{ type:any, title:string, ue
       setFile3d(url);
       setFile3dUrl(null);
 
-      // setasset3dLoader(false);
-
-   
     } else {
       setasset3dLoader(false);
     }

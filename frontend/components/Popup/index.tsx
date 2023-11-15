@@ -8,17 +8,15 @@ import Button from "../common/Button";
 import { useAppState } from "@/context/app.context";
 import { useSession } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 
 const PopupUpload = () => {
   const {
     setPopup,
     popup,
-    setUploadedProductlist,
     setProduct,
     addimgToCanvasSubject,
     fetchAssetsImagesWithProjectId,
-    AssetsActivTab,
-    setassetsActiveTab,
     fetchAssetsImages,
   } = useAppState();
   const [productnew, setProductnew] = useState("");
@@ -38,9 +36,7 @@ const PopupUpload = () => {
     if (productnew !== "") {
       console.log(popup.dataArray);
       setbtnisable(true)
-
       try {
-
         const response =  await fetch(`/api/addcaption`, {
           method: "POST",
           headers: {
@@ -54,26 +50,17 @@ const PopupUpload = () => {
         });
 
         const datares = await response;
-        // console.log(datares);
-
         if (datares) {
           fetchAssetsImages(userId, null);
           addimgToCanvasSubject(popup?.dataArray?.imageUrl);
           fetchAssetsImagesWithProjectId(userId, id);
-          // setTimeout(() => {
-
-          // }, 500);
-
-          // setUploadedProductlist((prev) => [
-          //   ...prev,
-          //   { url: popup?.data, tittle: productnew },
-          // ]);
           setProduct(productnew);
           setPopup({ status: false, data: null });
         }
       } catch (error) {
+        
+
         setbtnisable(false)
-        // Handle error
         setPopup({ status: false, data: null });
       }
     }
@@ -81,10 +68,7 @@ const PopupUpload = () => {
   useEffect(() => {
    if(popup?.dataArray?.caption && popup?.dataArray?.caption  !== null){
     setProductnew(popup?.dataArray?.caption);
-
-
    }
-   console.log(popup,"sssssss",popup?.dataArray?.caption)
   }, [])
   
 

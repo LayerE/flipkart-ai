@@ -1,13 +1,6 @@
-/* eslint-disable react/jsx-key */
 /// <reference no-default-lib="true"/>
 import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
-
-const fadeIn = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.5 } },
-};
-
 import { motion } from "framer-motion";
 import { useSession } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
@@ -15,6 +8,10 @@ import { useAppState } from "@/context/app.context";
 import { supabase } from "@/utils/supabase";
 import Loader from "../Loader";
 
+const fadeIn = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.5 } },
+};
 const toolslist = [
   {
     name: "Banner Creator",
@@ -32,14 +29,7 @@ const toolslist = [
     url: "/generate-3d/",
     img: "https://media.sketchfab.com/models/724f69d360e24cda99ba84fead2bed88/thumbnails/3bc8180aab6148778a75cde61100e6d4/915356641a0547a6907f0b8c89383780.jpeg",
   },
-  {
-    name: "Simple AI Outputs      ",
-    route: true,
-
-    discription: "Easy and Quick AI Photography",
-    url: "/quick-generator/",
-    img: "https://thumbs.dreamstime.com/b/space-background-galaxy-nebula-blue-orange-clouds-neural-network-ai-generated-art-271138821.jpg",
-  },
+ 
 ];
 
 const Tools = ({ loadetool }) => {

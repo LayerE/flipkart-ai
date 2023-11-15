@@ -1,6 +1,8 @@
 /// <reference no-default-lib="true"/>
 
 import { useAppState } from "@/context/app.context";
+import assets from "@/public/assets";
+import Image from "next/image";
 import React, { useState } from "react";
 import { styled } from "styled-components";
 
@@ -23,8 +25,7 @@ const BottomTab = () => {
   } = useAppState();
 
   const handileUndo = () => {
-    if(!loader){
-
+    if (!loader) {
       if (currentCanvasIndex.current > 0) {
         currentCanvasIndex.current--;
         canvasInstance.current.loadFromJSON(
@@ -35,22 +36,27 @@ const BottomTab = () => {
     }
   };
   const handilePre = () => {
-    if(!loader){
-
-    if (currentCanvasIndex.current < canvasHistory.current.length - 1) {
-      currentCanvasIndex.current++;
-      canvasInstance.current.loadFromJSON(
-        canvasHistory.current[currentCanvasIndex.current]
-      );
-      canvasInstance.current.renderAll();
+    if (!loader) {
+      if (currentCanvasIndex.current < canvasHistory.current.length - 1) {
+        currentCanvasIndex.current++;
+        canvasInstance.current.loadFromJSON(
+          canvasHistory.current[currentCanvasIndex.current]
+        );
+        canvasInstance.current.renderAll();
+      }
     }
-  }
+  };
+  const handileCleav = () => {
+    if (!loader) {
+      canvasInstance.current.clear();
+    }
   };
 
   return (
     <BottomTabWtapper>
       <div className="bottomTab">
         <div className="right">
+      
           <div className="undo" onClick={handileUndo}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -82,6 +88,9 @@ const BottomTab = () => {
                 fill="black"
               />
             </svg>
+          </div>
+          <div className="clare" onClick={handileCleav}>
+            <Image src={assets.icons.clean} width={16} height={15} alt="" />
           </div>
         </div>
       </div>
@@ -141,6 +150,14 @@ const BottomTabWtapper = styled.div`
   }
   .undo {
   }
+  /* .clare{
+    width: 15px;
+    height: 15px;
+    img{
+      width: 100%;
+      height: 100%;
+    }
+  } */
 
   /* Chrome, Safari, Edge, Opera */
   input::-webkit-outer-spin-button,

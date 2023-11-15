@@ -9,6 +9,8 @@ import generate_icon from './icons/generate.svg';
 import project_icon from './icons/projeect.svg';
 import user_icon from './icons/user.svg';
 import dot_icon from './icons/dot.svg';
+import clean from './icons/clean.png';
+
 
 
 // images
@@ -43,7 +45,8 @@ const icons = {
     project_icon,
     user_icon,
     edit_icon_diable,
-    dot_icon
+    dot_icon,
+    clean
 
 }
 const images = {

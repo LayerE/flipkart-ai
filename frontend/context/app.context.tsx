@@ -860,7 +860,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       // Calculate the maximum width and height based on the canvas size
       const maxWidth = canvasWidth;
       const maxHeight = canvasHeight;
-
       // Calculate the scaled width and height while maintaining the aspect ratio
       let scaledWidth = maxWidth;
       let scaledHeight = scaledWidth / imageAspectRatio;
@@ -871,7 +870,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       img.set({
         left: 6,
         top: 6,
-
         // scaleX: scaleX,
         // scaleY: scaleY,
       });
@@ -1356,11 +1354,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     }
     return false;
   }
+
+
   const generateImageHandeler = async (ueserId: any, proid: any) => {
     var subjectCount = 0;
     setLoader(false);
     setCanvasDisable(false);
-
     const startTime = new Date().getTime();
     canvasInstance?.current.forEachObject(function (obj: any) {
       if (obj.category === "subject") {
@@ -1371,27 +1370,18 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       }
     });
 
-    // if (category === null) {
-    //   toast("Select your product category first !");
-    // } else
-    if (subjectCount === 0 && !TDMode) {
+    if (category === null) {
+      toast("Select your product category first !");
+    } else if (subjectCount === 0 && !TDMode) {
       toast("Add product first");
-    }else if(product === ""|| product === null ||product === " "){
+    } else if (product === "" || product === null || product === " ") {
       toast("Add product Name");
-
-
-    }
-    else if(promt === "" || promt === null ||promt === " "){
+    } else if (promt === "" || promt === null || promt === " ") {
       toast("Select a templet or Describe your promt  ");
-
-      
-    }
-    
-    
-    else if (!TDMode) {
+    } else  {
       setLoader(true);
       setCanvasDisable(true);
-      // setGenerationLoader(true);
+
       const canvas1 = canvasInstance.current;
       try {
         console.log(templet);
@@ -1430,36 +1420,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         });
         const subjectDataUrl = await scaleDownImage(originalsubjectDataUrl);
 
-        // const originalImageElement = new Image();
-        // originalImageElement.src = subjectDataUrl;
-        // originalImageElement.onload = () => {
-        //   const canvas = document.createElement("canvas");
-        //   const width = activeSize.w;
-        //   const height = activeSize.h;
-
-        //   canvas.width = width;
-        //   canvas.height = height;
-
-        //   const ctx = canvas.getContext("2d");
-        //   ctx.drawImage(originalImageElement, 0, 0, width, height);
-
-        //   const resizedBase64 = canvas.toDataURL({
-        //     format: "webp",
-        //     multiplier: 4,
-        //   });
-        // };
-
-        //  const dd = await optimizeAndEncodeImage(subjectDataUrl, 23243)
-        //  console.log(dd)
-        // Example usage:
-
-        // const subjectDataUrlJson = subjectCanvas.toJSON();
-        // const updatedObject = {
-        //   width: activeSize.w,
-        //   height: activeSize.h,
-        //   ...subjectDataUrlJson,
-        // };
-
         subjectObjects.forEach((object: any) => {
           object.set({
             left: object.left + activeSize.l,
@@ -1467,7 +1427,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           });
           subjectCanvas.remove(object);
           canvasInstance.current.remove(object);
-          // maskCanvas.remove(object);
           canvasInstance.current.add(object);
           canvasInstance.current.renderAll();
         });
@@ -1486,7 +1445,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
             maskDataUrl: null,
             prompt: promtText.trim(),
             user_id: userId,
-            // category: category,
+            category: category,
             lora_type: loara,
             num_images: selectResult,
             caption: product,
@@ -1528,93 +1487,15 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
             }
           } catch (error) {
             toast.error("something went wrong");
-            setLoader(false)
+            setLoader(false);
           }
         }
       } catch (error) {
         console.error("Error generating image:", error);
         toast.error("something went wrong");
-        setLoader(false)
+        setLoader(false);
       }
-    } else {
-      // if (renderer === null) {
-      // } else {
-      //   console.log("dsfdfgdg");
-      //   setLoader(true);
-      //   const promtText = promtFull;
-      //   const screenshot = renderer.domElement.toDataURL("image/png");
-      //   var img = new Image();
-      //   // Set an onload event handler
-      //   let scaledDataURL;
-      //   img.onload = function () {
-      //     // Scale down the image by setting its width and height to 0.5 times the original dimensions
-      //     img.width *= 0.5;
-      //     img.height *= 0.5;
-      //     // Create a canvas to draw the scaled image
-      //     var canvas = document.createElement("canvas");
-      //     canvas.width = img.width;
-      //     canvas.height = img.height;
-      //     var ctx = canvas.getContext("2d");
-      //     if (ctx) {
-      //       ctx.drawImage(img, 0, 0, img.width, img.height);
-      //     }
-      //     // Get the scaled data URL
-      //     scaledDataURL = canvas.toDataURL("image/png");
-      //     // Now, scaledDataURL contains the data URL of the image scaled down to 0.5 of its original size.
-      //     // You can use it as needed.
-      //   };
-      //   // Set the source of the image to the original data URL
-      //   img.src = screenshot;
-      //   const response = await fetch("/api/generate", {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify({
-      //       dataUrl: scaledDataURL,
-      //       maskDataUrl: null,
-      //       prompt: promtText.trim(),
-      //       user_id: userId,
-      //       category: category,
-      //       lora_type: loara,
-      //       num_images: selectResult,
-      //     }),
-      //   });
-      //   const generate_response = await response.json();
-      //   if (generate_response?.error) {
-      //     // alert(generate_response?.error);
-      //     toast.error(generate_response?.error);
-      //     setLoader(false);
-      //     return false;
-      //   } else {
-      //     setLoader(true);
-      //     try {
-      //       const response = await fetch(
-      //         `${process.env.NEXT_PUBLIC_API}/jobId`,
-      //         {
-      //           method: "POST",
-      //           headers: {
-      //             "Content-Type": "application/json",
-      //           },
-      //           body: JSON.stringify({
-      //             userId: userId,
-      //             projectId: proid,
-      //             jobId: generate_response?.job_id,
-      //           }),
-      //         }
-      //       );
-      //       const datares = await response;
-      //       if (datares.ok) {
-      //         setJobIdOne([generate_response?.job_id]);
-      //         GetProjextById(proid);
-      //       }
-      //       // window.open(`/generate/${datares?._id}`, "_self");
-      //     } catch (error) {
-      //       setLoader(false);
-      //     }
-      //   }
-      // }
-    }
+    } 
   };
 
   const generateQuikcHandeler = async (ueserId: any, proid: any) => {
@@ -1680,7 +1561,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
             maskDataUrl: null,
             prompt: promtText.trim(),
             user_id: userId,
-            // category: category,
+            category: category,
             lora_type: loara,
             num_images: selectResult,
             caption: product,
@@ -1694,7 +1575,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           if (generate_response?.error) {
             toast.error(generate_response?.error);
             setLoader(false);
-      setCanvasDisable(false);
+            setCanvasDisable(false);
 
             return false;
           } else {
@@ -1720,10 +1601,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     const startTime = new Date().getTime();
     console.log(product, "sdfdsgdfg");
 
-    // if (category === null) {
-    //   toast("Select your product category first !");
-    // } else
-    if (!file3dUrl && !file3d) {
+    if (category === null) {
+      toast("Select your product category first !");
+    } else if (!file3dUrl && !file3d) {
       toast("Add a 3d model");
     } else if (product === null) {
       toast("Enter your 3d model name ");
@@ -1773,7 +1653,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
               maskDataUrl: null,
               prompt: promtText.trim(),
               user_id: userId,
-              // category: category,
+              category: category,
               lora_type: loara,
               num_images: selectResult,
               is_3d: true,

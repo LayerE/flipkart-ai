@@ -3,7 +3,6 @@
 
 import React from "react";
 import { Row } from "../common/Row";
-import Label from "../common/Label";
 import { styled } from "styled-components";
 import { useAppState } from "@/context/app.context";
 
@@ -20,10 +19,6 @@ const ListOf: React.FC = () => {
     setSelectedSurrounding,
     setSelectedBackground
 
-
-
-
-
   } = useAppState();
 
   return (
@@ -31,10 +26,6 @@ const ListOf: React.FC = () => {
       <AllWrapper>
 
       <div className="gap">
-        {/* <Row>
-          <Label>Select an element to add</Label>
-        </Row> */}
-
         <ResponsiveRowWraptwo>
           {viewMore?.list?.map((test:string, i:number) => (
             <div

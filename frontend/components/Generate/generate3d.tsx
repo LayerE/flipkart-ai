@@ -116,7 +116,7 @@ const Generate3d = () => {
     >
      <AllWrapper>
 
-      {/* <div className="gap">
+      <div className="gap">
         <DisabledLabel> Select your product category </DisabledLabel>
 
         <Box className="disBox">
@@ -132,7 +132,7 @@ const Generate3d = () => {
             style={{ width: "100%", pointerEvents: "none" }}
           ></DropdownInput>
         </Box>
-      </div> */}
+      </div>
       <div className="gap">
         <DisabledLabel>What is your object </DisabledLabel>
         <Input

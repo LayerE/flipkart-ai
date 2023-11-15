@@ -5,7 +5,7 @@ import { Row } from "../common/Row";
 import Button from "../common/Button";
 import { useAppState } from "@/context/app.context";
 import { styled } from "styled-components";
-import { useSession } from "@supabase/auth-helpers-react";
+
 const fadeIn = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 0.5 } },
@@ -14,15 +14,11 @@ const fadeIn = {
 import { motion } from "framer-motion";
 import EditorSection from "./Editor";
 import Tamplates from "./Templates";
-import { fabric } from "fabric";
-import Label, { DisabledLabel } from "../common/Label";
-import SuggetionInput from "./SuggetionInput";
+
+import  { DisabledLabel } from "../common/Label";
+
 import {
-  Loara,
-  PlacementSuggestions,
   categoryList,
-  productSuggestions,
-  resultList,
 } from "@/store/dropdown";
 import TextLoader from "../Loader/text";
 import { useRouter } from "next/router";
@@ -30,35 +26,11 @@ import DropdownInput, { DropdownNOBorder } from "../common/Dropdown";
 import { Input, TestArea } from "../common/Input";
 
 const Generate = () => {
-  const session = useSession();
+
 
   const {
     product,
-    placementTest,
-    backgroundTest,
-    surroundingTest,
-    generationLoader,
-    setGenerationLoader,
-    selectPlacement,
-    selectSurrounding,
-    selectBackground,
-    getBase64FromUrl,
-    addimgToCanvasGen,
-    canvasInstance,
-    setGeneratedImgList,
-    generatedImgList,
-    setSelectedImg,
-    setLoader,
-    selectedImg,
-    undoArray,
-    setModifidImageArray,
-    selectResult,
-    editorBox,
     loader,
-    jobId,
-    setJobId,
-    setSelectedresult,
-    setPlacementTest,
     generateImageHandeler,
     promt,
     setpromt,
@@ -66,17 +38,12 @@ const Generate = () => {
     setpromtFull,
     category,
     setcategory,
-    filteredArray,
     genrateeRef,
     TDMode,
     generate3dHandeler,
     userId,
-    setUserId,
-    elevatedSurface,
-    seTelevatedSurface,
     activeTemplet,
     setProduct,
-    setActiveTemplet,
   } = useAppState();
 
   const { query, isReady } = useRouter();
@@ -86,10 +53,8 @@ const Generate = () => {
 
   useEffect(() => {
     console.log(promt, promtFull, activeTemplet);
-    // if (promt == activeTemplet?.promt   ) {
     const words = promtFull.split(" ");
     const newPro = words[0];
-
     const words1 = product.split(" ");
     const newPro1 = words1[0];
 
@@ -100,9 +65,6 @@ const Generate = () => {
       const promts = promt;
       setpromtFull(promts);
     }
-
-    // }
-    // setpromtFull(promts);
   }, [product, activeTemplet]);
   useEffect(() => {
     if (promt == activeTemplet?.promt) {
@@ -110,17 +72,10 @@ const Generate = () => {
 
       setpromtFull(promts);
     }
-
-    // setpromtFull(promts);
-
-    // }
-    // setpromtFull(promts);
   }, [activeTemplet]);
 
   const handelPromt = (e) => {
     setpromt("");
-    // setProduct("")
-    // setActiveTemplet({})
     const promts = e.target.value;
     setpromt(promts);
     setpromtFull(promts);
@@ -135,23 +90,23 @@ const Generate = () => {
     >
       <AllWrapper>
         <div className="padding-s">
-          {/* <div className="gap">
-        <DisabledLabel> Select your product category </DisabledLabel>
+          <div className="gap">
+            <DisabledLabel> Select your product category </DisabledLabel>
 
-        <Box className="disBox">
-          {loader ? <div className="dis"></div> : null}
-          <DropdownInput
-            data={{
-              list: categoryList,
-              action: setcategory,
-              label: "placement",
+            <Box className="disBox">
+              {loader ? <div className="dis"></div> : null}
+              <DropdownInput
+                data={{
+                  list: categoryList,
+                  action: setcategory,
+                  label: "placement",
 
-              activeTab: category,
-            }}
-            style={{ width: "100%", pointerEvents: "none" }}
-          ></DropdownInput>
-        </Box>
-      </div> */}
+                  activeTab: category,
+                }}
+                style={{ width: "100%", pointerEvents: "none" }}
+              ></DropdownInput>
+            </Box>
+          </div>
           <div className="gap">
             <DisabledLabel>What is your Product </DisabledLabel>
             <Input
@@ -168,28 +123,8 @@ const Generate = () => {
                 value={promt}
                 onChange={(e) => handelPromt(e)}
                 readonly={loader ? "readonly" : false}
-                // value={placementTest}
-                // setValue={setPlacementTest}
-                // suggetion={PlacementSuggestionsFilter}
               />
-              {/* <input type="text" className="generatePreview" /> */}
             </Row>
-            {/* <Row>
-            <DATA>
-          <div>
-              <DisabledLabel>
-              Is model on elevated surface
-              </DisabledLabel>
-            </div>
-          <div
-              className={`toggle-switch ${elevatedSurface ? "on" : "off"}`}
-              onClick={() => seTelevatedSurface(!elevatedSurface)}
-            >
-              <div className="circle"></div>
-            </div>
-           
-          </DATA>
-        </Row> */}
             <Row>
               {loader ? (
                 <TextLoader />
@@ -204,30 +139,13 @@ const Generate = () => {
                   disabled={promt === "" ? true : false}
                 >
                   Generate
-                  {/* {generationLoader ? "Loading..." : "Generate"} */}
                 </Button>
               )}
             </Row>
           </div>
+        </div>
+        <div className="bigGap"></div>
 
-          {/* <div className="rowwothtwo" style={{ marginBottom: "0px" }}>
-        <DisabledLabel>Number of results</DisabledLabel>
-        <div className="two-side">
-         
-          <DropdownNOBorder
-            data={{
-              list: resultList,
-              action: setSelectedresult,
-              activeTab: selectResult,
-            }}
-          ></DropdownNOBorder>
-        </div>
-      </div> */}
-        </div>
-        <div className="bigGap">
-          {/* <Label>Edit the the prompt in the form below.</Label> */}
-        </div>
-        {/* <div className="gap"></div> */}
         <SwchichBtn className="swich">
           <div
             className={changeTab ? "btnswitch " : "btnswitch activeSwitch"}
@@ -259,7 +177,6 @@ export const AllWrapper = styled.div`
   .padding-s {
     padding-left: 15px;
     padding-right: 15px;
-    /* background-color: red; */
   }
 `;
 export const DATA = styled.div`
@@ -289,8 +206,7 @@ export const DATA = styled.div`
   }
 
   .toggle-switch.on {
-    background-color: ${(props) =>
-      props.theme.btnPrimary}; /* Based on the image you provided */
+    background-color: ${(props) => props.theme.btnPrimary};
   }
 
   .toggle-switch.on .circle {
@@ -357,14 +273,11 @@ export const SwchichBtn = styled(Row)`
   }
 `;
 export const Wrapper = styled.div`
-  /* position: absolute; */
   padding: 15px;
   max-height: calc(100vh - 320px);
   overflow-y: scroll;
 `;
 export const BoxOff = styled.div`
-  /* height: 100%; */
-  /* overflow: hidden; */
   position: relative;
   .dis {
     background: transparent !important;
@@ -395,7 +308,7 @@ export const BoxOff = styled.div`
       transition: all 0.3s ease-in-out;
       display: flex;
       justify-content: space-between;
-      /* align-items: center; */
+
       .sub {
         opacity: 0;
         transition: all 0.5s ease-in-out;

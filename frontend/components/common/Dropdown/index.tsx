@@ -1,9 +1,7 @@
-import { useAppState } from "@/context/app.context";
 import React, { useState, useEffect,useRef } from "react";
 import { styled } from "styled-components";
 const Dropdown = styled.div`
   position: relative;
-  /* width: 100%; */
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
@@ -15,18 +13,14 @@ const Dropdown = styled.div`
     align-items: center;
     border-radius: 6px;
     border: 2px solid #d9d9d9;
-    /* padding: 8px 15px; */
     padding: 0.7rem 0.75rem;
     gap: 15px;
     background: #fff;
     white-space: nowrap;
-    /* overflow: hidden; */
     text-overflow: ellipsis;
 
     &:hover{
       border: 2px solid rgba(249, 208, 13, 1) ;
-
-
     }
     svg {
       width: 15px;
@@ -178,16 +172,10 @@ const DropdownWrapper = styled.div`
     gap: 12px;
     align-items: center;
     width: 100%;
-
     border-radius: 6px;
-    /* border: 1px solid #040404; */
-    /* padding: 8px 15px; */
-    /* padding: 0.7rem 0.75rem; */
     text-align: right;
     background: #fff;
     white-space: nowrap;
-    /* overflow: hidden; */
-    /* text-overflow: ellipsis; */
   }
   .dropdown-content {
     
@@ -238,18 +226,6 @@ export const DropdownNOBorder: React.FC = ({ data }) => {
   };
   const popupRef = useRef<HTMLDivElement>(null);
 
-
-  // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  // const popupRef = useRef<HTMLDivElement>(null);
-
-  // const handleToggleDropdown = () => {
-  //   setIsDropdownOpen((prevState) => !prevState);
-  // };
-
-  // const handleOptionSelect = (option: string) => {
-  //   data.action(option);
-  //   setIsDropdownOpen(false);
-  // };
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
       if (
@@ -313,7 +289,6 @@ export const DropdownNOBorder: React.FC = ({ data }) => {
         </div>
         {isDropdownOpen && (
           <div className="dropdown-content">
-            {/* Place your dropdown options here */}
             {data.list.map((items, i) => (
               <p key={i} onClick={() => handleOptionSelect(items)}>
                 {items}

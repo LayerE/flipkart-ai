@@ -1,98 +1,91 @@
 // @ts-nocheck
 
-
 import React, { useEffect, useState } from "react";
 import { Row } from "../common/Row";
-
 import { useAppState } from "@/context/app.context";
 import { styled } from "styled-components";
+import { motion } from "framer-motion";
+import { TempletList } from "@/store/dropdown";
+import { useRouter } from "next/router";
+import Label from "../common/Label";
+
 
 const fadeIn = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 1 } },
 };
 
-import { motion } from "framer-motion";
-// import { Label } from "react-konva";
-import { TempletList, templets } from "@/store/dropdown";
-import { useSession } from "@supabase/auth-helpers-react";
-import { useRouter } from "next/router";
-import Label from "../common/Label";
-
 const Tamplates = () => {
   const {
-    setProduct,
     setPlacementTest,
     setBackgrundTest,
     setSurroundingTest,
     setSelectedPlacement,
     setSelectedSurrounding,
     setSelectedBackground,
-    placementTest,
-    surroundingTest,
     project,
     setTemplet,
     setViewMore,
-    loara,
     setLoara,
-    promt,
     setpromt,
     loader,
-    backgroundTest,
     GetProjextById,
     activeTemplet,
     setActiveTemplet,
+    category
   } = useAppState();
-  const session = useSession();
-  const [userId, setUserId] = useState<string | null>(null);
-  useEffect(() => {
-    if (session) {
-      setUserId(session.user.id);
-    }
-  }, [session]);
+
+
   const { query, isReady } = useRouter();
-  // const { id } = query;
   const id = (query.id as string[]) || [];
-  const addtoRecntly = async (obj) => {
-    if (isReady) {
-      try {
-        // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
 
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API}/recently`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              userId: userId,
-              projectId: id,
-              recently: obj,
-            }),
-          }
-        );
-        // console.log(await response.json(), "dfvcvdfvdvcdsd");
-        const datares = await response;
-
-        if (datares.ok) {
-          GetProjextById(id);
-          // setfilterRecently(project?.recently.reverse())
-        }
-        // window.open(`/generate/${datares?._id}`, "_self");
-      } catch (error) {
-        // Handle error
-      }
-    }
-  };
   const [filterRecently, setfilterRecently] = useState();
 
   useEffect(() => {
     GetProjextById(id);
-    // console.log(data, "dfvcvdf")
-
     setfilterRecently(project?.recently);
-  }, [isReady,setfilterRecently]);
+  }, [isReady, setfilterRecently]);
+
+
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [suggestedTemplates, setSuggestedTemplates] = useState([]);
+  const [otherTemplates, setOtherTemplates] = useState([]);
+  useEffect(() => {
+    ( () => {
+let templetType 
+if(category === "Apparel & Footwear"){
+  templetType= "Outdoor Scene"
+}
+else if(category === "Mobile & Laptops"){
+  templetType =  "On Platforms"
+}
+else if(category === "Furniture & Decor"){
+  templetType="Indoor Scene"
+}
+else if(category === "Other"){
+  templetType= "Backdrops"
+}
+
+      // Assuming 'TempletList' is the name of your array
+      const filtered = TempletList.find((item) => item.title === templetType);
+      if (filtered) {
+        setSuggestedTemplates(filtered.list);
+        console.log(filtered.list)
+      } else {
+
+
+        setSuggestedTemplates([]);
+      }
+      setOtherTemplates(TempletList.filter((item) => item.title !== templetType));
+    // console.log(TempletList.filter((item) => item.title !== "Furniture & Decor").flatMap(item => item.list) )
+
+    })()
+   
+    // filterTemplates(category)
+    console.log(suggestedTemplates,otherTemplates )
+    
+  }, [category]);
+
 
   return (
     <motion.div
@@ -125,7 +118,49 @@ const Tamplates = () => {
               </div>
             </div>
             <div className="horizontaScrollBox">
-              {filterRecently?.slice(-10)?.reverse().map((test, i) => (
+              {filterRecently
+                ?.slice(-10)
+                ?.reverse()
+                .map((test, i) => (
+                  <div
+                    key={i}
+                    className={`imageBoxs ${
+                      activeTemplet === test ? "actives" : ""
+                    }`}
+                    onClick={() => {
+                      if (!loader) {
+                        setActiveTemplet(test);
+                        setPlacementTest(test.placement);
+                        setSurroundingTest(test.surrounding);
+                        setBackgrundTest(test.background);
+                        setSelectedPlacement(test.placementType);
+                        setSelectedSurrounding(test.surroundingType);
+                        setSelectedBackground(test.backgroundType);
+                        setLoara(test.lora);
+                        setpromt(test.promt);
+                      }
+                    }}
+                  >
+                    <picture>
+                      <img src={test?.image} alt="" />
+                    </picture>
+                    <div className="heads">{test?.title}</div>
+                  </div>
+                ))}
+            </div>
+          </>
+        ) : null}
+{
+  suggestedTemplates.length ? 
+<>
+<div className=" rowsnew">
+          <div className="left">
+            <Label>Suggested templates:</Label>
+          </div>
+        </div>
+      
+            <ResponsiveRowWraptwo>
+              {suggestedTemplates.map((test, i) => (
                 <div
                   key={i}
                   className={`imageBoxs ${
@@ -134,7 +169,7 @@ const Tamplates = () => {
                   onClick={() => {
                     if (!loader) {
                       setActiveTemplet(test); // Set the current item as active
-
+                      setTemplet(test);
                       setPlacementTest(test.placement);
                       setSurroundingTest(test.surrounding);
                       setBackgrundTest(test.background);
@@ -147,21 +182,28 @@ const Tamplates = () => {
                   }}
                 >
                   <picture>
-                    <img src={test?.image} alt="" />
+                    <img src={test.image} alt="" />
                   </picture>
-                  <div className="heads">{test?.title}</div>
+                  <div className="head">{test?.title}</div>
                 </div>
               ))}
-            </div>
-          </>
-        ) : null}
+            </ResponsiveRowWraptwo>
+
+
+</>
+
+
+  :null
+}
+
+      
 
         <div className=" rowsnew">
           <div className="left">
-            <Label>Select a Template Below:</Label>
+            <Label>Select a  Other Template Below:</Label>
           </div>
         </div>
-        {TempletList.map((testd, i) => (
+        {otherTemplates.map((testd, i) => (
           <>
             <div className="sub-title">
               <Label>{testd.title}</Label>
@@ -176,9 +218,7 @@ const Tamplates = () => {
                   onClick={() => {
                     if (!loader) {
                       setActiveTemplet(test); // Set the current item as active
-                      // addtoRecntly(test);
                       setTemplet(test);
-                      // setProduct(test.product);
                       setPlacementTest(test.placement);
                       setSurroundingTest(test.surrounding);
                       setBackgrundTest(test.background);
@@ -272,18 +312,14 @@ export const RecentWrapper = styled(Row)`
     border-radius: 8px;
     border: 2px solid #d9d9d9;
     padding: 10px 10px !important;
-    /* height: 120px; */
 
     min-width: 150px !important;
     height: 180px;
     overflow: hidden;
-    /* display: flex;
-    align-items: center;
-    justify-content: center; */
+
     picture {
       width: 100%;
       height: 80%;
-      /* object-fit: cover; */
     }
     .head {
       display: flex;
@@ -306,13 +342,8 @@ export const RecentWrapper = styled(Row)`
       width: 100%;
       height: 100%;
       border-radius: 5px;
-
-      /* height: 130px; */
-
       object-fit: cover;
       transition: all 0.3s ease-in-out;
-
-      /* object-fit: contain; */
       &:hover {
         transform: scale(1.1);
       }

@@ -1,15 +1,12 @@
 // @ts-nocheck
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { styled } from "styled-components";
-import assets from "@/public/assets";
-import Link from "next/link";
 import { useAppState } from "@/context/app.context";
 import { useRouter } from "next/router";
 
 const ProjectCard = ({
   data,
-  setProjects,
   handleDelet,
   handleEdite,
   setprojectsLoader,
@@ -37,7 +34,7 @@ const ProjectCard = ({
   };
 
   const handleDeletFun = async (id) => {
-    // deleteDataByObjectIdFromLocalArray('Projects', data.id)
+
     await handleDelet(id);
     setopen(false);
   };
@@ -51,13 +48,12 @@ const ProjectCard = ({
 
   return (
     <CardWrapper className="projectfile link">
-      {/* <div className="" > */}
       <div className="img" onClick={() => navigate()}>
         {data?.previewImage !== "" ? (
           <img src={data?.previewImage} alt="" />
         ) : null}
       </div>
-      {/* </div> */}
+
       <div className="testcreat">
         <div className="pro-name">
           <input
@@ -165,7 +161,6 @@ const CardWrapper = styled.div`
   }
 
   input {
-    /* border: ; */
     background-color: transparent;
     width: 120px;
     border: none;
@@ -188,7 +183,6 @@ const CardWrapper = styled.div`
     position: absolute;
     bottom: 0;
     width: 100%;
-    /* text-align: center; */
     padding: 16px;
     font-size: 14px;
     transition: all 0.3s;

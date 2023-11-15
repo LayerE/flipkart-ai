@@ -1,5 +1,4 @@
 
-/// <reference no-default-lib="true"/>
 // @ts-nocheck
 
 import React, { useEffect, useState } from "react";
@@ -12,7 +11,6 @@ import { useSession } from "@supabase/auth-helpers-react";
 
 const Regeneret = ()=> {
   const session = useSession();
-
   const { query, isReady } = useRouter();
   const id = (query.id as string[]) || [];
 
@@ -23,8 +21,6 @@ const Regeneret = ()=> {
     positionBtn,
     canvasInstance,
     generatedImgList,
-
-
     GetProjextById,
     regenratedImgsJobId,
     setRegenratedImgsJobid,
@@ -199,8 +195,6 @@ const Regeneret = ()=> {
               <DaoderWarpperL></DaoderWarpperL>
               <picture className="">
                 <img src={regeneratePopup.url} alt="image" />
-
-                {/* <img src={regeneratePopup?.url} alt="image" /> */}
               </picture>
             </div>
 
@@ -365,11 +359,8 @@ const WrapperRegenerat = styled.div`
     }
 
     img {
-      /* width: 200px; */
       height: 22vh;
       width: 100%;
-      /* margin: auto; */
-      /* margin-bottom: 30px; */
       border-radius: 8px !important;
       object-fit: cover;
       object-position: center;
