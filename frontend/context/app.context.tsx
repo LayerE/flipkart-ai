@@ -1620,28 +1620,54 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setLoader(true);
         const promtText = promt;
         // const screenshot = renderer.domElement.toDataURL("image/png");
-        const screenshot = renderer.domElement.toDataURL("image/png", 4);
-        var img = new Image();
+        const screenshot = renderer.domElement.toDataURL("image/png");
+  
         // Set an onload event handler
         let scaledDataURL;
-        img.onload = async function () {
-          // Scale down the image by setting its width and height to 0.5 times the original dimensions
-          img.width *= 2;
-          img.height *= 2;
+        let subjectDataUrl
+
 
           // Create a canvas to draw the scaled image
-          var canvas = document.createElement("canvas");
-          canvas.width = img.width;
-          canvas.height = img.height;
-          var ctx = canvas.getContext("2d");
-          if (ctx) {
-            ctx.drawImage(img, 0, 0, img.width, img.height);
-          }
-          console.log(screenshot);
+          // var canvas = document.createElement("canvas");
+          // canvas.width = img.width;
+          // canvas.height = img.height;
+          // var ctx = canvas.getContext("2d");
+          // if (ctx) {
+          //   ctx.drawImage(img, 0, 0, activeSize.w, activeSize.h);
+          // }
 
-          // Get the scaled data URL
-          scaledDataURL = canvas.toDataURL("image/png");
-          console.log(scaledDataURL);
+          var canvass = new fabric.Canvas();
+canvass.setWidth(activeSize.w);
+canvass.setHeight(activeSize.h);
+
+// Add the image to the Fabric canvas
+fabric.Image.fromURL(screenshot, async function(oImg) {
+    // Scale the image
+    // oImg.scaleToWidth(activeSize.w);
+    // oImg.scaleToHeight(activeSize.h);
+
+    // Add the image to the canvas
+    canvass.add(oImg);
+
+    // Once the image is added and rendered, you can get the data URL
+    canvass.renderAll();
+    scaledDataURL = canvass.toDataURL({
+      format: 'png',
+      quality: 1,
+      multiplier: 4,
+    
+    });
+
+
+console.log(scaledDataURL);
+
+subjectDataUrl = await scaleDownImage(scaledDataURL);
+console.log( subjectDataUrl,"ssdwsds");
+
+// Get the scaled data URL
+// scaledDataURL = canvas.toDataURL("image/png");
+console.log(scaledDataURL);
+console.log( subjectDataUrl,"ssdwsds");
 
           const response = await fetch("/api/generate", {
             method: "POST",
@@ -1649,7 +1675,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              dataUrl: scaledDataURL,
+              dataUrl:await subjectDataUrl,
               maskDataUrl: null,
               prompt: promtText.trim(),
               user_id: userId,
@@ -1693,10 +1719,10 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
               setLoader(false);
             }
           }
+        })
         };
 
-        img.src = screenshot;
-      }
+        
     }
   };
 
@@ -1741,18 +1767,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           setreLoader(false);
         }
       }
-      //  commet r
-      // setTimeout(async function () {
-      //   const loadeImge = await fetchGeneratedImages(ueserId);
-
-      //   setSelectedImg({
-      //     status: true,
-      //     image: loadeImge[0]?.modified_image_url,
-      //     modifiedImage: loadeImge[0]?.modified_image_url,
-      //   });
-
-      //   setGeneratedImgList(loadeImge?.slice(0, 20));
-      // }, 30000);
+     
     } catch (error) {
       console.error("Error generating image:", error);
     } finally {

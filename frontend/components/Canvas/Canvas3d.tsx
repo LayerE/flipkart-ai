@@ -59,7 +59,7 @@ const Canvas3d = () => {
 
   let camera, scene, object, controls, renderNew;
   const [showText, setshowText] = useState(false);
-  // const [tdFormate, setTdFormate] = useState("tds");
+
 
   const [re, setRe] = useState(1);
   useEffect(() => {
@@ -68,86 +68,74 @@ const Canvas3d = () => {
     let renderer;
     const init = () => {
       camera = new THREE.PerspectiveCamera(
-        75,
+        45,
         activeSize.w / activeSize.h,
-        0.1,
-        1000
+        0.01, 1000 
       );
-      // camera.position.set(-1.8, 0.6, 2.7);
-      // camera.position.z = 5;
-      // camera.position.x = 10;
-
-      // camera.position.set(-20.5, 0.5, 8.0);
-      // camera.lookAt(new THREE.Vector3(0, 0, 0));
+      // camera.position.set( 1.5, 4, 9 );
       scene = new THREE.Scene();
-      // const axesHelper = new THREE.AxesHelper(5)
-      // scene.add(axesHelper)
-
+      scene.add(camera)
       renderer = new THREE.WebGLRenderer({
         antialias: true,
         preserveDrawingBuffer: true,
       });
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+				renderer.toneMappingExposure = 1;
+
+      // to get the colore and ligtin of the object 
       const pmremGenerator = new THREE.PMREMGenerator(renderer);
+      pmremGenerator.compileEquirectangularShader();
+
       scene.environment = pmremGenerator.fromScene(
-        new RoomEnvironment(renderer),
-        0.04
+        new RoomEnvironment(renderer)
+        // 0.04
       ).texture;
-      // renderer.useLegacyLights = false;
-      // renderer.shadowMap.enabled = true;
-      const ambientLight = new THREE.AmbientLight(0x404040);
-      scene.add(ambientLight);
-      const pointLight = new THREE.PointLight(0xff0000, 100);
-      // pointLight.position.set(50, 50, 50);
-      pointLight.position.set(2.5, 4.5, 15);
-      // scene.add(pointLight);
-      // scene.add(camera);
-      const light = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
-      light.position.set(2.5, 7.5, 15);
-      scene.add(light);
+
+      // const ambientLight = new THREE.AmbientLight(0x404040);
+      // scene.add(ambientLight);
+      // const pointLight = new THREE.PointLight(0xff0000, 100);
+
+      // pointLight.position.set(2.5, 4.5, 15);
+
+      // const light = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
+      // light.position.set(2.5, 7.5, 15);
+      // scene.add(light);
 
       controls = new OrbitControls(camera, renderer.domElement);
+      controls.screenSpacePanning = true;
+       
+
       // controls.target.set( 0, .5, 2 );
       controls.update();
+
       function loadModel() {
         object.traverse(function (child) {
           if (child.isMesh) {
-            // child.material.map = texture;
-            // child.material.color.setrgb(191, 14, 14)
             if (filsizeMorethan10) {
               // child.material.color.set(0xc8c8c8);
               // child.material = new THREE.MeshBasicMaterial({ color: 0xc8c8c8 });
             } else {
               child.material = child.material.clone();
             }
-            // child.material = child.material.clone();
           } else {
             if (filsizeMorethan10) {
-              // child.material = new THREE.MeshBasicMaterial({ color: 0xc8c8c8 });
+             
             }
           }
         });
-        // object.position.y = -0.5;
-        // object.scale.setScalar(0.07);
-        // container.add(object);
-        // scene.add(container);
+
         scene.add(object);
 
         // Adjust the camera position and rotation to focus on the loaded object
         const boundingBox = new THREE.Box3().setFromObject(object);
         const center = boundingBox.getCenter(new THREE.Vector3());
-
         const size = boundingBox.getSize(new THREE.Vector3());
 
         // Calculate the distance to fit the object in the view
         const maxDim = Math.max(size.x, size.y, size.z);
         const fov = camera.fov * (Math.PI / 180);
         const distance = Math.abs(maxDim / Math.sin(fov / 2));
-
-        // Set the camera position and look at the object
-        // camera.position.copy(center);
-
         camera.position.z += distance;
-        // camera.lookAt(center);
         controls.target = center;
         setasset3dLoader(false);
       }
@@ -156,17 +144,10 @@ const Canvas3d = () => {
         const boundingBox = new THREE.Box3().setFromObject(object);
         const center = boundingBox.getCenter(new THREE.Vector3());
         const size = boundingBox.getSize(new THREE.Vector3());
-
-        // Calculate the distance to fit the object in the view
         const maxDim = Math.max(size.x, size.y, size.z);
         const fov = camera.fov * (Math.PI / 180);
         const distance = Math.abs(maxDim / Math.sin(fov / 2));
-
-        // Set the camera position and look at the object
         camera.position.copy(center);
-        // camera.position.y += distance;
-        // object.position.set(0, 1, 0);
-
         camera.position.z += distance;
         camera.lookAt(center);
         setasset3dLoader(false);
@@ -186,13 +167,7 @@ const Canvas3d = () => {
 
       function onError(e) {
         console.log({ error: e });
-        // if(e.message === `Unexpected token 'P', \"PK\u0003\u0004\u0014\u0000\u0000\u0000\u0000\u0000\"... is not valid JSON`){
-        //   toast.error("Invalide formate");
-
-        // }else{
-
         toast.error(e.message);
-        // }
         setFile3dName(null);
         setasset3dLoader(false);
       }
@@ -217,46 +192,38 @@ const Canvas3d = () => {
 
       if (file3dUrl != null) {
         setshowText(true);
-
         if (tdFormate === ".obj") {
           setasset3dLoader(true);
-
           loader3d.load(
             file3dUrl,
             (obj) => {
               object = obj;
               loadModel();
-
-              // scene.add( obj );
             },
             onProgress,
             onError
           );
         } else if (tdFormate === ".3ds") {
           setasset3dLoader(true);
-
           loader3d.load(
             file3dUrl,
-            // "https://ik.imagekit.io/7urmiszfde/Bottle%20Coca-Cola%20N080710.3ds?updatedAt=1696856138699",
             (object) => {
               container.add(object);
               scene.add(container);
               postingCenter(object);
               const boundingBox = new THREE.Box3().setFromObject(object);
               const center = boundingBox.getCenter(new THREE.Vector3());
-
               const size = boundingBox.getSize(new THREE.Vector3());
 
-              // Calculate the distance to fit the object in the view
+
               const maxDim = Math.max(size.x, size.y, size.z);
               const fov = camera.fov * (Math.PI / 180);
               const distance = Math.abs(maxDim / Math.sin(fov / 2));
 
-              // Set the camera position and look at the object
-              // camera.position.copy(center);
+
 
               camera.position.z += distance;
-              // camera.lookAt(center);
+
               controls.target = center;
               setasset3dLoader(false);
             },
@@ -268,30 +235,8 @@ const Canvas3d = () => {
 
           loader3d.load(
             file3dUrl,
-            // "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
             (object) => {
-              // object.scene.traverse(function (child) {
-              //   if (child.type === "Mesh") {
-              //     let m = child;
-              //     m.receiveShadow = true;
-              //     m.castShadow = true;
-              //   }
-              //   if (child.type === "SpotLight") {
-              //     let l = child;
-              //     l.castShadow = true;
-              //     l.shadow.bias = -0.003;
-              //     l.shadow.mapSize.width = 2048;
-              //     l.shadow.mapSize.height = 2048;
-              //   }
-              // });
-              // // progressBar.style.display = 'none'
-              // scene.add(object.scene);
-              // // gltf.animations; // Array<THREE.AnimationClip>
-              // // gltf.scene; // THREE.Group
-              // // gltf.scenes; // Array<THREE.Group>
-              // // gltf.cameras; // Array<THREE.Camera>
-              // // gltf.asset; // Object
-
+    
               // After loading the model, calculate the center
               const boundingBox = new THREE.Box3().setFromObject(object.scene);
               const center = boundingBox.getCenter(new THREE.Vector3());
@@ -320,7 +265,7 @@ const Canvas3d = () => {
 
           loader3d.load(
             file3dUrl,
-            // "https://ik.imagekit.io/7urmiszfde/indoor%20plant_02_+2.fbx?updatedAt=1696879483866",
+           
             (object) => {
               object.traverse(function (child) {
                 if (child.isMesh) {
@@ -333,24 +278,21 @@ const Canvas3d = () => {
               object.scale.set(0.01, 0.01, 0.01);
               postingCenter(object);
               scene.add(object);
-              // container.add(object);
-              // scene.add(container);
+     
 
               const boundingBox = new THREE.Box3().setFromObject(object);
               const center = boundingBox.getCenter(new THREE.Vector3());
 
               const size = boundingBox.getSize(new THREE.Vector3());
 
-              // Calculate the distance to fit the object in the view
+           
               const maxDim = Math.max(size.x, size.y, size.z);
               const fov = camera.fov * (Math.PI / 180);
               const distance = Math.abs(maxDim / Math.sin(fov / 2));
 
-              // Set the camera position and look at the object
-              // camera.position.copy(center);
-
+          
               camera.position.z += distance;
-              // camera.lookAt(center);
+     
               controls.target = center;
               setasset3dLoader(false);
             },
@@ -362,7 +304,7 @@ const Canvas3d = () => {
 
           loader3d.load(
             file3dUrl,
-            // "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
+           
             (gltf) => {
               const model = gltf.scene;
               scene.add(model);
@@ -378,7 +320,7 @@ const Canvas3d = () => {
 
           loader3d.load(
             file3dUrl,
-            // "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
+           
             (geometry) => {
               const material = new THREE.MeshPhysicalMaterial({
                 color: 0xb2ffc8,
@@ -409,7 +351,7 @@ const Canvas3d = () => {
         } else if (tdFormate === ".ply") {
           loader3d.load(
             file3dUrl,
-            // "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
+           
             (geometry) => {
               const material = new THREE.MeshPhysicalMaterial({
                 color: 0xb2ffc8,
@@ -423,13 +365,13 @@ const Canvas3d = () => {
                 clearcoatRoughness: 0.25,
               });
 
-              // geometry.computeVertexNormals()
+     
               const mesh = new THREE.Mesh(geometry, material);
               mesh.rotateX(-Math.PI / 2);
               scene.add(mesh);
               camera.position.z += 150;
 
-              // postingCenter(geometry);
+      
 
               setasset3dLoader(false);
             },
@@ -437,7 +379,18 @@ const Canvas3d = () => {
             onError
           );
         }
-      } else if (file3d) {
+      } 
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      else if (file3d) {
         if (file3d) {
           setshowText(true);
         }
@@ -457,11 +410,10 @@ const Canvas3d = () => {
           );
         } else if (tdFormate === ".3ds") {
           setasset3dLoader(true);
-
           loader3d.load(
-            // "https://ik.imagekit.io/7urmiszfde/Bottle%20Coca-Cola%20N080710.3ds?updatedAt=1696856138699",
             file3d,
-            (object) => {
+            async (object) => {
+            
               container.add(object);
               scene.add(container);
               postingCenter(object);
@@ -475,11 +427,10 @@ const Canvas3d = () => {
               const fov = camera.fov * (Math.PI / 180);
               const distance = Math.abs(maxDim / Math.sin(fov / 2));
 
-              // Set the camera position and look at the object
-              // camera.position.copy(center);
+
 
               camera.position.z += distance;
-              // camera.lookAt(center);
+
               controls.target = center;
               setasset3dLoader(false);
             },
@@ -491,29 +442,27 @@ const Canvas3d = () => {
 
           loader3d.load(
             file3d,
-            // "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
-            (object) => {
-              object.scene.traverse(function (child) {
-                if (child.type === "Mesh") {
-                  // let m = child;
-                  // m.receiveShadow = true;
-                  // m.castShadow = true;
-                }
-                if (child.type === "SpotLight") {
-                  // let l = child;
-                  // l.castShadow = true;
-                  // l.shadow.bias = -0.003;
-                  // l.shadow.mapSize.width = 2048;
-                  // l.shadow.mapSize.height = 2048;
-                }
-              });
+            async (object) => {
+              // object.scene.traverse(function (child) {
+              //   if (child.type === "Mesh") {
+
+              //   }
+              //   if (child.type === "SpotLight") {
+
+              //   }
+              // });
+              const model = object.scene;
+         
+
+							scene.add( model );
+              render();
               // After loading the model, calculate the center
               const boundingBox = new THREE.Box3().setFromObject(object.scene);
               const center = boundingBox.getCenter(new THREE.Vector3());
 
               const size = boundingBox.getSize(new THREE.Vector3());
 
-              // Calculate the distance to fit the object in the view
+              // // Calculate the distance to fit the object in the view
               const maxDim = Math.max(size.x, size.y, size.z);
               const fov = camera.fov * (Math.PI / 180);
               const distance = Math.abs(maxDim / Math.sin(fov / 2));
@@ -522,18 +471,10 @@ const Canvas3d = () => {
 
               controls.target = center;
               const distances = center.distanceTo(controls.object.position);
-
-              // const cameraPosition = camera.position;
-              // const objectPosition = object.scene.position;
-              // const distance = cameraPosition.distanceTo(objectPosition);
-              // progressBar.style.display = 'none'
+          
               scene.add(object.scene);
 
-              // gltf.animations; // Array<THREE.AnimationClip>
-              // gltf.scene; // THREE.Group
-              // gltf.scenes; // Array<THREE.Group>
-              // gltf.cameras; // Array<THREE.Camera>
-              // gltf.asset; // Object
+
 
               setasset3dLoader(false);
             },
@@ -545,7 +486,7 @@ const Canvas3d = () => {
 
           loader3d.load(
             file3d,
-            // "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
+         
             (object) => {
               const model = object.scene;
               scene.add(model);
@@ -562,7 +503,7 @@ const Canvas3d = () => {
           const material = new THREE.MeshNormalMaterial();
           loader3d.load(
             file3d,
-            // "https://ik.imagekit.io/7urmiszfde/rp_nathan_animated_003_walking.fbx?updatedAt=1696878521110",
+          
             (object) => {
               object.traverse(function (child) {
                 if (child.isMesh) {
@@ -575,24 +516,21 @@ const Canvas3d = () => {
               object.scale.set(0.01, 0.01, 0.01);
               postingCenter(object);
               scene.add(object);
-              // container.add(object);
-              // scene.add(container);
+
 
               const boundingBox = new THREE.Box3().setFromObject(object);
               const center = boundingBox.getCenter(new THREE.Vector3());
 
               const size = boundingBox.getSize(new THREE.Vector3());
 
-              // Calculate the distance to fit the object in the view
+
               const maxDim = Math.max(size.x, size.y, size.z);
               const fov = camera.fov * (Math.PI / 180);
               const distance = Math.abs(maxDim / Math.sin(fov / 2));
 
-              // Set the camera position and look at the object
-              // camera.position.copy(center);
 
               camera.position.z += distance;
-              // camera.lookAt(center);
+
               controls.target = center;
               setasset3dLoader(false);
             },
@@ -604,7 +542,7 @@ const Canvas3d = () => {
 
           loader3d.load(
             file3d,
-            // "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
+          
             (geometry) => {
               const material = new THREE.MeshPhysicalMaterial({
                 color: 0xb2ffc8,
@@ -622,10 +560,10 @@ const Canvas3d = () => {
               mesh.rotateX(-Math.PI / 2);
 
               camera.position.z += 200;
-              // camera.lookAt(200);
+
               console.log(geometry, "fgdgfd");
 
-              // postingCenter(geometry);
+        
 
               setasset3dLoader(false);
             },
@@ -637,7 +575,7 @@ const Canvas3d = () => {
 
           loader3d.load(
             file3d,
-            // "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
+         
             (geometry) => {
               const material = new THREE.MeshPhysicalMaterial({
                 color: 0xb2ffc8,
@@ -651,13 +589,13 @@ const Canvas3d = () => {
                 clearcoatRoughness: 0.25,
               });
 
-              // geometry.computeVertexNormals()
+
               const mesh = new THREE.Mesh(geometry, material);
               mesh.rotateX(-Math.PI / 2);
               scene.add(mesh);
               camera.position.z += 150;
 
-              // postingCenter(geometry);
+
 
               setasset3dLoader(false);
             },
@@ -667,29 +605,13 @@ const Canvas3d = () => {
         }
       }
 
-      // loader3d.load(
-      //   "https://ik.imagekit.io/7urmiszfde/Barrett%20XM109%20AMPR.gltf?updatedAt=1696853193793",
-      //   (obj) => {
-      //     object = obj;
-      //     const model = obj.scene;
+    
 
-      //     // loadModel();
-      //     scene.add(model);
-      //   },
-      //   onProgress,
-      //   onError
-      // );
-
-      // renderer.setPixelRatio(window.devicePixelRatio);
       renderer.setClearColor(0x000000, 0);
       renderer.setSize(activeSize.w, activeSize.h);
-      // renderer.setS(activeSize.w, activeSize.h);
 
-      // renderer.setPixelRatio(window.devicePixelRatio);
-      // renderer.setSize(window.innerWidth, window.innerHeight);
-      // renderer.toneMapping = THREE.ACESFilmicToneMapping; //added contrast for filmic look
-      // renderer.toneMappingExposure = 1;
-      // renderer.outputEncoding = THREE.sRGBEncoding;
+
+
 
       containerRef.current.appendChild(renderer.domElement);
 
@@ -705,20 +627,7 @@ const Canvas3d = () => {
 
       controls.addEventListener("change", render);
 
-      //   renderNew = renderer;
-
-      //   const genBox = downloadRef.current;
-
-      //   genBox.addEventListener("click", (e) => {
-      //     const screenshot = renderer.domElement.toDataURL("image/png");
-      //     set3DImage(screenshot);
-      //     console.log("Screenshot:", screenshot);
-      //     const link = document.createElement("a");
-      //     link.href = screenshot;
-      //     link.download = "threejs_canvas.png";
-
-      //     link.click();
-      //   });
+   
       setTimeout(() => {
         render();
       }, 1000);
@@ -751,29 +660,10 @@ const Canvas3d = () => {
     };
   }, [file3d, file3dUrl, tdFormate, activeSize]);
 
-  // useEffect(() => {
-  //   console.log(!loader,"ssssssssssssssssssssssss");
 
-  //   if(controls){
-
-  //     controls.enableRotate = !loader; // Disable rotation
-  //     controls.enableZoom = !loader;   // Disable zooming
-  //     controls.enablePan = !loader;    // Disable panning
-  //   }
-  //   // return () => {
-  //   //   if (renderer) {
-  //   //     renderer.dispose(); // Dispose of the renderer
-  //   //   }
-  //   //   // Remove the renderer's canvas from the DOM
-  //   //   if (containerRef.current) {
-  //   //     containerRef.current.removeChild(renderer.domElement);
-  //   //   }
-
-  //   // }
-  // }, [loader])
 
   const captureScreenshot = () => {
-    console.log(renderer, "dsedfdegfdjjh");
+
     if (renderer) {
       //   render(); // Make sure the scene is up-to-date
       const screenshot = renderer.domElement.toDataURL("image/png");
@@ -782,6 +672,7 @@ const Canvas3d = () => {
       const link = document.createElement("a");
       link.href = screenshot;
       link.download = "threejs_canvas.png";
+      saveAs(screenshot, `image${Date.now()}.png`);
 
       // Trigger a click event to download the image
       link.click();
@@ -814,6 +705,7 @@ const Canvas3d = () => {
       {loader ? <div className="divovelay"></div> : null}
 
       <div className="boxs3d">
+      
         <div ref={containerRef} className="boxs">
           {!showText ? <div className="tesxt">3D model viewer</div> : null}
         </div>
