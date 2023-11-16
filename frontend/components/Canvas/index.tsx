@@ -13,8 +13,6 @@ import { saveAs } from "file-saver";
 import PopupCanvas from "./popupCanvas";
 import CropperBox from "./Cropper";
 
-// import { useBeforeUnload } from "react-router-dom";
-
 export default function CanvasBox({
   proid,
   userId,
@@ -55,7 +53,6 @@ export default function CanvasBox({
     setloadercarna,
     saveCanvasToDatabase,
     setRegenratedImgsJobid,
-
     positionBtn,
     newEditorBox,
     imageGenRect,
@@ -69,13 +66,9 @@ export default function CanvasBox({
     canvasDisable,
     setCanvasDisable,
     loader,
-
     setregeneraatingId,
-
-    // canvasRef
   } = useAppState();
-  // let newEditorBox;
-  // const [loadercarna, setloadercarna] = useState(false);
+
   const [canvasZoom, setCanvasZoom] = useState(1);
   const [canvasPosition, setCanvasPosition] = useState({ x: 0, y: 0 });
   const canvasRef = useRef(null);
@@ -84,17 +77,10 @@ export default function CanvasBox({
   /* eslint-disable */
 
   useEffect(() => {
-    // if (!canvasInstance.current) {
-    // console.log("canvas",canvasInstance.current)
     canvasInstance.current = new fabric.Canvas(canvasRef?.current, {
       width: window.innerWidth,
       height: window.innerHeight,
       preserveObjectStacking: true,
-      // selectionLineWidth: 2,
-      // transparentCorners: false,
-      // originX: "center",
-      // originY: "center",
-      // renderOnAddRemove: false,
     });
 
     const canvasInstanceRef = canvasInstance.current;
@@ -120,7 +106,7 @@ export default function CanvasBox({
     };
   }, [isReady, canvasInstance]);
 
-  const [re, setRe] = useState(1);
+
   const [state, setStar] = useState(false);
 
   useEffect(() => {
@@ -137,13 +123,10 @@ export default function CanvasBox({
         if (options.target && options.target.type === "image") {
           let selectedObject;
           if (options.target._element instanceof Image) {
-            console.log(options.target.id, "option");
-            // selectedObject = options.target._element.src;
             const img = new Image();
             img.src = options.target._element.src;
-            // Resize the image to 512x521 pixels
+            // Resize the image to 712x712 pixels
             const canvas = document.createElement("canvas");
-
             let containerWidth = 712;
             let containerHeight = 712;
 
@@ -184,13 +167,10 @@ export default function CanvasBox({
       });
 
       // Create the newEditorBox when the component mounts
-
       const EditorBoxText = new fabric.Text("Place Your Product Here", {
-        left: newEditorBox.left + 20, // center of the rectangle
-        top: newEditorBox.top + 20, // center of the rectangle
+        left: newEditorBox.left + 20, 
+        top: newEditorBox.top + 20, 
         fontSize: 24,
-        // originX: "center",
-        // originY: "center",
         selectable: false,
         excludeFromExport: true,
         fill: "rgba(0, 0, 0, 1)",
@@ -203,7 +183,6 @@ export default function CanvasBox({
         fontSize: 16,
         // originX: "center",
         // originY: "center",
-
         selectable: false, // Make it non-selectable
         evented: false, // Make it non-selectable
         hasControls: false,
@@ -224,11 +203,8 @@ export default function CanvasBox({
         }
       });
 
-      //   // Add your logic for generating/adding the image inside this box.
-      // });
       canvasInstanceRef.on("object:moving", function (event) {
         const movedObject = event.target;
-
         const e = event.e;
         if (movedObject.category === "subject") {
           if (
@@ -243,8 +219,6 @@ export default function CanvasBox({
         }
       });
 
-      // Set the newEditorBox in the global context
-      // setEditorBox(newEditorBox);
       canvasInstanceRef.on("object:selected", function (event) {
         console.log("Object selected:", event.target);
         const selectedObject = event.target;
@@ -258,35 +232,14 @@ export default function CanvasBox({
 
       canvasInstanceRef.on("selection:created", (e) => {
         var selectedObjects = e.target;
-        // var hasGenerated = selectedObjects.some(function (obj) {
-        //   return obj.category === "generated";
-        // });
-        // selectedObjects.selectable = false;
-
-        // if (hasGenerated) {
-        // Show the additional button if at least one object has the category "generated"
-        // rebtn.style.display = "block";
-        // }
         btn.style.display = "flex";
-
-        // If the object is a subject, add it to the subject objects array
       });
 
       canvasInstanceRef.on("selection:cleared", function (e) {
         var selectedObjects = e.target;
-
-        // var hasGenerated = selectedObjects.some(function (obj) {
-        //   return obj.category !== "generated";
-        // });
         btn.style.display = "none";
-
-        // if (hasGenerated) {
         rebtn.style.display = "none";
-        // Show the additional button if at least one object has the category "generated"
-        // }
-        // rebtn.style.display = "block";
         setDownloadImg(null);
-
         if (activeTab === 5) {
           setActiveTab(1);
         }
@@ -310,17 +263,7 @@ export default function CanvasBox({
       });
     }
 
-    return () => {
-      // if(canvasInstance.current)
-      // canvasInstance.current?.dispose();
-      // saveCanvasToDatabase();
-      // setTimeout(() => {
-      // }, 300);
-      // canvasInstance?.current.remove(newEditorBox);
-      // canvasInstance?.current.remove(imageGenRect);
-    };
   }, [canvasInstance.current, state, activeSize]);
-  // , activeSize, setActiveSize, re, state
 
   const DeletIrem = () => {
     const activeObject = canvasInstance?.current?.getActiveObject();
@@ -333,13 +276,9 @@ export default function CanvasBox({
   useEffect(() => {
     if (canvasInstance?.current && loadercarna) {
       const canvasInstanceRef = canvasInstance?.current;
-  
 
       fabric.Object.prototype.transparentCorners = false;
-      // fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
-      // Add a custom method to the Fabric canvas prototype
 
-      // Set the zoom level (e.g., zoom in by a factor of 2)
       var zoomLevel = zoom;
 
       canvasInstanceRef.setZoom(zoom);
@@ -371,10 +310,11 @@ export default function CanvasBox({
     }
   }, [canvasInstance.current]);
 
+
+
   useEffect(() => {
     // Fetch canvas data from your API and load it into the canvas
     const canvasInstanceRef = canvasInstance?.current;
-
     setloadercarna(true);
     if (isReady && userId) {
       console.log("canvasInstance", userId, proid);
@@ -393,19 +333,14 @@ export default function CanvasBox({
               }
             );
             setloadercarna(false);
-            // canvasInstanceRef.loadFromJSON(savedCanvasDataLocal, () => {
-            //   canvasInstanceRef.renderAll();
-            // });
+
           }
         })
-
         .catch((error) => {
           console.error(error);
           setloadercarna(false);
-
           return error;
         });
-
   
     }
   }, [isReady, userId]);
@@ -414,7 +349,6 @@ export default function CanvasBox({
     return () => {
       return () => {
         router.events.off("routeChangeStart", saveCanvasToDatabase);
-
         saveCanvasToDatabase();
       };
     };
@@ -441,27 +375,20 @@ export default function CanvasBox({
       setTimeout(() => {
         setRegeneratePopup({ status: true, url: downloadImg });
         console.log("Success", downloadImg);
-        // setActiveTab(6);
       }, 500);
     }
   };
 
   const downlaedImf = () => {
     if (downloadImg) {
-      // const url = modifidImageArray[modifidImageArray.length - 1]?.url;
       const url = downloadImg;
-
-      console.log(url);
-
       saveAs(url, `image${Date.now()}.${downloadeImgFormate}`);
-    } else {
-    }
+    } 
   };
 
   return (
     <Wrapper canvasDisable={loader}>
       {loadercarna ? <Loader /> : null}
-
       {isMagic ? <PopupCanvas /> : null}
       {crop ? <CropperBox /> : null}
       {loader ? <div className="divovelay"></div> : null}
@@ -531,17 +458,7 @@ export default function CanvasBox({
           <button className="selectone yello">Regenerate Product</button>
         </div>
 
-        <div className="ss">
-          {/* <button onClick={handleButtonClick}>,/fdvd</button> */}
-          {/* <picture>
-            <img
-              onClick={() => saveCanvasToDatabase()}
-              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAYFBMVEX///8AAAD4+Pjv7+8aGhoTExOYmJiTk5P09PQICAiQkJD6+vp/f39WVlbGxsaurq5ubm6FhYUnJye8vLwfHx9oaGjR0dHq6urg4OB1dXWkpKS2trY0NDQpKSlNTU1fX19H7sBTAAADJUlEQVR4nO3d224iMRBFUbo7QLhDrkwyM/n/vxwhTR5AUDbUsV1Ee78iFSw5pIliN6MRERERERERERERERERxWvRn29xy7CTGVc9WqR+vVu9dOeb3jLwZMYx4vHk0YnEYNVPni7o6gi7uYRxuWeDpxHOEsLbniO7pQ2sIixK3CaAdYQFiakVrCUsRky8BysKC/266dPAasIyqziNJCyxir11HawvLLCK6wxgTaF+FXfRhPJVXIUTildxcenDdkOhdhVzrhXVhdJVjClUEoMKhcSoQh0xrFBGjCtUEQMLRReNyELNKoYWSoixhQpicKGAGF3oJ4YXuonxhd6Lxh0Inat4D0LfKt6FsPP88w0hQoQIf5Aw9V/uexTOp0cd7+f4EUIzhAjzQ4jw1hDWFur3D0QT/pLJvnsPJny4aYOp1UcwYfcpo/0vZ49LVaHrOc40vwpYRfh7kOlG1/6M1hF240/Ze3Gf3O3ZRNh1f17nE0HLv9f6qgkbhhBh/BAijB9ChPFDiDB+CBHGDyHC+CFEGD+ECOOHEGH8ECKMH0KE8UOIMH5VhF+bN+mWmtHwtvmKIxxPtbrvhsk4hnBbxndoyNo9VFq4kXnOtWkvfJZhzpdxv7iywrIreCi9ikWFWxnkcsn3YlFhjbvDFn0RqeHl7w17aNJQ+ChTWKV27hcUvsoQdq/NhB8yg11iW3RB4V5msNs3E77LDHaJAyblhLNyH0iPG1oJx9WE9t8YCK0Qygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxHKDHYIHaMRygx2CB2jEcoMdggdoxPC/VCnfSth91Ar+2V4hHnf6dy4F9ctjLO+l7txKw8w77vVG7dzCdetX35Ga5ewv+7+7y16cp7bmbYGJPOe2wl/EnjmXMKs839NE5x/XLY2mC39wIzzfw0TnX+Me1GUrOCh51lryvmEZ5D7Sbzr4tNUe4C1X+9WcT6Gv6x26xIHdBd9lORfTkRERERERERERERERESC/gF2IVePB+evpwAAAABJRU5ErkJggg=="
-              alt=""
-            />
-          </picture> */}
-        </div>
-
+  
         <canvas ref={canvasRef} />
       </div>
     </Wrapper>
@@ -550,19 +467,15 @@ export default function CanvasBox({
 
 const Wrapper = styled.div`
   .divovelay {
-    /* display: ${(props) => (props.canvasDisable ? "none" : "block")}; */
     z-index: 10;
     position: absolute;
     width: 100%;
     height: 100%;
-    /* background-color: #000; */
   }
   canvas {
     pointer-events: ${(props) => (props.canvasDisable ? "none" : "auto")};
   }
   .convas-continer {
-    /* width: 1800px;
-  height: 1800px; */
     overflow: auto;
   }
   .delet {
@@ -590,19 +503,14 @@ const Wrapper = styled.div`
   }
   .leftbox,
   .rightbox {
-    /* background-color: red; */
     border: 1px solid rgba(249, 208, 13, 1);
     pointer-events: none;
     user-select: none;
     width: 100px;
     position: absolute;
-
-    /* z-index: 200; */
   }
   .generationBox {
-    /* border: 1px solid red; */
     position: absolute;
-    /* z-index: 200; */
     display: flex;
     gap: 20px;
   }
@@ -630,6 +538,4 @@ const Wrapper = styled.div`
     }
   }
 
-  .yello {
-  }
 `;

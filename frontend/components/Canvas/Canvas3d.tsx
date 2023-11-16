@@ -1,4 +1,3 @@
-/// <reference no-default-lib="true"/>
 // @ts-nocheck
 
 import React, { useEffect, useRef, useState } from "react";
@@ -11,9 +10,7 @@ import { FBXLoader } from "three/addons/loaders/FBXLoader.js";
 import { STLLoader } from "three/addons/loaders/STLLoader.js";
 import { PLYLoader } from "three/addons/loaders/PLYLoader.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
-
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import assets from "@/public/assets";
 import { useAppState } from "@/context/app.context";
 import styled from "styled-components";
 import { saveAs } from "file-saver";
@@ -28,40 +25,26 @@ const Canvas3d = () => {
 
   const {
     file3d,
-    setFile3d,
-    TdImage,
     loader,
-    set3DImage,
-    activeTab,
-    genrateeRef,
     renderer,
     setRenderer,
     setSelectedImg,
     selectedImg,
     setasset3dLoader,
     file3dUrl,
-    setFile3dUrl,
     tdFormate,
-    setTdFormate,
     filsizeMorethan10,
-    setfilsizeMorethan10,
-    setActiveSize,
     isMagic,
     crop,
     activeSize,
     setDownloadImg,
-    downloadImg,
     romovepopu3d,
-    file3dName,
-    setromovepopu3d,
     setFile3dName,
   } = useAppState();
 
-  let camera, scene, object, controls, renderNew;
+  let camera, scene, object, controls;
   const [showText, setshowText] = useState(false);
 
-
-  const [re, setRe] = useState(1);
   useEffect(() => {
     containerRef.current.style.width = `${activeSize.w}px`;
     containerRef.current.style.height = `${activeSize.h}px`;
@@ -70,42 +53,43 @@ const Canvas3d = () => {
       camera = new THREE.PerspectiveCamera(
         45,
         activeSize.w / activeSize.h,
-        0.01, 1000 
+        0.01,
+        1000
       );
       // camera.position.set( 1.5, 4, 9 );
+
       scene = new THREE.Scene();
-      scene.add(camera)
       renderer = new THREE.WebGLRenderer({
         antialias: true,
         preserveDrawingBuffer: true,
       });
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-				renderer.toneMappingExposure = 1;
+      renderer.toneMappingExposure = 1;
+      renderer.setClearColor(0x000000, 0);
+      renderer.setSize(activeSize.w, activeSize.h);
 
-      // to get the colore and ligtin of the object 
+      containerRef.current.appendChild(renderer.domElement);
+
+      // to get the colore and ligtin of the object
       const pmremGenerator = new THREE.PMREMGenerator(renderer);
       pmremGenerator.compileEquirectangularShader();
-
       scene.environment = pmremGenerator.fromScene(
         new RoomEnvironment(renderer)
-        // 0.04
       ).texture;
 
-      // const ambientLight = new THREE.AmbientLight(0x404040);
-      // scene.add(ambientLight);
-      // const pointLight = new THREE.PointLight(0xff0000, 100);
-
-      // pointLight.position.set(2.5, 4.5, 15);
-
-      // const light = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
-      // light.position.set(2.5, 7.5, 15);
-      // scene.add(light);
+      // ligting
+      const ambientLight = new THREE.AmbientLight(0x404040);
+      scene.add(ambientLight);
+      const pointLight = new THREE.PointLight(0xff0000, 100);
+      pointLight.position.set(2.5, 4.5, 15);
+      const light = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
+      light.position.set(2.5, 7.5, 15);
+      scene.add(light);
 
       controls = new OrbitControls(camera, renderer.domElement);
+      // controls.enableDamping = true;
       controls.screenSpacePanning = true;
-       
 
-      // controls.target.set( 0, .5, 2 );
       controls.update();
 
       function loadModel() {
@@ -119,7 +103,6 @@ const Canvas3d = () => {
             }
           } else {
             if (filsizeMorethan10) {
-             
             }
           }
         });
@@ -190,12 +173,12 @@ const Canvas3d = () => {
         loader3d = new PLYLoader();
       }
 
-      if (file3dUrl != null) {
+      if (file3dUrl != null || file3d != null) {
         setshowText(true);
         if (tdFormate === ".obj") {
           setasset3dLoader(true);
           loader3d.load(
-            file3dUrl,
+            file3dUrl != null ? file3dUrl : file3d,
             (obj) => {
               object = obj;
               loadModel();
@@ -206,7 +189,7 @@ const Canvas3d = () => {
         } else if (tdFormate === ".3ds") {
           setasset3dLoader(true);
           loader3d.load(
-            file3dUrl,
+            file3dUrl != null ? file3dUrl : file3d,
             (object) => {
               container.add(object);
               scene.add(container);
@@ -214,45 +197,34 @@ const Canvas3d = () => {
               const boundingBox = new THREE.Box3().setFromObject(object);
               const center = boundingBox.getCenter(new THREE.Vector3());
               const size = boundingBox.getSize(new THREE.Vector3());
-
-
               const maxDim = Math.max(size.x, size.y, size.z);
               const fov = camera.fov * (Math.PI / 180);
               const distance = Math.abs(maxDim / Math.sin(fov / 2));
-
-
-
               camera.position.z += distance;
-
               controls.target = center;
               setasset3dLoader(false);
             },
             onProgress,
             onError
           );
-        } else if (tdFormate === ".gltf" || tdFormate === ".gltf") {
+        } else if (tdFormate === ".gltf" || tdFormate === ".glb") {
           setasset3dLoader(true);
-
+          console.log(file3dUrl, file3d);
           loader3d.load(
-            file3dUrl,
+            file3dUrl ? file3dUrl : file3d,
+
             (object) => {
-    
               // After loading the model, calculate the center
               const boundingBox = new THREE.Box3().setFromObject(object.scene);
               const center = boundingBox.getCenter(new THREE.Vector3());
               // controls.target = center;
               const size = boundingBox.getSize(new THREE.Vector3());
-
               // Calculate the distance to fit the object in the view
               const maxDim = Math.max(size.x, size.y, size.z);
               const fov = camera.fov * (Math.PI / 180);
               const distance = Math.abs(maxDim / Math.sin(fov / 2));
-
               camera.position.z += distance;
-
               controls.target = center;
-              const distances = center.distanceTo(controls.object.position);
-
               scene.add(object.scene);
               setasset3dLoader(false);
             },
@@ -264,8 +236,8 @@ const Canvas3d = () => {
           const material = new THREE.MeshNormalMaterial();
 
           loader3d.load(
-            file3dUrl,
-           
+            file3dUrl != null ? file3dUrl : file3d,
+
             (object) => {
               object.traverse(function (child) {
                 if (child.isMesh) {
@@ -278,21 +250,13 @@ const Canvas3d = () => {
               object.scale.set(0.01, 0.01, 0.01);
               postingCenter(object);
               scene.add(object);
-     
-
               const boundingBox = new THREE.Box3().setFromObject(object);
               const center = boundingBox.getCenter(new THREE.Vector3());
-
               const size = boundingBox.getSize(new THREE.Vector3());
-
-           
               const maxDim = Math.max(size.x, size.y, size.z);
               const fov = camera.fov * (Math.PI / 180);
               const distance = Math.abs(maxDim / Math.sin(fov / 2));
-
-          
               camera.position.z += distance;
-     
               controls.target = center;
               setasset3dLoader(false);
             },
@@ -303,8 +267,8 @@ const Canvas3d = () => {
           setasset3dLoader(true);
 
           loader3d.load(
-            file3dUrl,
-           
+            file3dUrl != null ? file3dUrl : file3d,
+
             (gltf) => {
               const model = gltf.scene;
               scene.add(model);
@@ -319,234 +283,11 @@ const Canvas3d = () => {
           setasset3dLoader(true);
 
           loader3d.load(
-            file3dUrl,
-           
+            file3dUrl != null ? file3dUrl : file3d,
+
             (geometry) => {
               const material = new THREE.MeshPhysicalMaterial({
                 color: 0xb2ffc8,
-                // envMap: envTexture,
-                metalness: 0.25,
-                roughness: 0.1,
-                opacity: 1.0,
-                transparent: true,
-                transmission: 0.99,
-                clearcoat: 1.0,
-                clearcoatRoughness: 0.25,
-              });
-              const mesh = new THREE.Mesh(geometry, material);
-              scene.add(mesh);
-              mesh.rotateX(-Math.PI / 2);
-
-              camera.position.z += 200;
-              // camera.lookAt(200);
-              console.log(geometry, "fgdgfd");
-
-              // postingCenter(geometry);
-
-              setasset3dLoader(false);
-            },
-            onProgress,
-            onError
-          );
-        } else if (tdFormate === ".ply") {
-          loader3d.load(
-            file3dUrl,
-           
-            (geometry) => {
-              const material = new THREE.MeshPhysicalMaterial({
-                color: 0xb2ffc8,
-                // envMap: envTexture,
-                metalness: 0,
-                roughness: 0,
-                transparent: true,
-                transmission: 1.0,
-                side: THREE.DoubleSide,
-                clearcoat: 1.0,
-                clearcoatRoughness: 0.25,
-              });
-
-     
-              const mesh = new THREE.Mesh(geometry, material);
-              mesh.rotateX(-Math.PI / 2);
-              scene.add(mesh);
-              camera.position.z += 150;
-
-      
-
-              setasset3dLoader(false);
-            },
-            onProgress,
-            onError
-          );
-        }
-      } 
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      else if (file3d) {
-        if (file3d) {
-          setshowText(true);
-        }
-
-        if (tdFormate === ".obj") {
-          setasset3dLoader(true);
-
-          loader3d.load(
-            file3d,
-            (obj) => {
-              object = obj;
-              loadModel();
-              // scene.add( obj );
-            },
-            onProgress,
-            onError
-          );
-        } else if (tdFormate === ".3ds") {
-          setasset3dLoader(true);
-          loader3d.load(
-            file3d,
-            async (object) => {
-            
-              container.add(object);
-              scene.add(container);
-              postingCenter(object);
-              const boundingBox = new THREE.Box3().setFromObject(object);
-              const center = boundingBox.getCenter(new THREE.Vector3());
-
-              const size = boundingBox.getSize(new THREE.Vector3());
-
-              // Calculate the distance to fit the object in the view
-              const maxDim = Math.max(size.x, size.y, size.z);
-              const fov = camera.fov * (Math.PI / 180);
-              const distance = Math.abs(maxDim / Math.sin(fov / 2));
-
-
-
-              camera.position.z += distance;
-
-              controls.target = center;
-              setasset3dLoader(false);
-            },
-            onProgress,
-            onError
-          );
-        } else if (tdFormate === ".gltf" || tdFormate === ".glb") {
-          setasset3dLoader(true);
-
-          loader3d.load(
-            file3d,
-            async (object) => {
-              // object.scene.traverse(function (child) {
-              //   if (child.type === "Mesh") {
-
-              //   }
-              //   if (child.type === "SpotLight") {
-
-              //   }
-              // });
-              const model = object.scene;
-         
-
-							scene.add( model );
-              render();
-              // After loading the model, calculate the center
-              const boundingBox = new THREE.Box3().setFromObject(object.scene);
-              const center = boundingBox.getCenter(new THREE.Vector3());
-
-              const size = boundingBox.getSize(new THREE.Vector3());
-
-              // // Calculate the distance to fit the object in the view
-              const maxDim = Math.max(size.x, size.y, size.z);
-              const fov = camera.fov * (Math.PI / 180);
-              const distance = Math.abs(maxDim / Math.sin(fov / 2));
-
-              camera.position.z += distance;
-
-              controls.target = center;
-              const distances = center.distanceTo(controls.object.position);
-          
-              scene.add(object.scene);
-
-
-
-              setasset3dLoader(false);
-            },
-            onProgress,
-            onError
-          );
-        } else if (tdFormate === ".mtl") {
-          setasset3dLoader(true);
-
-          loader3d.load(
-            file3d,
-         
-            (object) => {
-              const model = object.scene;
-              scene.add(model);
-              object.preload();
-
-              setasset3dLoader(false);
-            },
-            onProgress,
-            onError
-          );
-        } else if (tdFormate === ".fbx") {
-          setasset3dLoader(true);
-
-          const material = new THREE.MeshNormalMaterial();
-          loader3d.load(
-            file3d,
-          
-            (object) => {
-              object.traverse(function (child) {
-                if (child.isMesh) {
-                  child.material = material;
-                  if (child.material) {
-                    child.material.transparent = false;
-                  }
-                }
-              });
-              object.scale.set(0.01, 0.01, 0.01);
-              postingCenter(object);
-              scene.add(object);
-
-
-              const boundingBox = new THREE.Box3().setFromObject(object);
-              const center = boundingBox.getCenter(new THREE.Vector3());
-
-              const size = boundingBox.getSize(new THREE.Vector3());
-
-
-              const maxDim = Math.max(size.x, size.y, size.z);
-              const fov = camera.fov * (Math.PI / 180);
-              const distance = Math.abs(maxDim / Math.sin(fov / 2));
-
-
-              camera.position.z += distance;
-
-              controls.target = center;
-              setasset3dLoader(false);
-            },
-            onProgress,
-            onError
-          );
-        } else if (tdFormate === ".stl") {
-          setasset3dLoader(true);
-
-          loader3d.load(
-            file3d,
-          
-            (geometry) => {
-              const material = new THREE.MeshPhysicalMaterial({
-                color: 0xb2ffc8,
-                // envMap: envTexture,
                 metalness: 0.25,
                 roughness: 0.1,
                 opacity: 1.0,
@@ -561,25 +302,18 @@ const Canvas3d = () => {
 
               camera.position.z += 200;
 
-              console.log(geometry, "fgdgfd");
-
-        
-
               setasset3dLoader(false);
             },
             onProgress,
             onError
           );
         } else if (tdFormate === ".ply") {
-          setasset3dLoader(true);
-
           loader3d.load(
-            file3d,
-         
+            file3dUrl != null ? file3dUrl : file3d,
+
             (geometry) => {
               const material = new THREE.MeshPhysicalMaterial({
                 color: 0xb2ffc8,
-                // envMap: envTexture,
                 metalness: 0,
                 roughness: 0,
                 transparent: true,
@@ -589,13 +323,10 @@ const Canvas3d = () => {
                 clearcoatRoughness: 0.25,
               });
 
-
               const mesh = new THREE.Mesh(geometry, material);
               mesh.rotateX(-Math.PI / 2);
               scene.add(mesh);
               camera.position.z += 150;
-
-
 
               setasset3dLoader(false);
             },
@@ -605,51 +336,28 @@ const Canvas3d = () => {
         }
       }
 
-    
-
-      renderer.setClearColor(0x000000, 0);
-      renderer.setSize(activeSize.w, activeSize.h);
-
-
-
-
       containerRef.current.appendChild(renderer.domElement);
 
-      // controls.enablePan = false;
-      controls.enableDamping = true;
-
-      // controls.target.set(0, 0, -0.2);
-      // controls.minDistance = 2;
-      // controls.update();
       // controls.enableDamping = true;
-      // controls.maxDistance = 150;
-      // controls.enableDamping = false;
-
+      controls.update();
       controls.addEventListener("change", render);
 
-   
+      /* The above code is updating the controls and then rendering after a delay of 1 second. */
+
       setTimeout(() => {
         render();
       }, 1000);
       setRenderer(renderer);
-
-      // window.addEventListener('resize', onWindowResize);
     };
 
     const render = () => {
       setRenderer(renderer);
-      // camera.lookAt(scene.position);
-
       renderer.render(scene, camera);
     };
 
     init();
 
     return () => {
-      // Cleanup logic
-      //   if (controls) {
-      //     controls.dispose(); // Dispose of the controls to prevent memory leaks
-      //   }
       if (renderer) {
         renderer.dispose(); // Dispose of the renderer
       }
@@ -662,32 +370,10 @@ const Canvas3d = () => {
 
 
 
-  const captureScreenshot = () => {
-
-    if (renderer) {
-      //   render(); // Make sure the scene is up-to-date
-      const screenshot = renderer.domElement.toDataURL("image/png");
-      console.log("Screenshot:", screenshot);
-
-      const link = document.createElement("a");
-      link.href = screenshot;
-      link.download = "threejs_canvas.png";
-      saveAs(screenshot, `image${Date.now()}.png`);
-
-      // Trigger a click event to download the image
-      link.click();
-    }
-  };
-
   const downlaedImf = () => {
     if (selectedImg?.image) {
-      // const url = modifidImageArray[modifidImageArray.length - 1]?.url;
       const url = selectedImg?.image;
-
-      console.log(url);
-
       saveAs(url, `image${Date.now()}.png`);
-    } else {
     }
   };
 
@@ -705,7 +391,6 @@ const Canvas3d = () => {
       {loader ? <div className="divovelay"></div> : null}
 
       <div className="boxs3d">
-      
         <div ref={containerRef} className="boxs">
           {!showText ? <div className="tesxt">3D model viewer</div> : null}
         </div>
@@ -758,10 +443,6 @@ const Canvas3d = () => {
           ) : null}
         </div>
       </div>
-
-      {/* <button onClick={() => captureScreenshot()} ref={downloadRef}>
-        Capture Screenshot
-      </button> */}
     </Cnavas3d>
   );
 };
@@ -800,17 +481,13 @@ const Cnavas3d = styled.div`
     border-radius: 10px;
   }
   .divovelay {
-    /* display: ${(props) => (props.canvasDisable ? "none" : "block")}; */
     z-index: 10;
     position: absolute;
     width: 100%;
     height: 100%;
-    /* background-color: #000; */
   }
 
   .boxs {
-    /* pointer-events:${(props) => (props.canvasDisable ? "none" : "auto")} */
-
     border: 2px solid rgba(249, 208, 13, 1);
     .tesxt {
       color: #000;

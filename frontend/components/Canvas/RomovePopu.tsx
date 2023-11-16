@@ -4,27 +4,21 @@ import React, { useEffect } from "react";
 import { styled } from "styled-components";
 import { useState } from "react";
 import { useAppState } from "@/context/app.context";
-
 import Button from "../common/Button";
 import { saveAs } from "file-saver";
 import { AssetsLoader } from "../Loader/AssetsLoader";
 import { RemoveLoader } from "../Loader/RemoveLoader";
-
 import { toast } from "react-toastify";
-
 import { arrayBufferToDataURL, dataURLtoFile } from "@/utils/BufferToDataUrl";
 
-const RemoveBox = ()=> {
-
-
-
+const RemoveBox = () => {
   const {
     downloadImg,
     TDMode,
     setromovepopu3d,
     romovepopu3d,
     downloadeImgFormate,
-    userId
+    userId,
   } = useAppState();
 
   const [loader, setLoader] = useState(false);
@@ -61,7 +55,6 @@ const RemoveBox = ()=> {
     setLoader(false);
   };
 
-
   const upSacle = async (photo: string, filename: string): Promise<string> => {
     const form = new FormData();
     const fileItem = await dataURLtoFile(photo, filename);
@@ -82,41 +75,23 @@ const RemoveBox = ()=> {
 
     const buffer = await response.arrayBuffer();
     const dataURL = await arrayBufferToDataURL(buffer);
-   
-    
 
     if (response.status === 402) {
       toast.error("Not enough credits to process the request");
       setromovepopu3d(false);
       setupdateImg(null);
     }
-    // const response = await fetch("/api/upscale", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     image_url: photo,
-    //     user_id: userId,
-
-    //   }),
-    // });
-
     return dataURL;
   };
 
   const UpscaleBG = async () => {
     setLoader(true);
-
     try {
-
       const data = await upSacle(downloadImg, "imger");
 
       if (data) {
         console.log(updateImg);
         setupdateImg(data);
-
- 
       }
     } catch (error) {
       setLoader(false);
@@ -124,7 +99,6 @@ const RemoveBox = ()=> {
       setromovepopu3d(false);
       setupdateImg(null);
     }
-
     setLoader(false);
   };
   useEffect(() => {
@@ -156,7 +130,7 @@ const RemoveBox = ()=> {
             >
               Download
             </Button>
-          ) : // <Button onClick={() => HandleCrope()}>Done</Button>
+          ) : 
           null}
 
           <Button
@@ -199,7 +173,6 @@ const Wrapper = styled.div`
   width: 100%;
   height: 100vh;
   right: 0;
-  /* bottom: 0; */
   z-index: 400;
   background-color: #ffffff;
 
@@ -207,7 +180,6 @@ const Wrapper = styled.div`
     width: 400px;
     height: 400px;
     position: relative;
-    /* margin-top: 80px !important; */
   }
   .reactEasyCrop_Container {
     width: 100%;

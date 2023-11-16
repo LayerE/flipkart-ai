@@ -3,76 +3,45 @@
 import React from "react";
 import { styled } from "styled-components";
 import {
-  useEffect,
-  useLayoutEffect,
-  useCallback,
-  useRef,
   useState,
 } from "react";
-// import { fabric } from "fabric";
 import Button from "../common/Button";
 import {
   Stage,
   Layer,
-  Rect,
-  Text,
   Image as KonvaImage,
   Line,
 } from "react-konva";
-import Konva from "konva";
 import useImage from "use-image";
 import { useAppState } from "@/context/app.context";
-import { arrayBufferToDataURL, dataURLtoFile } from "@/utils/BufferToDataUrl";
 import { saveAs } from "file-saver";
 
 const PopupCanvas = () => {
-  const popucanvasRef = useRef(null);
 
   const {
-    isMagic,
     setIsMagic,
     downloadImg,
-    addimgToCanvasGen,
     brushSize,
-    setBrushSize,
     linesHistory,
     setLinesHistory,
     lines,
     setLines,
     mode,
-    setMode,
-
     stageRef,
     TDMode,
     downloadeImgFormate,
-
     addimgToCanvasSubject,
     canvasInstance,
-
-    // canvasRef
   } = useAppState();
-
-  const [previewLoader, setpreviewLoader] = useState(false);
 
   const [containerWidth, setImageWidth] = useState(350);
   const [containerHeight, setImageHeight] = useState(350);
   const [drawing, setDrawing] = useState(false);
-  // const [scale, setScale] = useState(1);
-  const imgRef = useRef(null);
 
   const [img, status] = useImage(downloadImg, "Anonymous");
-  const [img2, status2] = useImage(
-    "https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80",
-    "Anonymous"
-  );
 
-  // let containerWidth = 300;
-  // let containerHeight = 300;
   const imageWidths = img ? img.width : 0;
   const imageHeights = img ? img.height : 0;
-  // if (img?.width !== img?.height) {
-  //   containerHeight = 200;
-  // }
   let scales = 1;
 
   if (imageWidths > containerWidth || imageHeights > containerHeight) {
@@ -81,12 +50,7 @@ const PopupCanvas = () => {
     scales = Math.min(widthScale, heightScale);
   }
 
-  useEffect(() => {
-    console.log(img?.width, img?.height);
-    if (img?.width !== img?.height) {
-      // setImageWidth(200)
-    }
-  }, [img]);
+
 
   const scaledWidth = imageWidths * scales;
   const scaledHeight = imageHeights * scales;
@@ -118,76 +82,49 @@ const PopupCanvas = () => {
     setDrawing(false);
   };
 
-  const [scale, setScale] = useState(1);
+  // const [scale, setScale] = useState(1);
+  // const [stagePos, setStagePos] = useState({ x: 0, y: 0 });
+  // const handleWheel = (e) => {
+  //   e.evt.preventDefault();
 
-  const undoLastDrawing = () => {
-    if (linesHistory.length === 0) return;
+  //   const scaleBy = 1.1;
+  //   const stage = e.target.getStage();
+  //   const oldScale = stage.scaleX();
+  //   const pointer = stage.getPointerPosition();
+  //   const mousePointTo = {
+  //     x: (pointer.x - stage.x()) / oldScale,
+  //     y: (pointer.y - stage.y()) / oldScale,
+  //   };
 
-    const lastVersion = linesHistory[linesHistory.length - 1];
-    setLines(lastVersion);
+  //   const newScale = e.evt.deltaY > 0 ? oldScale * scaleBy : oldScale / scaleBy;
 
-    // Remove the last version from history
-    setLinesHistory(linesHistory.slice(0, linesHistory.length - 1));
-  };
-  const [stagePos, setStagePos] = useState({ x: 0, y: 0 });
-  const handleWheel = (e) => {
-    e.evt.preventDefault();
-
-    const scaleBy = 1.1;
-    const stage = e.target.getStage();
-    const oldScale = stage.scaleX();
-
-    const pointer = stage.getPointerPosition();
-
-    const mousePointTo = {
-      x: (pointer.x - stage.x()) / oldScale,
-      y: (pointer.y - stage.y()) / oldScale,
-    };
-
-    const newScale = e.evt.deltaY > 0 ? oldScale * scaleBy : oldScale / scaleBy;
-
-    setScale(newScale);
-    setStagePos({
-      x: pointer.x - mousePointTo.x * newScale,
-      y: pointer.y - mousePointTo.y * newScale,
-    });
-  };
+  //   setScale(newScale);
+  //   setStagePos({
+  //     x: pointer.x - mousePointTo.x * newScale,
+  //     y: pointer.y - mousePointTo.y * newScale,
+  //   });
+  // };
 
   const closeHanddler = () => {
     setLinesHistory([]);
     setLines([]);
-
     setIsMagic(false);
   };
 
   const saveImage = () => {
     const stage = stageRef?.current;
-
     const dataURL = stage.toDataURL();
     DeletIrem();
-
     addimgToCanvasSubject(dataURL);
     setLinesHistory([]);
     setLines([]);
-
     setIsMagic(false);
-
-    // return dataURL;
   };
   const downloadH = () => {
     const stage = stageRef.current;
-
     const dataURL = stage.toDataURL();
-
     saveAs(dataURL, `image${Date.now()}.${downloadeImgFormate}`);
 
-    // addimgToCanvasSubject(dataURL);
-    // setLinesHistory([]);
-    // setLines([]);
-
-    // setIsMagic(false);
-
-    // return dataURL;
   };
 
   const DeletIrem = () => {
@@ -200,13 +137,6 @@ const PopupCanvas = () => {
 
   return (
     <Wrapper>
-      {/* <div className="popuCanvas">
-        <div className="canvaswrapper">
-          <canvas ref={popucanvasRef} />
-        </div>
-      </div> */}
-
-      {/* {magickErase ? ( */}
       <div className="rr">
         <div className="tgrideOne">
           <div className="clo" onClick={() => closeHanddler()}>
@@ -221,43 +151,22 @@ const PopupCanvas = () => {
           </div>
 
           <div style={{ margin: "20px" }}>
-            {previewLoader ? <div className="loaderq">Loading...</div> : null}
+
             <Stage
               width={containerWidth}
               height={containerHeight}
-              // scaleX={scale}
-              // scaleY={scale}
               onMouseDown={handleMouseDown}
               onMouseMove={handleMouseMove}
               onMouseUp={handleMouseUp}
-              // x={stagePos.x}
-              // y={stagePos.y}
-              // onWheel={handleWheel}
               ref={stageRef}
             >
               <Layer>
-                {/* <Rect
-                      width={imageWidth}
-                      height={imageHeight}
-                      fill={bgColor}
-                    /> */}
                 <KonvaImage
                   image={img}
-                  // x={100}
-                  // y={100}
                   x={(containerWidth - scaledWidth) / 2}
                   y={(containerHeight - scaledHeight) / 2}
                   width={scaledWidth}
                   height={scaledHeight}
-                  // onClick={handleImageClick}
-                  // draggable
-                  // onTransform={handleResize} // Handle resizing
-                  // ref={node => {
-                  //   // Reference to the KonvaImage element
-                  //   if (node) {
-                  //     node.getStage().on('click', () => setSelectedImage(null)); // Deselect when clicking on the stage
-                  //   }
-                  // }}
                 />
 
                 {lines.map((line, i) => (
@@ -275,39 +184,15 @@ const PopupCanvas = () => {
                 ))}
               </Layer>
             </Stage>
-            {/* <img
-                  src="https://preview.redd.it/need-an-npm-package-that-lets-you-create-an-image-mask-v0-12kzpoiivwha1.png?width=512&format=png&auto=webp&s=e19be5fdbd7406757e148f419eca861b7ae7f2dd"
-                  alt="hidden"
-                  ref={imgRef}
-                  style={{ display: "none" }}
-                /> */}
           </div>
         </div>
         <div className="bvtns">
           {TDMode ? (
-            <Button
-              onClick={() => downloadH()}
-              //   disabled={linesHistory.length === 0 ? true : false}
-            >
-              Download
-            </Button>
+            <Button onClick={() => downloadH()}>Download</Button>
           ) : (
-            <Button
-              onClick={() => saveImage()}
-              //   disabled={linesHistory.length === 0 ? true : false}
-            >
-              Done
-            </Button>
+            <Button onClick={() => saveImage()}>Done</Button>
           )}
-
-          {/* <Button
-                      onClick={() => saveImage()}
-                    //   disabled={linesHistory.length === 0 ? true : false}
-                    >
-                     Close
-                    </Button> */}
         </div>
-        {/* ) : null} */}
       </div>
     </Wrapper>
   );
@@ -333,21 +218,18 @@ const Wrapper = styled.div`
   width: 100%;
   height: 100vh;
   right: 0;
-  /* bottom: 0; */
+
   z-index: 400;
   background-color: #fff;
   .tgrideOne {
     position: relative !important;
-    /* left:0; */
 
     display: grid;
     grid-template-columns: 1fr;
-    /* gap: 20px; */
+
     background: rgba(249, 208, 13, 0.23);
-    /* height: 100%; */
-    /* position: relative; */
+
     .magicPrevie {
-      /* position: relative; */
       display: flex;
       justify-content: center;
       align-items: center;
@@ -355,16 +237,7 @@ const Wrapper = styled.div`
       width: 100%;
 
       canvas {
-        /* position: absolute; */
-        /* position: relative; */
-        /* top: 100px; */
-
-        /* background: #4444; */
-
         z-index: 30000;
-        /* top: 0; */
-        /* width: 500px;
-        height: 500px; */
       }
     }
   }
@@ -381,8 +254,6 @@ const Wrapper = styled.div`
     }
     .button {
       padding: 10px 80px !important;
-      /* background: transparent;
-      border: 1px solid ${({ theme }) => theme.btnPrimary} */
       width: max-content;
     }
     input[type="range"] {
@@ -406,10 +277,8 @@ const Wrapper = styled.div`
       -webkit-appearance: none;
       height: 30px;
       border-radius: 50%;
-      /* margin-top: -4px; */
       cursor: ew-resize;
       background: #434343;
-      /* box-shadow: -80px 0 0 80px #43e5f7; */
     }
     input {
       /* color: ; */

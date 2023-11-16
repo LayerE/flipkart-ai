@@ -1,4 +1,3 @@
-
 // @ts-nocheck
 
 import React, { useState } from "react";
@@ -17,19 +16,12 @@ const fadeIn = {
 const Projects = ({ onDelet }) => {
   const router = useRouter();
 
-
-  const {
-    setFilteredArray,
-    projectlist,
-    GetProjexts,
-    renameProject,
-    userId
-  } = useAppState();
+  const { setFilteredArray, projectlist, GetProjexts, renameProject, userId } =
+    useAppState();
   const [projectsLoader, setprojectsLoader] = useState(false);
 
   const handleCreate = async () => {
     try {
-   
       setprojectsLoader(true);
       if (userId) {
         const response = await fetch(
@@ -45,56 +37,48 @@ const Projects = ({ onDelet }) => {
             }),
           }
         );
-       
+
         const datares = await response.json();
         if (datares?._id) {
           setFilteredArray([]);
 
           router.push(`/generate/${datares?._id}`);
-         
         }
-      
       }
     } catch (error) {
-      console.log(error)
-     
+      console.log(error);
     }
   };
   const handleEdite = async (id: string, name: string) => {
     try {
-     
       renameProject(userId, id, name);
 
       GetProjexts(userId);
     } catch (error) {
       // toast.error("something went wrong");
 
-      console.log(error)
-      
+      console.log(error);
     }
   };
 
   const handleDelet = async (id: string) => {
-    try {    
+    try {
       const data = await fetch(
         `${process.env.NEXT_PUBLIC_API}/project?id=${id}`,
         {
           method: "DELETE",
         }
       );
-      console.log(data)
-      if(data.status === 200){
+      console.log(data);
+      if (data.status === 200) {
         toast.success("Project Deleted successfully ");
-
-      }else{
-      toast.error("failed Deleting Project ");
-
+      } else {
+        toast.error("failed Deleting Project ");
       }
       GetProjexts(userId);
     } catch (error) {
-      console.log(error)
+      console.log(error);
       toast.error("something went wrong");
-
     }
   };
 
@@ -136,18 +120,15 @@ const Projects = ({ onDelet }) => {
             <div className="testcreat">Create new project</div>
           </div>
 
-
           {projectlist?.map((item: any, i: number) => (
             <ProjectCard
               key={item._id}
               data={item}
-            
               handleDelet={handleDelet}
               handleEdite={handleEdite}
               setprojectsLoader={setprojectsLoader}
             />
           ))}
-
         </ProjectWrapper>
       </motion.div>
     </>
