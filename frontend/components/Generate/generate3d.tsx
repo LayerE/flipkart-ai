@@ -34,6 +34,7 @@ const Generate3d = () => {
 
   const {
     product,
+    setProduct,
     placementTest,
     backgroundTest,
     surroundingTest,
@@ -73,7 +74,9 @@ const Generate3d = () => {
     setUserId,
     setpromt,
     setActiveTemplet,
-    activeTemplet
+    activeTemplet,
+    elevatedSurface, seTelevatedSurface
+
   } = useAppState();
 
   const { query, isReady } = useRouter();
@@ -99,6 +102,8 @@ const Generate3d = () => {
   const handelPromt = (e) => {
     setpromt("");
     setActiveTemplet({})
+    setpromt(e.target.value)
+
     setpromtFull(e.target.value);
   };
 
@@ -109,6 +114,8 @@ const Generate3d = () => {
       variants={fadeIn}
       className="accest"
     >
+     <AllWrapper>
+
       <div className="gap">
         <DisabledLabel> Select your product category </DisabledLabel>
 
@@ -127,68 +134,19 @@ const Generate3d = () => {
         </Box>
       </div>
       <div className="gap">
+        <DisabledLabel>What is your object </DisabledLabel>
+        <Input
+        value={product}
+          onChange={(e) => setProduct(e.target.value)}
+          readonly={loader ? "readonly" : false} />
+
+
+        </div>
+      <div className="gap">
         <DisabledLabel>Describe your photo </DisabledLabel>
 
         <Row>
-          {/* <PromtGeneratePreview className="generatePreview">
-            {product !== null && product !== "" ? (
-              <label
-                htmlFor="prompt-editor-subject-0-input"
-                className="promtText"
-              >
-                {product}
-                {", "}
-              </label>
-            ) : null}
-            {selectPlacement !== null && selectPlacement !== "" ? (
-              <label
-                htmlFor="prompt-editor-subject-1-input"
-                className="promtText"
-              >
-                {selectPlacement}{" "}
-              </label>
-            ) : null}
-            {placementTest !== null && placementTest !== "" ? (
-              <label
-                htmlFor="prompt-editor-subject-1-input"
-                className="promtText"
-              >
-                {placementTest}{" "}
-              </label>
-            ) : null}
-            {selectSurrounding !== null && selectSurrounding !== "" ? (
-              <label
-                htmlFor="prompt-editor-subject-1-input"
-                className="promtText"
-              >
-                {selectSurrounding}{" "}
-              </label>
-            ) : null}
-            {surroundingTest !== null && surroundingTest !== "" ? (
-              <label
-                htmlFor="prompt-editor-subject-2-input"
-                className="promtText"
-              >
-                {surroundingTest}{" "}
-              </label>
-            ) : null}
-            {selectBackground !== null && selectBackground !== "" ? (
-              <label
-                htmlFor="prompt-editor-subject-1-input"
-                className="promtText"
-              >
-                {selectBackground}{" "}
-              </label>
-            ) : null}
-            {backgroundTest !== null && backgroundTest !== "" ? (
-              <label
-                htmlFor="prompt-editor-subject-3-input"
-                className="promtText"
-              >
-                {","} {backgroundTest}{" "}
-              </label>
-            ) : null}
-          </PromtGeneratePreview> */}
+          
           <TestArea
             value={promtFull}
             onChange={(e) => handelPromt(e)}
@@ -199,6 +157,22 @@ const Generate3d = () => {
           />
           {/* <input type="text" className="generatePreview" /> */}
         </Row>
+        {/* <Row>
+          <DATA>
+          <div>
+              <DisabledLabel>
+              Is model on elevated surface
+              </DisabledLabel>
+            </div>
+          <div
+              className={`toggle-switch ${elevatedSurface ? "on" : "off"}`}
+              onClick={() => seTelevatedSurface(!elevatedSurface)}
+            >
+              <div className="circle"></div>
+            </div>
+           
+          </DATA>
+        </Row> */}
         <Row>
           {loader ? (
             <TextLoader />
@@ -212,7 +186,8 @@ const Generate3d = () => {
               }
               disabled={promtFull === " " ? true : false}
             >
-              {generationLoader ? "Loading..." : "Generate"}
+              Generate
+              {/* {generationLoader ? "Loading..." : "Generate"} */}
             </Button>
           )}
         </Row>
@@ -231,6 +206,7 @@ const Generate3d = () => {
           ></DropdownNOBorder>
         </div>
       </div> */}
+     </AllWrapper>
 
       <div className="bigGap">
         {/* <Label>Edit the the prompt in the form below.</Label> */}
@@ -261,6 +237,16 @@ const Generate3d = () => {
 };
 
 export default Generate3d;
+export const AllWrapper = styled.div`
+
+
+    padding-left: 15px;
+    padding-right: 15px;
+    /* background-color: red; */
+
+ 
+
+`
 export const Box = styled.div`
   position: relative;
 
@@ -299,7 +285,40 @@ export const ResponsiveRowWraptwo = styled(Row)`
     grid-template-columns: repeat(2, 1fr);
    `}
 `;
+export const DATA = styled.div`
+width: 100%;
+display: flex; 
+justify-content: space-between;
+  .toggle-switch {
+    width: 46px;
+    height: 22px;
+    border: 1px solid ${(props) => props.theme.btnPrimary};
+    background-color: #e0e0e0;
+    border-radius: 15px;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
 
+  .toggle-switch .circle {
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: left 0.3s;
+  }
+
+  .toggle-switch.on {
+    background-color: ${(props) => props.theme.btnPrimary}; /* Based on the image you provided */
+  }
+
+  .toggle-switch.on .circle {
+    left: 25px;
+  }
+`;
 export const SwchichBtn = styled(Row)`
   display: flex;
   justify-content: space-between;
@@ -320,8 +339,10 @@ export const SwchichBtn = styled(Row)`
   }
 `;
 export const Wrapper = styled.div`
-  /* max-height: 600px;
-  overflow-y: scroll; */
+  max-height: calc(100vh - 320px);
+  overflow-y: scroll;
+  padding-left: 15px;
+    padding-right: 15px;
 `;
 export const BoxOff = styled.div`
   /* height: 100%; */

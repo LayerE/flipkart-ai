@@ -6,14 +6,11 @@ const Label = ({ children }: { children: React.ReactNode }) => {
   return <LabelWrapper>{children}</LabelWrapper>;
 };
 const LabelWrapper = styled(Row)`
-  /* gap: 0.25rem; */
-  /* background: ${({ theme }) => theme.secondary}; */
   font-weight: 500;
   line-height: 24px;
   font-size: 14px;
   border-radius: 0.25rem;
   width: fit-content;
-  /* padding: 0.5rem 1rem; */
 `;
 export const DisabledLabel = styled.p`
   font-size: clamp(0.8rem, 1vw, 0.9rem);

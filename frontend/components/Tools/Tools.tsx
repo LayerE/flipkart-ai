@@ -1,13 +1,6 @@
-/* eslint-disable react/jsx-key */
 /// <reference no-default-lib="true"/>
 import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
-
-const fadeIn = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.5 } },
-};
-
 import { motion } from "framer-motion";
 import { useSession } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
@@ -15,6 +8,10 @@ import { useAppState } from "@/context/app.context";
 import { supabase } from "@/utils/supabase";
 import Loader from "../Loader";
 
+const fadeIn = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.5 } },
+};
 const toolslist = [
   {
     name: "Banner Creator",
@@ -22,7 +19,7 @@ const toolslist = [
 
     discription: "Banners from your AI Generations ",
     url: "https://banner-production.up.railway.app/?userId=",
-    img: "https://www.notion.so/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2Fa4336ca6-f4ed-458c-b743-2a86cc9620a1%2Fb9317de9-c1b7-4f6e-b553-c2c44f2577f3%2FUntitled.png?table=block&id=1ce4a0a1-78eb-4cba-96c9-e971ae054f63&spaceId=a4336ca6-f4ed-458c-b743-2a86cc9620a1&width=860&userId=4a875d3f-c33d-4324-9807-2fb21ead789e&cache=v2",
+    img: "https://ik.imagekit.io/7urmiszfde/c5d0234a24d5537e.webp?updatedAt=1698826243971",
   },
   {
     name: "3D Product Photography      ",
@@ -32,14 +29,7 @@ const toolslist = [
     url: "/generate-3d/",
     img: "https://media.sketchfab.com/models/724f69d360e24cda99ba84fead2bed88/thumbnails/3bc8180aab6148778a75cde61100e6d4/915356641a0547a6907f0b8c89383780.jpeg",
   },
-  {
-    name: "Simple AI Outputs      ",
-    route: true,
-
-    discription: "Easy and Quick AI Photography",
-    url: "/quick-generator/",
-    img: "https://thumbs.dreamstime.com/b/space-background-galaxy-nebula-blue-orange-clouds-neural-network-ai-generated-art-271138821.jpg",
-  },
+ 
 ];
 
 const Tools = ({ loadetool }) => {
@@ -107,7 +97,7 @@ const ToolsWrapper = styled.div`
       cursor: pointer;
 
       .imgeWrapper {
-        height: 190px;
+        height: 230px;
         /* padding: 5px; */
         width: 100%;
         border-top-left-radius: 7px;

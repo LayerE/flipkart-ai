@@ -1,12 +1,11 @@
 // @ts-nocheck
 
-
 import React, { useEffect, useState } from "react";
 import { Row } from "../common/Row";
 import Button from "../common/Button";
 import { useAppState } from "@/context/app.context";
 import { styled } from "styled-components";
-import { useSession } from "@supabase/auth-helpers-react";
+
 const fadeIn = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 0.5 } },
@@ -15,15 +14,11 @@ const fadeIn = {
 import { motion } from "framer-motion";
 import EditorSection from "./Editor";
 import Tamplates from "./Templates";
-import { fabric } from "fabric";
-import Label, { DisabledLabel } from "../common/Label";
-import SuggetionInput from "./SuggetionInput";
+
+import  { DisabledLabel } from "../common/Label";
+
 import {
-  Loara,
-  PlacementSuggestions,
   categoryList,
-  productSuggestions,
-  resultList,
 } from "@/store/dropdown";
 import TextLoader from "../Loader/text";
 import { useRouter } from "next/router";
@@ -31,36 +26,11 @@ import DropdownInput, { DropdownNOBorder } from "../common/Dropdown";
 import { Input, TestArea } from "../common/Input";
 
 const Generate = () => {
-  const session = useSession();
 
 
   const {
     product,
-    placementTest,
-    backgroundTest,
-    surroundingTest,
-    generationLoader,
-    setGenerationLoader,
-    selectPlacement,
-    selectSurrounding,
-    selectBackground,
-    getBase64FromUrl,
-    addimgToCanvasGen,
-    canvasInstance,
-    setGeneratedImgList,
-    generatedImgList,
-    setSelectedImg,
-    setLoader,
-    selectedImg,
-    undoArray,
-    setModifidImageArray,
-    selectResult,
-    editorBox,
     loader,
-    jobId,
-    setJobId,
-    setSelectedresult,
-    setPlacementTest,
     generateImageHandeler,
     promt,
     setpromt,
@@ -68,46 +38,47 @@ const Generate = () => {
     setpromtFull,
     category,
     setcategory,
-    filteredArray,
     genrateeRef,
     TDMode,
     generate3dHandeler,
-    userId, setUserId
+    userId,
+    activeTemplet,
+    setProduct,
   } = useAppState();
 
   const { query, isReady } = useRouter();
   const id = (query.id as string[]) || [];
 
   const [changeTab, setChangeTab] = useState(false);
-  // useEffect(() => {
-  //   if (session) {
-  //     setUserId(session.user.id);
-  //   }
-  // }, [session]);
-  // const [promtFull, setpromtFull] = useState();
-
-  // const promt =
-  //   product +
-  //   " " +
-  //   selectPlacement +
-  //   " " +
-  //   placementTest +
-  //   " " +
-  //   selectSurrounding +
-  //   " " +
-  //   surroundingTest +
-  //   " " +
-  //   selectBackground +
-  //   " " +
-  //   backgroundTest;
 
   useEffect(() => {
-    const promts = product + " " + promt;
-    setpromtFull(promts);
-  }, [product, promt]);
+    console.log(promt, promtFull, activeTemplet);
+    const words = promtFull.split(" ");
+    const newPro = words[0];
+    const words1 = product.split(" ");
+    const newPro1 = words1[0];
+
+    if (newPro1 === newPro) {
+      const promts = promt;
+      setpromtFull(promt);
+    } else {
+      const promts = promt;
+      setpromtFull(promts);
+    }
+  }, [product, activeTemplet]);
+  useEffect(() => {
+    if (promt == activeTemplet?.promt) {
+      const promts = promt;
+
+      setpromtFull(promts);
+    }
+  }, [activeTemplet]);
 
   const handelPromt = (e) => {
-    setpromtFull(e.target.value);
+    setpromt("");
+    const promts = e.target.value;
+    setpromt(promts);
+    setpromtFull(promts);
   };
 
   return (
@@ -117,160 +88,134 @@ const Generate = () => {
       variants={fadeIn}
       className="accest"
     >
-      <div className="gap">
-        <DisabledLabel> Select your product category </DisabledLabel>
+      <AllWrapper>
+        <div className="padding-s">
+          <div className="gap">
+            <DisabledLabel> Select your product category </DisabledLabel>
 
-        <Box className="disBox">
-          {loader ? <div className="dis"></div> : null}
-          <DropdownInput
-            data={{
-              list: categoryList,
-              action: setcategory,
-              label: "placement",
+            <Box className="disBox">
+              {loader ? <div className="dis"></div> : null}
+              <DropdownInput
+                data={{
+                  list: categoryList,
+                  action: setcategory,
+                  label: "placement",
 
-              activeTab: category,
+                  activeTab: category,
+                }}
+                style={{ width: "100%", pointerEvents: "none" }}
+              ></DropdownInput>
+            </Box>
+          </div>
+          <div className="gap">
+            <DisabledLabel>What is your Product </DisabledLabel>
+            <Input
+              value={product}
+              onChange={(e) => setProduct(e.target.value)}
+              readonly={loader ? "readonly" : false}
+            />
+          </div>
+          <div className="gap">
+            <DisabledLabel>Describe your photo </DisabledLabel>
+
+            <Row>
+              <TestArea
+                value={promt}
+                onChange={(e) => handelPromt(e)}
+                readonly={loader ? "readonly" : false}
+              />
+            </Row>
+            <Row>
+              {loader ? (
+                <TextLoader />
+              ) : (
+                <Button
+                  ref={genrateeRef}
+                  onClick={() =>
+                    TDMode
+                      ? generate3dHandeler(userId, id)
+                      : generateImageHandeler(userId, id)
+                  }
+                  disabled={promt === "" ? true : false}
+                >
+                  Generate
+                </Button>
+              )}
+            </Row>
+          </div>
+        </div>
+        <div className="bigGap"></div>
+
+        <SwchichBtn className="swich">
+          <div
+            className={changeTab ? "btnswitch " : "btnswitch activeSwitch"}
+            onClick={() => setChangeTab(false)}
+          >
+            Templates
+          </div>
+
+          <div
+            className={changeTab ? "btnswitch activeSwitch" : "btnswitch "}
+            onClick={() => {
+              setChangeTab(true);
             }}
-            style={{ width: "100%", pointerEvents: "none" }}
-          ></DropdownInput>
-        </Box>
-      </div>
-      <div className="gap">
-        <DisabledLabel>Describe your photo </DisabledLabel>
-
-        <Row>
-          {/* <PromtGeneratePreview className="generatePreview">
-            {product !== null && product !== "" ? (
-              <label
-                htmlFor="prompt-editor-subject-0-input"
-                className="promtText"
-              >
-                {product}
-                {", "}
-              </label>
-            ) : null}
-            {selectPlacement !== null && selectPlacement !== "" ? (
-              <label
-                htmlFor="prompt-editor-subject-1-input"
-                className="promtText"
-              >
-                {selectPlacement}{" "}
-              </label>
-            ) : null}
-            {placementTest !== null && placementTest !== "" ? (
-              <label
-                htmlFor="prompt-editor-subject-1-input"
-                className="promtText"
-              >
-                {placementTest}{" "}
-              </label>
-            ) : null}
-            {selectSurrounding !== null && selectSurrounding !== "" ? (
-              <label
-                htmlFor="prompt-editor-subject-1-input"
-                className="promtText"
-              >
-                {selectSurrounding}{" "}
-              </label>
-            ) : null}
-            {surroundingTest !== null && surroundingTest !== "" ? (
-              <label
-                htmlFor="prompt-editor-subject-2-input"
-                className="promtText"
-              >
-                {surroundingTest}{" "}
-              </label>
-            ) : null}
-            {selectBackground !== null && selectBackground !== "" ? (
-              <label
-                htmlFor="prompt-editor-subject-1-input"
-                className="promtText"
-              >
-                {selectBackground}{" "}
-              </label>
-            ) : null}
-            {backgroundTest !== null && backgroundTest !== "" ? (
-              <label
-                htmlFor="prompt-editor-subject-3-input"
-                className="promtText"
-              >
-                {","} {backgroundTest}{" "}
-              </label>
-            ) : null}
-          </PromtGeneratePreview> */}
-          <TestArea
-            value={promtFull}
-            onChange={(e) => handelPromt(e)}
-            readonly={loader ? "readonly" : false}
-            // value={placementTest}
-            // setValue={setPlacementTest}
-            // suggetion={PlacementSuggestionsFilter}
-          />
-          {/* <input type="text" className="generatePreview" /> */}
-        </Row>
-        <Row>
-          {loader ? (
-            <TextLoader />
-          ) : (
-            <Button
-              ref={genrateeRef}
-              onClick={() =>
-                TDMode
-                  ? generate3dHandeler(userId, id)
-                  : generateImageHandeler(userId, id)
-              }
-              disabled={promtFull === " " ? true : false}
-            >
-              {generationLoader ? "Loading..." : "Generate"}
-            </Button>
-          )}
-        </Row>
-      </div>
-
-      {/* <div className="rowwothtwo" style={{ marginBottom: "0px" }}>
-        <DisabledLabel>Number of results</DisabledLabel>
-        <div className="two-side">
-         
-          <DropdownNOBorder
-            data={{
-              list: resultList,
-              action: setSelectedresult,
-              activeTab: selectResult,
-            }}
-          ></DropdownNOBorder>
-        </div>
-      </div> */}
-
-      <div className="bigGap">
-        {/* <Label>Edit the the prompt in the form below.</Label> */}
-      </div>
-      {/* <div className="gap"></div> */}
-      <SwchichBtn className="swich">
-        <div
-          className={changeTab ? "btnswitch " : "btnswitch activeSwitch"}
-          onClick={() => setChangeTab(false)}
-        >
-          Templates
-        </div>
-
-        <div
-          className={changeTab ? "btnswitch activeSwitch" : "btnswitch "}
-          onClick={() => {
-            setChangeTab(true);
-          }}
-        >
-          Settings
-        </div>
-      </SwchichBtn>
-      <Wrapper className="wrappper">
-        {changeTab ? <EditorSection /> : <Tamplates />}
-      </Wrapper>
+          >
+            Settings
+          </div>
+        </SwchichBtn>
+        <Wrapper className="wrappper">
+          {changeTab ? <EditorSection /> : <Tamplates />}
+        </Wrapper>
+      </AllWrapper>
     </motion.div>
   );
 };
 
 export default Generate;
+
+export const AllWrapper = styled.div`
+  .padding-s {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+`;
+export const DATA = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  .toggle-switch {
+    width: 46px;
+    height: 22px;
+    border: 1px solid ${(props) => props.theme.btnPrimary};
+    background-color: #e0e0e0;
+    border-radius: 15px;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .toggle-switch .circle {
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: left 0.3s;
+  }
+
+  .toggle-switch.on {
+    background-color: ${(props) => props.theme.btnPrimary};
+  }
+
+  .toggle-switch.on .circle {
+    left: 25px;
+  }
+`;
 export const Box = styled.div`
   position: relative;
+  /* Toggle A */
 
   .dis {
     position: absolute;
@@ -328,12 +273,11 @@ export const SwchichBtn = styled(Row)`
   }
 `;
 export const Wrapper = styled.div`
-  /* max-height: 600px;
-  overflow-y: scroll; */
+  padding: 15px;
+  max-height: calc(100vh - 320px);
+  overflow-y: scroll;
 `;
 export const BoxOff = styled.div`
-  /* height: 100%; */
-  /* overflow: hidden; */
   position: relative;
   .dis {
     background: transparent !important;
@@ -364,7 +308,7 @@ export const BoxOff = styled.div`
       transition: all 0.3s ease-in-out;
       display: flex;
       justify-content: space-between;
-      /* align-items: center; */
+
       .sub {
         opacity: 0;
         transition: all 0.5s ease-in-out;

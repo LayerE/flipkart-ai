@@ -1,8 +1,7 @@
 // @ts-nocheck
 
-
 import { NextResponse, NextRequest } from "next/server";
-export const maxDuration = 50;
+export const maxDuration = 300;
 
 export default async function handler(req: NextRequest, res: NextResponse) {
   try {

@@ -1,7 +1,7 @@
 // @ts-nocheck
 
 import React, { useState, useEffect, useRef } from "react";
-import { Input, Suggestion1, TestArea } from "../common/Input";
+import { Input, Suggestion1 } from "../common/Input";
 
 const SuggetionInput = ({ value, setValue, suggetion }) => {
   const [showDropdown, setShowDropdown] = useState(false);

@@ -30,26 +30,17 @@ import { useSession } from "@supabase/auth-helpers-react";
 import { supabase } from "@/utils/supabase";
 
 export default function Home() {
-
   // const [userId, setUserID] = useState<string | null>(null);
-  const [loadetool, setloadetool] = useState(false)
+  const [loadetool, setloadetool] = useState(false);
 
   const { query, isReady } = useRouter();
   // const { id } = query;
   const id = (query.id as string[]) || [];
   const {
-    activeTabHome,
-
-    activeTab,
-    popupImage,
     setUserID,
     userId,
-    projectlist,
     setMainLoader,
-    setprojectlist,
-
     mainLoader,
-    setFilteredArray,
     setActiveTab,
     setpromtFull,
     setActiveTemplet,
@@ -58,39 +49,29 @@ export default function Home() {
     setProduct,
     setpromt,
     setLoader,
-    fetchAssetsImages,
     popup,
     setSelectedImg,
     setActiveTabHome,
     setActiveSize,
+    seTelevatedSurface,
   } = useAppState();
   const router = useRouter();
-
-
 
   useEffect(() => {
     const checkSession = async () => {
       const { data } = await supabase.auth.getSession();
       if (data.session) {
-        // router.push("/");
         setUserID(data.session.user.id);
       }
     };
     checkSession();
   }, []);
-  // const [loadercarna, setloadercarna] = useState(true);
-  // const [rerenter, setre] = useState(false);
 
   useEffect(() => {
-    // if (rerenter <= 6) {
-    //   setre(rerenter + 1);
-    // }
-   
-    
-    
     if (isReady && userId) {
-      setloadetool(true)
+      setloadetool(true);
       setActiveTab(1);
+      seTelevatedSurface(false);
       setcategory(null);
       setpromtFull("");
       setActiveTemplet(null);
@@ -112,45 +93,18 @@ export default function Home() {
       setSelectedImg(null);
       setMainLoader(false);
       setActiveTabHome(4);
-  
-  
+
       setTimeout(() => {
-        setloadetool(false)
+        setloadetool(false);
       }, 1000);
-      // fetchAssetsImages(userId, null);
-
-      //
-      // setFilteredArray(null);
-      // axios
-      //   .get(`${process.env.NEXT_PUBLIC_API}/user?id=${userId}`)
-      //   .then(async (response) => {
-
-      //     const dataFecth = await fetchData(userId);
-      //     console.log("dfd", await dataFecth);
-
-      //     if (dataFecth.status === 200) {
-      //       setprojectlist(await dataFecth.data);
-
-      //       setMainLoader(false);
-      //     }else{
-      //       setMainLoader(false);
-
-      //     }
-      //   })
-      //   .catch((error) => {
-      //     setMainLoader(false);
-
-      //     console.error(error);
-      //   });
     }
   }, [isReady, userId]);
-
 
   return (
     <MainPage>
       {popup?.status ? <PopupUpload /> : null}
 
-      {mainLoader ? <MainLoader  /> : null}
+      {mainLoader ? <MainLoader /> : null}
 
       <motion.div
         initial="hidden"
@@ -158,8 +112,6 @@ export default function Home() {
         variants={fadeIn}
         className="new"
       >
-   
-
         <HomeSidebar />
 
         <div className="dashbaord">
@@ -177,7 +129,7 @@ const MainPage = styled.div`
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
 .sidebar{
-  display: none;;
+  display: none;
 }
 `}
 

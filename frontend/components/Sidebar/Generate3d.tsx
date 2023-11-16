@@ -1,26 +1,12 @@
 // @ts-nocheck
 
-import React, { useState } from "react";
+import React from "react";
 import { styled } from "styled-components";
-import Column from "../common/Column";
 import Image from "next/image";
 import assets from "@/public/assets";
 import { useAppState } from "@/context/app.context";
-import { ResponsiveRowWrap, Row } from "../common/Row";
-import Label, { DisabledLabel } from "../common/Label";
-import { FileUpload, Input, Input2, TestArea } from "../common/Input";
-import DropdownInput from "../common/Dropdown";
-import Button from "../common/Button";
-import Assets from "../Assets/index";
-import Generate from "../Generate/index";
-import Edit from "../Edit";
-
 import { motion } from "framer-motion";
-import Humans from "../Humans";
-import Element from "../Element";
 import ListOf from "../List OfProduct";
-import MagicEraser from "../MagicErase";
-import RegenratTab from "../RegenrateTab";
 import Assets3d from "../Assets/Assets3 d";
 import Edit3d from "../Edit/Edite3d";
 import Generate3d from "../Generate/generate3d.tsx";
@@ -59,7 +45,6 @@ const Sidebar3d: React.FC = () => {
     viewMore,
     setViewMore,
     downloadImg,
-    isMagic,
     setIsMagic,
   } = useAppState();
 
@@ -80,11 +65,6 @@ const Sidebar3d: React.FC = () => {
                   activeTab === elemenmt.id ? "active tabBox " : "tabBox"
                 }
                 onClick={() => {
-                  //   if (elemenmt.id == 7) {
-                  //     set3dMode(true);
-                  //   } else if (elemenmt.id == 1) {
-                  //     set3dMode(false);
-                  //   }
                   setActiveTab(elemenmt.id);
                   setViewMore({ status: false });
                   setIsMagic(false);
@@ -158,6 +138,9 @@ const Sidebar3d: React.FC = () => {
 };
 
 const SideBar = styled.div`
+.tittle{
+  margin-left: 15px;
+}
   position: relative;
   z-index: 200;
   background-color: #fff;
@@ -340,8 +323,8 @@ const SideBar = styled.div`
     width: 380px;
   }
   .tapExpanded {
-    padding-left: 15px;
-    padding-right: 15px;
+    /* padding-left: 15px;
+    padding-right: 15px; */
     padding-top: 30px;
     /* padding-bottom: 70px; */
     border-right: 2px solid ${({ theme }) => theme.bgBorder};
@@ -350,6 +333,15 @@ const SideBar = styled.div`
     height: 100%;
     overflow: auto;
   }
+  .tapExpanded::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.tapExpanded {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
   ${({ theme }) => theme.mediaWidth.upToMedium`
   .tapExpanded{
   display: none;

@@ -1,17 +1,11 @@
 // @ts-nocheck
 
-import { images } from "@/next.config";
 import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
-
 import { motion } from "framer-motion";
 import { useAppState } from "@/context/app.context";
-import { useSession } from "@supabase/auth-helpers-react";
-import PopupCard from "../Popup/PopupCard";
-import axios from "axios";
 import Loader from "../Loader";
 import { supabase } from "@/utils/supabase";
-import { IMG_TABLE } from "@/store/table";
 
 const fadeIn = {
   hidden: { opacity: 0 },
@@ -19,49 +13,18 @@ const fadeIn = {
 };
 
 const Gellery = () => {
-  const session = useSession();
-  // const [userId, setUserId] = useState<string | null>(null);
-
   const [gallery, setGallery] = useState();
 
   const {
-    fetchGeneratedImages,
-    generatedImgList,
     setPopupImage,
-    setGeneratedImgList,
     galleryActivTab,
     setgalleryActiveTab,
     userId,
     setUserID,
-    getSupabaseImage
+    getSupabaseImage,
   } = useAppState();
 
   const [laoder, setlaoder] = useState(true);
-
-  // useEffect(() => {
-  //   if (userId) {
-  //     fetchGeneratedImages(userId);
-
-  //     axios
-  //     .get(`${process.env.NEXT_PUBLIC_API}/user?id=${userId}`)
-  //     .then((response) => {
-  //       console.log(response.data.jobIds);
-  //       console.log(response, "adsfnbdhjskgvyuifdsgh");
-
-  //       const  filteredResult = generatedImgList.filter((obj) =>
-  //       response.data.jobIds?.includes(obj?.task_id)
-  //       )
-  //       // setGallery(filteredResult)
-
-  //     })
-
-  //     .catch((error) => {
-  //       console.error(error);
-
-  //       return error;
-  //     });
-  //   }
-  // }, []);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -76,7 +39,7 @@ const Gellery = () => {
     checkSession();
     if (userId) {
       fetchAssetsImages();
-      getSupabaseImage()
+      getSupabaseImage();
     }
   }, [userId, galleryActivTab]);
 
@@ -84,65 +47,24 @@ const Gellery = () => {
     setlaoder(true);
 
     try {
-     
-     
       if (galleryActivTab === "ai") {
-
-        const datass = await  getSupabaseImage()
-        if (datass){
-
+        const datass = await getSupabaseImage();
+        if (datass) {
           setGallery(datass);
         }
 
-        // const response = await fetch(
-        //   `${process.env.NEXT_PUBLIC_API}/generatedImg?userId=${userId}`,
-        //   {
-        //     method: "GET",
-        //   }
-        // );
-        // const data = await response.json();
-        // console.log(data, "dd");
-
-        // if (data?.length) {
-        //   if (galleryActivTab === "ai") {
-        //     // setGallery(data);
-        //     setlaoder(false);
-        //   } else {
-        //   }
-        // }
         setlaoder(false);
       } else {
-        // const response = await fetch(`/api/getbanner`, {
-        //   method: "POST",
-        //   body: JSON.stringify({
-        //     user_id: userId,
-        //   }),
-        // });
-        // const data = await response.json();
-        // console.log(data, "gelery");
-
-        // if (data?.length) {
-        //     if (galleryActivTab === "ai") {
-        //       console.log(data,"ssssssssssssssssss")
-        //       setGallery(data);
-        //       setlaoder(false);
-        //     } else {
-        //     }
-
-          // setGallery(data);
-        // }
         const { data, error } = await supabase
-        .from("banner")
-        .select("*")
-        .eq("user_id", userId)
-        .order("created_at", { ascending: false });
+          .from("banner")
+          .select("*")
+          .eq("user_id", userId)
+          .order("created_at", { ascending: false });
         setlaoder(false);
-        if(data){
+        if (data) {
           setGallery(data);
-
+        }
       }
-      }
-      
     } catch (error) {
       setlaoder(false);
 
@@ -223,7 +145,7 @@ const Gellery = () => {
                       </picture>
                     </div>
                   ))}
-              {/* {} */}
+           
             </div>
           )}
         </div>

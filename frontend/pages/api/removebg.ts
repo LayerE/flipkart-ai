@@ -4,10 +4,9 @@ import { NextResponse, NextRequest } from "next/server";
 import axios from "axios";
 import FormData from "form-data";
 const { createCanvas, loadImage } = require("canvas");
-export const maxDuration = 50;
+export const maxDuration = 300;
 
 export const config = {
-  
   api: {
     bodyParser: {
       sizeLimit: "25mb", // Set desired value here
@@ -35,6 +34,9 @@ const uploadImage = async (dataUrl: string) => {
     const { data } = response;
     const { url, name, height, width } = data;
 
+    console.log("Image uploaded to ImageKit");
+    console.log(url);
+
     return { url, name, height, width };
   } catch (error) {
     // Handle errors here
@@ -58,6 +60,8 @@ export default async function handler(req: NextRequest, res: NextResponse) {
     const { body } = req;
     const payload = body;
     const { user_id, dataUrl, project_id, type } = payload;
+
+    console.log(payload);
 
     var fileExtension = "png";
     if (dataUrl.includes("jpeg") || dataUrl.includes("jpg")) {
@@ -102,18 +106,24 @@ export default async function handler(req: NextRequest, res: NextResponse) {
         "base64"
       );
 
-      const caption_response = await fetch(
-        "https://dehiddenformodal--onlycaption-caption.modal.run",
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          method: "POST",
-          body: JSON.stringify({
-            img: inputBase64Url,
-          }),
-        }
-      );
+      const useCaption = false;
+      var caption_response: { json: () => any };
+
+      if (useCaption) {
+        caption_response = await fetch(
+          "https://dehiddenformodal--onlycaption-caption.modal.run",
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            method: "POST",
+            body: JSON.stringify({
+              img: inputBase64Url,
+            }),
+            timeout: 10000,
+          }
+        );
+      }
 
       let form = new FormData();
       form.append("image_file", inputBuffer, {
@@ -134,13 +144,18 @@ export default async function handler(req: NextRequest, res: NextResponse) {
       };
 
       const response = axios.request(config);
+      var caption_data = null;
 
-      //  Get the caption
-      const caption_data = await caption_response.json();
-
-      console.log(caption_data);
-
-      caption = caption_data["caption"];
+      if (useCaption) {
+        try {
+          //  Get the caption
+          caption_data = await caption_response.json();
+          caption = caption_data["caption"];
+        } catch (error) {
+          console.log(error.message);
+        }
+        console.log(caption_data);
+      }
 
       // Get base64url from response
       const { data } = await response;

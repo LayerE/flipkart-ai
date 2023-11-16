@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { colors } from "@/theme/colors";
+
 
 const Button = styled.button<{
   size?: string;
@@ -23,9 +23,8 @@ const Button = styled.button<{
   cursor: pointer;
   width: 100%;
   font-weight: 700;
-  /* transition: 0.2s; */
+
   :hover {
-    /* background: #0d30f9 !important; */
 
   }
   &:disabled {
@@ -156,22 +155,6 @@ const GlowBtnWrapper = styled.div<{ _width: string; _bg?: string }>`
     overflow: visible !important;
   }
 
-  /* button:hover {
-    background: ${({ theme }) => theme.primaryGradient};
-    animation: animatedgradient 3s infinite linear;
-    background-size: 200% 200%;
-  }
-  @keyframes animatedgradient {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
-  } */
   button:is(:hover, :focus-visible) path {
     animation-name: bounce;
   }

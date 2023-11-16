@@ -1,31 +1,20 @@
 // @ts-nocheck
 
-import React, { useState } from "react";
+import React from "react";
 import { styled } from "styled-components";
-import Column from "../common/Column";
 import Image from "next/image";
 import assets from "@/public/assets";
 import { useAppState } from "@/context/app.context";
-import { ResponsiveRowWrap, Row } from "../common/Row";
-import Label, { DisabledLabel } from "../common/Label";
-import { FileUpload, Input, Input2, TestArea } from "../common/Input";
-import DropdownInput from "../common/Dropdown";
-import Button from "../common/Button";
 import Assets from "../Assets/index";
 import Generate from "../Generate/index";
 import Edit from "../Edit";
-
 import { motion } from "framer-motion";
-import Humans from "../Humans";
 import Element from "../Element";
 import ListOf from "../List OfProduct";
 import MagicEraser from "../MagicErase";
 import RegenratTab from "../RegenrateTab";
 import Assets3d from "../Assets/Assets3 d";
-const fadeIn = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 1 } },
-};
+
 
 const TabData = [
   {
@@ -33,30 +22,13 @@ const TabData = [
     image: assets.icons.assets_icon,
     tittle: "Assets",
   },
-  // {
-  //   id: 7,
-  //   image: assets.icons.assets_icon,
 
-  //   tittle: "3D Assets",
-  // },
   {
     id: 2,
 
     image: assets.icons.generate_icon,
     tittle: "Generate",
   },
-  // {
-  //   id: 3,
-
-  //   image: assets.icons.element_icon,
-  //   tittle: "Elements",
-  // },
-  // {
-  //   id: 4,
-
-  //   image: assets.icons.user_icon,
-  //   tittle: "Humans",
-  // },
 
   {
     id: 5,
@@ -76,7 +48,6 @@ const Sidebar: React.FC = () => {
     downloadImg,
     isMagic,
     setIsMagic,
-    TDMode,
     set3dMode,
   } = useAppState();
 
@@ -255,9 +226,7 @@ const Sidebar: React.FC = () => {
               <ListOf />
             ) : activeTab === 3 ? (
               <Element />
-            ) : activeTab === 4 ? (
-              <Humans />
-            ) : activeTab === 5 && isMagic === "true" ? (
+            )  : activeTab === 5 && isMagic === "true" ? (
               <MagicEraser />
             ) : activeTab === 5 ? (
               <Edit />
@@ -274,6 +243,9 @@ const Sidebar: React.FC = () => {
 };
 
 const SideBar = styled.div`
+.tittle{
+  margin-left: 15px;
+}
   position: relative;
   z-index: 200;
   background-color: #fff;
@@ -395,15 +367,13 @@ const SideBar = styled.div`
     }
   }
 
-
    `}
   .active {
     background-color: ${({ theme }) => theme.btnPrimary};
   }
   .blure {
     pointer-events: none;
-
-    filter: blur(2px); /* adjust px value to increase or decrease the blur */
+    filter: blur(2px);
     opacity: 0.9;
   }
   .gen {
@@ -417,8 +387,7 @@ const SideBar = styled.div`
     gap: 0.3rem;
   }
   .tabBox {
-    /* padding: 13px 15px; */
-    /* background-color: ${({ theme }) => theme.btnPrimary}; */
+  
     width: 58px;
     height: 54px;
     display: flex;
@@ -454,18 +423,24 @@ const SideBar = styled.div`
   `}
   .larfer {
     width: 380px;
+    position: relative;
   }
   .tapExpanded {
-    padding-left: 15px;
-    padding-right: 15px;
-    padding-top: 30px;
-    /* padding-bottom: 70px; */
+    padding-top: 100px;
     border-right: 2px solid ${({ theme }) => theme.bgBorder};
-    padding-top: ${({ theme }) => theme.paddings.paddingTop};
     width: 100% !important;
     height: 100%;
     overflow: auto;
   }
+  .tapExpanded::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.tapExpanded {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
   ${({ theme }) => theme.mediaWidth.upToMedium`
   .tapExpanded{
   display: none;

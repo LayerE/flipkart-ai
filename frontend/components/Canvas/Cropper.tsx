@@ -1,44 +1,26 @@
 import React from "react";
 import { styled } from "styled-components";
-import { useState, useCallback } from "react";
-import Cropper from "react-easy-crop";
+import { useState } from "react";
 import { useAppState } from "@/context/app.context";
-// import ReactCrop, { type Crop } from 'react-image-crop'
-import ReactCrop, {
-  centerCrop,
-  makeAspectCrop,
-  Crop,
-  PixelCrop,
-  convertToPixelCrop,
-} from "react-image-crop";
+import ReactCrop from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 import Button from "../common/Button";
 import { saveAs } from "file-saver";
 
 const CropperBox = () => {
   const {
-    addimgToCanvasCropped,
-    crop,
     setCrop,
     downloadImg,
     addimgToCanvasGen,
     TDMode,
     downloadeImgFormate,
-    downloadImgEdit, setDownloadImgEdit,
-    canvasInstance
+    canvasInstance,
   } = useAppState();
 
-  // const [cropSize, setCropSize] = useState({ x: 0, y: 0 })
   const [cropSize, setCropSize] = useState();
-  const [completedCrop, setCompletedCrop] = useState<PixelCrop>();
-
-  const [zoom, setZoom] = useState(1);
-  const [aspect, setAspect] = useState<number | undefined>(1);
 
   const HandleCrope = async () => {
-    console.log("dfg");
     if (cropSize.width && cropSize.height) {
-      console.log("dfg");
 
       const canvas = document.createElement("canvas");
       const image = document.getElementById("img");
@@ -66,14 +48,7 @@ const CropperBox = () => {
       );
       const url = URL.createObjectURL(blob);
 
-      // const link = document.createElement('a');
-      // link.href = url;
-      // link.download = 'cropped_image.png';
-      // document.body.appendChild(link);
-      // link.click();
-      // document.body.removeChild(link);
-      DeletIrem()
-
+      DeletIrem();
       addimgToCanvasGen(url);
       setCrop(false);
     }
@@ -81,17 +56,13 @@ const CropperBox = () => {
   const downloadH = async () => {
     console.log("dfg");
     if (cropSize.width && cropSize.height) {
-      console.log("dfg");
-
       const canvas = document.createElement("canvas");
       const image = document.getElementById("img");
       image.setAttribute("crossOrigin", "anonymous");
       const scaleX = image.naturalWidth / image.width;
       const scaleY = image.naturalHeight / image.height;
-
       canvas.width = cropSize.width;
       canvas.height = cropSize.height;
-
       const ctx = canvas.getContext("2d");
       ctx.drawImage(
         image,
@@ -105,26 +76,9 @@ const CropperBox = () => {
         cropSize.height
       );
 
-      // const blob = await new Promise((resolve) =>
-      // );
       const url = canvas.toDataURL();
-      // const url = URL.createObjectURL(blob);
-
-      // const link = document.createElement('a');
-      // link.href = url;
-      // link.download = 'cropped_image.png';
-      // document.body.appendChild(link);
-      // link.click();
-      // document.body.removeChild(link);
-
       saveAs(url, `image${Date.now()}.${downloadeImgFormate}`);
-
-      // setCrop(false)
     }
-
-    // setIsMagic(false);
-
-    // return dataURL;
   };
 
   const DeletIrem = () => {
@@ -137,21 +91,10 @@ const CropperBox = () => {
   return (
     <Wrapper>
       <div className="cropperbox">
-        {/* <Cropper
-      image={downloadImg}
-      crop={cropSize}
-      zoom={zoom}
-    //   aspect={4 / 3}
-      onCropChange={setCropSize}
-      onCropComplete={onCropComplete}
-      onZoomChange={setZoom}
-    /> */}
-
         <ReactCrop
           crop={cropSize}
           onChange={(c) => setCropSize(c)}
-          onComplete={(c) => setCompletedCrop(c)}
-          aspect={aspect}
+  
           minWidth={50}
           minHeight={50}
         >
@@ -203,7 +146,6 @@ const Wrapper = styled.div`
   width: 100%;
   height: 100vh;
   right: 0;
-  /* bottom: 0; */
   z-index: 400;
   background-color: #ffffff;
 
@@ -211,7 +153,6 @@ const Wrapper = styled.div`
     width: 400px;
     height: 400px;
     position: relative;
-    /* margin-top: 80px !important; */
   }
   .reactEasyCrop_Container {
     width: 100%;

@@ -1,6 +1,5 @@
 // @ts-nocheck
 
-
 import React, { useState } from "react";
 import { styled } from "styled-components";
 import Button from "../common/Button";
@@ -31,9 +30,6 @@ const PopupCard = () => {
   const handletBtn = async () => {
     if (popupImage.generat) {
       try {
-        // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
-        const getUser = localStorage.getItem("userId");
-        console.log(getUser);
         if (popupImage?.userId) {
           const response = await fetch(
             `${process.env.NEXT_PUBLIC_API}/project?id=${popupImage.userId}`,
@@ -48,16 +44,11 @@ const PopupCard = () => {
               }),
             }
           );
-          // console.log(await response.json(), "dfvcvdfvdvcdsd");
           const datares = await response.json();
           if (datares?._id) {
-           
-
             GetProjexts(popupImage.userId);
             setPopupImage({ statu: false });
-
             router.push(`/generate/${datares?._id}`);
-            // window.open(`/generate/${datares?._id}`, "_self");
             setTimeout(() => {}, 1000);
           }
         }
@@ -87,24 +78,11 @@ const PopupCard = () => {
 
   const handleDelet = async () => {
     try {
-      // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
-
-      // const response = await fetch(
-      //   `${process.env.NEXT_PUBLIC_API}/assets?id=${id}`,
-      //   {
-      //     method: "DELETE",
-      //   }
-      // );
-      console.log(popupImage?.list[currentIndex]?.image_url, "deleter");
-
-let deletfrom 
-      if(popupImage.type === "product"){
-        deletfrom = null
-
-      }else{
-        deletfrom = "brand"
-
-
+      let deletfrom;
+      if (popupImage.type === "product") {
+        deletfrom = null;
+      } else {
+        deletfrom = "brand";
       }
 
       const response = await fetch(`/api/deleteimage`, {
@@ -114,29 +92,29 @@ let deletfrom
         },
         body: JSON.stringify({
           image_url: popupImage?.list[currentIndex]?.image_url,
-          type: deletfrom
+          type: deletfrom,
         }),
       });
-      console.log(response, "deleter");
+
       if (response.status === 200) {
         toast.success("Deleted successfully");
-
         if (showNext) handleNext();
         else setPopupImage({ statu: false });
       } else {
         toast.error("Failed to delete");
       }
 
-      // GetProjexts(userId);
     } catch (error) {
-      // Handle error
+      toast.error("something went wrong");
+
+
     }
   };
   const redirectToAnotherSite = () => {
     window.open(popupImage?.list[currentIndex]?.image_url, "_blank");
   };
   return (
-    // <motion.div initial="hidden" animate="visible" variants={fadeIn}>
+  
 
     <PopupWrapper2>
       <div className="wrapper">
@@ -199,9 +177,7 @@ let deletfrom
 
         <div className="btns">
           {popupImage.generat ? (
-            // AssetsActivTab === "product" ? (
-            //   <Button onClick={() => handletBtn()}> {popupImage.btn} </Button>
-            // ) : (
+         
             <>
               <div className="we">
                 <div className="btnsd">
@@ -239,13 +215,13 @@ let deletfrom
               <Button onClick={() => handletBtn()}> {popupImage.btn} </Button>
             </>
           ) : (
-            // )
+        
             <Button onClick={() => handletBtn()}> {popupImage.btn} </Button>
           )}
         </div>
       </div>
     </PopupWrapper2>
-    // </motion.div>
+
   );
 };
 

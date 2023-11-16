@@ -1,17 +1,13 @@
-
 // @ts-nocheck
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { styled } from "styled-components";
 import { motion } from "framer-motion";
-import Link from "next/link";
-import assets from "@/public/assets";
 import ProjectCard from "./ProjectCard";
 import { useAppState } from "@/context/app.context";
-import { useSession } from "@supabase/auth-helpers-react";
-import { setTimeout } from "timers";
 import { useRouter } from "next/router";
-import MainLoader from "../Loader/main";
+import { toast } from "react-toastify";
+
 const fadeIn = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 0.5 } },
@@ -19,30 +15,14 @@ const fadeIn = {
 
 const Projects = ({ onDelet }) => {
   const router = useRouter();
-  const [projects, setProjects] = useState([]);
-  const session = useSession();
-  // const [userId, setUserId] = useState<string | null>(null);
-  // useEffect(() => {
-  //   if (session) {
-  //     setUserId(session.user.id);
-  //   }
-  // }, [session]);
-  const {
-    activeTab,
-    setprojectlist,
-    setFilteredArray,
-    projectlist,
-    GetProjexts,
-    renameProject,
-    userId, setUserId
-  } = useAppState();
+
+  const { setFilteredArray, projectlist, GetProjexts, renameProject, userId } =
+    useAppState();
   const [projectsLoader, setprojectsLoader] = useState(false);
 
   const handleCreate = async () => {
     try {
-      // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
       setprojectsLoader(true);
-      console.log(userId);
       if (userId) {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API}/project?id=${userId}`,
@@ -57,47 +37,48 @@ const Projects = ({ onDelet }) => {
             }),
           }
         );
-        // console.log(await response.json(), "dfvcvdfvdvcdsd");
+
         const datares = await response.json();
         if (datares?._id) {
           setFilteredArray([]);
 
           router.push(`/generate/${datares?._id}`);
-          // console.log(datares,"sdcdrfc")
-          // GetProjexts(userId);
-          // window.open(`/generate/${datares?._id}`, "_self");
         }
-        // setprojectsLoader(false);
       }
     } catch (error) {
-      // Handle error
+      console.log(error);
     }
   };
   const handleEdite = async (id: string, name: string) => {
     try {
-      // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
       renameProject(userId, id, name);
 
       GetProjexts(userId);
     } catch (error) {
-      // Handle error
+      // toast.error("something went wrong");
+
+      console.log(error);
     }
   };
 
   const handleDelet = async (id: string) => {
     try {
-      // const response = await axios.get(`/api/user?id=${"shdkjs"}`);
-
-      const response = await fetch(
+      const data = await fetch(
         `${process.env.NEXT_PUBLIC_API}/project?id=${id}`,
         {
           method: "DELETE",
         }
       );
-
+      console.log(data);
+      if (data.status === 200) {
+        toast.success("Project Deleted successfully ");
+      } else {
+        toast.error("failed Deleting Project ");
+      }
       GetProjexts(userId);
     } catch (error) {
-      // Handle error
+      console.log(error);
+      toast.error("something went wrong");
     }
   };
 
@@ -139,18 +120,15 @@ const Projects = ({ onDelet }) => {
             <div className="testcreat">Create new project</div>
           </div>
 
-          {/* <Link href={"/"}> */}
           {projectlist?.map((item: any, i: number) => (
             <ProjectCard
               key={item._id}
               data={item}
-              setProjects={setProjects}
               handleDelet={handleDelet}
               handleEdite={handleEdite}
               setprojectsLoader={setprojectsLoader}
             />
           ))}
-          {/* </Link> */}
         </ProjectWrapper>
       </motion.div>
     </>

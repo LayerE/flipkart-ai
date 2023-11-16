@@ -3,7 +3,6 @@
 
 import React from "react";
 import { Row } from "../common/Row";
-import Label from "../common/Label";
 import { styled } from "styled-components";
 import { useAppState } from "@/context/app.context";
 
@@ -20,19 +19,13 @@ const ListOf: React.FC = () => {
     setSelectedSurrounding,
     setSelectedBackground
 
-
-
-
-
   } = useAppState();
 
   return (
     <div className="accest">
-      <div className="gap">
-        {/* <Row>
-          <Label>Select an element to add</Label>
-        </Row> */}
+      <AllWrapper>
 
+      <div className="gap">
         <ResponsiveRowWraptwo>
           {viewMore?.list?.map((test:string, i:number) => (
             <div
@@ -65,9 +58,19 @@ const ListOf: React.FC = () => {
           ))}
         </ResponsiveRowWraptwo>
       </div>
+      </AllWrapper>
     </div>
+
   );
 };
+export const AllWrapper = styled.div`
+
+
+    padding-left: 15px;
+    padding-right: 15px;
+
+
+ `
 
 export const ResponsiveRowWraptwo = styled(Row)`
   display: grid !important;

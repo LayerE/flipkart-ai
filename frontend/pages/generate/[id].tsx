@@ -30,7 +30,7 @@ const fadeIn = {
 
 export default function Home() {
   const session = useSession();
-  // const [userId, setUserID] = useState<string | null>(null);
+ 
 
   const { query, isReady } = useRouter();
   // const { id } = query;

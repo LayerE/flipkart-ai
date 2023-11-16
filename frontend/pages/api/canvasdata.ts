@@ -6,7 +6,7 @@ import { createClient } from "@supabase/supabase-js";
 export const config = {
   runtime: "edge",
 };
-export const maxDuration = 50;
+export const maxDuration = 300;
 
 export default async (req: NextRequest) => {
   try {
@@ -60,14 +60,11 @@ export default async (req: NextRequest) => {
         }
       );
 
-      const { data, error } = await supabase.rpc(
-        "check_and_insert_canvas",
-        {
-          user_id_arg: user_id,
-          project_id_arg: project_id,
-          canvasdata_arg: canvasdata,
-        }
-      );
+      const { data, error } = await supabase.rpc("check_and_insert_canvas", {
+        user_id_arg: user_id,
+        project_id_arg: project_id,
+        canvasdata_arg: canvasdata,
+      });
 
       if (error) {
         console.log(error);

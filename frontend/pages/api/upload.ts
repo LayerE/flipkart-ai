@@ -1,15 +1,12 @@
-
 // @ts-nocheck
-
 
 import { NextResponse, NextRequest } from "next/server";
 import axios from "axios";
 import FormData from "form-data";
 const { createCanvas, loadImage } = require("canvas");
-export const maxDuration = 50;
+export const maxDuration = 300;
 
 export const config = {
-  
   api: {
     bodyParser: {
       sizeLimit: "25mb", // Set desired value here
@@ -17,25 +14,25 @@ export const config = {
   },
 };
 
-async function getImageDimensions(base64Url: string) {
-  const canvas = createCanvas();
-  const ctx = canvas.getContext("2d");
+// async function getImageDimensions(base64Url: string) {
+//   const canvas = createCanvas();
+//   const ctx = canvas.getContext("2d");
 
-  try {
-    const image = await loadImage(base64Url);
-    canvas.width = image.width;
-    canvas.height = image.height;
-    ctx.drawImage(image, 0, 0);
-    const dimensions = {
-      width: canvas.width,
-      height: canvas.height,
-    };
-    return dimensions;
-  } catch (error) {
-    console.error("Error:", error.message);
-    return { error: error.message };
-  }
-}
+//   try {
+//     const image = await loadImage(base64Url);
+//     canvas.width = image.width;
+//     canvas.height = image.height;
+//     ctx.drawImage(image, 0, 0);
+//     const dimensions = {
+//       width: canvas.width,
+//       height: canvas.height,
+//     };
+//     return dimensions;
+//   } catch (error) {
+//     console.error("Error:", error.message);
+//     return { error: error.message };
+//   }
+// }
 
 const uploadImage = async (dataUrl: string) => {
   const formdata = new FormData();
@@ -91,23 +88,24 @@ export default async function handler(req: NextRequest, res: NextResponse) {
     const inputBase64Url = dataUrl;
 
     // Get the image dimensions of the image from its base64Url
-    const { width: img_width, height: img_height } = await getImageDimensions(
-      inputBase64Url
-    );
+    // const { width: img_width, height: img_height } = await getImageDimensions(
+    //   inputBase64Url
+    // );
 
-    if (!img_width || !img_height) {
-      res.status(400).send("Image is corrupted or unsupported dimensions");
-      return;
-    }
+    // if (!img_width || !img_height) {
+    //   res.status(400).send("Image is corrupted or unsupported dimensions");
+    //   return;
+    // }
 
-    // Check if image is less than 25MP
-    if (img_width * img_height > 25000000) {
-      res.status(400).send("Image is too big");
-      return;
-    }
+    // // Check if image is less than 25MP
+    // if (img_width * img_height > 25000000) {
+    //   res.status(400).send("Image is too big");
+    //   return;
+    // }
 
     // Upload image to ImageKit
     const { url: imageUrl, height, width } = await uploadImage(dataUrl);
+    console.log(imageUrl)
 
     if (image_type == "image") {
       // Add the image to the database
