@@ -1,0 +1,9 @@
+modal-client
+Pillow
+celery
+boto3
+requests
+openai==0.28
+replicate
+supabase
+imagekitio
