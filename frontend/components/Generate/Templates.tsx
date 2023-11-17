@@ -56,6 +56,9 @@ let templetType
 if(category === "Apparel & Footwear"){
   templetType= "Outdoor Scene"
 }
+else if(category === "Large Appliances"){
+  templetType =  "Indoor Scene"
+}
 else if(category === "Mobile & Laptops"){
   templetType =  "On Platforms"
 }

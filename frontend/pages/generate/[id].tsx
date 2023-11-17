@@ -121,7 +121,7 @@ export default function Home() {
   useEffect(() => {
     let time = setInterval(() => {
       if (isReady && userId) {
-        // fetchAssetsImages();
+        fetchAssetsImages();
       }
     }, 5000);
     return () => {

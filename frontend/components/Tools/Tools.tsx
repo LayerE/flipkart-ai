@@ -47,7 +47,7 @@ const Tools = ({ loadetool }) => {
   return (
     <motion.div initial="hidden" animate="visible" variants={fadeIn}>
       <ToolsWrapper>
-        {loadetool ? <Loader h={true} /> : null}
+        {/* {loadetool ? <Loader h={true} /> : null} */}
         <div className="headerText">Tools</div>
 
         <div className="gridbox">

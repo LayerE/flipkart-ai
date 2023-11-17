@@ -1,5 +1,5 @@
 export const categoryList = [
-  // "Large Appliances",
+  "Large Appliances",
   "Apparel & Footwear",
   "Mobile & Laptops",
   "Furniture & Decor",

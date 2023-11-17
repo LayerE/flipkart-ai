@@ -90,7 +90,7 @@ const BottomTab = () => {
             </svg>
           </div>
           <div className="clare" onClick={handileCleav}>
-            <Image src={assets.icons.clean} width={16} height={15} alt="" />
+            <Image src={assets.icons.clean} width={20} height={20} alt="" />
           </div>
         </div>
       </div>
@@ -150,14 +150,9 @@ const BottomTabWtapper = styled.div`
   }
   .undo {
   }
-  /* .clare{
-    width: 15px;
-    height: 15px;
-    img{
-      width: 100%;
-      height: 100%;
-    }
-  } */
+  .clare{
+ cursor: pointer;
+  }
 
   /* Chrome, Safari, Edge, Opera */
   input::-webkit-outer-spin-button,
