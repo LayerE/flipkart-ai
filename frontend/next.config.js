@@ -3,12 +3,12 @@ const path = require("path");
 if (
   process.env.LD_LIBRARY_PATH == null ||
   !process.env.LD_LIBRARY_PATH.includes(
-    `${process.env.PWD}/node_modules/canvas/build/Release:`,
+    `${process.env.PWD}/node_modules/canvas/build/Release:`
   )
 ) {
   process.env.LD_LIBRARY_PATH = `${
     process.env.PWD
-  }/node_modules/canvas/build/Release:${process.env.LD_LIBRARY_PATH || ''}`;
+  }/node_modules/canvas/build/Release:${process.env.LD_LIBRARY_PATH || ""}`;
 }
 const nextConfig = {
   reactStrictMode: true,
@@ -16,12 +16,8 @@ const nextConfig = {
   compiler: {
     styledComponents: true,
   },
-  // experimental: {
-  //   esmExternals: "loose", // <-- add this
-  //   serverComponentsExternalPackages: ["mongoose"] // <-- and this
-  // },
   experimental: {
-    serverComponentsExternalPackages: ['fabric'],
+    serverComponentsExternalPackages: ["fabric"],
   },
   typescript: {
     ignoreBuildErrors: true,
@@ -35,13 +31,11 @@ const nextConfig = {
     config.resolve.alias["styled-components"] = path.resolve(
       __dirname,
       "node_modules",
-      "styled-components",
-      
+      "styled-components"
     );
 
-    
     return config;
   },
-}
+};
 
 module.exports = nextConfig;

@@ -9,7 +9,6 @@ import { toast } from "react-toastify";
 import { arrayBufferToDataURL, dataURLtoFile } from "@/utils/BufferToDataUrl";
 import { useSession } from "@supabase/auth-helpers-react";
 import Pica from "pica";
-import { IMG_TABLE } from "@/store/table";
 import { supabase } from "@/utils/supabase";
 import { optimizeAndEncodeImage } from "@/lib/resize";
 import { getBase64FromUrl, scaleDownImage } from "@/utils";
@@ -1435,6 +1434,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   };
 
   const getSupabaseImage = async () => {
+
+    const IMG_TABLE = process.env.NEXT_PUBLIC_IMAGE_TABLE
     if (userId !== null) {
       const { data, error } = await supabase
         .from(IMG_TABLE)

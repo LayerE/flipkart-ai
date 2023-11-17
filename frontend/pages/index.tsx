@@ -1,17 +1,6 @@
 // @ts-nocheck
 
-
-import Image from "next/image";
-import { Inter } from "next/font/google";
 import { styled } from "styled-components";
-import assets from "@/public/assets";
-import Link from "next/link";
-
-const fadeIn = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.5 } },
-};
-
 import { motion } from "framer-motion";
 import HomeSidebar from "@/components/Sidebar/HomeSidebar";
 import Projects from "@/components/Projets/Projects";
@@ -24,17 +13,21 @@ import { useEffect, useState } from "react";
 import PopupCard from "@/components/Popup/PopupCard";
 import axios from "axios";
 import { useRouter } from "next/router";
-import Loader from "@/components/Loader";
 import MainLoader from "@/components/Loader/main";
 import PopupUpload from "@/components/Popup";
 import { supabase } from "@/utils/supabase";
+
+
+const fadeIn = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.5 } },
+};
 
 export default function Home() {
   const session = useSession();
   const router = useRouter();
 
   const { query, isReady } = router;
-  // const { id } = query;
   const id = (query.id as string[]) || [];
   const {
     activeTabHome,
@@ -62,12 +55,10 @@ export default function Home() {
     setUserID,
     setListOfAssetsById,
     GetProjexts,
-    setActiveSize
+    setActiveSize,
   } = useAppState();
 
-  // const [loadercarna, setloadercarna] = useState(true);
   const [rerenter, setre] = useState(1);
-  // const [userId, setUserID] = useState<string | null>(null);
 
   useEffect(() => {
     if (isReady) {
@@ -76,13 +67,12 @@ export default function Home() {
         if (data.session) {
           // router.push("/");
           setUserID(data.session.user.id);
-          GetProjexts(data.session.user.id)
+          GetProjexts(data.session.user.id);
         } else {
           // router.push("/sign-in");
         }
       };
       checkSession();
-      
     }
   }, [session]);
 
@@ -94,8 +84,8 @@ export default function Home() {
 
     if (isReady && userId) {
       console.log(session);
-      seTelevatedSurface(false)
-    
+      seTelevatedSurface(false);
+
       setActiveTab(1);
       setcategory(null);
       setpromtFull("");
@@ -115,7 +105,7 @@ export default function Home() {
         t: 160,
         gl: 592,
         gt: 160,
-      })
+      });
 
       fetchAssetsImages(userId, null);
 
@@ -125,7 +115,6 @@ export default function Home() {
       axios
         .get(`${process.env.NEXT_PUBLIC_API}/user?id=${userId}`)
         .then(async (response) => {
-       
           const dataFecth = await fetchData(userId);
           console.log("dfd", await dataFecth);
 
@@ -133,17 +122,13 @@ export default function Home() {
             setprojectlist(await dataFecth.data);
 
             setMainLoader(false);
-          }else{
+          } else {
             setMainLoader(false);
-
-
           }
         })
         .catch((error) => {
           console.error(error);
           setMainLoader(false);
-
-
         });
     }
   }, [isReady, userId]);
@@ -154,20 +139,11 @@ export default function Home() {
     );
 
     return data;
-    // .then((response) => {
-    //   return response
-    //   // setloadercarna(false);
-    // })
-    // .catch((error) => {
-    //   console.error(error);
-    //   setloadercarna(false);
-    // });
   };
 
   const handleDelete = () => {
     // Update the list of items by fetching data again
-    if(userId){
-
+    if (userId) {
       fetchData(userId);
     }
   };
@@ -189,10 +165,6 @@ export default function Home() {
         <HomeSidebar />
 
         <div className="dashbaord">
-          {/* {
-        loadercarna ? 
-        <Loader/>:
-        null} */}
           {activeTabHome === 1 ? (
             <Projects onDelet={handleDelete} />
           ) : activeTabHome === 2 ? (

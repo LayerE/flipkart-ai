@@ -1,8 +1,6 @@
 /// <reference no-default-lib="true"/>
 // @ts-nocheck
 
-
-
 import Head from "next/head";
 import React, { lazy, useEffect, useRef, useState } from "react";
 import Sidebar from "@/components/Sidebar";
@@ -14,7 +12,6 @@ import Canvas from "@/components/Canvas/Canvas";
 import Loader from "@/components/Loader";
 import BottomTab from "@/components/BottomTab";
 import CanvasBox from "@/components/Canvas";
-// const CanvasBox = lazy(() => import("@/components/Canvas"));
 import { useSession } from "@supabase/auth-helpers-react";
 import assert from "assert";
 import assets from "@/public/assets";
@@ -30,10 +27,7 @@ const fadeIn = {
 
 export default function Home() {
   const session = useSession();
- 
-
   const { query, isReady } = useRouter();
-  // const { id } = query;
   const id = (query.id as string[]) || [];
 
   const {
@@ -52,7 +46,6 @@ export default function Home() {
     regeneratePopup,
     generateImageHandeler,
     SaveProjexts,
-
     GetProjextById,
     setproject,
     project,
@@ -60,7 +53,6 @@ export default function Home() {
     addimgToCanvasSubject,
     projectId,
     setprojectId,
-
     setUserId,
     setGeneratedImgList,
     saveCanvasToDatabase,
@@ -80,23 +72,14 @@ export default function Home() {
     const checkSession = async () => {
       const { data } = await supabase.auth.getSession();
       if (data.session) {
-        // router.push("/");
         setUserID(data.session.user.id);
       }
     };
     checkSession();
   }, [session]);
   useEffect(() => {
-    // const getUser = localStorage.getItem("userId");
-    // if (!getUser) {
-    //   if (userId) localStorage.setItem("userId", userId);
-    // }
     if (isReady) {
-      // setFilteredArray([])
-      console.log("setFilteredArray", id);
       GetProjextById(id);
-      //  fetchAssetsImages(userId, null);
-      console.log(TDMode, "dddddddddddddddddddddddddddddddd");
     }
     set3dMode(false);
   }, [id, isReady, TDMode]);
@@ -122,11 +105,8 @@ export default function Home() {
 
   useEffect(() => {
     setprojectId(id);
-
     setassetsActiveTab("product");
-
     const canvas1 = canvasInstance.current;
-
     const objects = canvas1?.getObjects();
     const subjectObjects = [];
     objects?.forEach((object) => {
@@ -141,7 +121,7 @@ export default function Home() {
   useEffect(() => {
     let time = setInterval(() => {
       if (isReady && userId) {
-        fetchAssetsImages();
+        // fetchAssetsImages();
       }
     }, 5000);
     return () => {
@@ -160,9 +140,8 @@ export default function Home() {
         }
       );
       const data = await response.json();
-
       // const data = await getSupabaseImage();
-  
+
 
       if (data?.length) {
         const filteredResults = await data?.filter(
@@ -191,8 +170,6 @@ export default function Home() {
 
   return (
     <MainPages>
-      {/* {loader ? <Loader /> : null} */}
-
       <div className="news">
         {popup?.status ? <PopupUpload /> : null}
 
@@ -200,11 +177,7 @@ export default function Home() {
         <div
           className="Editor"
           ref={outerDivRef}
-          style={
-            {
-              // overflow: 'auto', // Enable scrollbars
-            }
-          }
+
         >
           {regeneratePopup.status ? <Regeneret /> : null}
 
@@ -224,47 +197,12 @@ export default function Home() {
                     </picture>
                   </div>
                 ))}
-                {/* {loader ? null : (
-                  <div
-                    className="itemsadd"
-                    onClick={() => generateImageHandeler(userId, id)}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="14"
-                      height="14"
-                      viewBox="0 0 14 14"
-                      fill="none"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        clipRule="evenodd"
-                        d="M7 0C7.26522 0 7.51957 0.105357 7.70711 0.292893C7.89464 0.48043 8 0.734784 8 1V6H13C13.2652 6 13.5196 6.10536 13.7071 6.29289C13.8946 6.48043 14 6.73478 14 7C14 7.26522 13.8946 7.51957 13.7071 7.70711C13.5196 7.89464 13.2652 8 13 8H8V13C8 13.2652 7.89464 13.5196 7.70711 13.7071C7.51957 13.8946 7.26522 14 7 14C6.73478 14 6.48043 13.8946 6.29289 13.7071C6.10536 13.5196 6 13.2652 6 13V8H1C0.734784 8 0.48043 7.89464 0.292893 7.70711C0.105357 7.51957 0 7.26522 0 7C0 6.73478 0.105357 6.48043 0.292893 6.29289C0.48043 6.10536 0.734784 6 1 6H6V1C6 0.734784 6.10536 0.48043 6.29289 0.292893C6.48043 0.105357 6.73478 0 7 0Z"
-                        fill="#585858"
-                      />
-                    </svg>
-                  </div>
-                )} */}
+               
               </div>
             </div>
           ) : null}
 
           <div className="main-privier"></div>
-          {/* <div className="canvase">
-            <Canvas />
-            <div className="generated">
-              {selectedImg?.status ? (
-                <picture>
-               
-                  <img
-                    src={modifidImageArray[modifidImageArray.length - 1]?.url}
-                    alt=""
-                  />
-                </picture>
-              ) : null}
-            </div>
-            
-          </div> */}
           {TDMode ? <Canvas3d /> : <CanvasBox proid={id} userId={userId} />}
         </div>
       </div>
@@ -308,14 +246,13 @@ const MainPages = styled.div`
     bottom: 40px;
     padding-right: 30px;
     left: 20px;
-    /* right: 20px; */
+
     justify-content: right;
     z-index: 10;
     z-index: 100;
 
     .itemsWrapper {
       display: flex;
-      /* flex-direction: column; */
       width: 100%;
       gap: 10px;
       background-color: rgba(248, 248, 248, 1);
@@ -328,14 +265,13 @@ const MainPages = styled.div`
         height: 10px;
       }
 
-      /* Track */
+
       &::-webkit-scrollbar-track {
         box-shadow: inset 0 0 5px grey;
         border-radius: 10px;
         height: 7px;
       }
 
-      /* Handle */
       &::-webkit-scrollbar-thumb {
         border-radius: 10px;
       }

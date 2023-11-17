@@ -18,14 +18,14 @@ const toolslist = [
     route: false,
 
     discription: "Banners from your AI Generations ",
-    url: "https://banner-production.up.railway.app/?userId=",
+    url: `${process.env.NEXT_PUBLIC_BANNER_CANVAS_LINK} `,
     img: "https://ik.imagekit.io/7urmiszfde/c5d0234a24d5537e.webp?updatedAt=1698826243971",
   },
   {
-    name: "3D Product Photography      ",
+    name: "3D Product Photography",
     route: true,
 
-    discription: "Convert 3D Model into Generated Images      ",
+    discription: "Convert 3D Model into Generated Images",
     url: "/generate-3d/",
     img: "https://media.sketchfab.com/models/724f69d360e24cda99ba84fead2bed88/thumbnails/3bc8180aab6148778a75cde61100e6d4/915356641a0547a6907f0b8c89383780.jpeg",
   },
@@ -35,9 +35,7 @@ const toolslist = [
 const Tools = ({ loadetool }) => {
   const session = useSession();
   const { userId, setUserID, setMainLoader } = useAppState();
-
   const router = useRouter();
-
   const Redirect = (url: string, route: string) => {
     setMainLoader(true);
     if (route) {
@@ -98,7 +96,6 @@ const ToolsWrapper = styled.div`
 
       .imgeWrapper {
         height: 230px;
-        /* padding: 5px; */
         width: 100%;
         border-top-left-radius: 7px;
         border-top-right-radius: 7px;
@@ -108,7 +105,6 @@ const ToolsWrapper = styled.div`
           width: 100%;
           height: 100%;
           background-color: #d9d9d9;
-          /* border-radius: 7px; */
           picture {
             width: 100%;
             height: 100%;

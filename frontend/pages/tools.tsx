@@ -30,11 +30,8 @@ import { useSession } from "@supabase/auth-helpers-react";
 import { supabase } from "@/utils/supabase";
 
 export default function Home() {
-  // const [userId, setUserID] = useState<string | null>(null);
   const [loadetool, setloadetool] = useState(false);
-
   const { query, isReady } = useRouter();
-  // const { id } = query;
   const id = (query.id as string[]) || [];
   const {
     setUserID,

@@ -14,7 +14,6 @@ import PopupUpload from "@/components/Popup";
 import Loader from "@/components/Loader";
 import BottomTab from "@/components/BottomTab";
 import CanvasBox from "@/components/Canvas";
-// const CanvasBox = lazy(() => import("@/components/Canvas"));
 import { useSession } from "@supabase/auth-helpers-react";
 import Regeneret from "@/components/Popup/Regeneret";
 import { useRouter } from "next/router";
@@ -29,12 +28,8 @@ const fadeIn = {
 
 export default function Home() {
   const session = useSession();
-
   const { query, isReady } = useRouter();
-  // const { id } = query;
   const id = (query.id as string[]) || [];
-
-  //   const [tdFormate, setTdFormate] = useState("obj");
 
   const {
     outerDivRef,
@@ -56,7 +51,6 @@ export default function Home() {
     addimgToCanvasSubject,
     projectId,
     setprojectId,
-
     setGeneratedImgList,
     filteredArray,
     setFilteredArray,
@@ -69,9 +63,7 @@ export default function Home() {
     setUserID,
     set3dMode,
     getSupabaseImage,
-    // tdFormate, setTdFormate
   } = useAppState();
-  // const [userId, setUserID] = useState<string | null>(null);
 
   useEffect(() => {
     if (isReady) {
@@ -80,7 +72,6 @@ export default function Home() {
       const checkSession = async () => {
         const { data } = await supabase.auth.getSession();
         if (data.session) {
-          // router.push("/");
           setUserID(data.session.user.id);
           console.log(data.session, "dfdsd");
         }
@@ -112,16 +103,7 @@ export default function Home() {
 
   useEffect(() => {
     setprojectId(id);
-    // setUserId(userId);
     setassetsActiveTab("product");
-    // let filteredResult;
-
-    // filteredResult = generatedImgList.filter((obj) =>
-    //   jobId?.includes(obj?.task_id)
-    // );
-
-    // setFilteredArray(filteredResult);
-
     const canvas1 = canvasInstance.current;
 
     const objects = canvas1?.getObjects();
@@ -132,13 +114,7 @@ export default function Home() {
       }
     });
 
-    // if (filteredResult?.length < jobId?.length) {
-    //   // addimgToCanvasGen(filteredResult[0]?.modified_image_url);
-    // }
-
-    return () => {
-      // setprojectId(null);
-    };
+  
   }, [jobId, setGeneratedImgList, regeneratePopup]);
 
   useEffect(() => {
@@ -177,39 +153,10 @@ export default function Home() {
     }
   };
 
-  // useEffect(() => {
-  //   const canvas1 = canvasInstance?.current;
-
-  //   const objects = canvas1?.getObjects();
-  //   const subjectObjects = [];
-  //   objects?.forEach((object: any) => {
-  //     if (object.category === "subject") {
-  //       subjectObjects.push(object);
-  //     }
-  //   });
-  //   const state = false;
-  //   setTimeout(() => {
-  //     if (subjectObjects.length <= 0 && newassetonCanvas !== null) {
-  //       console.log(
-  //         newassetonCanvas,
-  //         subjectObjects.length,
-  //         newassetonCanvas !== null
-  //       );
-  //       let state = true;
-  //       if (newassetonCanvas !== null && state) {
-  //         state = false;
-
-  //         addimgToCanvasSubject(newassetonCanvas);
-  //       }
-
-  //       setNewassetonCanvas(null);
-  //     }
-  //   }, 1000);
-  // }, []);
+ 
 
   return (
     <MainPages>
-      {/* {loader ? <Loader /> : null} */}
 
       <div className="news">
         {popup?.status ? <PopupUpload /> : null}
@@ -218,15 +165,11 @@ export default function Home() {
         <div
           className="Editor"
           ref={outerDivRef}
-          style={
-            {
-              // overflow: 'auto', // Enable scrollbars
-            }
-          }
+         
         >
           {regeneratePopup.status ? <Regeneret /> : null}
 
-          {/* <BottomTab /> */}
+  
 
           {filteredArray?.length > 0 ? (
             <div className="generatedBox">

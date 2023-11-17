@@ -1,1 +1,0 @@
-export const IMG_TABLE ="public_images"
