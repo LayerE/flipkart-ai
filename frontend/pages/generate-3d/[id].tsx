@@ -71,7 +71,7 @@ export default function Home() {
         const { data } = await supabase.auth.getSession();
         if (data.session) {
           setUserID(data.session.user.id);
-          console.log(data.session, "dfdsd");
+
         }
       };
       checkSession();
@@ -79,17 +79,17 @@ export default function Home() {
     set3dMode(true);
   }, [id, isReady, TDMode, session]);
 
-  useEffect(() => {
-    const times = setInterval(() => {
-      if (isReady && userId) {
-        fetchGeneratedImages(userId);
-      }
-    }, 5000);
+  // useEffect(() => {
+  //   const times = setInterval(() => {
+  //     if (isReady && userId) {
+  //       fetchGeneratedImages(userId);
+  //     }
+  //   }, 5000);
 
-    return () => {
-      clearInterval(times);
-    };
-  }, []);
+  //   return () => {
+  //     clearInterval(times);
+  //   };
+  // }, []);
 
   const upateImage = (url) => {
     if (!loader) {

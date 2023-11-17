@@ -23,7 +23,9 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
+# Environment Variables
+.env
+.dev.vars
 # local env files
 .env*.local
 .env

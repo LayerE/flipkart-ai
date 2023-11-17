@@ -44,18 +44,17 @@ const Canvas3d = () => {
 
   let camera, scene, object, controls;
   const [showText, setshowText] = useState(false);
-  const addH = 100
-  const addW = 100
-
+  const addH = 100;
+  const addW = 100;
 
   useEffect(() => {
-    containerRef.current.style.width = `${activeSize.w  }px`;
-    containerRef.current.style.height = `${activeSize.h  }px`;
+    containerRef.current.style.width = `${activeSize.w}px`;
+    containerRef.current.style.height = `${activeSize.h}px`;
     let renderer;
     const init = () => {
       camera = new THREE.PerspectiveCamera(
         45,
-        activeSize.w  / activeSize.h,
+        activeSize.w / activeSize.h,
         0.01,
         1000
       );
@@ -69,7 +68,7 @@ const Canvas3d = () => {
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1;
       renderer.setClearColor(0x000000, 0);
-      renderer.setSize(activeSize.w , activeSize.h);
+      renderer.setSize(activeSize.w, activeSize.h);
 
       containerRef.current.appendChild(renderer.domElement);
 
@@ -371,8 +370,6 @@ const Canvas3d = () => {
     };
   }, [file3d, file3dUrl, tdFormate, activeSize]);
 
-
-
   const downlaedImf = () => {
     if (selectedImg?.image) {
       const url = selectedImg?.image;
@@ -394,9 +391,10 @@ const Canvas3d = () => {
       {loader ? <div className="divovelay"></div> : null}
 
       <div className="boxs3d">
-        <div ref={containerRef} className="boxs"
+        <div
+          ref={containerRef}
+          className="boxs"
           style={{ minWidth: activeSize.w, height: activeSize.h }}
-        
         >
           {!showText ? <div className="tesxt">3D model viewer</div> : null}
         </div>
@@ -462,6 +460,7 @@ const Cnavas3d = styled.div`
   overflow: scroll;
 
   margin-top: 100px;
+  margin-bottom: 20px;
 
   &::-webkit-scrollbar {
     width: 10px;
@@ -476,7 +475,6 @@ const Cnavas3d = styled.div`
     height: 100%;
     /* overflow: auto; */
     /* overflow-y: hidden; */
-
   }
   /* Track */
   &::-webkit-scrollbar-track {
@@ -499,7 +497,7 @@ const Cnavas3d = styled.div`
 
   .boxs {
     width: 100%;
-overflow: hidden;
+    overflow: hidden;
     border: 2px solid rgba(249, 208, 13, 1);
     .tesxt {
       color: #000;

@@ -1286,8 +1286,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         console.error("Error generating image:", error);
         toast.error("something went wrong");
         setLoader(false);
-      } finally {
-        setLoader(false);
       }
     }
   };
@@ -1429,7 +1427,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       console.error("Error generating image:", error);
     } finally {
       setGenerationLoader(false);
-      setLoader(false);
+   
     }
   };
 
