@@ -145,7 +145,6 @@ const Gellery = () => {
                       </picture>
                     </div>
                   ))}
-           
             </div>
           )}
         </div>

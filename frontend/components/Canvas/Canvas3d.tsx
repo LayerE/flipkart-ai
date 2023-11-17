@@ -44,15 +44,18 @@ const Canvas3d = () => {
 
   let camera, scene, object, controls;
   const [showText, setshowText] = useState(false);
+  const addH = 100
+  const addW = 100
+
 
   useEffect(() => {
-    containerRef.current.style.width = `${activeSize.w}px`;
-    containerRef.current.style.height = `${activeSize.h}px`;
+    containerRef.current.style.width = `${activeSize.w  }px`;
+    containerRef.current.style.height = `${activeSize.h  }px`;
     let renderer;
     const init = () => {
       camera = new THREE.PerspectiveCamera(
         45,
-        activeSize.w / activeSize.h,
+        activeSize.w  / activeSize.h,
         0.01,
         1000
       );
@@ -66,7 +69,7 @@ const Canvas3d = () => {
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1;
       renderer.setClearColor(0x000000, 0);
-      renderer.setSize(activeSize.w, activeSize.h);
+      renderer.setSize(activeSize.w , activeSize.h);
 
       containerRef.current.appendChild(renderer.domElement);
 
@@ -77,7 +80,7 @@ const Canvas3d = () => {
         new RoomEnvironment(renderer)
       ).texture;
 
-      // ligting
+      // // ligting
       const ambientLight = new THREE.AmbientLight(0x404040);
       scene.add(ambientLight);
       const pointLight = new THREE.PointLight(0xff0000, 100);
@@ -391,7 +394,10 @@ const Canvas3d = () => {
       {loader ? <div className="divovelay"></div> : null}
 
       <div className="boxs3d">
-        <div ref={containerRef} className="boxs">
+        <div ref={containerRef} className="boxs"
+          style={{ minWidth: activeSize.w, height: activeSize.h }}
+        
+        >
           {!showText ? <div className="tesxt">3D model viewer</div> : null}
         </div>
         <div
@@ -453,7 +459,9 @@ const Cnavas3d = styled.div`
   padding: 0 30px;
   min-width: 100%;
   height: 100%;
-  overflow: auto;
+  overflow: scroll;
+
+  margin-top: 100px;
 
   &::-webkit-scrollbar {
     width: 10px;
@@ -462,11 +470,13 @@ const Cnavas3d = styled.div`
   }
   .boxs3d {
     display: flex;
-    transform: scale(0.7) translateX(-23%) translateY(5%);
+    /* transform: scale(0.8) translateX(-15%) translateY(13%); */
     gap: 30px;
-    margin-right: 30px;
     width: 100%;
     height: 100%;
+    /* overflow: auto; */
+    /* overflow-y: hidden; */
+
   }
   /* Track */
   &::-webkit-scrollbar-track {
@@ -488,6 +498,8 @@ const Cnavas3d = styled.div`
   }
 
   .boxs {
+    width: 100%;
+overflow: hidden;
     border: 2px solid rgba(249, 208, 13, 1);
     .tesxt {
       color: #000;
@@ -497,6 +509,7 @@ const Cnavas3d = styled.div`
     }
   }
   .outboxs {
+    width: 100%;
     position: relative;
     background-color: rgb(254, 244, 199);
     overflow: hidden;

@@ -1,7 +1,5 @@
-
 // @ts-nocheck
 /// <reference no-default-lib="true"/>
-
 
 import Head from "next/head";
 import React, { lazy, useEffect, useRef, useState } from "react";
@@ -113,8 +111,6 @@ export default function Home() {
         subjectObjects.push(object);
       }
     });
-
-  
   }, [jobId, setGeneratedImgList, regeneratePopup]);
 
   useEffect(() => {
@@ -153,46 +149,38 @@ export default function Home() {
     }
   };
 
- 
-
   return (
     <MainPages>
-
       <div className="news">
         {popup?.status ? <PopupUpload /> : null}
 
         <Sidebar3d />
-        <div
-          className="Editor"
-          ref={outerDivRef}
-         
-        >
+        <div className="Editor" ref={outerDivRef}>
           {regeneratePopup.status ? <Regeneret /> : null}
 
-  
-
-          {filteredArray?.length > 0 ? (
-            <div className="generatedBox">
-              <div className="itemsWrapper">
-                {filteredArray?.map((item: any, i: number) => (
-                  <div
-                    key={i}
-                    className="items"
-                    onClick={() => upateImage(item?.modified_image_url)}
-                  >
-                    <picture>
-                      <img src={item?.modified_image_url} alt="" />
-                    </picture>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ) : null}
-
-          <div className="main-privier"></div>
+          {/* <div className="main-privier"></div> */}
 
           <Canvas3d />
+          {filteredArray?.length > 0 ? (
+          <div className="generatedBox">
+            <div className="itemsWrapper">
+              {filteredArray?.map((item: any, i: number) => (
+                <div
+                  key={i}
+                  className="items"
+                  onClick={() => upateImage(item?.modified_image_url)}
+                >
+                  <picture>
+                    <img src={item?.modified_image_url} alt="" />
+                  </picture>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : null}
         </div>
+
+       
       </div>
     </MainPages>
   );
@@ -200,6 +188,7 @@ export default function Home() {
 
 const MainPages = styled.div`
   position: relative;
+  overflow: hidden;
 
   .generated {
     width: 100%;
@@ -231,10 +220,11 @@ const MainPages = styled.div`
   .generatedBox {
     width: 100%;
     display: flex;
-    position: absolute;
-    bottom: 0px;
-    padding-right: 30px;
-    left: 20px;
+    /* height: 300px; */
+    position: relative;
+    /* bottom: 0px; */
+    /* padding-right: 30px; */
+    /* left: 20px; */
     /* right: 20px; */
     justify-content: right;
     z-index: 10;
@@ -349,8 +339,12 @@ const MainPages = styled.div`
     width: 100%;
     min-height: 100vh;
     position: relative;
-    overflow: hidden;
-    height: 100vh;
+    overflow: auto;
+    /* height: 100vh; */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
     /* padding-top: 100px; */
   }
 
