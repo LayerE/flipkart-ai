@@ -1699,7 +1699,7 @@ export function IconBack() {
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        shape-rendering="crispEdges"
+        shapeRendering="crispEdges"
       />
     </g>
     <defs>
@@ -1710,9 +1710,9 @@ export function IconBack() {
         width="38"
         height="38"
         filterUnits="userSpaceOnUse"
-        color-interpolation-filters="sRGB"
+        colorInterpolationFilters="sRGB"
       >
-        <feFlood flood-opacity="0" result="BackgroundImageFix" />
+        <feFlood floodOpacity="0" result="BackgroundImageFix" />
         <feOffset dy="1" />
         <feGaussianBlur stdDeviation="4" />
         <feComposite in2="hardAlpha" operator="out" />

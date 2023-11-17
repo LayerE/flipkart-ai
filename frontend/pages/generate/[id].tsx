@@ -114,8 +114,6 @@ export default function Home() {
         subjectObjects.push(object);
       }
     });
-
-
   }, [jobId, setGeneratedImgList, regeneratePopup]);
 
   useEffect(() => {
@@ -129,8 +127,6 @@ export default function Home() {
     };
   }, [isReady, userId, jobId]);
 
-
-
   const fetchAssetsImages = async () => {
     try {
       const response = await fetch(
@@ -142,17 +138,15 @@ export default function Home() {
       const data = await response.json();
       // const data = await getSupabaseImage();
 
-
       if (data?.length) {
-        const filteredResults = await data?.filter(
-          (obj) => jobIdOne?.includes(obj?.task_id)
+        const filteredResults = await data?.filter((obj) =>
+          jobIdOne?.includes(obj?.task_id)
         );
 
         const filteredResultss = await data?.filter(
           (obj: any) => obj?.project_id == id
         );
         if (filteredResults?.length) {
-       
           setLoader(false);
           setCanvasDisable(true);
 
@@ -166,19 +160,13 @@ export default function Home() {
     }
   };
 
-
-
   return (
     <MainPages>
       <div className="news">
         {popup?.status ? <PopupUpload /> : null}
 
         <Sidebar />
-        <div
-          className="Editor"
-          ref={outerDivRef}
-
-        >
+        <div className="Editor" ref={outerDivRef}>
           {regeneratePopup.status ? <Regeneret /> : null}
 
           <BottomTab />
@@ -197,7 +185,6 @@ export default function Home() {
                     </picture>
                   </div>
                 ))}
-               
               </div>
             </div>
           ) : null}
@@ -264,7 +251,6 @@ const MainPages = styled.div`
         width: 10px;
         height: 10px;
       }
-
 
       &::-webkit-scrollbar-track {
         box-shadow: inset 0 0 5px grey;

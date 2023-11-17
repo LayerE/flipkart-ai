@@ -474,7 +474,7 @@ const Cnavas3d = styled.div`
     width: 100%;
     height: 100%;
     /* overflow: auto; */
-    /* overflow-y: hidden; */
+    overflow-y: hidden;
   }
   /* Track */
   &::-webkit-scrollbar-track {

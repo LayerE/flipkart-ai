@@ -1,6 +1,7 @@
 // @ts-nocheck
 
-import React from "react";
+
+import React, { useRef, useEffect, useState } from 'react';
 import { styled } from "styled-components";
 import Image from "next/image";
 import assets from "@/public/assets";
@@ -39,6 +40,7 @@ const TabData = [
 ];
 
 const Sidebar3d: React.FC = () => {
+
   const {
     activeTab,
     setActiveTab,
@@ -48,10 +50,43 @@ const Sidebar3d: React.FC = () => {
     setIsMagic,
   } = useAppState();
 
+  const outerDivRef = useRef(null);
+  const innerDivRef = useRef(null);
+  const [outerWidth, setOuterWidth] = useState(0);
+
+  useEffect(() => {
+    const outerDiv = outerDivRef.current;
+    const innerDiv = innerDivRef.current;
+
+    const updateWidth = () => {
+      if (outerDiv && innerDiv) {
+        // Get the width of the outer div
+        const newOuterWidth = outerDiv.clientHeight;
+
+        // Set the width of the inner div to match the outer div
+        innerDiv.style.height = `${newOuterWidth}px`;
+
+        // Update the state with the new outer width
+        setOuterWidth(newOuterWidth);
+      }
+    };
+
+    // Initial update
+    updateWidth();
+
+    // Add a resize event listener to update the width when the window is resized
+    window.addEventListener('resize', updateWidth);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener('resize', updateWidth);
+    };
+  });
+
   return (
-    <SideBar>
-      <motion.div className="new">
-        <div className="columWrapper">
+    <SideBar ref={outerDivRef}>
+      <motion.div className="new" ref={innerDivRef} >
+        <div className="columWrapper" >
           {TabData.map((elemenmt, i) =>
             !downloadImg && elemenmt?.id === 5 ? (
               <div key={i} className={"tabBox disable"}>
@@ -138,16 +173,18 @@ const Sidebar3d: React.FC = () => {
 };
 
 const SideBar = styled.div`
-.tittle{
-  margin-left: 15px;
-}
+  .tittle {
+    margin-left: 15px;
+  }
   position: relative;
   z-index: 200;
   background-color: #fff;
+
   .new {
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
   }
+
   .selectbox {
     display: flex;
     gap: 10px;
@@ -334,14 +371,14 @@ const SideBar = styled.div`
     overflow: auto;
   }
   .tapExpanded::-webkit-scrollbar {
-  display: none;
-}
+    display: none;
+  }
 
-/* Hide scrollbar for IE, Edge and Firefox */
-.tapExpanded {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-}
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .tapExpanded {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
   ${({ theme }) => theme.mediaWidth.upToMedium`
   .tapExpanded{
   display: none;

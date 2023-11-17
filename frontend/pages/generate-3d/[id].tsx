@@ -71,7 +71,7 @@ export default function Home() {
         const { data } = await supabase.auth.getSession();
         if (data.session) {
           setUserID(data.session.user.id);
-
+          console.log(data.session, "dfdsd");
         }
       };
       checkSession();
@@ -79,17 +79,17 @@ export default function Home() {
     set3dMode(true);
   }, [id, isReady, TDMode, session]);
 
-  // useEffect(() => {
-  //   const times = setInterval(() => {
-  //     if (isReady && userId) {
-  //       fetchGeneratedImages(userId);
-  //     }
-  //   }, 5000);
+  useEffect(() => {
+    const times = setInterval(() => {
+      if (isReady && userId) {
+        fetchGeneratedImages(userId);
+      }
+    }, 5000);
 
-  //   return () => {
-  //     clearInterval(times);
-  //   };
-  // }, []);
+    return () => {
+      clearInterval(times);
+    };
+  }, []);
 
   const upateImage = (url) => {
     if (!loader) {
@@ -162,25 +162,23 @@ export default function Home() {
 
           <Canvas3d />
           {filteredArray?.length > 0 ? (
-          <div className="generatedBox">
-            <div className="itemsWrapper">
-              {filteredArray?.map((item: any, i: number) => (
-                <div
-                  key={i}
-                  className="items"
-                  onClick={() => upateImage(item?.modified_image_url)}
-                >
-                  <picture>
-                    <img src={item?.modified_image_url} alt="" />
-                  </picture>
-                </div>
-              ))}
+            <div className="generatedBox">
+              <div className="itemsWrapper">
+                {filteredArray?.map((item: any, i: number) => (
+                  <div
+                    key={i}
+                    className="items"
+                    onClick={() => upateImage(item?.modified_image_url)}
+                  >
+                    <picture>
+                      <img src={item?.modified_image_url} alt="" />
+                    </picture>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        ) : null}
+          ) : null}
         </div>
-
-       
       </div>
     </MainPages>
   );
@@ -223,7 +221,7 @@ const MainPages = styled.div`
     /* height: 300px; */
     position: relative;
     /* bottom: 0px; */
-    /* padding-right: 30px; */
+    padding-right: 30px;
     /* left: 20px; */
     /* right: 20px; */
     justify-content: right;
@@ -339,6 +337,7 @@ const MainPages = styled.div`
     width: 100%;
     min-height: 100vh;
     position: relative;
+   
     overflow: auto;
     /* height: 100vh; */
     display: flex;
@@ -346,6 +345,28 @@ const MainPages = styled.div`
     justify-content: space-between;
     gap: 20px;
     /* padding-top: 100px; */
+
+    &::-webkit-scrollbar {
+      display: none;
+        width: 10px;
+        height: 10px;
+      }
+
+      /* Track */
+      &::-webkit-scrollbar-track {
+        box-shadow: inset 0 0 5px grey;
+        border-radius: 10px;
+        height: 7px;
+      display: none;
+
+      }
+
+      /* Handle */
+      &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+      display: none;
+
+      }
   }
 
   .convas-continer {
