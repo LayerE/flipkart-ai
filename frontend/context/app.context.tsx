@@ -1424,6 +1424,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         }
       }
     } catch (error) {
+      setLoader(false);
+
       console.error("Error generating image:", error);
     } finally {
       setGenerationLoader(false);

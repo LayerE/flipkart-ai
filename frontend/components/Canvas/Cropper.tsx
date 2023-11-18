@@ -136,7 +136,7 @@ const Wrapper = styled.div`
       max-width: fit-content;
     }
   }
-  border: 1px solid black;
+  /* border: 1px solid black; */
   display: flex;
   flex-direction: column;
   gap: 1.5em;
@@ -144,7 +144,7 @@ const Wrapper = styled.div`
   align-items: center;
   position: absolute;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   right: 0;
   z-index: 400;
   background-color: #ffffff;

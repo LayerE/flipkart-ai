@@ -57,7 +57,7 @@ const uploadImage = async (
       width: width,
     };
   } else {
-    const base64String = dataUrl;
+    let base64String = dataUrl;
     if (!dataUrl.includes("data:image")) {
       base64String = `data:image/png;base64,${dataUrl}`;
     }

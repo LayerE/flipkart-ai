@@ -227,12 +227,12 @@ export const FileUpload = ({
             if (type === "element") {
             } else {
               const filename = `img${Date.now()}`;
-              const dataimage = await scaleDownImage(reader.result);
+              // const dataimage = await scaleDownImage(reader.result);
               const response = await fetch("/api/removebg", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                  dataUrl: dataimage,
+                  dataUrl: reader.result,
                   user_id: uerId,
                   project_id: projectId,
                   // type: "product",

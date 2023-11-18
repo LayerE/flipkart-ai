@@ -12,6 +12,7 @@ import { arrayBufferToDataURL, dataURLtoFile } from "@/utils/BufferToDataUrl";
 import { ImgFormate } from "@/store/dropdown";
 import { useRouter } from "next/router";
 import { styled } from "styled-components";
+import { toast } from "react-toastify";
 
 const fadeIn = {
   hidden: { opacity: 0 },
@@ -43,6 +44,7 @@ const Edit = () => {
     setCrop,
     loader,
     userId,
+    regenratingId,
   } = useAppState();
 
   const { query, isReady } = useRouter();
@@ -59,47 +61,87 @@ const Edit = () => {
     setIsMagic(false);
 
     setLoader(true);
-    const response = await fetch("/api/removebg", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        dataUrl: downloadImg,
-        user_id: userId,
-        project_id: id,
-      }),
-    });
-    const data = await response.json();
-    if (data) {
-      addimgToCanvasSubject(data?.data?.data[0]);
-    } else {
-      setLoader(false);
+    try {
+      const response = await fetch("/api/removebg", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          dataUrl: downloadImg,
+          user_id: userId,
+          project_id: id,
+        }),
+      });
+      const data = await response.json();
+      if (data) {
+        console.log(data?.imageUrl,"dfdfdf",data)
+        addimgToCanvasSubject(data?.imageUrl);
+      } else {
+        setLoader(false);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("BG remove failed");
+
     }
 
     setLoader(false);
   };
 
   const upSacle = async (photo: string, filename: string): Promise<string> => {
-    const form = new FormData();
-    const fileItem = await dataURLtoFile(photo, filename);
-    form.append("image_file", fileItem);
-    form.append("target_width", 2048);
-    form.append("target_height", 2048);
-    const response = await fetch(
-      "https://clipdrop-api.co/image-upscaling/v1/upscale",
-      {
+    // const form = new FormData();
+    // const fileItem = await dataURLtoFile(photo, filename);
+    // form.append("image_file", fileItem);
+    // form.append("target_width", 2048);
+    // form.append("target_height", 2048);
+    // const response = await fetch(
+    //   "https://clipdrop-api.co/image-upscaling/v1/upscale",
+    //   {
+    //     method: "POST",
+    //     headers: {
+    //       "x-api-key":
+    //         "ca2c46b3fec7f2917642e99ab5c48d3e23a2f940293a0a3fbec2e496566107f9d8b192d030b7ecfd85cfb02b6adb32f4",
+    //     },
+    //     body: form,
+    //   }
+    // );
+    try {
+      const response = await fetch("/api/upscale", {
         method: "POST",
-        headers: {
-          "x-api-key":
-            "ca2c46b3fec7f2917642e99ab5c48d3e23a2f940293a0a3fbec2e496566107f9d8b192d030b7ecfd85cfb02b6adb32f4",
-        },
-        body: form,
-      }
-    );
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          image_url: regenratingId,
+          user_id: userId,
+          project_id: id,
+        }),
+      });
 
-    const buffer = await response.arrayBuffer();
-    const dataURL = await arrayBufferToDataURL(buffer);
-    localStorage.setItem("m-images", JSON.stringify(dataURL));
-    return dataURL;
+      const data = await response.json();
+
+
+      if (response.status == 500) {
+        toast.error("something went wrong");
+        setLoader(false);
+      }
+
+      // const buffer = await response.arrayBuffer();
+      // const dataURL = await arrayBufferToDataURL(buffer);
+      // localStorage.setItem("m-images", JSON.stringify(dataURL));
+
+      if (data) {
+        addimgToCanvasGen(data.image_url);
+        setSelectedImg({ status: true, image: data.image_url });
+        setLoader(false);
+      }
+    } catch (error) {
+      console.log(error);
+      setLoader(false);
+
+      toast.error("Only generated images can be upscale");
+    }
+
+    // const dataURL = await data.image_url;
+
+    // return dataURL;
   };
 
   const UpscaleBG = async () => {
@@ -109,12 +151,11 @@ const Edit = () => {
 
     const data = await upSacle(downloadImg, "imger");
 
-    if (data) {
-      addimgToCanvasGen(data);
-      setSelectedImg({ status: true, image: data });
-    }
-
-    setLoader(false);
+    // if (data) {
+    //   addimgToCanvasGen(data);
+    //   setSelectedImg({ status: true, image: data });
+    //   setLoader(false);
+    // }
   };
 
   const history = useRef([]);

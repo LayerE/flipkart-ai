@@ -50,8 +50,8 @@ const BottomTab = () => {
     if (!loader) {
       canvasInstance.current.clear();
       canvasHistory.current = []; // Clear the canvasHistory array
-  currentCanvasIndex.current = -1; // Reset the current index
-  canvasInstance.current.clear(); // Clear the canvas content
+      currentCanvasIndex.current = -1; // Reset the current index
+      canvasInstance.current.clear(); // Clear the canvas content
       // currentCanvasIndex = null
       // canvasHistory.current = null
     }
@@ -61,7 +61,6 @@ const BottomTab = () => {
     <BottomTabWtapper>
       <div className="bottomTab">
         <div className="right">
-      
           <div className="undo" onClick={handileUndo}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -155,8 +154,8 @@ const BottomTabWtapper = styled.div`
   }
   .undo {
   }
-  .clare{
- cursor: pointer;
+  .clare {
+    cursor: pointer;
   }
 
   /* Chrome, Safari, Edge, Opera */

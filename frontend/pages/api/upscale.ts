@@ -98,6 +98,8 @@ export default async function handler(req: NextRequest, res: NextResponse) {
       image_url: original_image_url,
     } = supabaseResponse.data[0];
 
+    
+
     // Convert the image_url to base64 URL
     const image_response = await fetch(image_url);
     const image_data = await image_response.blob();
@@ -122,6 +124,7 @@ export default async function handler(req: NextRequest, res: NextResponse) {
 
     const upscale_data = await upscale_response.json();
     const outputBase64Url = upscale_data["image"];
+
 
     // Upload image
     const { url: imageUrl } = await uploadImage(

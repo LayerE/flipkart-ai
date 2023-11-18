@@ -83,7 +83,7 @@ const Assets: React.FC = () => {
                     onClick={() => {
                       if (!assetLoader && !loader) {
                         addimgToCanvasSubject(test?.image_url);
-                        setProduct(test?.caption);
+                        setProduct(test?.caption ? test?.caption : "");
                       }
                     }}
                   >

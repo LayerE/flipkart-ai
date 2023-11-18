@@ -52,19 +52,20 @@ const Generate = () => {
   const [changeTab, setChangeTab] = useState(false);
 
   useEffect(() => {
-    console.log(promt, promtFull, activeTemplet);
-    const words = promtFull.split(" ");
-    const newPro = words[0];
-    const words1 = product.split(" ");
-    const newPro1 = words1[0];
+  if(product){}
+  console.log(promt, promtFull, activeTemplet);
+  const words = promtFull.split(" ");
+  const newPro = words[0];
+  const words1 = product.split(" ");
+  const newPro1 = words1[0];
 
-    if (newPro1 === newPro) {
-      const promts = promt;
-      setpromtFull(promt);
-    } else {
-      const promts = promt;
-      setpromtFull(promts);
-    }
+  if (newPro1 === newPro) {
+    const promts = promt;
+    setpromtFull(promt);
+  } else {
+    const promts = promt;
+    setpromtFull(promts);
+  }
   }, [product, activeTemplet]);
   useEffect(() => {
     if (promt == activeTemplet?.promt) {
