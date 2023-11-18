@@ -49,6 +49,11 @@ const BottomTab = () => {
   const handileCleav = () => {
     if (!loader) {
       canvasInstance.current.clear();
+      canvasHistory.current = []; // Clear the canvasHistory array
+  currentCanvasIndex.current = -1; // Reset the current index
+  canvasInstance.current.clear(); // Clear the canvas content
+      // currentCanvasIndex = null
+      // canvasHistory.current = null
     }
   };
 
