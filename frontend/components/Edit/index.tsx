@@ -118,10 +118,10 @@ const Edit = () => {
       const data = await response.json();
 
 
-      if (response.status == 500) {
-        toast.error("something went wrong");
-        setLoader(false);
-      }
+      // if (response.status == 500) {
+      //   toast.error("something went wrong");
+      //   setLoader(false);
+      // }
 
       // const buffer = await response.arrayBuffer();
       // const dataURL = await arrayBufferToDataURL(buffer);

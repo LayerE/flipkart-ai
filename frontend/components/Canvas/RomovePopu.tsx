@@ -53,7 +53,7 @@ const RemoveBox = () => {
       setromovepopu3d(false);
       setupdateImg(null);
     }
-    setLoader(false);
+    // setLoader(false);
   };
 
   const upSacle = async (photo: string, filename: string): Promise<string> => {
