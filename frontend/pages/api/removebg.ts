@@ -3,9 +3,15 @@
 import { NextResponse, NextRequest } from "next/server";
 import axios from "axios";
 import FormData from "form-data";
-const { createCanvas, loadImage } = require("canvas");
-export const maxDuration = 300;
+import { v4 as uuidv4 } from "uuid";
+import { createClient } from "@supabase/supabase-js";
 
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL as string,
+  process.env.SUPABASE_SERVICE_KEY as string
+);
+
+export const maxDuration = 300;
 export const config = {
   api: {
     bodyParser: {
@@ -14,34 +20,85 @@ export const config = {
   },
 };
 
-const uploadImage = async (dataUrl: string) => {
-  const formdata = new FormData();
-  formdata.append("file", dataUrl);
-  formdata.append("fileName", "img.png");
+const getFileExtension = (dataUrl: string) => {
+  if (dataUrl.includes("png")) {
+    return "png";
+  } else if (dataUrl.includes("jpg") || dataUrl.includes("jpeg")) {
+    return "jpg";
+  } else if (dataUrl.includes("webp")) {
+    return "webp";
+  } else {
+    // Default extension or handle other cases as needed
+    return "png";
+  }
+};
 
-  try {
-    const response = await axios.post(
+const uploadImage = async (
+  dataUrl: string,
+  user_id?: string,
+  useImageKit: boolean = false
+) => {
+  if (useImageKit) {
+    const formdata = new FormData();
+    formdata.append("file", dataUrl);
+    formdata.append("fileName", "img.png");
+
+    const imageKitResponse = await fetch(
       "https://upload.imagekit.io/api/v1/files/upload",
-      formdata,
       {
+        method: "POST",
         headers: {
           Authorization: "Basic " + btoa(process.env.IMAGEKIT_API_KEY + ":"),
-          ...formdata.getHeaders(),
         },
+        body: formdata,
       }
     );
 
-    const { data } = response;
-    const { url, name, height, width } = data;
+    const imageKitJson = await imageKitResponse.json();
+    const { url, name, height, width } = imageKitJson;
 
-    console.log("Image uploaded to ImageKit");
-    console.log(url);
+    return {
+      url: url + "?tr=orig-true",
+      name: name,
+      height: height,
+      width: width,
+    };
+  } else {
+    var base64String = dataUrl;
+    if (!dataUrl.includes("data:image")) {
+      base64String = `data:image/png;base64,${dataUrl}`;
+    }
 
-    return { url, name, height, width };
-  } catch (error) {
-    // Handle errors here
-    console.error("Error uploading image:", error);
-    throw error;
+    // Generate a unique filename
+    const filename = `${user_id}/${uuidv4()}.${getFileExtension(base64String)}`;
+    const bucket_name =
+      process.env.SUPABASE_REQUEST_IMAGES_BUCKET || "request_images";
+
+    const byteCharacters = atob(base64String.split(",")[1]);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: "image/png" });
+
+    // Upload image to supabase storage bucket
+    const { error } = await supabase.storage
+      .from(bucket_name)
+      .upload(`${filename}`, blob, {
+        cacheControl: "public, max-age=31536000, immutable",
+        upsert: false,
+      });
+
+    if (error) {
+      console.log(error.message);
+      throw error;
+    }
+
+    return {
+      url: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${bucket_name}/${filename}`,
+      name: filename,
+    };
   }
 };
 
@@ -60,8 +117,6 @@ export default async function handler(req: NextRequest, res: NextResponse) {
     const { body } = req;
     const payload = body;
     const { user_id, dataUrl, project_id, type } = payload;
-
-    console.log(payload);
 
     var fileExtension = "png";
     if (dataUrl.includes("jpeg") || dataUrl.includes("jpg")) {
@@ -95,7 +150,7 @@ export default async function handler(req: NextRequest, res: NextResponse) {
       inputBase64Url = dataUrl;
     }
 
-    const useClipDrop = true;
+    const useClipDrop = false;
     var outputBase64Url = "";
     var caption = "";
 
@@ -161,8 +216,8 @@ export default async function handler(req: NextRequest, res: NextResponse) {
       const { data } = await response;
       outputBase64Url = `data:image/png;base64,${data.toString("base64")}`;
     } else {
-      const caption_bg_response = await fetch(
-        "https://dehiddenformodal--bgremove-caption-removebg-and-caption.modal.run",
+      const image_bg_response = await fetch(
+        "https://dehiddenformodal--bgremove-removebg-and-caption.modal.run",
         {
           headers: {
             "Content-Type": "application/json",
@@ -174,13 +229,16 @@ export default async function handler(req: NextRequest, res: NextResponse) {
         }
       );
 
-      const caption_bg_data = await caption_bg_response.json();
+      const caption_bg_data = await image_bg_response.json();
       outputBase64Url = caption_bg_data["image"];
-      caption = caption_bg_data["caption"];
     }
 
-    // Upload image to ImageKit
-    const { url: imageUrl, height, width } = await uploadImage(outputBase64Url);
+    // Upload image
+    const {
+      url: imageUrl,
+      height,
+      width,
+    } = await uploadImage(outputBase64Url, user_id, false);
 
     // Add the image to the database
     const respy = await fetch(

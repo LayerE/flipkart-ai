@@ -57,7 +57,10 @@ const uploadImage = async (
       width: width,
     };
   } else {
-    const base64String = `data:image/png;base64,${dataUrl}`;
+    const base64String = dataUrl;
+    if (!dataUrl.includes("data:image")) {
+      base64String = `data:image/png;base64,${dataUrl}`;
+    }
 
     // Generate a unique filename
     const filename = `${user_id}/${uuidv4()}.${getFileExtension(base64String)}`;
