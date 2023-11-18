@@ -17,7 +17,6 @@ import MainLoader from "@/components/Loader/main";
 import PopupUpload from "@/components/Popup";
 import { supabase } from "@/utils/supabase";
 
-
 const fadeIn = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 0.5 } },
