@@ -1,31 +1,95 @@
 // @ts-nocheck
 
 import { NextResponse, NextRequest } from "next/server";
+import { v4 as uuidv4 } from "uuid";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL as string,
+  process.env.SUPABASE_SERVICE_KEY as string
+);
 
 export const config = {
   runtime: "edge",
 };
 
-const uploadImage = async (dataUrl: string) => {
-  const formdata = new FormData();
-  formdata.append("file", dataUrl);
-  formdata.append("fileName", "img.png");
+const getFileExtension = (dataUrl: string) => {
+  if (dataUrl.includes("png")) {
+    return "png";
+  } else if (dataUrl.includes("jpg") || dataUrl.includes("jpeg")) {
+    return "jpg";
+  } else if (dataUrl.includes("webp")) {
+    return "webp";
+  } else {
+    // Default extension or handle other cases as needed
+    return "png";
+  }
+};
 
-  const imageKitResponse = await fetch(
-    "https://upload.imagekit.io/api/v1/files/upload",
-    {
-      method: "POST",
-      headers: {
-        Authorization: "Basic " + btoa(process.env.IMAGEKIT_API_KEY + ":"),
-      },
-      body: formdata,
+const uploadImage = async (
+  dataUrl: string,
+  user_id?: string,
+  useImageKit: boolean = false
+) => {
+  if (useImageKit) {
+    const formdata = new FormData();
+    formdata.append("file", dataUrl);
+    formdata.append("fileName", "img.png");
+
+    const imageKitResponse = await fetch(
+      "https://upload.imagekit.io/api/v1/files/upload",
+      {
+        method: "POST",
+        headers: {
+          Authorization: "Basic " + btoa(process.env.IMAGEKIT_API_KEY + ":"),
+        },
+        body: formdata,
+      }
+    );
+
+    const imageKitJson = await imageKitResponse.json();
+    const { url, name, height, width } = imageKitJson;
+
+    return {
+      url: url + "?tr=orig-true",
+      name: name,
+      height: height,
+      width: width,
+    };
+  } else {
+    const base64String = `data:image/png;base64,${dataUrl}`;
+
+    // Generate a unique filename
+    const filename = `${user_id}/${uuidv4()}.${getFileExtension(base64String)}`;
+    const bucket_name =
+      process.env.SUPABASE_REQUEST_IMAGES_BUCKET || "request_images";
+
+    const byteCharacters = atob(base64String.split(",")[1]);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
     }
-  );
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: "image/png" });
 
-  const imageKitJson = await imageKitResponse.json();
-  const { url, name, height, width } = imageKitJson;
+    // Upload image to supabase storage bucket
+    const { error } = await supabase.storage
+      .from(bucket_name)
+      .upload(`${filename}`, blob, {
+        cacheControl: "public, max-age=31536000, immutable",
+        upsert: false,
+      });
 
-  return { url, name, height, width };
+    if (error) {
+      console.log(error.message);
+      throw error;
+    }
+
+    return {
+      url: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${bucket_name}/${filename}`,
+      name: filename,
+    };
+  }
 };
 
 export default async (req: NextRequest) => {
@@ -59,15 +123,13 @@ export default async (req: NextRequest) => {
 
     console.log("Prompt was " + prompt);
 
-    const { url: imageUrl, height, width } = await uploadImage(dataUrl);
+    const { url: imageUrl } = await uploadImage(dataUrl, user_id, false);
 
     // if (height > 768 || width > 768 || height < 256 || width < 256) {
     //   return NextResponse.json({
     //     error: "Image must be between 256px and 768px",
     //   });
     // }
-
-    console.log(dataUrl);
 
     const response = await fetch(process.env.CELERY_WORKER_URL as string, {
       method: "POST",
@@ -76,7 +138,7 @@ export default async (req: NextRequest) => {
       },
       body: JSON.stringify({
         key: process.env.KEY,
-        image_url: imageUrl + "?tr=orig-true",
+        image_url: imageUrl,
         prompt: prompt,
         mask_image: maskDataUrl,
         user_id: user_id,
