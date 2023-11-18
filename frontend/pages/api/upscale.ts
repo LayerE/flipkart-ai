@@ -1,63 +1,156 @@
 // @ts-nocheck
 
 import { NextResponse, NextRequest } from "next/server";
-const axios = require("axios");
+import { v4 as uuidv4 } from "uuid";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL as string,
+  process.env.SUPABASE_SERVICE_KEY as string
+);
+
 export const maxDuration = 300;
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: "25mb", // Set desired value here
+    },
+  },
+};
 
-async function imageUrlToBase64(url: string) {
-  try {
-    const response = await axios.get(url, { responseType: "arraybuffer" });
-    const base64String = Buffer.from(response.data, "binary").toString(
-      "base64"
-    );
-    return "data:image/png;base64," + base64String;
-  } catch (error) {
-    console.log(error);
-    throw new Error("An error occurred while converting the image to base64.");
+const getFileExtension = (dataUrl: string) => {
+  if (dataUrl.includes("png")) {
+    return "png";
+  } else if (dataUrl.includes("jpg") || dataUrl.includes("jpeg")) {
+    return "jpg";
+  } else if (dataUrl.includes("webp")) {
+    return "webp";
+  } else {
+    // Default extension or handle other cases as needed
+    return "png";
   }
-}
+};
 
-export default async (req: NextRequest, res: NextResponse) => {
+const uploadImage = async (dataUrl: string, user_id?: string) => {
+  var base64String = dataUrl;
+  if (!dataUrl.includes("data:image")) {
+    base64String = `data:image/png;base64,${dataUrl}`;
+  }
+
+  // Generate a unique filename
+  const filename = `${user_id}/${uuidv4()}.${getFileExtension(base64String)}`;
+  const bucket_name = process.env.TABLE_NAME_WITHOUT_AUTH || "request_images";
+
+  const byteCharacters = atob(base64String.split(",")[1]);
+  const byteNumbers = new Array(byteCharacters.length);
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i);
+  }
+  const byteArray = new Uint8Array(byteNumbers);
+  const blob = new Blob([byteArray], { type: "image/png" });
+
+  // Upload image to supabase storage bucket
+  const { error } = await supabase.storage
+    .from(bucket_name)
+    .upload(`${filename}`, blob, {
+      cacheControl: "public, max-age=31536000, immutable",
+      upsert: false,
+    });
+
+  if (error) {
+    console.log(error.message);
+    throw error;
+  }
+
+  return {
+    url: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${bucket_name}/${filename}`,
+    name: filename,
+  };
+};
+
+export default async function handler(req: NextRequest, res: NextResponse) {
   try {
     if (req.method !== "POST") {
       res.status(405).send("Method not allowed");
+      return;
     }
 
     const { body } = req;
-    const { image_url, user_id } = body;
-
-    if (!image_url) {
-      res.status(400).send("Missing image_url");
-    }
+    const payload = body;
+    const { user_id, image_url } = payload;
 
     if (!user_id) {
       res.status(400).send("Missing user_id");
+      return;
     }
 
-    // Convert image_url to base64string in order to send to Replicate
-    const imageBase64 = await imageUrlToBase64(image_url);
+    const supabaseResponse = await supabase
+      .from(process.env.NEXT_PUBLIC_IMAGE_TABLE as string)
+      .select("*")
+      .eq("modified_image_url", image_url)
+      .eq("user_id", user_id);
 
-    const response = await fetch("https://api.replicate.com/v1/predictions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Token " + process.env.REPLICATE_API_KEY,
-      },
-      body: JSON.stringify({
-        version:
-          "42fed1c4974146d4d2414e2be2c5277c7fcf05fcc3a73abf41610695738c1d7b",
-        input: {
-          image: imageBase64,
+    // Get the prompt, caption, project_id, image_url
+    const {
+      prompt,
+      caption,
+      project_id,
+      image_url: original_image_url,
+    } = supabaseResponse.data[0];
+
+    // Convert the image_url to base64 URL
+    const image_response = await fetch(image_url);
+    const image_data = await image_response.blob();
+    const image_arrayBuffer = await image_data.arrayBuffer();
+    const image_buffer = Buffer.from(image_arrayBuffer);
+    const image_base64Url = `data:image/png;base64,${image_buffer.toString(
+      "base64"
+    )}`;
+
+    const upscale_response = await fetch(
+      "https://dehiddenformodal--upscale-upscale.modal.run",
+      {
+        headers: {
+          "Content-Type": "application/json",
         },
-        webhook: `${process.env.REPLICATE_WEBHOOK}/?user_id=${user_id}`,
-        webhook_events_filter: ["completed"],
-      }),
-    });
+        method: "POST",
+        body: JSON.stringify({
+          img: image_base64Url,
+        }),
+      }
+    );
 
-    const resp = await response.json();
-    res.status(200).send({ message: "Job started", ok: true, id: resp.id });
+    const upscale_data = await upscale_response.json();
+    const outputBase64Url = upscale_data["image"];
+
+    // Upload image
+    const { url: imageUrl } = await uploadImage(
+      outputBase64Url,
+      user_id,
+      false
+    );
+
+    await supabase.from(process.env.TABLE_NAME_WITHOUT_AUTH as string).insert([
+      {
+        user_id,
+        image_url: original_image_url,
+        modified_image_url: imageUrl,
+        project_id: project_id || null,
+        type: "image",
+        prompt,
+        caption,
+      },
+    ]);
+
+    res.status(200).send(
+      JSON.stringify({
+        image_url: imageUrl,
+      })
+    );
+    return;
   } catch (error) {
-    console.log(error);
-    res.status(500).send("Error generating image");
+    console.log(error.message);
+    res.status(500).send("Error upscaling image");
+    return;
   }
-};
+}
