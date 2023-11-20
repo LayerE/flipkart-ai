@@ -1,4 +1,5 @@
 {
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
   "functions": {
     "src/pages/api/*.ts": {
       "memory": 256
