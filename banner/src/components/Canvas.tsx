@@ -31,7 +31,7 @@ const FixedMain = styled('main')`
   right: 0;
   width: 100%;
   height: 100%;
-  z-index: ${theme.layers.canvasApp};
+  /* z-index: ${theme.layers.canvasApp}; */
   user-select: none;
 `;
 
@@ -508,6 +508,7 @@ export default function Canvas() {
 
   return (
     <FixedMain
+    
       id={APP_FIXED_MAIN_UNIQUE_ID}
       style={{
         cursor: getCursorFromModes({ userMode, actionMode }),
