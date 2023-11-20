@@ -1,29 +1,37 @@
-import styled from '@emotion/styled';
-import React, { useRef, type PointerEvent, type Touch, type TouchEvent, useState } from 'react';
+// @ts-nocheck
 
-import { TRANSPARENT_BACKGROUND_IMAGE } from '~/config/constants';
-import { APP_FIXED_MAIN_UNIQUE_ID } from '~/config/globalElementIds';
-import { CANVAS_CONTROLS_OVERLAY } from '~/config/globalElementIds';
-import type { ActionModeOption } from '~/config/types';
-import useCanvasContext from '~/context/useCanvasContext';
-import useActionMode from '~/store/useActionMode';
-import useActiveObjectId from '~/store/useActiveObjectId';
-import useCanvasObjects from '~/store/useCanvasObjects';
-import useCanvasWorkingSize from '~/store/useCanvasWorkingSize';
-import useDefaultParams from '~/store/useDefaultParams';
-import useScrollPosition from '~/store/useScrollPosition';
-import useUserMode from '~/store/useUserMode';
-import useWindowSize from '~/store/useWindowSize';
-import useZoom from '~/store/useZoom';
-import theme from '~/theme';
-import generateUniqueId from '~/utils/generateUniqueId';
-import getControlPoints from '~/utils/getControlPoints';
-import getCursorFromModes from '~/utils/getCursorFromModes';
-import getDimensionsFromFreeDraw from '~/utils/getDimensionsFromFreeDraw';
-import getRelativeMousePositionOnCanvas from '~/utils/getRelativeMousePositionOnCanvas';
-import isCursorWithinRectangle from '~/utils/isCursorWithinRectangle';
+import styled from "@emotion/styled";
+import React, {
+  useRef,
+  type PointerEvent,
+  type Touch,
+  type TouchEvent,
+  useState,
+} from "react";
 
-const FixedMain = styled('main')`
+import { TRANSPARENT_BACKGROUND_IMAGE } from "~/config/constants";
+import { APP_FIXED_MAIN_UNIQUE_ID } from "~/config/globalElementIds";
+import { CANVAS_CONTROLS_OVERLAY } from "~/config/globalElementIds";
+import type { ActionModeOption } from "~/config/types";
+import useCanvasContext from "~/context/useCanvasContext";
+import useActionMode from "~/store/useActionMode";
+import useActiveObjectId from "~/store/useActiveObjectId";
+import useCanvasObjects from "~/store/useCanvasObjects";
+import useCanvasWorkingSize from "~/store/useCanvasWorkingSize";
+import useDefaultParams from "~/store/useDefaultParams";
+import useScrollPosition from "~/store/useScrollPosition";
+import useUserMode from "~/store/useUserMode";
+import useWindowSize from "~/store/useWindowSize";
+import useZoom from "~/store/useZoom";
+import theme from "~/theme";
+import generateUniqueId from "~/utils/generateUniqueId";
+import getControlPoints from "~/utils/getControlPoints";
+import getCursorFromModes from "~/utils/getCursorFromModes";
+import getDimensionsFromFreeDraw from "~/utils/getDimensionsFromFreeDraw";
+import getRelativeMousePositionOnCanvas from "~/utils/getRelativeMousePositionOnCanvas";
+import isCursorWithinRectangle from "~/utils/isCursorWithinRectangle";
+
+const FixedMain = styled("main")`
   position: fixed;
   top: 0;
   bottom: 0;
@@ -31,7 +39,7 @@ const FixedMain = styled('main')`
   right: 0;
   width: 100%;
   height: 100%;
-  /* z-index: ${theme.layers.canvasApp}; */
+  z-index: ${theme.layers.canvasApp};
   user-select: none;
 `;
 
@@ -46,20 +54,35 @@ export default function Canvas() {
   const windowSize = useWindowSize((state) => state.windowSize);
 
   const activeObjectId = useActiveObjectId((state) => state.activeObjectId);
-  const setActiveObjectId = useActiveObjectId((state) => state.setActiveObjectId);
-  
+  const setActiveObjectId = useActiveObjectId(
+    (state) => state.setActiveObjectId,
+  );
 
   const canvasObjects = useCanvasObjects((state) => state.canvasObjects);
-  const appendRectangleObject = useCanvasObjects((state) => state.appendRectangleObject);
-  const appendEllipseObject = useCanvasObjects((state) => state.appendEllipseObject);
-  const appendFreeDrawObject = useCanvasObjects((state) => state.appendFreeDrawObject);
+  const appendRectangleObject = useCanvasObjects(
+    (state) => state.appendRectangleObject,
+  );
+  const appendEllipseObject = useCanvasObjects(
+    (state) => state.appendEllipseObject,
+  );
+  const appendFreeDrawObject = useCanvasObjects(
+    (state) => state.appendFreeDrawObject,
+  );
   const appendTextObject = useCanvasObjects((state) => state.appendTextObject);
-  const updateCanvasObject = useCanvasObjects((state) => state.updateCanvasObject);
-  const appendFreeDrawPointToCanvasObject = useCanvasObjects((state) => state.appendFreeDrawPointToCanvasObject);
+  const updateCanvasObject = useCanvasObjects(
+    (state) => state.updateCanvasObject,
+  );
+  const appendFreeDrawPointToCanvasObject = useCanvasObjects(
+    (state) => state.appendFreeDrawPointToCanvasObject,
+  );
   const moveCanvasObject = useCanvasObjects((state) => state.moveCanvasObject);
-  const resizeCanvasObject = useCanvasObjects((state) => state.resizeCanvasObject);
+  const resizeCanvasObject = useCanvasObjects(
+    (state) => state.resizeCanvasObject,
+  );
 
-  const canvasWorkingSize = useCanvasWorkingSize((state) => state.canvasWorkingSize);
+  const canvasWorkingSize = useCanvasWorkingSize(
+    (state) => state.canvasWorkingSize,
+  );
 
   const defaultParams = useDefaultParams((state) => state.defaultParams);
 
@@ -67,7 +90,9 @@ export default function Canvas() {
   const decrementZoom = useZoom((state) => state.decrementZoom);
 
   const scrollPosition = useScrollPosition((state) => state.scrollPosition);
-  const updateScrollPosition = useScrollPosition((state) => state.updateScrollPosition);
+  const updateScrollPosition = useScrollPosition(
+    (state) => state.updateScrollPosition,
+  );
 
   const userMode = useUserMode((state) => state.userMode);
   const setUserMode = useUserMode((state) => state.setUserMode);
@@ -77,9 +102,14 @@ export default function Canvas() {
 
   const zoom = useZoom((state) => state.zoom);
 
-  const initialDrawingPositionRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const initialDrawingPositionRef = useRef<{ x: number; y: number }>({
+    x: 0,
+    y: 0,
+  });
 
-  const activeObject = canvasObjects.find((canvasObject) => canvasObject.id === activeObjectId);
+  const activeObject = canvasObjects.find(
+    (canvasObject) => canvasObject.id === activeObjectId,
+  );
 
   // On pointer down
 
@@ -89,8 +119,10 @@ export default function Canvas() {
     const context = contextRef.current;
     if (!canvas || !context) return;
 
-    const clientX = 'clientX' in event ? event.clientX : event.touches[0]?.clientX;
-    const clientY = 'clientY' in event ? event.clientY : event.touches[0]?.clientY;
+    const clientX =
+      "clientX" in event ? event.clientX : event.touches[0]?.clientX;
+    const clientY =
+      "clientY" in event ? event.clientY : event.touches[0]?.clientY;
 
     const relativeMousePosition = getRelativeMousePositionOnCanvas({
       windowMouseX: clientX,
@@ -107,106 +139,108 @@ export default function Canvas() {
     const createdObjectId = generateUniqueId();
 
     switch (userMode) {
-      case 'icon':
-      case 'image':
-      case 'select': {
+      case "icon":
+      case "image":
+      case "select": {
         let isResizing = false;
         // Resize object
         if (activeObject) {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { position,position1, ...boxes } = getControlPoints({
+          const { position, position1, ...boxes } = getControlPoints({
             canvasObject: activeObject,
             zoom,
           });
-          Object.entries(boxes).slice(0,8).forEach(([boxName, box]) => {
-
-            //let {valuex,valuey}=getWindowToCanvas(initialDrawingPositionRef.current.x, initialDrawingPositionRef.current.y)
-            const isWithinBounds = isCursorWithinRectangle(
-              {
-              x: box.x,
-              y: box.y,
-              width: box.width,
-              height: box.height,
-              relativeMouseX: initialDrawingPositionRef.current.x,
-              relativeMouseY: initialDrawingPositionRef.current.y,
-            });
-    
-      
-            if (isWithinBounds) {
-              isResizing = true;
-              console.log(`${boxName.split('Box')[0]} in normal` )
-               
-      
-              setActionMode({
-                type: 'isResizing',
-                option: boxName.split('Box')[0] as ActionModeOption,
+          Object.entries(boxes)
+            .slice(0, 8)
+            .forEach(([boxName, box]) => {
+              //let {valuex,valuey}=getWindowToCanvas(initialDrawingPositionRef.current.x, initialDrawingPositionRef.current.y)
+              const isWithinBounds = isCursorWithinRectangle({
+                x: box.x,
+                y: box.y,
+                width: box.width,
+                height: box.height,
+                relativeMouseX: initialDrawingPositionRef.current.x,
+                relativeMouseY: initialDrawingPositionRef.current.y,
               });
 
-              if((activeObject.rotation>=0.785398/*1.5706*/ && activeObject.rotation<2.35619/*3.14159*/) || (activeObject.rotation<=-3.92699/*-4.71238*/ && activeObject.rotation>-6.28318))
-              {  
-                const obj: { [key: string]: string } = {
+              if (isWithinBounds) {
+                isResizing = true;
+                console.log(`${boxName.split("Box")[0]} in normal`);
 
-                  "topLeft":"topRight",
-                  "topCenter":"middleRight",
-                   "topRight":"bottomRight",
-                   "middleLeft":"topCenter",
-                   "middleRight":"bottomCenter",
-                   "bottomLeft":"topLeft",
-                   "bottomCenter":"middleLeft",
-                   "bottomRight":"bottomLeft"
-                }
-
-                const value =boxName.split('Box')[0];
                 setActionMode({
-                  type: 'isResizing',
-                  option: obj[value] as ActionModeOption,
+                  type: "isResizing",
+                  option: boxName.split("Box")[0] as ActionModeOption,
                 });
-              }
-              else if((activeObject.rotation>=2.35619/*3.14159*/&& activeObject.rotation<3.92699/*4.71238*/)||(activeObject.rotation<=-2.35619/*-3.14159*/ && activeObject.rotation>-3.92699/*-4.71238*/))
-              {  
-                const obj: { [key: string]: string } = {
 
-                  "topLeft":"bottomRight",
-                  "topCenter":"bottomCenter",
-                   "topRight":"bottomLeft",
-                   "middleLeft":"middleRight",
-                   "middleRight":"middleLeft",
-                   "bottomLeft":"topRight",
-                   "bottomCenter":"topCenter",
-                   "bottomRight":"topLeft"
+                if (
+                  (activeObject.rotation >= 0.785398 /*1.5706*/ &&
+                    activeObject.rotation < 2.35619) /*3.14159*/ ||
+                  (activeObject.rotation <= -3.92699 /*-4.71238*/ &&
+                    activeObject.rotation > -6.28318)
+                ) {
+                  const obj: { [key: string]: string } = {
+                    topLeft: "topRight",
+                    topCenter: "middleRight",
+                    topRight: "bottomRight",
+                    middleLeft: "topCenter",
+                    middleRight: "bottomCenter",
+                    bottomLeft: "topLeft",
+                    bottomCenter: "middleLeft",
+                    bottomRight: "bottomLeft",
+                  };
+
+                  const value = boxName.split("Box")[0];
+                  setActionMode({
+                    type: "isResizing",
+                    option: obj[value] as ActionModeOption,
+                  });
+                } else if (
+                  (activeObject.rotation >= 2.35619 /*3.14159*/ &&
+                    activeObject.rotation < 3.92699) /*4.71238*/ ||
+                  (activeObject.rotation <= -2.35619 /*-3.14159*/ &&
+                    activeObject.rotation > -3.92699) /*-4.71238*/
+                ) {
+                  const obj: { [key: string]: string } = {
+                    topLeft: "bottomRight",
+                    topCenter: "bottomCenter",
+                    topRight: "bottomLeft",
+                    middleLeft: "middleRight",
+                    middleRight: "middleLeft",
+                    bottomLeft: "topRight",
+                    bottomCenter: "topCenter",
+                    bottomRight: "topLeft",
+                  };
+
+                  const value = boxName.split("Box")[0];
+                  setActionMode({
+                    type: "isResizing",
+                    option: obj[value] as ActionModeOption,
+                  });
+                } else if (
+                  (activeObject.rotation >= 3.92699 /*4.71238*/ &&
+                    activeObject.rotation < 6.28318) ||
+                  (activeObject.rotation <= -0.785398 /*-1.5707*/ &&
+                    activeObject.rotation > -2.35619) /*-3.14159*/
+                ) {
+                  const obj: { [key: string]: string } = {
+                    topLeft: "bottomLeft",
+                    topCenter: "middleLeft",
+                    topRight: "topLeft",
+                    middleLeft: "bottomCenter",
+                    middleRight: "topCenter",
+                    bottomLeft: "bottomRight",
+                    bottomCenter: "middleRight",
+                    bottomRight: "topRight",
+                  };
+
+                  const value = boxName.split("Box")[0];
+                  setActionMode({
+                    type: "isResizing",
+                    option: obj[value] as ActionModeOption,
+                  });
                 }
-
-                const value =boxName.split('Box')[0];
-                setActionMode({
-                  type: 'isResizing',
-                  option: obj[value] as ActionModeOption,
-                });
               }
-              else if((activeObject.rotation>=3.92699/*4.71238*/ && activeObject.rotation<6.28318)||(activeObject.rotation<=-0.785398/*-1.5707*/ && activeObject.rotation>-2.35619/*-3.14159*/) )
-              {  
-                const obj: { [key: string]: string } = {
-
-                  "topLeft":"bottomLeft",
-                  "topCenter":"middleLeft",
-                   "topRight":"topLeft",
-                   "middleLeft":"bottomCenter",
-                   "middleRight":"topCenter",
-                   "bottomLeft":"bottomRight",
-                   "bottomCenter":"middleRight",
-                   "bottomRight":"topRight"
-                }
-
-                const value =boxName.split('Box')[0];
-                setActionMode({
-                  type: 'isResizing',
-                  option: obj[value] as ActionModeOption,
-                });
-              }
-             
-            }
-
-            
-          });
+            });
         }
         if (!isResizing) {
           const clickedObjects = canvasObjects.filter((canvasObject) => {
@@ -230,20 +264,20 @@ export default function Canvas() {
           });
           //const shouldClearSelection = !wasClickInsideWorkingCanvas && clickedObject?.id !== activeObjectId;
           //setActiveObjectId(shouldClearSelection ? null : clickedObject?.id || null);
-          //adding 
-          setActiveObjectId( clickedObject?.id || null)
-          
+          //adding
+          setActiveObjectId(clickedObject?.id || null);
+
           if (clickedObject) {
-            setUserMode('select');
-            setActionMode({ type: 'isMoving' });
+            setUserMode("select");
+            setActionMode({ type: "isMoving" });
           } else {
-            setActionMode({ type: 'isPanning' });
+            setActionMode({ type: "isPanning" });
           }
         }
         drawEverything();
         break;
       }
-      case 'free-draw': {
+      case "free-draw": {
         appendFreeDrawObject({
           id: createdObjectId,
           x: initialDrawingPositionRef.current.x,
@@ -259,13 +293,13 @@ export default function Canvas() {
               y: initialDrawingPositionRef.current.y,
             },
           ],
-          rotation:0,
+          rotation: 0,
         });
         setActiveObjectId(createdObjectId);
-        setActionMode({ type: 'isDrawing' });
+        setActionMode({ type: "isDrawing" });
         break;
       }
-      case 'rectangle': {
+      case "rectangle": {
         appendRectangleObject({
           id: createdObjectId,
           x: initialDrawingPositionRef.current.x,
@@ -277,13 +311,13 @@ export default function Canvas() {
           strokeWidth: 0,
           opacity: 100,
           borderRadius: 0,
-          rotation:0
+          rotation: 0,
         });
         setActiveObjectId(createdObjectId);
-        setActionMode({ type: 'isDrawing' });
+        setActionMode({ type: "isDrawing" });
         break;
       }
-      case 'ellipse': {
+      case "ellipse": {
         appendEllipseObject({
           id: createdObjectId,
           x: initialDrawingPositionRef.current.x,
@@ -295,35 +329,35 @@ export default function Canvas() {
           strokeWidth: 0,
           opacity: 100,
           borderRadius: 0,
-          rotation:0,
+          rotation: 0,
         });
         setActiveObjectId(createdObjectId);
-        setActionMode({ type: 'isDrawing' });
+        setActionMode({ type: "isDrawing" });
         break;
       }
-      case 'text': {
+      case "text": {
         appendTextObject({
           id: createdObjectId,
           x: initialDrawingPositionRef.current.x,
           y: initialDrawingPositionRef.current.y,
           width: 200,
           height: 100,
-          text: 'Add text',
-          textAlignHorizontal: 'center',
-          textAlignVertical: 'middle',
+          text: "Add text",
+          textAlignHorizontal: "center",
+          textAlignVertical: "middle",
           textJustify: false,
           fontColorHex: defaultParams.fontColorHex,
           fontSize: 44,
-          fontFamily: 'sans-serif',
-          fontStyle: 'normal',
-          fontWeight: 'normal',
-          fontVariant: 'normal',
+          fontFamily: "sans-serif",
+          fontStyle: "normal",
+          fontWeight: "normal",
+          fontVariant: "normal",
           fontLineHeightRatio: 1,
           opacity: 100,
-          rotation:0,
+          rotation: 0,
         });
         setActiveObjectId(createdObjectId);
-        setUserMode('select');
+        setUserMode("select");
         setActionMode(null);
         break;
       }
@@ -340,17 +374,27 @@ export default function Canvas() {
     const context = contextRef.current;
     if (!canvas || !context || !actionMode) return;
 
-    const clientX = 'clientX' in event ? event.clientX : event.touches[0]?.clientX;
-    const clientY = 'clientY' in event ? event.clientY : event.touches[0]?.clientY;
+    const clientX =
+      "clientX" in event ? event.clientX : event.touches[0]?.clientX;
+    const clientY =
+      "clientY" in event ? event.clientY : event.touches[0]?.clientY;
 
-    const finger0PageX = 'touches' in event ? event.touches[0]?.pageX : null;
-    const finger0PageY = 'touches' in event ? event.touches[0]?.pageY : null;
+    const finger0PageX = "touches" in event ? event.touches[0]?.pageX : null;
+    const finger0PageY = "touches" in event ? event.touches[0]?.pageY : null;
 
-    const finger1PageX = 'touches' in event ? event.touches[1]?.pageX : null;
-    const finger1PageY = 'touches' in event ? event.touches[1]?.pageY : null;
+    const finger1PageX = "touches" in event ? event.touches[1]?.pageX : null;
+    const finger1PageY = "touches" in event ? event.touches[1]?.pageY : null;
 
-    if (finger0PageX !== null && finger0PageY !== null && finger1PageX !== null && finger1PageY !== null) {
-      const distanceBetweenTouches = Math.hypot(finger0PageX - finger1PageX, finger0PageY - finger1PageY);
+    if (
+      finger0PageX !== null &&
+      finger0PageY !== null &&
+      finger1PageX !== null &&
+      finger1PageY !== null
+    ) {
+      const distanceBetweenTouches = Math.hypot(
+        finger0PageX - finger1PageX,
+        finger0PageY - finger1PageY,
+      );
 
       if (distanceBetweenTouchesRef.current) {
         if (distanceBetweenTouches > distanceBetweenTouchesRef.current) {
@@ -364,20 +408,20 @@ export default function Canvas() {
     }
 
     const movementX =
-      'movementX' in event
+      "movementX" in event
         ? event.movementX
         : previousTouchRef.current?.pageX
         ? event.touches[0].pageX - previousTouchRef.current.pageX
         : 0;
 
     const movementY =
-      'movementY' in event
+      "movementY" in event
         ? event.movementY
         : previousTouchRef.current?.pageY
         ? event.touches[0].pageY - previousTouchRef.current.pageY
         : 0;
 
-    if ('touches' in event) {
+    if ("touches" in event) {
       previousTouchRef.current = event.touches[0];
     }
 
@@ -393,21 +437,21 @@ export default function Canvas() {
     const finalY = relativeMousePosition.relativeMouseY;
 
     switch (userMode) {
-      case 'select': {
-        if (activeObjectId && actionMode.type === 'isMoving') {
-       
-          
-            moveCanvasObject({
-              id: activeObjectId,
-              deltaPosition: {
-                deltaX: movementX / (zoom / 100),
-                deltaY: movementY / (zoom / 100),
-              },
-              canvasWorkingSize,
-            });
-    
-         
-        } else if (activeObjectId && actionMode.type === 'isResizing' && actionMode.option) {
+      case "select": {
+        if (activeObjectId && actionMode.type === "isMoving") {
+          moveCanvasObject({
+            id: activeObjectId,
+            deltaPosition: {
+              deltaX: movementX / (zoom / 100),
+              deltaY: movementY / (zoom / 100),
+            },
+            canvasWorkingSize,
+          });
+        } else if (
+          activeObjectId &&
+          actionMode.type === "isResizing" &&
+          actionMode.option
+        ) {
           resizeCanvasObject({
             id: activeObjectId,
             actionModeOption: actionMode.option,
@@ -417,7 +461,7 @@ export default function Canvas() {
             },
             canvasWorkingSize,
           });
-        } else if (actionMode.type === 'isPanning') {
+        } else if (actionMode.type === "isPanning") {
           updateScrollPosition({
             deltaX: movementX,
             deltaY: movementY,
@@ -425,7 +469,7 @@ export default function Canvas() {
         }
         break;
       }
-      case 'free-draw': {
+      case "free-draw": {
         if (activeObjectId) {
           appendFreeDrawPointToCanvasObject(activeObjectId, {
             x: finalX,
@@ -434,11 +478,17 @@ export default function Canvas() {
         }
         break;
       }
-      case 'rectangle':
-      case 'ellipse': {
+      case "rectangle":
+      case "ellipse": {
         if (activeObjectId) {
-          const topLeftX = Math.min(initialDrawingPositionRef.current.x, finalX);
-          const topLeftY = Math.min(initialDrawingPositionRef.current.y, finalY);
+          const topLeftX = Math.min(
+            initialDrawingPositionRef.current.x,
+            finalX,
+          );
+          const topLeftY = Math.min(
+            initialDrawingPositionRef.current.y,
+            finalY,
+          );
 
           const width = Math.abs(initialDrawingPositionRef.current.x - finalX);
           const height = Math.abs(initialDrawingPositionRef.current.y - finalY);
@@ -468,18 +518,18 @@ export default function Canvas() {
     if (!canvas || !context) return;
 
     previousTouchRef.current = null;
-    if ('touches' in event) {
+    if ("touches" in event) {
       distanceBetweenTouchesRef.current = 0;
     }
 
     switch (userMode) {
-      case 'select': {
+      case "select": {
         break;
       }
-      case 'text': {
+      case "text": {
         break;
       }
-      case 'free-draw': {
+      case "free-draw": {
         context.closePath();
         if (activeObject) {
           const dimensions = getDimensionsFromFreeDraw({
@@ -490,13 +540,13 @@ export default function Canvas() {
             height: dimensions.height,
           });
         }
-        setUserMode('select');
+        setUserMode("select");
         drawEverything();
         break;
       }
-      case 'rectangle':
-      case 'ellipse': {
-        setUserMode('select');
+      case "rectangle":
+      case "ellipse": {
+        setUserMode("select");
         drawEverything();
         break;
       }
@@ -508,7 +558,6 @@ export default function Canvas() {
 
   return (
     <FixedMain
-    
       id={APP_FIXED_MAIN_UNIQUE_ID}
       style={{
         cursor: getCursorFromModes({ userMode, actionMode }),
@@ -523,20 +572,20 @@ export default function Canvas() {
       <canvas
         id={CANVAS_CONTROLS_OVERLAY}
         style={{
-          position: 'absolute',
+          position: "absolute",
           top: 0,
           left: 0,
           width: `${windowSize.width}px`,
           height: `${windowSize.height}px`,
           zIndex: theme.layers.canvasElement + 1,
-          overflow:'visible'
+          overflow: "visible",
         }}
         width={windowSize.width}
         height={windowSize.height}
       />
       <div
         style={{
-          position: 'absolute',
+          position: "absolute",
           top: scrollPosition.y,
           left: scrollPosition.x,
           width: `${canvasWorkingSize.width}px`,
@@ -544,22 +593,27 @@ export default function Canvas() {
           transform: `scale(${zoom / 100})`,
           zIndex: theme.layers.canvasElement,
           backgroundImage: `url(${TRANSPARENT_BACKGROUND_IMAGE})`,
-          backgroundColor: 'white',
+          backgroundColor: "white",
         }}
       >
         <h1
           style={{
-            position: 'absolute',
+            position: "absolute",
             top: `${-38 / (zoom / 100)}px`,
-            left: '0',
+            left: "0",
             width: `${Number.MAX_SAFE_INTEGER}px`,
-            color: ' #4831D4',
+            color: " #4831D4",
             fontSize: `${20 / (zoom / 100)}px`,
           }}
         >
           {`${canvasWorkingSize.width} x ${canvasWorkingSize.height} px`}
         </h1>
-        <canvas style={{overflow:'visible'}} ref={canvasRef} width={canvasWorkingSize.width} height={canvasWorkingSize.height} />
+        <canvas
+          style={{ overflow: "visible" }}
+          ref={canvasRef}
+          width={canvasWorkingSize.width}
+          height={canvasWorkingSize.height}
+        />
       </div>
     </FixedMain>
   );
