@@ -14,20 +14,14 @@ const fadeIn = {
 import { motion } from "framer-motion";
 import EditorSection from "./Editor";
 import Tamplates from "./Templates";
-
-import  { DisabledLabel } from "../common/Label";
-
-import {
-  categoryList,
-} from "@/store/dropdown";
+import { DisabledLabel } from "../common/Label";
+import { categoryList } from "@/store/dropdown";
 import TextLoader from "../Loader/text";
 import { useRouter } from "next/router";
 import DropdownInput, { DropdownNOBorder } from "../common/Dropdown";
 import { Input, TestArea } from "../common/Input";
 
 const Generate = () => {
-
-
   const {
     product,
     loader,
@@ -48,25 +42,26 @@ const Generate = () => {
 
   const { query, isReady } = useRouter();
   const id = (query.id as string[]) || [];
-
   const [changeTab, setChangeTab] = useState(false);
 
   useEffect(() => {
-  if(product){}
-  console.log(promt, promtFull, activeTemplet);
-  const words = promtFull.split(" ");
-  const newPro = words[0];
-  const words1 = product.split(" ");
-  const newPro1 = words1[0];
+    if (product) {
+    }
+    console.log(promt, promtFull, activeTemplet);
+    const words = promtFull.split(" ");
+    const newPro = words[0];
+    const words1 = product.split(" ");
+    const newPro1 = words1[0];
 
-  if (newPro1 === newPro) {
-    const promts = promt;
-    setpromtFull(promt);
-  } else {
-    const promts = promt;
-    setpromtFull(promts);
-  }
+    if (newPro1 === newPro) {
+      const promts = promt;
+      setpromtFull(promt);
+    } else {
+      const promts = promt;
+      setpromtFull(promts);
+    }
   }, [product, activeTemplet]);
+  
   useEffect(() => {
     if (promt == activeTemplet?.promt) {
       const promts = promt;
@@ -117,7 +112,9 @@ const Generate = () => {
             />
           </div>
           <div className="gap">
-            <DisabledLabel>Describe your background(without mentioning your product name) </DisabledLabel>
+            <DisabledLabel>
+              Describe your background(without mentioning your product name){" "}
+            </DisabledLabel>
 
             <Row>
               <TestArea
