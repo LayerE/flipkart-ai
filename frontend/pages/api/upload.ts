@@ -111,7 +111,7 @@ export default async function handler(req: NextRequest, res: NextResponse) {
 
     const { body } = req;
     const payload = body;
-    const { user_id, dataUrl, project_id, type } = payload;
+    var { user_id, dataUrl, project_id, type } = payload;
 
     if (!user_id) {
       res.status(400).send("Missing user_id");
@@ -122,6 +122,16 @@ export default async function handler(req: NextRequest, res: NextResponse) {
 
     if (type && type.length > 0) {
       image_type = type;
+    }
+
+    if (dataUrl.length < 3000) {
+      const image_response = await fetch(dataUrl);
+      const image_data = await image_response.blob();
+      const image_arrayBuffer = await image_data.arrayBuffer();
+      const image_buffer = Buffer.from(image_arrayBuffer);
+      dataUrl = `data:image/png;base64,${image_buffer.toString(
+        "base64"
+      )}`;
     }
 
     // Upload image to ImageKit

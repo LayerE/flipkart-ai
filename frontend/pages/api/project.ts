@@ -1,0 +1,95 @@
+// @ts-nocheck
+
+import { NextResponse, NextRequest } from "next/server";
+export const maxDuration = 300;
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL as string,
+  process.env.SUPABASE_SERVICE_KEY as string
+);
+
+export default async function handler(req: NextRequest, res: NextResponse) {
+  try {
+    if (req.method !== "POST") {
+      res.status(405).send("Method not allowed");
+      return;
+    }
+
+    // Get the request parameters
+    const should_delete = req?.query?.should_delete || false;
+    const project_id_param = req?.query?.project_id || null;
+
+    if (project_id_param) {
+      const { data, error } = await supabase
+        .from(process.env.PROJECTS_TABLE as string)
+        .select("*")
+        .match({ project_id: project_id_param });
+
+      if (data.length === 0) {
+        res.status(400).send("Invalid project_id");
+        return;
+      }
+
+      // Return the response as a JSON where all the keys in the object are the column names
+      res.status(200).send(data[0]);
+      return;
+    }
+
+    const { body } = req;
+    const payload = body;
+    const { project_id, title, previewImage, canvasHistory, recently } =
+      payload;
+
+    if (should_delete) {
+      const { data, error } = await supabase
+        .from(process.env.PROJECTS_TABLE as string)
+        .delete()
+        .match({ project_id: project_id });
+      res.status(200).send({ success: true, message: "Project deleted" });
+    } else if (!project_id) {
+      // Create a new project
+      const response = await supabase
+        .from(process.env.PROJECTS_TABLE as string)
+        .insert([{ title: "default" }])
+        .select();
+
+      // Return the project_id
+      const data = response.data;
+      const project_id = data[0].project_id;
+
+      res.status(200).send({ success: true, project_id: project_id });
+    } else {
+      let bodyObject = {};
+
+      if (title !== null) {
+        bodyObject["title"] = title;
+      }
+
+      if (previewImage !== null) {
+        bodyObject["previewImage"] = previewImage;
+      }
+
+      if (canvasHistory !== null) {
+        bodyObject["canvasHistory"] = canvasHistory;
+      }
+
+      if (recently !== null) {
+        bodyObject["recently"] = recently;
+      }
+
+      const { data, error } = await supabase
+        .from(process.env.PROJECTS_TABLE as string)
+        .update(bodyObject)
+        .match({ project_id: project_id });
+
+      // Send success response
+      res.status(200).send({ success: true, project_id: project_id });
+    }
+    return;
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Error in Creating/Updating Project");
+    return;
+  }
+}
