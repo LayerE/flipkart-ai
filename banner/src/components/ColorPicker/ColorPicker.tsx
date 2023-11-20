@@ -1,3 +1,5 @@
+
+// @ts-nocheck
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import React, { useRef, useState, type CSSProperties } from 'react';

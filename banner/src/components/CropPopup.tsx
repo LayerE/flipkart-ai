@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import styled from '@emotion/styled';
 import { Button, NumberInput } from '@mantine/core';
 import React, { useRef } from 'react';

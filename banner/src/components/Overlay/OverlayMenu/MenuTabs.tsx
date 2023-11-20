@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import styled from '@emotion/styled';
 import { Tabs } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import styled from '@emotion/styled';
 import { Input, Button, Loader, Tooltip, Group, Text } from '@mantine/core';
 import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone';

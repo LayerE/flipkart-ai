@@ -29,7 +29,6 @@ const toolslist = [
     url: "/generate-3d/",
     img: "https://media.sketchfab.com/models/724f69d360e24cda99ba84fead2bed88/thumbnails/3bc8180aab6148778a75cde61100e6d4/915356641a0547a6907f0b8c89383780.jpeg",
   },
- 
 ];
 
 const Tools = ({ loadetool }) => {

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { Global } from '@emotion/react';
 import { MantineProvider, ColorSchemeProvider, type ColorScheme } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';

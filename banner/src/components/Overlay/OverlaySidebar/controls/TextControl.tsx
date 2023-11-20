@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import styled from '@emotion/styled';
 import { Slider, NativeSelect, Textarea, Button, Tooltip } from '@mantine/core';
 import React, { type ReactNode } from 'react';

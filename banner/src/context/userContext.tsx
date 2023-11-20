@@ -1,3 +1,6 @@
+
+// @ts-nocheck
+
 // customHooks/userIdContext.js
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 

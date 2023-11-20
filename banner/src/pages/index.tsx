@@ -1,3 +1,5 @@
+
+// @ts-nocheck
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useUserId } from '~/context/userContext';

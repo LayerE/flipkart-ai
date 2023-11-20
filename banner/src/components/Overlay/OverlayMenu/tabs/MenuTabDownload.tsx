@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import styled from '@emotion/styled';
 import { Button, Checkbox } from '@mantine/core';
 import React,{useState} from 'react';

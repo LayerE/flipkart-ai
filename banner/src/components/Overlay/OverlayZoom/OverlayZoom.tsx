@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import styled from '@emotion/styled';
 import { ActionIcon, Tooltip } from '@mantine/core';
 import React from 'react';

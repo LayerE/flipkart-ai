@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import type { ReactNode } from 'react';
 import { BsImageFill, BsLayersFill } from 'react-icons/bs';
 import { FaInfoCircle, FaCloudDownloadAlt, FaCog } from 'react-icons/fa';

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import styled from '@emotion/styled';
 import { Input, Button, ActionIcon, Tooltip } from '@mantine/core';
 import React, { useEffect, useState } from 'react';

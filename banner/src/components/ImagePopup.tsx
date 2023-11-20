@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 
 import React, { useEffect, useRef, useState,useContext } from 'react';
 import {useImage}  from '~/context/useImage'

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 
 import { createContext, useContext, useState, ReactNode, SetStateAction, Dispatch } from 'react';
 

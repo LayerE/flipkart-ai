@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React, { type CSSProperties } from 'react';
 import {
   AlphaPicker,

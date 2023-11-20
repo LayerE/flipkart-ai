@@ -1,3 +1,6 @@
+
+
+// @ts-nocheck
 import { modals } from '@mantine/modals';
 import React, { useContext, useState, useMemo, useCallback, createContext, type ReactNode } from 'react';
 

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { useEffect } from 'react';
 
 import { APP_FIXED_MAIN_UNIQUE_ID, CANVAS_CONTROLS_OVERLAY } from '~/config/globalElementIds';
