@@ -1,0 +1,1 @@
+This is a celery task adder, written in flask, it receives requests via HTTP from Frontend of the website and adds tasks to the queue, to be picked up the celery worker.

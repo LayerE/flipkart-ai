@@ -1,0 +1,1 @@
+There are two folders, one is celery task adder and the other is celery worker, both are dockerized for easy deployment.
