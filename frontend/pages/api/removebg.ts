@@ -103,8 +103,7 @@ const uploadImage = async (
 };
 
 function isUrl(url: string) {
-  const urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
-  return urlRegex.test(url);
+  return url.length < 3000;
 }
 
 export default async function handler(req: NextRequest, res: NextResponse) {
