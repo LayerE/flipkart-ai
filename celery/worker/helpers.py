@@ -1,16 +1,34 @@
 import hashlib
 import os
 
-import boto3
 import openai
-from botocore.config import Config
-from botocore.exceptions import ClientError
 from supabase import Client, create_client
 
+IMAGES_TABLE_NAME = os.getenv("IMAGES_TABLE_NAME")
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+
 supabase: Client = create_client(
-    os.environ["SUPABASE_URL"],
+    SUPABASE_URL,
     os.environ["SUPABASE_KEY"],
 )
+
+
+def determine_model(prompt):
+    sdxlcanny_prompts = ["podium", "stage", "platform"]
+    epicrealism_new_prompts = [
+        "kitchen",
+        "bathroom",
+        "fridge",
+        "refrigerator",
+        "washing",
+    ]
+
+    if any(word in sdxlcanny_prompts for word in prompt.split()):
+        return "sdxlcanny"
+    elif any(word in epicrealism_new_prompts for word in prompt.split()):
+        return "epicrealism-new"
+    else:
+        return "epicrealism-sam"
 
 
 def upload_file_to_supabase(bucketName, image, filePath):
@@ -26,43 +44,6 @@ def upload_file_to_supabase(bucketName, image, filePath):
         return False
 
 
-def upload_file(bucket, directory, file, b2, endpoint, b2path="test"):
-    file_path = directory + "/" + file
-    remote_path = b2path + "/" + file
-    try:
-        content_type = (
-            "video/mp4"
-            if file.endswith(".mp4")
-            else "image/jpeg"
-            if file.endswith(".jpeg")
-            else "image/jpg"
-            if file.endswith(".jpg")
-            else "image/png"
-        )
-        b2.Bucket(bucket).upload_file(
-            file_path, remote_path, ExtraArgs={"ContentType": content_type}
-        )
-        file_url = f"{endpoint}/{bucket}/{remote_path}"
-    except ClientError as ce:
-        print("error", ce)
-        file_url = None
-
-    return file_url
-
-
-def get_b2_resource(endpoint, key_id, application_key):
-    b2 = boto3.resource(
-        service_name="s3",
-        endpoint_url=endpoint,
-        aws_access_key_id=key_id,
-        aws_secret_access_key=application_key,
-        config=Config(
-            signature_version="s3v4",
-        ),
-    )
-    return b2
-
-
 def hash(word):
     sha256 = hashlib.sha256()
     sha256.update(word.encode("utf-8"))
@@ -72,20 +53,8 @@ def hash(word):
 # Function to make a request to chatgpt API and return the response
 def get_chatgpt_response(prompt):
     try:
-        # completion = openai.ChatCompletion.create(
-        #     model="gpt-3.5-turbo",
-        #     temperature=0.2,
-        #     messages=[
-        #         {
-        #             "role": "system",
-        #             "content": "You will be generating prompts for Stable Diffusion, a Generative Adversarial Network (GAN) that can take text and output images. Your goal is to create a prompt that the GAN can use to generate an image. To start, only ask and wait for a text prompt from the user. When a text is submitted, take it and expand on it. For example, if the text prompt was a lone tree in a field, a description may be: 'A lone tree in a field stands tall with gnarled branches and rugged bark. The surrounding open space provides a sense of peace and tranquility.' Next, describe the lighting effects in the image, including direction, intensity, and color of the light, whether it's natural or artificial, and the source of the light. Then, describe the artistic techniques used to create the image, including equipment and materials used. Send the entire response as a single line of text with a maximum of 20 words in total.",
-        #         },
-        #         {"role": "user", "content": prompt},
-        #     ],
-        # )
-        # return completion.choices[0].message.content
         openai.api_base = "https://api.fireworks.ai/inference/v1"
-        openai.api_key = "4MqnqQsn8a1g7xdQBTi3AbPsTMAIVG75t5tBIEHXcG05m10z"
+        openai.api_key = os.environ["FIREFWORKS_API_KEY"]
         chat_completion = openai.ChatCompletion.create(
             model="accounts/fireworks/models/mistral-7b-instruct-4k",
             messages=[
