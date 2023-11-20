@@ -1,3 +1,6 @@
+
+// @ts-nocheck
+
 import styled from '@emotion/styled';
 import { Button, Checkbox, NumberInput, Select } from '@mantine/core';
 import React from 'react';

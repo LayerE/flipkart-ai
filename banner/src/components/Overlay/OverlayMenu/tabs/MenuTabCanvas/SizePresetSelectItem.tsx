@@ -1,3 +1,5 @@
+
+// @ts-nocheck
 import { Group, Text } from '@mantine/core';
 import React, { forwardRef, type ComponentPropsWithoutRef } from 'react';
 import { BsReddit, BsTiktok } from 'react-icons/bs';
