@@ -11,7 +11,42 @@ const supabase = createClient(
 
 export default async function handler(req: NextRequest, res: NextResponse) {
   try {
-    if (req.method !== "POST") {
+    if (req.method === "GET") {
+      // Get the user_id from the query parameters
+      const user_id = req?.query?.user_id || null;
+
+      if (!user_id) {
+        res.status(400).send("Missing user_id");
+        return;
+      }
+
+      // Get the project ids for the user
+      const { data, error } = await supabase
+        .from(process.env.NEXT_PUBLIC_IMAGE_TABLE as string)
+        // Select distinct project_id's for the user
+        .select("project_id")
+        .eq("user_id", user_id);
+
+      if (error) {
+        res.status(500).send("Error in getting project_ids");
+        return;
+      }
+
+      const unique_project_ids = new Set();
+      const filtered__project_ids = [];
+
+      // Filter out the duplicate project_ids
+      for (let i = 0; i < data.length; i++) {
+        const project_id = data[i].project_id;
+        if (!unique_project_ids.has(project_id)) {
+          unique_project_ids.add(project_id);
+          filtered__project_ids.push(project_id);
+        }
+      } 
+
+      // Return the project_ids as a JSON
+      res.status(200).send({ project_ids: filtered__project_ids });
+    } else if (req.method !== "POST") {
       res.status(405).send("Method not allowed");
       return;
     }

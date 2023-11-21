@@ -124,14 +124,40 @@ export default async function handler(req: NextRequest, res: NextResponse) {
       image_type = type;
     }
 
+    if (image_type == "regenerate") {
+      // Just need to update the is_regenerated column in the database
+      await fetch(
+        `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/${process.env.NEXT_PUBLIC_IMAGE_TABLE}?user_id=eq.${user_id}&modfied_image_url=eq.${dataUrl}`,
+        {
+          headers: {
+            apikey: process.env.SUPABASE_SERVICE_KEY as string,
+            Authorization:
+              `Bearer ${process.env.SUPABASE_SERVICE_KEY}` as string,
+            "Content-Type": "application/json",
+          },
+          method: "PATCH",
+          body: JSON.stringify({
+            is_regenerated: true,
+          }),
+        }
+      );
+
+      // Return the dataUrl
+      res.status(200).send(
+        JSON.stringify({
+          data: { data: [dataUrl] },
+          imageUrl: dataUrl,
+        })
+      );
+      return;
+    }
+
     if (dataUrl.length < 3000) {
       const image_response = await fetch(dataUrl);
       const image_data = await image_response.blob();
       const image_arrayBuffer = await image_data.arrayBuffer();
       const image_buffer = Buffer.from(image_arrayBuffer);
-      dataUrl = `data:image/png;base64,${image_buffer.toString(
-        "base64"
-      )}`;
+      dataUrl = `data:image/png;base64,${image_buffer.toString("base64")}`;
     }
 
     // Upload image to ImageKit
