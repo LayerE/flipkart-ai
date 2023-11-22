@@ -149,7 +149,7 @@ export default async function handler(req: NextRequest, res: NextResponse) {
       inputBase64Url = dataUrl;
     }
 
-    const useClipDrop = false;
+    const useClipDrop = true;
     var outputBase64Url = "";
     var caption = "";
 
