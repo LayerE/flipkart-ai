@@ -84,18 +84,6 @@ export default function Home() {
     set3dMode(false);
   }, [id, isReady, TDMode]);
 
-  useEffect(() => {
-    const times = setInterval(() => {
-      if (isReady && userId) {
-        fetchGeneratedImages(userId);
-      }
-    }, 5000);
-
-    return () => {
-      clearInterval(times);
-    };
-  }, []);
-
   const upateImage = (url) => {
     if (!loader) {
       addimgToCanvasGen(url);
@@ -114,7 +102,7 @@ export default function Home() {
         subjectObjects.push(object);
       }
     });
-  }, [jobId, setGeneratedImgList, regeneratePopup]);
+  }, [jobIdOne, setGeneratedImgList, regeneratePopup]);
 
   useEffect(() => {
     let time = setInterval(() => {
@@ -125,27 +113,23 @@ export default function Home() {
     return () => {
       clearInterval(time);
     };
-  }, [isReady, userId, jobId]);
+  }, [isReady, userId, jobIdOne]);
 
   const fetchAssetsImages = async () => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API}/generatedImg?userId=${userId}&projectId=${id}`,
-        {
-          method: "GET",
-        }
-      );
-      const data = await response.json();
-      // const data = await getSupabaseImage();
+      const data = await getSupabaseImage();
 
-      if (data?.length) {
-        const filteredResults = await data?.filter((obj) =>
+      if (data) {
+        
+
+        const filteredResultss = await data?.filter(
+          (obj: any) => obj?.project_id === id && obj?.is_regenerated === false
+        );
+
+        const filteredResults = await filteredResultss?.filter((obj) =>
           jobIdOne?.includes(obj?.task_id)
         );
 
-        const filteredResultss = await data?.filter(
-          (obj: any) => obj?.project_id == id
-        );
         if (filteredResults?.length) {
           setLoader(false);
           setCanvasDisable(true);

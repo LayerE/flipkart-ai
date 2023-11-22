@@ -32,6 +32,7 @@ export default async function handler(req: NextRequest, res: NextResponse) {
         return;
       }
 
+
       const unique_project_ids = new Set();
       const filtered__project_ids = [];
 
@@ -42,9 +43,9 @@ export default async function handler(req: NextRequest, res: NextResponse) {
           unique_project_ids.add(project_id);
           filtered__project_ids.push(project_id);
         }
-      } 
+      }
 
-      // Return the project_ids as a JSON
+      // Return the projects as a JSON
       res.status(200).send({ project_ids: filtered__project_ids });
     } else if (req.method !== "POST") {
       res.status(405).send("Method not allowed");
@@ -55,21 +56,21 @@ export default async function handler(req: NextRequest, res: NextResponse) {
     const should_delete = req?.query?.should_delete || false;
     const project_id_param = req?.query?.project_id || null;
 
-    if (project_id_param) {
-      const { data, error } = await supabase
-        .from(process.env.PROJECTS_TABLE as string)
-        .select("*")
-        .match({ project_id: project_id_param });
+    // if (project_id_param) {
+    //   const { data, error } = await supabase
+    //     .from(process.env.PROJECTS_TABLE as string)
+    //     .select("*")
+    //     .match({ project_id: project_id_param });
 
-      if (data.length === 0) {
-        res.status(400).send("Invalid project_id");
-        return;
-      }
+    //   if (data.length === 0) {
+    //     res.status(400).send("Invalid project_id");
+    //     return;
+    //   }
 
-      // Return the response as a JSON where all the keys in the object are the column names
-      res.status(200).send(data[0]);
-      return;
-    }
+    //   // Return the response as a JSON where all the keys in the object are the column names
+    //   res.status(200).send(data[0]);
+    //   return;
+    // }
 
     const { body } = req;
     const payload = body;
@@ -83,18 +84,24 @@ export default async function handler(req: NextRequest, res: NextResponse) {
         .match({ project_id: project_id });
       res.status(200).send({ success: true, message: "Project deleted" });
     } else if (!project_id) {
+      const user_id = req?.query?.user_id || null;
+
       // Create a new project
+
       const response = await supabase
         .from(process.env.PROJECTS_TABLE as string)
-        .insert([{ title: "default" }])
+        .insert([{ title: "Untitled", user_id: user_id }])
         .select();
 
       // Return the project_id
+
       const data = response.data;
       const project_id = data[0].project_id;
 
       res.status(200).send({ success: true, project_id: project_id });
     } else {
+
+      console.log("fdfdf")
       let bodyObject = {};
 
       if (title !== null) {
@@ -112,11 +119,14 @@ export default async function handler(req: NextRequest, res: NextResponse) {
       if (recently !== null) {
         bodyObject["recently"] = recently;
       }
+      console.log("fdfdf",bodyObject)
 
       const { data, error } = await supabase
         .from(process.env.PROJECTS_TABLE as string)
         .update(bodyObject)
         .match({ project_id: project_id });
+      console.log(project_id,"fdfdf",data)
+
 
       // Send success response
       res.status(200).send({ success: true, project_id: project_id });

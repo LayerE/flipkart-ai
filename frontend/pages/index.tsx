@@ -107,43 +107,59 @@ export default function Home() {
       });
 
       fetchAssetsImages(userId, null);
-
-      //
-      setMainLoader(true);
       setFilteredArray(null);
-      axios
-        .get(`${process.env.NEXT_PUBLIC_API}/user?id=${userId}`)
-        .then(async (response) => {
-          const dataFecth = await fetchData(userId);
-          console.log("dfd", await dataFecth);
 
-          if (dataFecth.status === 200) {
-            setprojectlist(await dataFecth.data);
 
-            setMainLoader(false);
-          } else {
+      // axios
+      //   .get("/api/images")
+      //   .then(async (response) => {
+      //     // const dataFecth = await fetchData(userId);
+      //     console.log("dfd",response);
+
+      //     if (dataFecth.status === 200) {
+      //       // setprojectlist(await dataFecth.data);
+
+      //       setMainLoader(false);
+      //     } else {
+      //       setMainLoader(false);
+      //     }
+      //   })
+      //   .catch((error) => {
+      //     console.error(error);
+      //     setMainLoader(false);
+      //   });
+      (async () => {
+        try {
+          const responses = await axios.get(`/api/projects?user_id=${userId}`);
+          // const responsess = await axios.post(`/api/images?user_id=${userId}`, {
+          //   user_id: userId,
+          // });
+          if (responses.data) {
+            setprojectlist(responses.data.project);
             setMainLoader(false);
           }
-        })
-        .catch((error) => {
-          console.error(error);
+        } catch (e) {
           setMainLoader(false);
-        });
+        }
+
+       
+     
+      })();
     }
   }, [isReady, userId]);
 
-  const fetchData = async (getUser: string) => {
-    const data = await axios.get(
-      `${process.env.NEXT_PUBLIC_API}/getprojects?id=${getUser}`
-    );
+  // const fetchData = async (getUser: string) => {
+  //   const data = await axios.get(
+  //     `${process.env.NEXT_PUBLIC_API}/getprojects?id=${getUser}`
+  //   );
 
-    return data;
-  };
+  //   return data;
+  // };
 
   const handleDelete = () => {
     // Update the list of items by fetching data again
     if (userId) {
-      fetchData(userId);
+      // fetchData(userId);
     }
   };
 

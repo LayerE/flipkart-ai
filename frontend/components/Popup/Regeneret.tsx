@@ -38,10 +38,10 @@ const Regeneret = ()=> {
 
   useEffect(()=> {
     const filteredResult = generatedImgList.filter(
-      (obj)=> obj?.task_id === regenratedImgsJobId
+      (obj)=> obj?.task_id === regenratedImgsJobId  && obj?.is_regenerated === true
     );
     setFilteredArray(filteredResult);
-    console.log(generatedImgList, "dfd");
+    console.log(generatedImgList, "dfd",filteredResult);
 
     if (filteredResult?.length) {
       setLoader(false);
@@ -139,27 +139,49 @@ const Regeneret = ()=> {
   const addImges = async ()=> {
     try {
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API}/jobId`, {
+      // const response = await fetch(`${process.env.NEXT_PUBLIC_API}/jobId`, {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({
+      //     userId: userId,
+      //     projectId: id,
+      //     jobId: regenratedImgsJobId,
+      //   }),
+      // });
+
+      const response = await fetch("/api/upload", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          userId: userId,
-          projectId: id,
-          jobId: regenratedImgsJobId,
+          user_id: userId,
+          project_id: id,
+          image_type: "regenerate",
         }),
       });
-      const datares = await response;
-
-      if (datares.ok) {
-        setJobId((pre) => [...pre, regenratedImgsJobId]);
+      const data = await response.json();
+      console.log(data)
+      if (data?.data) {
         setCanvasDisable(false);
         setLoader(false);
         GetProjextById(id);
         addimgToCanvasGen(selectedCards);
         setRegeneratePopup({ statu: false });
+        
+      } else {
+        console.log("bg not removed");
       }
+      // const datares = await response;
+
+      // if (datares.ok) {
+      
+      //   setCanvasDisable(false);
+      //   setLoader(false);
+      //   GetProjextById(id);
+      //   addimgToCanvasGen(selectedCards);
+      //   setRegeneratePopup({ statu: false });
+      // }
 
     } catch (error) {
       console.log(error);

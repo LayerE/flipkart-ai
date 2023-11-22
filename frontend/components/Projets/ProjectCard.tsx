@@ -43,7 +43,7 @@ const ProjectCard = ({
     setFilteredArray([]);
 
     setprojectsLoader(true);
-    router.push(`/generate/${data._id}`);
+    router.push(`/generate/${data.project_id}`);
   };
 
   return (
@@ -60,7 +60,7 @@ const ProjectCard = ({
             ref={inputRef}
             type="text"
             value={projectName}
-            onChange={(e) => onChangeHandle(e, data._id)}
+            onChange={(e) => onChangeHandle(e, data.project_id)}
             disabled={rename !== true ? true : false}
           />
         </div>
@@ -100,7 +100,7 @@ const ProjectCard = ({
                 </div>
                 <div className="text">Rename</div>
               </div>
-              <div className="items" onClick={() => handleDeletFun(data._id)}>
+              <div className="items" onClick={() => handleDeletFun(data.project_id)}>
                 <div className="icon">
                   <svg
                     width="15"

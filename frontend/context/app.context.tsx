@@ -883,18 +883,18 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     const canvasData = canvasInstance.current.toJSON(["category"]);
     if (canvasData.objects.length > 1 && !loadercarna) {
       SaveProjexts(userId, projectId, canvasData);
-      const filteredResult = generatedImgList.filter((obj: any) =>
-        jobId?.includes(obj?.task_id)
-      );
+      // const filteredResult = generatedImgList.filter((obj: any) =>
+      //   jobId?.includes(obj?.task_id)
+      // );
     }
   };
 
   const GetProjexts = (getUser: string) => {
     axios
-      .get(`${process.env.NEXT_PUBLIC_API}/getprojects?id=${getUser}`)
+      .get(`/api/images?user_id=${userId}`)
       .then((response) => {
-        setprojectlist(response.data);
-        return response.data;
+        setprojectlist(response?.data?.project);
+        return response?.data?.project;
       })
       .catch((error) => {
         console.error(error);
@@ -921,6 +921,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       project_id: projectId,
       canvasdata: canvas,
     });
+    console.log("sdss")
 
     try {
       const response = await fetch(`/api/canvasdata`, {
@@ -930,28 +931,45 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         },
         body: json,
       });
+      
+      console.log(response,"sdss")
+      console.log("sdfsdfsdf",filteredArray[0]?.modified_image_url)
+      
       const data = await response.json();
-
       if (
         data &&
         filteredArray[0] &&
         "modified_image_url" in filteredArray[0]
       ) {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API}/addPreview`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
+        // const response = await fetch(
+        //   `${process.env.NEXT_PUBLIC_API}/addPreview`,
+        //   {
+        //     method: "POST",
+        //     headers: {
+        //       "Content-Type": "application/json",
+        //     },
 
-            body: JSON.stringify({
-              userId: userId,
-              projectId: projectId,
-              img: (filteredArray[0] as any)?.modified_image_url,
-            }),
-          }
-        );
+        //     body: JSON.stringify({
+        //       userId: userId,
+        //       projectId: projectId,
+        //       img: (filteredArray[0] as any)?.modified_image_url,
+        //     }),
+        //   }
+        // );
+      
+
+        console.log("sdfsdfsdf",filteredArray[0]?.modified_image_url)
+        const jsons = JSON.stringify({
+          project_id: projectId,
+          previewImage: filteredArray[0]?.modified_image_url,
+        });
+        const response = await fetch(`/api/project?user_id=${userId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: jsons,
+        });
 
         const datares = await response;
       }
@@ -964,12 +982,11 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
   const renameProject = async (userId: any, projectId: any, name: any) => {
     const json = JSON.stringify({
-      id: userId,
-      projectId: projectId,
-      name: name,
+      project_id: projectId,
+      title: name,
     });
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API}/rename`, {
+      const response = await fetch(`/api/project?user_id=${userId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -990,6 +1007,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       const data = await getSupabaseImage();
       if (data) {
         setGeneratedImgList(data);
+        // setFilteredArray(data);
+
       }
 
       return data;
@@ -1069,19 +1088,21 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     }
   };
 
-  const addtoRecntly = async (ueserId: any, proid: any) => {
+  const addtoRecntly = async (userId: any, proid: any) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API}/recently`, {
+      const json = JSON.stringify({
+        project_id: projectId,
+        recently: templet,
+      });
+
+      const response = await fetch(`/api/project?user_id=${userId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          userId: ueserId,
-          projectId: proid,
-          recently: templet,
-        }),
+        body: json,
       });
+      const data = await response.json();
 
       const datares = await response;
 
@@ -1223,65 +1244,68 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           canvasInstance.current.renderAll();
         });
 
-        console.log(subjectDataUrl, "subject");
 
         const promtText = promt;
 
-        const response = await fetch("/api/generate", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            dataUrl: subjectDataUrl,
-            maskDataUrl: null,
-            prompt: promtText.trim(),
-            user_id: userId,
-            category: category,
-            lora_type: loara,
-            num_images: selectResult,
-            caption: product,
-            project_id: proid,
-            // is_elevated: elevatedSurface
-          }),
-        });
+    // fetch("/api/generate", {
+    //       method: "POST",
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //       body: JSON.stringify({
+    //         dataUrl: subjectDataUrl,
+    //         maskDataUrl: null,
+    //         prompt: promtText.trim(),
+    //         user_id: userId,
+    //         category: category,
+    //         // lora_type: loara,
+    //         num_images: selectResult,
+    //         caption: product,
+    //         project_id: proid,
+    //         // is_elevated: elevatedSurface
+    //       }),
+    //     })
+        
+        axios.post(`/api/generate`,{
 
-        const generate_response = await response.json();
-        if (generate_response?.error) {
-          toast.error(generate_response?.error);
-          setLoader(false);
-          return false;
-        } else {
-          const endTime = new Date().getTime();
-          const elapsedTime = endTime - startTime;
+          dataUrl: subjectDataUrl,
+          maskDataUrl: null,
+          prompt: promtText.trim(),
+          user_id: userId,
+          category: category,
+          // lora_type: loara,
+          num_images: selectResult,
+          caption: product,
+          project_id: proid,
+        })
+        .then((response) => {
+        const generate_response =  response.data;
+        console.log(generate_response, "subject");
+        const getJobid = generate_response?.job_id
 
-          console.log(`Elapsed time: ${elapsedTime} milliseconds`);
-          try {
-            const response = await fetch(
-              `${process.env.NEXT_PUBLIC_API}/jobId`,
-              {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  userId: userId,
-                  projectId: proid,
-                  jobId: generate_response?.job_id,
-                }),
-              }
-            );
-            const datares = await response;
-
-            if (datares.ok) {
-              setJobIdOne([generate_response?.job_id]);
-              GetProjextById(proid);
-            }
-          } catch (error) {
-            toast.error("something went wrong");
+          if (generate_response?.ok) {
+            setJobIdOne([getJobid]);
+            console.log(generate_response?.job_id);
+            GetProjextById(proid);
+            const endTime = new Date().getTime();
+            const elapsedTime = endTime - startTime;
+            console.log(`Elapsed time: ${elapsedTime} milliseconds`);
+          } else if (generate_response?.error) {
+            toast.error(generate_response?.error);
             setLoader(false);
+            return false;
+          } else {
+            console.error(" ");
           }
-        }
+        })
+        .catch((error) => {
+          console.error(error);
+          return error;
+        })
+
+        // const generate_response = await response.json();
+        // console.log(await generate_response, "dfdfdsfdfd");
+       
       } catch (error) {
         console.error("Error generating image:", error);
         toast.error("something went wrong");
@@ -1330,7 +1354,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
             multiplier: 4,
           });
 
-          console.log(screenshot)
+          console.log(screenshot);
 
           subjectDataUrl = await scaleDownImage(scaledDataURL);
 
@@ -1429,13 +1453,11 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       console.error("Error generating image:", error);
     } finally {
       setGenerationLoader(false);
-   
     }
   };
 
   const getSupabaseImage = async () => {
-
-    const IMG_TABLE = process.env.NEXT_PUBLIC_IMAGE_TABLE
+    const IMG_TABLE = process.env.NEXT_PUBLIC_IMAGE_TABLE;
     if (userId !== null) {
       const { data, error } = await supabase
         .from(IMG_TABLE)

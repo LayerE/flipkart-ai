@@ -24,25 +24,23 @@ const Projects = ({ onDelet }) => {
     try {
       setprojectsLoader(true);
       if (userId) {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API}/project?id=${userId}`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              title: "Untitled",
-              id: userId,
-            }),
-          }
-        );
+        const response = await fetch(`/api/project?user_id=${userId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            // title: "Untitled",
+            // id: userId,
+          }),
+        });
 
         const datares = await response.json();
-        if (datares?._id) {
+        console.log(datares);
+        if (datares?.success) {
           setFilteredArray([]);
 
-          router.push(`/generate/${datares?._id}`);
+          router.push(`/generate/${datares?.project_id}`);
         }
       }
     } catch (error) {
@@ -53,7 +51,7 @@ const Projects = ({ onDelet }) => {
     try {
       renameProject(userId, id, name);
 
-      GetProjexts(userId);
+      // GetProjexts(userId);
     } catch (error) {
       // toast.error("something went wrong");
 
@@ -64,18 +62,22 @@ const Projects = ({ onDelet }) => {
   const handleDelet = async (id: string) => {
     try {
       const data = await fetch(
-        `${process.env.NEXT_PUBLIC_API}/project?id=${id}`,
+        `/api/project?should_delete=${true}&&project_id=${id}`,
         {
-          method: "DELETE",
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
       );
+
       console.log(data);
       if (data.status === 200) {
         toast.success("Project Deleted successfully ");
       } else {
         toast.error("failed Deleting Project ");
       }
-      GetProjexts(userId);
+      // GetProjexts(userId);
     } catch (error) {
       console.log(error);
       toast.error("something went wrong");

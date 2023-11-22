@@ -20,6 +20,20 @@ const SignIn = () => {
     });
   }
 
+
+  const signInWithGoogle = async ()=>{
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent',
+        },
+      },
+    })
+    
+
+  }
   useEffect(() => {
     const checkSession = async () => {
       const { data } = await supabase.auth.getSession();
@@ -46,6 +60,9 @@ const SignIn = () => {
             </h3>
           </div>
         </div>
+        <button onClick={signInWithGoogle} className="w-full px-4 py-2 text-white font-medium bg-yellow-500 hover:bg-yellow-400 active:bg-yellow-400 rounded-lg duration-150">
+              Sign in
+            </button>
         <form
           onSubmit={(e) => {
             e.preventDefault();
