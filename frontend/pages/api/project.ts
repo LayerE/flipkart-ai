@@ -32,7 +32,6 @@ export default async function handler(req: NextRequest, res: NextResponse) {
         return;
       }
 
-
       const unique_project_ids = new Set();
       const filtered__project_ids = [];
 
@@ -100,8 +99,7 @@ export default async function handler(req: NextRequest, res: NextResponse) {
 
       res.status(200).send({ success: true, project_id: project_id });
     } else {
-
-      console.log("fdfdf")
+      console.log("fdfdf");
       let bodyObject = {};
 
       if (title !== null) {
@@ -119,14 +117,13 @@ export default async function handler(req: NextRequest, res: NextResponse) {
       if (recently !== null) {
         bodyObject["recently"] = recently;
       }
-      console.log("fdfdf",bodyObject)
+      console.log("fdfdf", bodyObject);
 
       const { data, error } = await supabase
         .from(process.env.PROJECTS_TABLE as string)
         .update(bodyObject)
         .match({ project_id: project_id });
-      console.log(project_id,"fdfdf",data)
-
+      console.log(project_id, "fdfdf", data);
 
       // Send success response
       res.status(200).send({ success: true, project_id: project_id });
