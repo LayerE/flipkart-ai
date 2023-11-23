@@ -14,17 +14,25 @@ export default async function handler(req: NextRequest, res: NextResponse) {
     if (req.method === "GET") {
       // Get the user_id from the query parameters
       const user_id = req?.query?.user_id || null;
+      const project_id_arg = req?.query?.project_id || null;
 
       if (!user_id) {
         res.status(400).send("Missing user_id");
         return;
       }
 
-      const response = await supabase
-        .from(process.env.PROJECTS_TABLE as string)
-        .select("*")
-        .eq("user_id", user_id)
-        .order("created_at", { ascending: false });
+      const response = project_id_arg
+        ? await supabase
+            .from(process.env.PROJECTS_TABLE as string)
+            .select("*")
+            .eq("user_id", user_id)
+            .eq("project_id", project_id_arg)
+            .order("created_at", { ascending: false })
+        : await supabase
+            .from(process.env.PROJECTS_TABLE as string)
+            .select("*")
+            .eq("user_id", user_id)
+            .order("created_at", { ascending: false });
 
       // Return the projects
       res.status(200).json(response.data);
