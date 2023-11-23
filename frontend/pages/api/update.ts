@@ -44,20 +44,11 @@ export default async function handler(req: NextRequest, res: NextResponse) {
       return;
     }
 
-    // Upsert rows which match the image_urls to is_regenerated = false
-    const updateObject = [];
-    for (var i = 0; i < image_urls.length; i++) {
-      updateObject.push({
-        user_id: user_id,
-        project_id: project_id,
-        modified_image_url: image_urls[i],
-        is_regenerated: false,
-      });
-    }
-
-    const { data, error } = await supabase
-      .from(process.env.NEXT_PUBLIC_IMAGE_TABLE as string)
-      .upsert(updateObject);
+    const { data, error } = await supabase.rpc("regenerate_add_to_gallery", {
+      image_urls_arg: image_urls,
+      user_id_arg: user_id,
+      project_id_arg: project_id,
+    });
 
     if (error) {
       console.log(error.message);
@@ -65,7 +56,7 @@ export default async function handler(req: NextRequest, res: NextResponse) {
       return;
     }
 
-    res.status(200).send({ success: true, message: "Image updated" });
+    res.status(200).send({ success: true, message: "Images Added to Gallery" });
     return;
   } catch (error) {
     console.log(error);
