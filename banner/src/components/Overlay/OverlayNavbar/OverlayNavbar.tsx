@@ -165,6 +165,7 @@ export default function OverlayNavbar() {
                     window.location.href = process.env.NEXT_PUBLIC_FLIPKART_APP_URL as string
                   }}
                 >
+                  
                   {icon}
                 </ActionIcon>
               </Tooltip>

@@ -1,4 +1,4 @@
-/// <reference no-default-lib="true"/>
+
 // @ts-nocheck
 import { createContext, useContext, useState, useRef, useEffect } from "react";
 import { fabric } from "fabric";
@@ -890,7 +890,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     axios
       .get(`/api/project?user_id=${getUser}`)
       .then((response) => {
-        console.log(response);
+      
         setprojectlist(response?.data);
         return response?.data;
       })
@@ -935,7 +935,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         filteredArray[0] &&
         "modified_image_url" in filteredArray[0]
       ) {
-        console.log("sdfsdfsdf", filteredArray[0]?.modified_image_url);
+    
         const jsons = JSON.stringify({
           project_id: projectId,
           user_id: userId,
@@ -1085,7 +1085,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         `/api/project?user_id=${userId}&project_id=${proid}`
       );
       if (projectData.data) {
-        console.log(projectData.data[0].recently, "selectedCards");
+     
 
         const json = JSON.stringify({
           user_id: userId,
@@ -1202,7 +1202,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
       const canvas1 = canvasInstance.current;
       try {
-        console.log("templet");
+      
         if (templet?.title) {
           addtoRecntly(ueserId, proid);
         }
@@ -1265,16 +1265,14 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           })
           .then((response) => {
             const generate_response = response.data;
-            console.log(generate_response, "subject");
+          
             const getJobid = generate_response?.job_id;
 
             if (generate_response?.ok) {
               setJobIdOne([getJobid]);
-              console.log(generate_response?.job_id);
+            
               GetProjextById(proid);
-              const endTime = new Date().getTime();
-              const elapsedTime = endTime - startTime;
-              console.log(`Elapsed time: ${elapsedTime} milliseconds`);
+           
             } else if (generate_response?.error) {
               toast.error(generate_response?.error);
               setLoader(false);
@@ -1297,8 +1295,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     }
   };
 
-  const generate3dHandeler = async (ueserId: any, proid: any) => {
-    const startTime = new Date().getTime();
+  const generate3dHandeler = async (userId: any, proid: any) => {
+   
     if (category === null) {
       toast("Select your product category first !");
     } else if (!file3dUrl && !file3d) {
@@ -1356,7 +1354,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
             })
             .then((response) => {
               const generate_response = response.data;
-              console.log(generate_response, "subject");
+       
               const getJobid = generate_response?.job_id;
 
               if (generate_response?.ok) {

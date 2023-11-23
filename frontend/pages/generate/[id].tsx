@@ -107,7 +107,7 @@ export default function Home() {
   useEffect(() => {
     let time = setInterval(() => {
       if (isReady && userId) {
-        fetchAssetsImages();
+        pollingGenertedImages();
       }
     }, 5000);
     return () => {
@@ -115,7 +115,9 @@ export default function Home() {
     };
   }, [isReady, userId, jobIdOne]);
 
-  const fetchAssetsImages = async () => {
+  // polling generate images avery 5 sec
+
+  const pollingGenertedImages = async () => {
     try {
       const data = await getSupabaseImage();
 

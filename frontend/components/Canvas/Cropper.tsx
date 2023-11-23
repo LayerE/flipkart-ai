@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React from "react";
 import { styled } from "styled-components";
 import { useState } from "react";
@@ -54,7 +56,7 @@ const CropperBox = () => {
     }
   };
   const downloadH = async () => {
-    console.log("dfg");
+
     if (cropSize.width && cropSize.height) {
       const canvas = document.createElement("canvas");
       const image = document.getElementById("img");

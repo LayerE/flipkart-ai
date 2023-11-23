@@ -36,7 +36,7 @@ const Projects = () => {
         });
 
         const datares = await response.json();
-        console.log(datares);
+     
         if (datares?.success) {
           setFilteredArray([]);
 
@@ -57,7 +57,7 @@ const Projects = () => {
   };
 
   const handleDelet = async (id: string) => {
-    console.log(id);
+  
     try {
       const data = await fetch(`/api/project?should_delete=${true}`, {
         method: "POST",

@@ -23,7 +23,7 @@ const Header = () => {
 
   const currentRoute = router.pathname;
   useEffect(() => {
-    console.log(router.pathname);
+  
     if (currentRoute === "/generate-3d/[id]") {
       setBAck(true);
     } else if (currentRoute === "/quick-generator/[id]") {

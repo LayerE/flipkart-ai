@@ -10,7 +10,7 @@ import { useAppState } from "@/context/app.context";
 import { DisabledLabel } from "../common/Label";
 import DropdownInput from "../common/Dropdown";
 import SuggetionInput from "../Generate/SuggetionInput";
-import { productSuggestions } from "@/store/dropdown";
+import { productSuggestions } from "@/data/dropdown";
 
 const RegenratTab = () => {
   const {

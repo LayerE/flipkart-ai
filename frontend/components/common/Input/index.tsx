@@ -238,7 +238,7 @@ export const FileUpload = ({
                   // type: "product",
                 }),
               });
-              console.log(response);
+
               if (response?.status === 413) {
                 toast.error("Image exceeded 4mb limit");
 

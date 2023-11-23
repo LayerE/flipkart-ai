@@ -129,7 +129,7 @@ const AssetsDir = () => {
               setbrandassetLoader(false);
             }
             const data = await response.json();
-            console.log(data.data.data, "ddsfvd");
+
 
             if (data?.data) {
               fetchAssetsImages(userId, null, true);

@@ -4,7 +4,7 @@ import Label from "../common/Label";
 import { FileUpload } from "../common/Input";
 import { styled } from "styled-components";
 import { useAppState } from "@/context/app.context";
-import { elemest } from "@/store/listOfElement";
+import { elemest } from "@/data/listOfElement";
 
 const Element: React.FC = () => {
   const { setViewMore, addimgToCanvas } = useAppState();

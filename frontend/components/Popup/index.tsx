@@ -34,7 +34,7 @@ const PopupUpload = () => {
 
   const HandileUpload = async () => {
     if (productnew !== "") {
-      console.log(popup.dataArray);
+  
       setbtnisable(true)
       try {
         const response =  await fetch(`/api/addcaption`, {
@@ -51,11 +51,11 @@ const PopupUpload = () => {
 
         const datares = await response;
         if (datares) {
-          fetchAssetsImages(userId, null);
           addimgToCanvasSubject(popup?.dataArray?.imageUrl);
           fetchAssetsImagesWithProjectId(userId, id);
           setProduct(productnew);
           setPopup({ status: false, data: null });
+          fetchAssetsImages(userId, null,true);
         }
       } catch (error) {
         

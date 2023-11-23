@@ -82,7 +82,7 @@ export default function Home() {
     setSelectedImg(null);
 
     if (isReady && userId) {
-      console.log(session);
+
       seTelevatedSurface(false);
 
       setActiveTab(1);

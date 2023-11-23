@@ -8,6 +8,7 @@ import { useAppState } from "@/context/app.context";
 import { fabric } from "fabric";
 import { useRouter } from "next/router";
 import { useSession } from "@supabase/auth-helpers-react";
+import { toast } from "react-toastify";
 
 const Regeneret = ()=> {
   const session = useSession();
@@ -41,7 +42,7 @@ const Regeneret = ()=> {
       (obj)=> obj?.task_id === regenratedImgsJobId  && obj?.is_regenerated === true
     );
     setFilteredArray(filteredResult);
-    console.log(generatedImgList, "dfd",filteredResult);
+  
 
     if (filteredResult?.length) {
       setLoader(false);
@@ -49,7 +50,7 @@ const Regeneret = ()=> {
       setLoader(true);
     }
 
-    console.log(filteredResult, "sdfds", regenratedImgsJobId);
+
   }, [generatedImgList, regenratedImgsJobId]);
 
   useEffect(()=> {
@@ -68,15 +69,13 @@ const Regeneret = ()=> {
 
     const cellWidth = canvasInstance.current.width / gridSize;
     const cellHeight = canvasInstance.current.height / gridSize;
-    console.log(`dgf`, url);
+  
     let incr = 0;
 
     url.forEach(async (imageSrc, index)=> {
       const row = Math.floor(index / gridSize);
       const col = index % gridSize;
-      console.log(cellWidth, cellHeight, gridSize);
-
-      console.log(imageSrc);
+    
 
       fabric.Image.fromURL(
         await getBase64FromUrl(imageSrc),
@@ -117,7 +116,7 @@ const Regeneret = ()=> {
           img.scaleToWidth(scaledWidth);
           img.scaleToHeight(scaledHeight);
 
-          console.log(img);
+       
           canvasInstance.current.add(img);
           canvasInstance.current.setActiveObject(img);
           canvasInstance.current.renderAll();
@@ -163,19 +162,11 @@ const Regeneret = ()=> {
       } else {
         console.log("bg not removed");
       }
-      // const datares = await response;
-
-      // if (datares.ok) {
-      
-      //   setCanvasDisable(false);
-      //   setLoader(false);
-      //   GetProjextById(id);
-      //   addimgToCanvasGen(selectedCards);
-      //   setRegeneratePopup({ statu: false });
-      // }
+   
 
     } catch (error) {
       console.log(error);
+      toast.error("something went wrong");
 
     }
   };

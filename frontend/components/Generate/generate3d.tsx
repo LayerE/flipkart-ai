@@ -23,7 +23,7 @@ import {
   categoryList,
   productSuggestions,
   resultList,
-} from "@/store/dropdown";
+} from "@/data/dropdown";
 import TextLoader from "../Loader/text";
 import { useRouter } from "next/router";
 import DropdownInput, { DropdownNOBorder } from "../common/Dropdown";
@@ -93,7 +93,7 @@ const Generate3d = () => {
 
   useEffect(() => {
     const promts = product + " " + promt;
-    console.log(promt,promtFull,activeTemplet);
+  
     if (promt == activeTemplet?.promt ) {
       setpromtFull(promt);
     }

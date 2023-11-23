@@ -6,13 +6,14 @@ import Label from "../common/Label";
 import { FileUpload } from "../common/Input";
 import { styled } from "styled-components";
 import { useAppState } from "@/context/app.context";
-import { productList } from "@/store/listOfElement";
+import { productList } from "@/data/listOfElement";
 import { useRouter } from "next/router";
 
 
 const Assets: React.FC = () => {
   const {
     setProduct,
+    product,
     listofassets,
     addimgToCanvasSubject,
     assetLoader,
@@ -22,15 +23,13 @@ const Assets: React.FC = () => {
   } = useAppState();
   const { query, isReady } = useRouter();
   const { id } = query;
-  const [re, setRe] = useState(1);
+
   useEffect(() => {
-    if (re <= 10) {
-      setRe(re + 1);
-    }
+   
     if (userId && isReady) {
       fetchAssetsImages(userId, id, true);
     }
-  }, [isReady, userId, re]);
+  }, [isReady, userId, product]);
 
   return (
     <div className="accest">

@@ -9,7 +9,7 @@ import { useAppState } from "@/context/app.context";
 import { saveAs } from "file-saver";
 import { motion } from "framer-motion";
 import { arrayBufferToDataURL, dataURLtoFile } from "@/utils/BufferToDataUrl";
-import { ImgFormate } from "@/store/dropdown";
+import { ImgFormate } from "@/data/dropdown";
 import { useRouter } from "next/router";
 import { styled } from "styled-components";
 import { toast } from "react-toastify";
@@ -73,7 +73,7 @@ const Edit = () => {
       });
       const data = await response.json();
       if (data) {
-        console.log(data?.imageUrl,"dfdfdf",data)
+   
         addimgToCanvasSubject(data?.imageUrl);
       } else {
         setLoader(false);

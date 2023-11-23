@@ -211,7 +211,7 @@ const Canvas3d = () => {
           );
         } else if (tdFormate === ".gltf" || tdFormate === ".glb") {
           setasset3dLoader(true);
-          console.log(file3dUrl, file3d);
+
           loader3d.load(
             file3dUrl ? file3dUrl : file3d,
 

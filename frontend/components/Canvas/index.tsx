@@ -220,7 +220,7 @@ export default function CanvasBox({
       });
 
       canvasInstanceRef.on("object:selected", function (event) {
-        console.log("Object selected:", event.target);
+   
         const selectedObject = event.target;
         if (selectedObject === newEditorBox) {
           // Hide the border by setting stroke to transparent
@@ -284,7 +284,7 @@ export default function CanvasBox({
       canvasInstanceRef.setZoom(zoom);
       var zooms = canvasInstanceRef.getZoom();
 
-      console.log(" position", zooms);
+
 
       // Set the zooming point (x, y) coordinates
       var zoomPointX = 100; // X-coordinate of the zooming point
@@ -321,7 +321,7 @@ export default function CanvasBox({
       axios
         .get(`/api/project?user_id=${userId}&project_id=${proid}`)
         .then((response) => {
-          console.log(response)
+
           if (canvasInstanceRef) {
             canvasInstanceRef.loadFromJSON(
               response?.data[0].canvasHistory,
@@ -372,7 +372,7 @@ export default function CanvasBox({
       setRegenratedImgsJobid([]);
       setTimeout(() => {
         setRegeneratePopup({ status: true, url: downloadImg });
-        console.log("Success", downloadImg);
+      
       }, 500);
     }
   };

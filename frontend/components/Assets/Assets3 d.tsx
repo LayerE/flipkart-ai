@@ -6,7 +6,7 @@ import { styled } from "styled-components";
 import { useAppState } from "@/context/app.context";
 import { useRouter } from "next/router";
 import Button from "../common/Button";
-import { formate3d } from "@/store/format";
+import { formate3d } from "@/data/format";
 
 const Assets3d = () => {
   const {

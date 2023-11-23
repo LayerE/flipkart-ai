@@ -57,35 +57,10 @@ const RemoveBox = () => {
   };
 
   const upSacle = async (photo: string, filename: string): Promise<string> => {
-    // const form = new FormData();
-    // const fileItem = await dataURLtoFile(photo, filename);
-    // form.append("image_file", fileItem);
-    // form.append("target_width", 2048);
-    // form.append("target_height", 2048);
-    // const response = await fetch(
-    //   "https://clipdrop-api.co/image-upscaling/v1/upscale",
-    //   {
-    //     method: "POST",
-    //     headers: {
-    //       "x-api-key":
-    //         "ca2c46b3fec7f2917642e99ab5c48d3e23a2f940293a0a3fbec2e496566107f9d8b192d030b7ecfd85cfb02b6adb32f4",
-    //     },
-    //     body: form,
-    //   }
-    // );
-
-    // const buffer = await response.arrayBuffer();
-    // const dataURL = await arrayBufferToDataURL(buffer);
-
-    // if (response.status === 402) {
-    //   toast.error("Not enough credits to process the request");
-    //   setromovepopu3d(false);
-    //   setupdateImg(null);
-    // }
-    // return dataURL;
+  
 
     try {
-      console.log(downloadImg)
+    
       const response = await fetch("/api/upscale", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -96,13 +71,6 @@ const RemoveBox = () => {
       });
 
       const data = await response.json();
-
-
-  
-
-      // const buffer = await response.arrayBuffer();
-      // const dataURL = await arrayBufferToDataURL(buffer);
-      // localStorage.setItem("m-images", JSON.stringify(dataURL));
 
       if (data) {
         setupdateImg(data.image_url);
@@ -124,17 +92,7 @@ const RemoveBox = () => {
     // try {
       const data = await upSacle(downloadImg, "imger");
 
-      // if (data) {
-      //   console.log(updateImg);
-      //   setupdateImg(data);
-      // }
-    // } catch (error) {
-    //   setLoader(false);
-    //   toast.error("Error upscale Image");
-    //   setromovepopu3d(false);
-    //   setupdateImg(null);
-    // }
-    // setLoader(false);
+
   };
   useEffect(() => {
     if (romovepopu3d.type === "bgRemove") {

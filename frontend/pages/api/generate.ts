@@ -124,7 +124,7 @@ export default async (req: NextRequest) => {
       return NextResponse.json({ error: "Missing prompt" });
     }
 
-    console.log("Prompt was " + prompt);
+
 
     const { url: imageUrl } = await uploadImage(dataUrl, user_id, false);
 

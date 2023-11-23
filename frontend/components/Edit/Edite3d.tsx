@@ -16,7 +16,7 @@ import { saveAs } from "file-saver";
 import { SketchPicker } from "react-color";
 import { motion } from "framer-motion";
 import { arrayBufferToDataURL, dataURLtoFile } from "@/utils/BufferToDataUrl";
-import { ImgFormate, coloreMode } from "@/store/dropdown";
+import { ImgFormate, coloreMode } from "@/data/dropdown";
 import { Input } from "../common/Input";
 import { Console } from "console";
 import { useRouter } from "next/router";

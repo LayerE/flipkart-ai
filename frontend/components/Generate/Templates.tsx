@@ -5,7 +5,7 @@ import { Row } from "../common/Row";
 import { useAppState } from "@/context/app.context";
 import { styled } from "styled-components";
 import { motion } from "framer-motion";
-import { TempletList } from "@/store/dropdown";
+import { TempletList } from "@/data/dropdown";
 import { useRouter } from "next/router";
 import Label from "../common/Label";
 
@@ -66,14 +66,14 @@ const Tamplates = () => {
       const filtered = TempletList.find((item) => item.title === templetType);
       if (filtered) {
         setSuggestedTemplates(filtered.list);
-        console.log(filtered.list);
+        
       } else {
         setSuggestedTemplates([]);
       }
       setOtherTemplates(
         TempletList.filter((item) => item.title !== templetType)
       );
-      // console.log(TempletList.filter((item) => item.title !== "Furniture & Decor").flatMap(item => item.list) )
+     
     })();
 
     // filterTemplates(category)

@@ -15,7 +15,7 @@ import { motion } from "framer-motion";
 import EditorSection from "./Editor";
 import Tamplates from "./Templates";
 import { DisabledLabel } from "../common/Label";
-import { categoryList } from "@/store/dropdown";
+import { categoryList } from "@/data/dropdown";
 import TextLoader from "../Loader/text";
 import { useRouter } from "next/router";
 import DropdownInput, { DropdownNOBorder } from "../common/Dropdown";

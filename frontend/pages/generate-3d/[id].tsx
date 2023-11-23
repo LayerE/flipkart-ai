@@ -111,29 +111,34 @@ export default function Home() {
         subjectObjects.push(object);
       }
     });
-  }, [jobId, setGeneratedImgList, regeneratePopup]);
+  }, [jobIdOne, setGeneratedImgList, regeneratePopup]);
 
   useEffect(() => {
     let time = setInterval(() => {
       if (isReady && userId) {
-        fetchAssetsImages();
+        polling3dGenertedImages();
       }
     }, 5000);
     return () => {
       clearInterval(time);
     };
-  }, [isReady, userId, jobId]);
+  }, [isReady, userId, jobIdOne]);
 
-  const fetchAssetsImages = async () => {
+  const polling3dGenertedImages = async () => {
     try {
       const data = await getSupabaseImage();
 
       if (data) {
-        const filteredResults = await data?.filter((obj: any) =>
-          jobIdOne?.includes(obj?.task_id)
-        );
+        console.log(data, "data");
+        console.log(jobIdOne, "jobIdOne");
+
         const filteredResultss = await data?.filter(
           (obj: any) => obj?.is_3d === true
+        );
+        console.log(filteredResultss, "filteredResultss");
+
+        const filteredResults = await filteredResultss?.filter((obj: any) =>
+          jobIdOne?.includes(obj?.task_id)
         );
         if (filteredResults?.length) {
           setLoader(false);
@@ -337,7 +342,7 @@ const MainPages = styled.div`
     width: 100%;
     min-height: 100vh;
     position: relative;
-   
+
     overflow: auto;
     /* height: 100vh; */
     display: flex;
@@ -348,25 +353,23 @@ const MainPages = styled.div`
 
     &::-webkit-scrollbar {
       display: none;
-        width: 10px;
-        height: 10px;
-      }
+      width: 10px;
+      height: 10px;
+    }
 
-      /* Track */
-      &::-webkit-scrollbar-track {
-        box-shadow: inset 0 0 5px grey;
-        border-radius: 10px;
-        height: 7px;
+    /* Track */
+    &::-webkit-scrollbar-track {
+      box-shadow: inset 0 0 5px grey;
+      border-radius: 10px;
+      height: 7px;
       display: none;
+    }
 
-      }
-
-      /* Handle */
-      &::-webkit-scrollbar-thumb {
-        border-radius: 10px;
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+      border-radius: 10px;
       display: none;
-
-      }
+    }
   }
 
   .convas-continer {
