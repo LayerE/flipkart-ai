@@ -50,41 +50,31 @@ const Projects = () => {
   const handleEdite = async (id: string, name: string) => {
     try {
       renameProject(userId, id, name);
-
-      // GetProjexts(userId);
+      GetProjexts(userId);
     } catch (error) {
-      // toast.error("something went wrong");
-
       console.log(error);
     }
   };
 
   const handleDelet = async (id: string) => {
-    console.log(id)
+    console.log(id);
     try {
-      const data = await fetch(
-        `/api/project?should_delete=${true}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            project_id: id,
-            // id: userId,
-          }),
-          
+      const data = await fetch(`/api/project?should_delete=${true}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-        
-      );
-
-      console.log(data);
+        body: JSON.stringify({
+          project_id: id,
+          // id: userId,
+        }),
+      });
       if (data.status === 200) {
         toast.success("Project Deleted successfully ");
+        GetProjexts(userId);
       } else {
         toast.error("failed Deleting Project ");
       }
-      // GetProjexts(userId);
     } catch (error) {
       console.log(error);
       toast.error("something went wrong");

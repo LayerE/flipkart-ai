@@ -139,18 +139,7 @@ const Regeneret = ()=> {
   const addImges = async ()=> {
     try {
 
-      console.log(selectedCards,"selectedCards")
-      // const response = await fetch(`${process.env.NEXT_PUBLIC_API}/jobId`, {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({
-      //     userId: userId,
-      //     projectId: id,
-      //     jobId: regenratedImgsJobId,
-      //   }),
-      // });
+    
 
       const response = await fetch("/api/update", {
         method: "POST",
@@ -163,7 +152,7 @@ const Regeneret = ()=> {
         }),
       });
       const data = await response.json();
-      console.log(data,"dsff")
+  
       if (data?.success) {
         setCanvasDisable(false);
         setLoader(false);

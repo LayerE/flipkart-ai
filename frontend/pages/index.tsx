@@ -148,13 +148,7 @@ export default function Home() {
     }
   }, [ userId]);
 
-  // const fetchData = async (getUser: string) => {
-  //   const data = await axios.get(
-  //     `${process.env.NEXT_PUBLIC_API}/getprojects?id=${getUser}`
-  //   );
 
-  //   return data;
-  // };
 
  
 

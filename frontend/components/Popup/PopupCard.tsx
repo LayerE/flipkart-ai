@@ -32,28 +32,27 @@ const PopupCard = () => {
       try {
         if (popupImage?.userId) {
           const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API}/project?id=${popupImage.userId}`,
+            `/api/project?user_id=${popupImage.userId}`,
             {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
-                title: "Untitle",
-                id: popupImage.userId,
               }),
             }
           );
           const datares = await response.json();
-          if (datares?._id) {
+          if (datares?.success) {
             GetProjexts(popupImage.userId);
             setPopupImage({ statu: false });
-            router.push(`/generate/${datares?._id}`);
+            router.push(`/generate/${datares?.project_id}`);
             setTimeout(() => {}, 1000);
           }
         }
       } catch (error) {
-        // Handle error
+        console.log(error)
+
       }
     } else {
       if (popupImage?.list[currentIndex]?.modified_image_url) {
