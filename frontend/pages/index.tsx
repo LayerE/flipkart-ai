@@ -130,7 +130,7 @@ export default function Home() {
       //   });
       (async () => {
         try {
-          const responses = await axios.get(`/api/projects?user_id=${userId}`);
+          const responses = await axios.get(`/api/project?user_id=${userId}`);
           // const responsess = await axios.post(`/api/images?user_id=${userId}`, {
           //   user_id: userId,
           // });

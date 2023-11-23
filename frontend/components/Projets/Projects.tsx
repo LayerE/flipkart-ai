@@ -60,15 +60,22 @@ const Projects = () => {
   };
 
   const handleDelet = async (id: string) => {
+    console.log(id)
     try {
       const data = await fetch(
-        `/api/project?should_delete=${true}&&project_id=${id}`,
+        `/api/project?should_delete=${true}`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-        }
+          body: JSON.stringify({
+            project_id: id,
+            // id: userId,
+          }),
+          
+        },
+        
       );
 
       console.log(data);
