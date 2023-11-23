@@ -1109,11 +1109,17 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const addtoRecntly = async (userId: any, proid: any) => {
     try {
       const json = JSON.stringify({
-        project_id: projectId,
+        project_id: proid,
         recently: templet,
       });
 
-      const response = await fetch(`/api/project?user_id=${userId}`, {
+      const queryParams = new URLSearchParams({
+        user_id: userId,
+        project_id: proid,
+        // Add more parameters as needed
+      });
+      
+      const response = await fetch(`/api/project?${queryParams}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

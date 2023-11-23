@@ -139,6 +139,7 @@ const Regeneret = ()=> {
   const addImges = async ()=> {
     try {
 
+      console.log(selectedCards,"selectedCards")
       // const response = await fetch(`${process.env.NEXT_PUBLIC_API}/jobId`, {
       //   method: "POST",
       //   headers: {
@@ -151,13 +152,14 @@ const Regeneret = ()=> {
       //   }),
       // });
 
-      const response = await fetch("/api/upload", {
+      const response = await fetch("/api/update", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           user_id: userId,
           project_id: id,
-          image_type: "regenerate",
+          type: "regenerate",
+          image_urls: selectedCards
         }),
       });
       const data = await response.json();

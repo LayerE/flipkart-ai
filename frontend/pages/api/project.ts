@@ -88,6 +88,7 @@ export default async function handler(req: NextRequest, res: NextResponse) {
       if (recently !== null) {
         bodyObject["recently"] = recently;
       }
+     
 
       const { data, error } = await supabase
         .from(process.env.PROJECTS_TABLE as string)
