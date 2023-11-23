@@ -120,8 +120,6 @@ export default function Home() {
       const data = await getSupabaseImage();
 
       if (data) {
-        
-
         const filteredResultss = await data?.filter(
           (obj: any) => obj?.project_id === id && obj?.is_regenerated === false
         );

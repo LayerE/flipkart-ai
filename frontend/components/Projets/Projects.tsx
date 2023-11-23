@@ -13,7 +13,7 @@ const fadeIn = {
   visible: { opacity: 1, transition: { duration: 0.5 } },
 };
 
-const Projects = ({ onDelet }) => {
+const Projects = () => {
   const router = useRouter();
 
   const { setFilteredArray, projectlist, GetProjexts, renameProject, userId } =

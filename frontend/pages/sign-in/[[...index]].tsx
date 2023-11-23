@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { supabase } from "../../utils/supabase";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import GoogleButton from "react-google-button";
 
 const SignIn = () => {
   const router = useRouter();
@@ -20,20 +21,17 @@ const SignIn = () => {
     });
   }
 
-
-  const signInWithGoogle = async ()=>{
+  const signInWithGoogle = async () => {
     const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
+      provider: "google",
       options: {
         queryParams: {
-          access_type: 'offline',
-          prompt: 'consent',
+          access_type: "offline",
+          prompt: "consent",
         },
       },
-    })
-    
-
-  }
+    });
+  };
   useEffect(() => {
     const checkSession = async () => {
       const { data } = await supabase.auth.getSession();
@@ -60,15 +58,13 @@ const SignIn = () => {
             </h3>
           </div>
         </div>
-        <button onClick={signInWithGoogle} className="w-full px-4 py-2 text-white font-medium bg-yellow-500 hover:bg-yellow-400 active:bg-yellow-400 rounded-lg duration-150">
-              Sign in
-            </button>
+
         <form
           onSubmit={(e) => {
             e.preventDefault();
             signInWithEmail(email);
             // alert("Please check your email for login link");
-            setsendMail(true)
+            setsendMail(true);
           }}
           className="mt-8 space-y-5"
         >
@@ -84,22 +80,35 @@ const SignIn = () => {
             />
           </div>
 
-          {sendMail ? 
-          <>
-          <div className="w-full px-4 pt-2 text-yellow-500  font-medium hover: text-center">
-          Please check your email for login link
-          </div>
-           <div className="w-full px-4 pt-0 text-black-500  font-medium hover: text-center cursor-pointer" onClick={()=> setsendMail(false)}>
-          Enter new Email
-           </div>
-           </>
-          : (
+          {sendMail ? (
+            <>
+              <div className="w-full px-4 pt-2 text-yellow-500  font-medium hover: text-center">
+                Please check your email for login link
+              </div>
+              <div
+                className="w-full px-4 pt-0 text-black-500  font-medium hover: text-center cursor-pointer"
+                onClick={() => setsendMail(false)}
+              >
+                Enter new Email
+              </div>
+            </>
+          ) : (
             <button className="w-full px-4 py-2 text-white font-medium bg-yellow-500 hover:bg-yellow-400 active:bg-yellow-400 rounded-lg duration-150">
               Sign in
             </button>
           )}
         </form>
-       
+        <div className="text-center my-2">or</div>
+        <div className="flex justify-center">
+          <GoogleButton
+            onClick={() => {
+              signInWithGoogle();
+            }}
+          />
+          {/* <button onClick={signInWithGoogle} className="w-full px-4 py-2 text-white font-medium bg-yellow-500 hover:bg-yellow-400 active:bg-yellow-400 rounded-lg duration-150">
+              Sign in
+            </button> */}
+        </div>
       </div>
     </main>
   );

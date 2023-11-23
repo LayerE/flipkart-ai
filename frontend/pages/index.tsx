@@ -113,7 +113,7 @@ export default function Home() {
       // axios
       //   .get("/api/images")
       //   .then(async (response) => {
-      //     // const dataFecth = await fetchData(userId);
+          // const dataFecth = await fetchData(userId);
       //     console.log("dfd",response);
 
       //     if (dataFecth.status === 200) {
@@ -135,7 +135,7 @@ export default function Home() {
           //   user_id: userId,
           // });
           if (responses.data) {
-            setprojectlist(responses.data.project);
+            setprojectlist(responses.data);
             setMainLoader(false);
           }
         } catch (e) {
@@ -146,7 +146,7 @@ export default function Home() {
      
       })();
     }
-  }, [isReady, userId]);
+  }, [ userId]);
 
   // const fetchData = async (getUser: string) => {
   //   const data = await axios.get(
@@ -156,12 +156,7 @@ export default function Home() {
   //   return data;
   // };
 
-  const handleDelete = () => {
-    // Update the list of items by fetching data again
-    if (userId) {
-      // fetchData(userId);
-    }
-  };
+ 
 
   return (
     <MainPage>
@@ -181,7 +176,7 @@ export default function Home() {
 
         <div className="dashbaord">
           {activeTabHome === 1 ? (
-            <Projects onDelet={handleDelete} />
+            <Projects  />
           ) : activeTabHome === 2 ? (
             <AssetsDir />
           ) : activeTabHome === 3 ? (

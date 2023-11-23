@@ -48,6 +48,7 @@
     "react-draggable": "^4.4.5",
     "react-dropzone": "^14.2.3",
     "react-easy-crop": "^5.0.2",
+    "react-google-button": "^0.7.2",
     "react-image-crop": "^10.1.8",
     "react-konva": "^18.2.10",
     "react-range-slider-input": "^3.0.7",

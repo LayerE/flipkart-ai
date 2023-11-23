@@ -30,16 +30,13 @@ const Gellery = () => {
     const checkSession = async () => {
       const { data } = await supabase.auth.getSession();
       if (data.session) {
-        // router.push("/");
         setUserID(data.session.user.id);
-      } else {
-        // router.push("/sign-in");
       }
     };
     checkSession();
     if (userId) {
       fetchAssetsImages();
-      getSupabaseImage();
+      // getSupabaseImage();
     }
   }, [userId, galleryActivTab]);
 
@@ -50,7 +47,11 @@ const Gellery = () => {
       if (galleryActivTab === "ai") {
         const datass = await getSupabaseImage();
         if (datass) {
-          setGallery(datass);
+          const filteredResultss = await datass?.filter(
+            (obj: any) => obj?.is_regenerated === false
+          );
+
+          setGallery(filteredResultss);
         }
 
         setlaoder(false);
