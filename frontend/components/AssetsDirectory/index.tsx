@@ -70,7 +70,7 @@ const AssetsDir = () => {
   const fetchAssetsImagess = async () => {
     try {
       if (AssetsActivTab === "product") {
-        fetchAssetsImages(userId, null);
+        fetchAssetsImages(userId, null, true);
         setAssets(listofassets);
       } else {
         fetchAssetsImagesBrant(userId, null);
@@ -132,7 +132,7 @@ const AssetsDir = () => {
             console.log(data.data.data, "ddsfvd");
 
             if (data?.data) {
-              fetchAssetsImages(userId, null);
+              fetchAssetsImages(userId, null, true);
               fetchAssetsImagesWithProjectId(userId, id);
               setbrandassetLoader(false);
               // }

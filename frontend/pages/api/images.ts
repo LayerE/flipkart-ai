@@ -37,7 +37,8 @@ export default async (req: NextRequest) => {
       });
 
       const data = await response.json();
-      return NextResponse.json({ data });
+      const revesData = data.reverse()
+      return NextResponse.json({ data:revesData  });
     } else {
       // Return all the images for the user
       const requestURL =

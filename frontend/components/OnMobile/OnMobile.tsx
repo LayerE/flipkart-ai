@@ -8,8 +8,8 @@ const OnMobile = () => {
 
            
       <p className='text-xl text-stone-500'>
-        It looks like you're using a mobile device! For an optimal experience,
-        we recommend switching to a larger screen such as a desktop or tablet.
+       {` It looks like you're using a mobile device! For an optimal experience,
+        we recommend switching to a larger screen such as a desktop or tablet.`}
       </p>
       <br />
       <p className='text-stone-500'>

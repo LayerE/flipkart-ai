@@ -1017,25 +1017,43 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     }
   };
 
-  const fetchAssetsImages = async (userId: any, pro: any) => {
+  const fetchAssetsImages = async (userId: any, pro: any, is_bg_removed) => {
     try {
-      const response = await fetch(`/api/images`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user_id: userId,
-        }),
-      });
+      let response
+      if(is_bg_removed){
+         response = await fetch(`/api/images`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user_id: userId,
+            is_bg_removed:true
+          }),
+        });
+
+      }else{
+         response = await fetch(`/api/images`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user_id: userId,
+          }),
+        });
+
+      }
+     
       const data = await response.json();
 
       if (data?.data.length) {
         const revers = data.data.reverse();
-        setListOfAssets(revers);
+        setListOfAssets(data.data);
+        return data.data;
       }
+      
 
-      return data;
     } catch (error) {
       console.error("Error fetching images:", error);
     }

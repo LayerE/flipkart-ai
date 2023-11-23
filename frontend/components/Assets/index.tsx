@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React, {  useState, useEffect } from "react";
 import { Row } from "../common/Row";
 import Label from "../common/Label";
@@ -26,7 +28,7 @@ const Assets: React.FC = () => {
       setRe(re + 1);
     }
     if (userId && isReady) {
-      fetchAssetsImages(userId, id);
+      fetchAssetsImages(userId, id, true);
     }
   }, [isReady, userId, re]);
 
