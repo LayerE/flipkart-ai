@@ -9,7 +9,6 @@ import { TempletList } from "@/store/dropdown";
 import { useRouter } from "next/router";
 import Label from "../common/Label";
 
-
 const fadeIn = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 1 } },
@@ -32,9 +31,8 @@ const Tamplates = () => {
     GetProjextById,
     activeTemplet,
     setActiveTemplet,
-    category
+    category,
   } = useAppState();
-
 
   const { query, isReady } = useRouter();
   const id = (query.id as string[]) || [];
@@ -46,49 +44,41 @@ const Tamplates = () => {
     setfilterRecently(project?.recently);
   }, [isReady, setfilterRecently]);
 
-
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [suggestedTemplates, setSuggestedTemplates] = useState([]);
   const [otherTemplates, setOtherTemplates] = useState([]);
   useEffect(() => {
-    ( () => {
-let templetType 
-if(category === "Apparel & Footwear"){
-  templetType= "Outdoor Scene"
-}
-else if(category === "Large Appliances"){
-  templetType =  "Indoor Scene"
-}
-else if(category === "Mobile & Laptops"){
-  templetType =  "On Platforms"
-}
-else if(category === "Furniture & Decor"){
-  templetType="Indoor Scene"
-}
-else if(category === "Other"){
-  templetType= "Backdrops"
-}
+    (() => {
+      let templetType;
+      if (category === "Apparel & Footwear") {
+        templetType = "Outdoor Scene";
+      } else if (category === "Large Appliances") {
+        templetType = "Indoor Scene";
+      } else if (category === "Mobile & Laptops") {
+        templetType = "On Platforms";
+      } else if (category === "Furniture & Decor") {
+        templetType = "Indoor Scene";
+      } else if (category === "Other") {
+        templetType = "Backdrops";
+      }
 
       // Assuming 'TempletList' is the name of your array
       const filtered = TempletList.find((item) => item.title === templetType);
       if (filtered) {
         setSuggestedTemplates(filtered.list);
-        console.log(filtered.list)
+        console.log(filtered.list);
       } else {
-
-
         setSuggestedTemplates([]);
       }
-      setOtherTemplates(TempletList.filter((item) => item.title !== templetType));
-    // console.log(TempletList.filter((item) => item.title !== "Furniture & Decor").flatMap(item => item.list) )
+      setOtherTemplates(
+        TempletList.filter((item) => item.title !== templetType)
+      );
+      // console.log(TempletList.filter((item) => item.title !== "Furniture & Decor").flatMap(item => item.list) )
+    })();
 
-    })()
-   
     // filterTemplates(category)
-    console.log(suggestedTemplates,otherTemplates )
-    
+    console.log(suggestedTemplates, otherTemplates);
   }, [category]);
-
 
   return (
     <motion.div
@@ -153,15 +143,14 @@ else if(category === "Other"){
             </div>
           </>
         ) : null}
-{
-  suggestedTemplates.length ? 
-<>
-<div className=" rowsnew">
-          <div className="left">
-            <Label>Suggested templates:</Label>
-          </div>
-        </div>
-      
+        {suggestedTemplates.length ? (
+          <>
+            <div className=" rowsnew">
+              <div className="left">
+                <Label>Suggested templates:</Label>
+              </div>
+            </div>
+
             <ResponsiveRowWraptwo>
               {suggestedTemplates.map((test, i) => (
                 <div
@@ -191,19 +180,12 @@ else if(category === "Other"){
                 </div>
               ))}
             </ResponsiveRowWraptwo>
-
-
-</>
-
-
-  :null
-}
-
-      
+          </>
+        ) : null}
 
         <div className=" rowsnew">
           <div className="left">
-            <Label>Select a  Other Template Below:</Label>
+            <Label>Select a Other Template Below:</Label>
           </div>
         </div>
         {otherTemplates.map((testd, i) => (

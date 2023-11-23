@@ -34,7 +34,7 @@ export default function CanvasBox({
     downloadImg,
     setDownloadImg,
     RegenerateImageHandeler,
-    GetProjextById,
+
     isMagic,
     setEditorBox,
     bringImageToFront,

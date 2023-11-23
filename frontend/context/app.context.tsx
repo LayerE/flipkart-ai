@@ -903,11 +903,15 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   };
 
   const GetProjextById = (getUser: any) => {
+
+  
+   
     axios
-      .get(`${process.env.NEXT_PUBLIC_API}/project?id=${getUser}`)
-      .then((response) => {
-        setproject(response.data);
-        setJobId(response.data.jobIds);
+    .get(`/api/project?user_id=${userId}&project_id=${getUser}`)
+    .then((response) => {
+ 
+        setproject(response.data[0]);
+
         return response.data;
       })
       .catch((error) => {
@@ -921,7 +925,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       project_id: projectId,
       canvasdata: canvas,
     });
-    console.log("sdss")
+    console.log("sdss");
 
     try {
       const response = await fetch(`/api/canvasdata`, {
@@ -931,10 +935,10 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         },
         body: json,
       });
-      
-      console.log(response,"sdss")
-      console.log("sdfsdfsdf",filteredArray[0]?.modified_image_url)
-      
+
+      console.log(response, "sdss");
+      console.log("sdfsdfsdf", filteredArray[0]?.modified_image_url);
+
       const data = await response.json();
       if (
         data &&
@@ -956,9 +960,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         //     }),
         //   }
         // );
-      
 
-        console.log("sdfsdfsdf",filteredArray[0]?.modified_image_url)
+        console.log("sdfsdfsdf", filteredArray[0]?.modified_image_url);
         const jsons = JSON.stringify({
           project_id: projectId,
           previewImage: filteredArray[0]?.modified_image_url,
@@ -1008,7 +1011,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       if (data) {
         setGeneratedImgList(data);
         // setFilteredArray(data);
-
       }
 
       return data;
@@ -1019,21 +1021,20 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
   const fetchAssetsImages = async (userId: any, pro: any, is_bg_removed) => {
     try {
-      let response
-      if(is_bg_removed){
-         response = await fetch(`/api/images`, {
+      let response;
+      if (is_bg_removed) {
+        response = await fetch(`/api/images`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
             user_id: userId,
-            is_bg_removed:true
+            is_bg_removed: true,
           }),
         });
-
-      }else{
-         response = await fetch(`/api/images`, {
+      } else {
+        response = await fetch(`/api/images`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -1042,9 +1043,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
             user_id: userId,
           }),
         });
-
       }
-     
+
       const data = await response.json();
 
       if (data?.data.length) {
@@ -1052,8 +1052,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setListOfAssets(data.data);
         return data.data;
       }
-      
-
     } catch (error) {
       console.error("Error fetching images:", error);
     }
@@ -1108,30 +1106,38 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
   const addtoRecntly = async (userId: any, proid: any) => {
     try {
-      const json = JSON.stringify({
-        project_id: proid,
-        recently: templet,
-      });
+      const projectData = await axios.get(
+        `/api/project?user_id=${userId}&project_id=${proid}`
+      );
+      if (projectData.data) {
+        console.log(projectData.data[0].recently, "selectedCards");
 
-      const queryParams = new URLSearchParams({
-        user_id: userId,
-        project_id: proid,
-        // Add more parameters as needed
-      });
-      
-      const response = await fetch(`/api/project?${queryParams}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: json,
-      });
-      const data = await response.json();
+        const json = JSON.stringify({
+          user_id: userId,
+  
+          project_id: proid,
+          recently: [templet,...projectData.data[0].recently],
+        });
+  
+        const queryParams = new URLSearchParams({
+          user_id: userId,
+          project_id: proid,
+          // Add more parameters as needed
+        });
+        const response = await fetch(`/api/project`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: json,
+        });
+        const data = await response.json();
 
-      const datares = await response;
+        const datares = await response;
 
-      if (datares.ok) {
-        GetProjextById(proid);
+        if (datares.ok) {
+          GetProjextById(proid);
+        }
       }
     } catch (error) {}
   };
@@ -1268,68 +1274,66 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           canvasInstance.current.renderAll();
         });
 
-
         const promtText = promt;
 
-    // fetch("/api/generate", {
-    //       method: "POST",
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //       },
-    //       body: JSON.stringify({
-    //         dataUrl: subjectDataUrl,
-    //         maskDataUrl: null,
-    //         prompt: promtText.trim(),
-    //         user_id: userId,
-    //         category: category,
-    //         // lora_type: loara,
-    //         num_images: selectResult,
-    //         caption: product,
-    //         project_id: proid,
-    //         // is_elevated: elevatedSurface
-    //       }),
-    //     })
-        
-        axios.post(`/api/generate`,{
+        // fetch("/api/generate", {
+        //       method: "POST",
+        //       headers: {
+        //         "Content-Type": "application/json",
+        //       },
+        //       body: JSON.stringify({
+        //         dataUrl: subjectDataUrl,
+        //         maskDataUrl: null,
+        //         prompt: promtText.trim(),
+        //         user_id: userId,
+        //         category: category,
+        //         // lora_type: loara,
+        //         num_images: selectResult,
+        //         caption: product,
+        //         project_id: proid,
+        //         // is_elevated: elevatedSurface
+        //       }),
+        //     })
 
-          dataUrl: subjectDataUrl,
-          maskDataUrl: null,
-          prompt: promtText.trim(),
-          user_id: userId,
-          category: category,
-          // lora_type: loara,
-          num_images: selectResult,
-          caption: product,
-          project_id: proid,
-        })
-        .then((response) => {
-        const generate_response =  response.data;
-        console.log(generate_response, "subject");
-        const getJobid = generate_response?.job_id
+        axios
+          .post(`/api/generate`, {
+            dataUrl: subjectDataUrl,
+            maskDataUrl: null,
+            prompt: promtText.trim(),
+            user_id: userId,
+            category: category,
+            // lora_type: loara,
+            num_images: selectResult,
+            caption: product,
+            project_id: proid,
+          })
+          .then((response) => {
+            const generate_response = response.data;
+            console.log(generate_response, "subject");
+            const getJobid = generate_response?.job_id;
 
-          if (generate_response?.ok) {
-            setJobIdOne([getJobid]);
-            console.log(generate_response?.job_id);
-            GetProjextById(proid);
-            const endTime = new Date().getTime();
-            const elapsedTime = endTime - startTime;
-            console.log(`Elapsed time: ${elapsedTime} milliseconds`);
-          } else if (generate_response?.error) {
-            toast.error(generate_response?.error);
-            setLoader(false);
-            return false;
-          } else {
-            console.error(" ");
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          return error;
-        })
+            if (generate_response?.ok) {
+              setJobIdOne([getJobid]);
+              console.log(generate_response?.job_id);
+              GetProjextById(proid);
+              const endTime = new Date().getTime();
+              const elapsedTime = endTime - startTime;
+              console.log(`Elapsed time: ${elapsedTime} milliseconds`);
+            } else if (generate_response?.error) {
+              toast.error(generate_response?.error);
+              setLoader(false);
+              return false;
+            } else {
+              console.error(" ");
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+            return error;
+          });
 
         // const generate_response = await response.json();
         // console.log(await generate_response, "dfdfdsfdfd");
-       
       } catch (error) {
         console.error("Error generating image:", error);
         toast.error("something went wrong");

@@ -163,8 +163,8 @@ const Regeneret = ()=> {
         }),
       });
       const data = await response.json();
-      console.log(data)
-      if (data?.data) {
+      console.log(data,"dsff")
+      if (data?.success) {
         setCanvasDisable(false);
         setLoader(false);
         GetProjextById(id);
