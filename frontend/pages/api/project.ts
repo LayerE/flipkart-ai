@@ -32,13 +32,13 @@ export default async function handler(req: NextRequest, res: NextResponse) {
       const response = project_id_arg
         ? await supabase
             .from(process.env.PROJECTS_TABLE as string)
-            .select("*")
+            .select("project_id,title,previewImage")
             .eq("user_id", user_id)
             .eq("project_id", project_id_arg)
             .order("created_at", { ascending: false })
         : await supabase
             .from(process.env.PROJECTS_TABLE as string)
-            .select("*")
+            .select("project_id,title,previewImage")
             .eq("user_id", user_id)
             .order("created_at", { ascending: false });
 
