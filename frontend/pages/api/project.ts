@@ -4,6 +4,14 @@ import { NextResponse, NextRequest } from "next/server";
 export const maxDuration = 300;
 import { createClient } from "@supabase/supabase-js";
 
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: "5mb", // Set desired value here
+    },
+  },
+};
+
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL as string,
   process.env.SUPABASE_SERVICE_KEY as string

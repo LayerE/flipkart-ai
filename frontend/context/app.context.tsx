@@ -923,12 +923,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     const json = JSON.stringify({
       user_id: userId,
       project_id: projectId,
-      canvasdata: canvas,
+      canvasHistory: {},
     });
-    console.log("sdss");
+  
 
     try {
-      const response = await fetch(`/api/canvasdata`, {
+      const response = await fetch(`/api/project?user_id=${userId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -936,8 +936,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         body: json,
       });
 
-      console.log(response, "sdss");
-      console.log("sdfsdfsdf", filteredArray[0]?.modified_image_url);
+    
 
       const data = await response.json();
       if (
@@ -945,25 +944,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         filteredArray[0] &&
         "modified_image_url" in filteredArray[0]
       ) {
-        // const response = await fetch(
-        //   `${process.env.NEXT_PUBLIC_API}/addPreview`,
-        //   {
-        //     method: "POST",
-        //     headers: {
-        //       "Content-Type": "application/json",
-        //     },
 
-        //     body: JSON.stringify({
-        //       userId: userId,
-        //       projectId: projectId,
-        //       img: (filteredArray[0] as any)?.modified_image_url,
-        //     }),
-        //   }
-        // );
 
         console.log("sdfsdfsdf", filteredArray[0]?.modified_image_url);
         const jsons = JSON.stringify({
           project_id: projectId,
+          user_id: userId,
           previewImage: filteredArray[0]?.modified_image_url,
         });
         const response = await fetch(`/api/project?user_id=${userId}`, {

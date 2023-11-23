@@ -319,14 +319,12 @@ export default function CanvasBox({
     if (isReady && userId) {
       console.log("canvasInstance", userId, proid);
       axios
-        .post(`/api/canvasdata`, {
-          user_id: userId,
-          project_id: proid,
-        })
+        .get(`/api/project?user_id=${userId}&project_id=${proid}`)
         .then((response) => {
+          console.log(response)
           if (canvasInstanceRef) {
             canvasInstanceRef.loadFromJSON(
-              response?.data.newData.canvasdata,
+              response?.data[0].canvasHistory,
               canvasInstanceRef.renderAll.bind(canvasInstanceRef),
               function (o, object) {
                 console.log(o, object);
