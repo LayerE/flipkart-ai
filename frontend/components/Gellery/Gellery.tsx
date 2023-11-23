@@ -13,7 +13,8 @@ const fadeIn = {
 };
 
 const Gellery = () => {
-  const [gallery, setGallery] = useState();
+  const [gallery, setGallery] = useState([]);
+  const [laoder, setlaoder] = useState(true);
 
   const {
     setPopupImage,
@@ -24,8 +25,6 @@ const Gellery = () => {
     getSupabaseImage,
   } = useAppState();
 
-  const [laoder, setlaoder] = useState(true);
-
   useEffect(() => {
     const checkSession = async () => {
       const { data } = await supabase.auth.getSession();
@@ -35,37 +34,79 @@ const Gellery = () => {
     };
     checkSession();
     if (userId) {
+      // Perform the initial fetch
       fetchAssetsImages();
-      // getSupabaseImage();
     }
+
+    // Set up Supabase Realtime subscription
+    const subscription = supabase
+      .channel("public_gallery")
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+        },
+        (payload) => {
+          // Handle real-time updates or inserts
+          console.log("Change received!", payload);
+          updateStateWithPayload(payload);
+        }
+      )
+      .subscribe();
+
+    // Clean up the subscription when the component is unmounted
+    return () => {
+      subscription.unsubscribe();
+    };
   }, [userId, galleryActivTab]);
+
+  const updateStateWithPayload = (payload) => {
+    setGallery((prevData) => {
+      const newData = [...prevData];
+      const index = newData.findIndex((item) => item.id === payload.new.id);
+
+      if (index !== -1) {
+        // Update existing record
+        newData[index] = payload.new;
+      } else {
+        // Insert new record
+        newData.push(payload.new);
+      }
+
+      return newData;
+    });
+  };
 
   const fetchAssetsImages = async () => {
     setlaoder(true);
 
     try {
+      let newData;
+
       if (galleryActivTab === "ai") {
         const datass = await getSupabaseImage();
         if (datass) {
-          const filteredResultss = await datass?.filter(
-            (obj: any) => obj?.is_regenerated === false
+          const filteredResultss = datass?.filter(
+            (obj) => obj?.is_regenerated === false
           );
-
-          setGallery(filteredResultss);
+          newData = filteredResultss;
         }
-
-        setlaoder(false);
       } else {
         const { data, error } = await supabase
           .from("banner")
           .select("*")
           .eq("user_id", userId)
           .order("created_at", { ascending: false });
-        setlaoder(false);
         if (data) {
-          setGallery(data);
+          newData = data;
         }
       }
+
+      // Update the state with the new data
+      setGallery(newData || []);
+
+      setlaoder(false);
     } catch (error) {
       setlaoder(false);
 
