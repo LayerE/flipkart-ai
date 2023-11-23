@@ -20,23 +20,15 @@ export default async function handler(req: NextRequest, res: NextResponse) {
         return;
       }
 
-      // Get the project ids for the user
-      const projectsList = await supabase
+      const response = await supabase
         .from(process.env.PROJECTS_TABLE as string)
-        .select("project_id")
+        .select("*")
         .eq("user_id", user_id)
         .order("created_at", { ascending: false });
 
-      // Return the project ids
-      const uniqueProjects = new Set();
-      const project_ids = [];
-      for (const project of projectsList.data) {
-        if (!uniqueProjects.has(project.project_id)) {
-          project_ids.push(project.project_id);
-          uniqueProjects.add(project.project_id);
-        }
-      }
-      res.status(200).json({ project_ids });
+      // Return the projects
+      res.status(200).json(response.data);
+      
     } else if (req.method !== "POST") {
       res.status(405).send("Method not allowed");
       return;
