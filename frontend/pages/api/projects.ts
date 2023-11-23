@@ -21,26 +21,29 @@ export default async function handler(req: NextRequest, res: NextResponse) {
       }
 
       // Get the project ids for the user
-
-      const projextlist = await supabase
+      const projectsList = await supabase
         .from(process.env.PROJECTS_TABLE as string)
-        .select("*")
-        .eq("user_id", user_id);
+        .select("project_id")
+        .eq("user_id", user_id)
+        .order("created_at", { ascending: false });
 
-
-const reversProjects = projextlist.data.reverse()
-      // Return the projects as a JSON
-      res.status(200).send({ project: reversProjects });
+      // Return the project ids
+      const uniqueProjects = new Set();
+      const project_ids = [];
+      for (const project of projectsList.data) {
+        if (!uniqueProjects.has(project.project_id)) {
+          project_ids.push(project.project_id);
+          uniqueProjects.add(project.project_id);
+        }
+      }
+      res.status(200).json({ project_ids });
     } else if (req.method !== "POST") {
       res.status(405).send("Method not allowed");
       return;
     }
-
-    
-  
   } catch (error) {
     console.log(error);
-    res.status(500).send("Error in Creating/Updating Project");
+    res.status(500).send("Error in Fetching Projects");
     return;
   }
 }
