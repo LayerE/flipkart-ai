@@ -9,22 +9,21 @@ from PIL import Image
 from supabase import Client, create_client
 
 from helpers import (
-    IMAGES_TABLE_NAME,
-    SUPABASE_URL,
-    THREED_IMAGES_TABLE_NAME,
+    NEXT_PUBLIC_IMAGE_TABLE,
+    NEXT_PUBLIC_SUPABASE_URL,
     determine_model,
     get_chatgpt_response,
     upload_file_to_supabase,
 )
 
 supabase: Client = create_client(
-    os.environ["SUPABASE_URL"],
-    os.environ["SUPABASE_KEY"],
+    NEXT_PUBLIC_SUPABASE_URL,
+    os.environ["SUPABASE_SERVICE_KEY"],
 )
 
 app = Celery(
     "images",
-    broker=os.getenv("CLOUDAMQP_URL"),
+    broker=f"amqp://{os.environ['RABBITMQ_DEFAULT_USER']}:{os.environ['RABBITMQ_DEFAULT_PASS']}@{os.environ['RABBITMQ_HOST']}",
 )
 
 
@@ -86,13 +85,13 @@ def generate_normal(rawJson):
         for i in range(number_of_images):
             try:
                 uploadToSupabase = upload_file_to_supabase(
-                    bucketName=IMAGES_TABLE_NAME,
+                    bucketName=NEXT_PUBLIC_IMAGE_TABLE,
                     image=images[i],
                     filePath=f"{task_id}/{i}.png",
                 )
                 if uploadToSupabase:
                     original_file_urls.append(
-                        f"{SUPABASE_URL}/storage/v1/object/public/{IMAGES_TABLE_NAME}/{task_id}/{i}.png"
+                        f"{NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/{NEXT_PUBLIC_IMAGE_TABLE}/{task_id}/{i}.png"
                     )
             except Exception as e:
                 print("Exception catched error is: ", e)
@@ -100,10 +99,10 @@ def generate_normal(rawJson):
 
         # Insert into the supabase database
         requests.post(
-            f"{SUPABASE_URL}/rest/v1/{IMAGES_TABLE_NAME}",
+            f"{NEXT_PUBLIC_SUPABASE_URL}/rest/v1/{NEXT_PUBLIC_IMAGE_TABLE}",
             headers={
-                "apikey": os.getenv("SUPABASE_KEY"),
-                "Authorization": f"Bearer {os.getenv('SUPABASE_KEY')}",
+                "apikey": os.getenv("SUPABASE_SERVICE_KEY"),
+                "Authorization": f"Bearer {os.getenv('SUPABASE_SERVICE_KEY')}",
                 "Content-Type": "application/json",
             },
             data=json.dumps(
@@ -174,21 +173,21 @@ def generate_threed(rawJson):
         original_file_urls = []
         for i in range(number_of_images):
             uploadToSupabase = upload_file_to_supabase(
-                bucketName=IMAGES_TABLE_NAME,
+                bucketName=NEXT_PUBLIC_IMAGE_TABLE,
                 image=images[i],
                 filePath=f"{task_id}/{i}.png",
             )
             if uploadToSupabase:
                 original_file_urls.append(
-                    f"{SUPABASE_URL}/storage/v1/object/public/{IMAGES_TABLE_NAME}/{task_id}/{i}.png"
+                    f"{NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/{NEXT_PUBLIC_IMAGE_TABLE}/{task_id}/{i}.png"
                 )
 
         # Insert into the supabase database
         requests.post(
-            f"{SUPABASE_URL}/rest/v1/{THREED_IMAGES_TABLE_NAME}",
+            f"{NEXT_PUBLIC_SUPABASE_URL}/rest/v1/{THREED_IMAGES_TABLE_NAME}",
             headers={
-                "apikey": os.getenv("SUPABASE_KEY"),
-                "Authorization": f"Bearer {os.getenv('SUPABASE_KEY')}",
+                "apikey": os.getenv("SUPABASE_SERVICE_KEY"),
+                "Authorization": f"Bearer {os.getenv('SUPABASE_SERVICE_KEY')}",
                 "Content-Type": "application/json",
             },
             data=json.dumps(
@@ -221,10 +220,10 @@ def regenerate(rawJson):
 
         # Get the prompt and caption from the database
         response = requests.get(
-            f"{SUPABASE_URL}/rest/v1/{IMAGES_TABLE_NAME}?modified_image_url=eq.{image_url}",
+            f"{NEXT_PUBLIC_SUPABASE_URL}/rest/v1/{NEXT_PUBLIC_IMAGE_TABLE}?modified_image_url=eq.{image_url}",
             headers={
-                "apikey": os.getenv("SUPABASE_KEY"),
-                "Authorization": f"Bearer {os.getenv('SUPABASE_KEY')}",
+                "apikey": os.getenv("SUPABASE_SERVICE_KEY"),
+                "Authorization": f"Bearer {os.getenv('SUPABASE_SERVICE_KEY')}",
                 "Content-Type": "application/json",
             },
         )
@@ -258,21 +257,22 @@ def regenerate(rawJson):
         original_file_urls = []
         for i in range(number_of_images):
             uploadToSupabase = upload_file_to_supabase(
-                bucketName=IMAGES_TABLE_NAME,
+                bucketName=NEXT_PUBLIC_IMAGE_TABLE,
                 image=images[i],
                 filePath=f"{task_id}/{i}.png",
             )
             if uploadToSupabase:
                 original_file_urls.append(
-                    f"{SUPABASE_URL}/storage/v1/object/public/{IMAGES_TABLE_NAME}/{task_id}/{i}.png"
+                    f"{NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/{NEXT_PUBLIC_IMAGE_TABLE}/{task_id}/{i}.png"
                 )
 
         # Insert into the supabase database
-        requests.post(
-            f"{SUPABASE_URL}/rest/v1/{IMAGES_TABLE_NAME}",
+        # Insert into the supabase database
+        response = requests.post(
+            f"{NEXT_PUBLIC_SUPABASE_URL}/rest/v1/{NEXT_PUBLIC_IMAGE_TABLE}",
             headers={
-                "apikey": os.getenv("SUPABASE_KEY"),
-                "Authorization": f"Bearer {os.getenv('SUPABASE_KEY')}",
+                "apikey": os.getenv("SUPABASE_SERVICE_KEY"),
+                "Authorization": f"Bearer {os.getenv('SUPABASE_SERVICE_KEY')}",
                 "Content-Type": "application/json",
             },
             data=json.dumps(
@@ -284,7 +284,8 @@ def regenerate(rawJson):
                         "user_id": user_id,
                         "task_id": task_id,
                         "caption": caption,
-                        "project_id": project_id,
+                        "is_3d": True,
+                        "project_id": None,
                     }
                     for i in range(number_of_images)
                 ]

@@ -17,7 +17,7 @@ export default async (req: NextRequest) => {
       return NextResponse.json({ error: "Missing user_id" });
     }
 
-    const getURL = `${process.env.SUPABASE_URL}/rest/v1/${
+    const getURL = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/${
       process.env.BRAND_ASSETS_TABLE
     }?select=id,image_url&user_id=eq.${user_id}`;
 

@@ -8,7 +8,7 @@ export const config = {
 };
 
 const supabase = createClient(
-  process.env.SUPABASE_URL as string,
+  process.env.NEXT_PUBLIC_SUPABASE_URL as string,
   process.env.SUPABASE_SERVICE_KEY as string,
   {
     auth: {
@@ -47,9 +47,9 @@ export default async (req: NextRequest) => {
       return NextResponse.json({ error: error.message });
     }
 
-    const fileUrl = `${process.env.SUPABASE_URL}/storage/v1/object/public/${process.env.BANNER_BUCKET}/${randomFileName}`;
+    const fileUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${process.env.BANNER_BUCKET}/${randomFileName}`;
 
-    const postURL = `${process.env.SUPABASE_URL}/rest/v1/${process.env.BANNER_TABLE}`;
+    const postURL = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/${process.env.BANNER_TABLE}`;
 
     const response = await fetch(postURL, {
       headers: {
