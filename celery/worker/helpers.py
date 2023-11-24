@@ -4,13 +4,12 @@ import os
 import openai
 from supabase import Client, create_client
 
-IMAGES_TABLE_NAME = os.getenv("IMAGES_TABLE_NAME")
-SUPABASE_URL = os.getenv("SUPABASE_URL")
-THREED_IMAGES_TABLE_NAME = os.getenv("THREED_IMAGES_TABLE_NAME")
+NEXT_PUBLIC_IMAGE_TABLE = os.getenv("NEXT_PUBLIC_IMAGE_TABLE")
+NEXT_PUBLIC_SUPABASE_URL = os.getenv("NEXT_PUBLIC_SUPABASE_URL")
 
 supabase: Client = create_client(
-    SUPABASE_URL,
-    os.environ["SUPABASE_KEY"],
+    NEXT_PUBLIC_SUPABASE_URL,
+    os.environ["SUPABASE_SERVICE_KEY"],
 )
 
 
@@ -55,7 +54,7 @@ def hash(word):
 def get_chatgpt_response(prompt):
     try:
         openai.api_base = "https://api.fireworks.ai/inference/v1"
-        openai.api_key = os.environ["FIREFWORKS_API_KEY"]
+        openai.api_key = os.environ["FIREWORKS_API_KEY"]
         chat_completion = openai.ChatCompletion.create(
             model="accounts/fireworks/models/mistral-7b-instruct-4k",
             messages=[

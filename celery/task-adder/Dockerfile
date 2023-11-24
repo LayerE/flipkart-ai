@@ -5,6 +5,6 @@ ADD requirements.txt /app
 RUN pip install --upgrade pip
 RUN pip install --upgrade -r requirements.txt
 ADD . /app
-EXPOSE 5000
+EXPOSE 80
 RUN chmod +x ./entrypoint.sh
 ENTRYPOINT ["sh", "entrypoint.sh"]

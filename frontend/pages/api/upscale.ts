@@ -39,7 +39,7 @@ const uploadImage = async (dataUrl: string, user_id?: string) => {
 
   // Generate a unique filename
   const filename = `${user_id}/${uuidv4()}.${getFileExtension(base64String)}`;
-  const bucket_name = process.env.TABLE_NAME_WITHOUT_AUTH || "request_images";
+  const bucket_name = process.env.NEXT_PUBLIC_IMAGE_TABLE || "request_images";
 
   const byteCharacters = atob(base64String.split(",")[1]);
   const byteNumbers = new Array(byteCharacters.length);
@@ -98,8 +98,6 @@ export default async function handler(req: NextRequest, res: NextResponse) {
       image_url: original_image_url,
     } = supabaseResponse.data[0];
 
-    
-
     // Convert the image_url to base64 URL
     const image_response = await fetch(image_url);
     const image_data = await image_response.blob();
@@ -125,7 +123,6 @@ export default async function handler(req: NextRequest, res: NextResponse) {
     const upscale_data = await upscale_response.json();
     const outputBase64Url = upscale_data["image"];
 
-
     // Upload image
     const { url: imageUrl } = await uploadImage(
       outputBase64Url,
@@ -133,7 +130,7 @@ export default async function handler(req: NextRequest, res: NextResponse) {
       false
     );
 
-    await supabase.from(process.env.TABLE_NAME_WITHOUT_AUTH as string).insert([
+    await supabase.from(process.env.NEXT_PUBLIC_IMAGE_TABLE as string).insert([
       {
         user_id,
         image_url: original_image_url,

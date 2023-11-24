@@ -19,8 +19,8 @@ app = Celery(
 headers = {"Content-Type": "application/json", "User-Agent": "CommerceCopilotv1.0"}
 
 supabase: Client = create_client(
-    os.environ["SUPABASE_URL"],
-    os.environ["SUPABASE_KEY"],
+    os.environ["NEXT_PUBLIC_SUPABASE_URL"],
+    os.environ["SUPABASE_SERVICE_KEY"],
 )
 
 
@@ -134,7 +134,7 @@ def create_task(
 
                 # Upload the image to Supabase Storage
                 image_urls = [
-                    f"{os.getenv('SUPABASE_URL')}/storage/v1/object/public/api_images/{unique_id}/{i}.png"
+                    f"{os.getenv('NEXT_PUBLIC_SUPABASE_URL')}/storage/v1/object/public/api_images/{unique_id}/{i}.png"
                     for i in range(number_of_images)
                 ]
 
@@ -155,11 +155,11 @@ def create_task(
             #     "task_id", unique_id
             # ).execute()
             requests.patch(
-                f"{os.getenv('SUPABASE_URL')}/rest/v1/APIRequests?task_id=eq.{unique_id}",
+                f"{os.getenv('NEXT_PUBLIC_SUPABASE_URL')}/rest/v1/APIRequests?task_id=eq.{unique_id}",
                 json={"result": image_urls},
                 headers={
-                    "apikey": os.getenv("SUPABASE_KEY"),
-                    "Authorization": "Bearer " + os.getenv("SUPABASE_KEY"),
+                    "apikey": os.getenv("SUPABASE_SERVICE_KEY"),
+                    "Authorization": "Bearer " + os.getenv("SUPABASE_SERVICE_KEY"),
                     "Content-Type": "application/json",
                 },
             )

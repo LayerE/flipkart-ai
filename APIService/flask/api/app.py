@@ -73,10 +73,10 @@ def getTaskResult():
 
     # Get the result from database
     result = requests.get(
-        f"{os.environ['SUPABASE_URL']}/rest/v1/APIRequests?select=result&task_id=eq.{task_id}",
+        f"{os.environ['NEXT_PUBLIC_SUPABASE_URL']}/rest/v1/APIRequests?select=result&task_id=eq.{task_id}",
         headers={
-            "apikey": os.environ["SUPABASE_KEY"],
-            "Authorization": "Bearer " + os.environ["SUPABASE_KEY"],
+            "apikey": os.environ["SUPABASE_SERVICE_KEY"],
+            "Authorization": "Bearer " + os.environ["SUPABASE_SERVICE_KEY"],
             "Content-Type": "application/json",
         },
     )
