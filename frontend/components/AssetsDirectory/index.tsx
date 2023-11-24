@@ -23,10 +23,7 @@ const AssetsDir = () => {
   
 
   const {
-    fetchGeneratedImages,
-    generatedImgList,
     setPopupImage,
-    setGeneratedImgList,
     listofassets,
     setListOfAssets,
     fetchAssetsImages,
