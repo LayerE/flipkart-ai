@@ -162,7 +162,7 @@ interface ContextITFC {
   setgalleryActiveTab: (galleryActivTab: string) => void;
   addimgToCanvasCropped: (url: string) => void;
   changeRectangleSize: () => void;
-  getSupabaseImage: () => void;
+  getSupabaseImage: (is_3d: boolean) => void;
   positionBtn: (obj: any) => void;
   generate3dHandeler: (ueserId: any, proid: any) => void;
 
@@ -1453,8 +1453,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     }
   };
 
-  const getSupabaseImage = async () => {
-    const IMG_TABLE = process.env.NEXT_PUBLIC_IMAGE_TABLE;
+  const getSupabaseImage = async (is_3d: boolean = false) => {
+    const IMG_TABLE = is_3d ? "3d_images" : process.env.NEXT_PUBLIC_IMAGE_TABLE;
     if (userId !== null) {
       const { data, error } = await supabase
         .from(IMG_TABLE)

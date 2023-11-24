@@ -126,20 +126,10 @@ export default function Home() {
 
   const polling3dGenertedImages = async () => {
     try {
-      const data = await getSupabaseImage();
+      const data = await getSupabaseImage(true);
 
       if (data) {
-        console.log(data, "data");
-        console.log(jobIdOne, "jobIdOne");
-
-        const filteredResultss = await data?.filter(
-          (obj: any) => obj?.is_3d === true
-        );
-        console.log(filteredResultss, "filteredResultss");
-
-        const filteredResults = await filteredResultss?.filter((obj: any) =>
-          jobIdOne?.includes(obj?.task_id)
-        );
+        const filteredResults = data;
         if (filteredResults?.length) {
           setLoader(false);
           setCanvasDisable(true);
