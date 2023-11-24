@@ -6,6 +6,7 @@ from supabase import Client, create_client
 
 IMAGES_TABLE_NAME = os.getenv("IMAGES_TABLE_NAME")
 SUPABASE_URL = os.getenv("SUPABASE_URL")
+THREED_IMAGES_TABLE_NAME = os.getenv("THREED_IMAGES_TABLE_NAME")
 
 supabase: Client = create_client(
     SUPABASE_URL,

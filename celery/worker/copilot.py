@@ -11,6 +11,7 @@ from supabase import Client, create_client
 from helpers import (
     IMAGES_TABLE_NAME,
     SUPABASE_URL,
+    THREED_IMAGES_TABLE_NAME,
     determine_model,
     get_chatgpt_response,
     upload_file_to_supabase,
@@ -81,7 +82,6 @@ def generate_normal(rawJson):
         number_of_images = len(images)
 
         original_file_urls = []
-        IMAGES_TABLE_NAME = IMAGES_TABLE_NAME
 
         for i in range(number_of_images):
             try:
@@ -174,7 +174,7 @@ def generate_threed(rawJson):
         original_file_urls = []
         for i in range(number_of_images):
             uploadToSupabase = upload_file_to_supabase(
-                bucketName=IMAGES_TABLE_NAME,
+                bucketName=THREED_IMAGES_TABLE_NAME,
                 image=images[i],
                 filePath=f"{task_id}/{i}.png",
             )
@@ -185,7 +185,7 @@ def generate_threed(rawJson):
 
         # Insert into the supabase database
         requests.post(
-            f"{SUPABASE_URL}/rest/v1/{IMAGES_TABLE_NAME}",
+            f"{os.getenv('SUPABASE_URL')}/rest/v1/{THREED_IMAGES_TABLE_NAME}",
             headers={
                 "apikey": os.getenv("SUPABASE_KEY"),
                 "Authorization": f"Bearer {os.getenv('SUPABASE_KEY')}",
@@ -200,8 +200,6 @@ def generate_threed(rawJson):
                         "user_id": user_id,
                         "task_id": task_id,
                         "caption": caption,
-                        "is_3d": True,
-                        "project_id": rawJson["project_id"],
                     }
                     for i in range(number_of_images)
                 ]
@@ -282,7 +280,7 @@ def regenerate(rawJson):
                     {
                         "image_url": image_url,
                         "modified_image_url": original_file_urls[i],
-                        "prompt": caption + " " + prompt,
+                        "prompt": prompt,
                         "user_id": user_id,
                         "task_id": task_id,
                         "caption": caption,
