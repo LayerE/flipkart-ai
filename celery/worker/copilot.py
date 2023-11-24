@@ -185,7 +185,7 @@ def generate_threed(rawJson):
 
         # Insert into the supabase database
         requests.post(
-            f"{os.getenv('SUPABASE_URL')}/rest/v1/{THREED_IMAGES_TABLE_NAME}",
+            f"{SUPABASE_URL}/rest/v1/{THREED_IMAGES_TABLE_NAME}",
             headers={
                 "apikey": os.getenv("SUPABASE_KEY"),
                 "Authorization": f"Bearer {os.getenv('SUPABASE_KEY')}",
