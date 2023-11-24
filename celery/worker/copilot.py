@@ -214,6 +214,7 @@ def generate_threed(rawJson):
 @app.task()
 def regenerate(rawJson):
     try:
+        print(rawJson.values())
         image_url, user_id = rawJson.values()
         # Get the celery task id
         task_id = str(regenerate.request.id)
