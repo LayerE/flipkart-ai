@@ -5,7 +5,8 @@ from flask import Flask, jsonify, request
 
 copilot = Celery(
     "images",
-    broker=f"amqp://{os.environ['RABBITMQ_DEFAULT_USER']}:{os.environ['RABBITMQ_DEFAULT_PASS']}@{os.environ['RABBITMQ_HOST']}",
+    # broker=f"amqp://{os.environ['RABBITMQ_DEFAULT_USER']}:{os.environ['RABBITMQ_DEFAULT_PASS']}@{os.environ['RABBITMQ_HOST']}",
+    broker="amqps://dptdaebm:bBLQFApup2KynNcYo0QIzVgfnJQONMTH@horse.lmq.cloudamqp.com/dptdaebm",
 )
 
 
