@@ -201,8 +201,8 @@ def generate_threed(rawJson):
         response = requests.post(
             f"{NEXT_PUBLIC_SUPABASE_URL}/rest/v1/{NEXT_PUBLIC_IMAGE_TABLE}",
             headers={
-                "apikey": os.getenv("SUPABASE_KEY"),
-                "Authorization": f"Bearer {os.getenv('SUPABASE_KEY')}",
+                "apikey": os.getenv("SUPABASE_SERVICE_KEY"),
+                "Authorization": f"Bearer {os.getenv('SUPABASE_SERVICE_KEY')}",
                 "Content-Type": "application/json",
             },
             data=json.dumps(
