@@ -3,6 +3,7 @@ import os
 
 import openai
 from supabase import Client, create_client
+from PIL import Image
 
 NEXT_PUBLIC_IMAGE_TABLE = os.getenv("NEXT_PUBLIC_IMAGE_TABLE")
 NEXT_PUBLIC_SUPABASE_URL = os.getenv("NEXT_PUBLIC_SUPABASE_URL")
@@ -48,6 +49,14 @@ def hash(word):
     sha256 = hashlib.sha256()
     sha256.update(word.encode("utf-8"))
     return sha256.hexdigest()
+
+
+def get_dominant_color(pil_img):
+    img = pil_img.copy()
+    img = img.convert("RGBA")
+    img = img.resize((1, 1), resample=0)
+    dominant_color = img.getpixel((0, 0))
+    return dominant_color
 
 
 # Function to make a request to chatgpt API and return the response

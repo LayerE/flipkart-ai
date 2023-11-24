@@ -1,3 +1,5 @@
 flask
 celery
 gunicorn
+flask-swagger-ui
+requests
