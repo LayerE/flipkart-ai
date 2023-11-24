@@ -36,7 +36,7 @@ const AssetsDir = () => {
     fetchAssetsImagesWithProjectId,
     setPopup,
     fetchAssetsImagesBrant,
-    setUploadedProductlist,
+  
     setProduct,
     addimgToCanvasSubject,
     listofassetsBarand,
