@@ -7,5 +7,4 @@ RUN pip install --upgrade -r requirements.txt
 ADD . /app
 EXPOSE 80
 RUN chmod +x ./entrypoint.sh
-# ENTRYPOINT ["sh", "entrypoint.sh"]
-ENTRYPOINT [ "flask", "run", "--host=0.0.0.0", "--port=80", "--debug" ]
+ENTRYPOINT ["sh", "entrypoint.sh"]
