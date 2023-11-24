@@ -5,7 +5,8 @@ from flask import Flask, jsonify, request
 
 copilot = Celery(
     "images",
-    broker=os.getenv("CELERY_BROKER"),
+    # broker=f"amqp://{os.environ['RABBITMQ_DEFAULT_USER']}:{os.environ['RABBITMQ_DEFAULT_PASS']}@{os.environ['RABBITMQ_HOST']}",
+    broker="amqps://dptdaebm:bBLQFApup2KynNcYo0QIzVgfnJQONMTH@horse.lmq.cloudamqp.com/dptdaebm",
 )
 
 
@@ -35,8 +36,8 @@ def generate():
         data = request.get_json()
 
         # A very basic key based check, to prevent abuse, DDOS, etc.
-        key = data["key"]
-        if key != os.getenv("KEY"):
+        verification_key = data["key"]
+        if verification_key != os.getenv("KEY"):
             return jsonify({"message": "Server is down 🥹"}), 200
 
         keys_with_defaults = {
@@ -77,4 +78,4 @@ def generate():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0")
+    app.run(host="0.0.0.0", port=80, debug=True)
