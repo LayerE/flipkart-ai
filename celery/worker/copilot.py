@@ -174,7 +174,7 @@ def generate_threed(rawJson):
         original_file_urls = []
         for i in range(number_of_images):
             uploadToSupabase = upload_file_to_supabase(
-                bucketName=THREED_IMAGES_TABLE_NAME,
+                bucketName=IMAGES_TABLE_NAME,
                 image=images[i],
                 filePath=f"{task_id}/{i}.png",
             )
