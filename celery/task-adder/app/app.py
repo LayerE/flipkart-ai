@@ -1,5 +1,4 @@
 import os
-import json
 
 from celery import Celery
 from flask import Flask, jsonify, request
@@ -54,9 +53,9 @@ def generate():
             "is_quick_generation": False,
         }
 
-        rawJson = json.dumps({
+        rawJson = {
             key: data.get(key, default) for key, default in keys_with_defaults.items()
-        })
+        }
 
         function_map = {
             "regenerate": regenerate.delay,
