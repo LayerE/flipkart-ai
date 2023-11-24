@@ -30,7 +30,11 @@ app = Celery(
 @app.task()
 def generate_normal(rawJson):
     try:
-        prompt, image_url, num_images, caption, user_id = rawJson.values()
+        prompt = rawJson["prompt"]
+        image_url = rawJson["image_url"]
+        num_images = rawJson["num_images"]
+        caption = rawJson["caption"]
+        user_id = rawJson["user_id"]
 
         is_quick_generation = (
             rawJson["is_quick_generation"]
@@ -131,7 +135,11 @@ def generate_normal(rawJson):
 @app.task()
 def generate_threed(rawJson):
     try:
-        prompt, image_url, num_images, caption, user_id = rawJson.values()
+        prompt = rawJson["prompt"]
+        image_url = rawJson["image_url"]
+        num_images = rawJson["num_images"]
+        caption = rawJson["caption"]
+        user_id = rawJson["user_id"]
 
         # Get the celery task id
         task_id = str(generate_threed.request.id)
@@ -183,11 +191,11 @@ def generate_threed(rawJson):
                 )
 
         # Insert into the supabase database
-        requests.post(
-            f"{NEXT_PUBLIC_SUPABASE_URL}/rest/v1/{THREED_IMAGES_TABLE_NAME}",
+        response = requests.post(
+            f"{os.getenv('SUPABASE_URL')}/rest/v1/{NEXT_PUBLIC_IMAGE_TABLE}",
             headers={
-                "apikey": os.getenv("SUPABASE_SERVICE_KEY"),
-                "Authorization": f"Bearer {os.getenv('SUPABASE_SERVICE_KEY')}",
+                "apikey": os.getenv("SUPABASE_KEY"),
+                "Authorization": f"Bearer {os.getenv('SUPABASE_KEY')}",
                 "Content-Type": "application/json",
             },
             data=json.dumps(
@@ -199,6 +207,8 @@ def generate_threed(rawJson):
                         "user_id": user_id,
                         "task_id": task_id,
                         "caption": caption,
+                        "is_3d": True,
+                        "project_id": None,
                     }
                     for i in range(number_of_images)
                 ]
@@ -216,7 +226,7 @@ def regenerate(rawJson):
     try:
         image_url = rawJson["image_url"]
         user_id = rawJson["user_id"]
-        
+
         # Get the celery task id
         task_id = str(regenerate.request.id)
 
@@ -231,7 +241,11 @@ def regenerate(rawJson):
         )
 
         response = response.json()
-        prompt, caption, user_id, image_url, project_id = response[0].values()
+        prompt = response[0]["prompt"]
+        caption = response[0]["caption"]
+        user_id = response[0]["user_id"]
+        image_url = response[0]["image_url"]
+        project_id = response[0]["project_id"]
 
         image_response = requests.get(image_url).content
         image_response = Image.open(BytesIO(image_response))
@@ -286,8 +300,9 @@ def regenerate(rawJson):
                         "user_id": user_id,
                         "task_id": task_id,
                         "caption": caption,
-                        "is_3d": True,
-                        "project_id": None,
+                        "is_3d": False,
+                        "is_regenerated": True,
+                        "project_id": project_id,
                     }
                     for i in range(number_of_images)
                 ]
