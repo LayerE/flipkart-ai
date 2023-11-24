@@ -36,8 +36,8 @@ def generate():
         data = request.get_json()
 
         # A very basic key based check, to prevent abuse, DDOS, etc.
-        key = data["key"]
-        if key != os.getenv("KEY"):
+        verification_key = data["key"]
+        if verification_key != os.getenv("KEY"):
             return jsonify({"message": "Server is down 🥹"}), 200
 
         keys_with_defaults = {
