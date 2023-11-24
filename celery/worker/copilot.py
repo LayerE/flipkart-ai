@@ -145,7 +145,12 @@ def generate_threed(rawJson):
         # Get the celery task id
         task_id = str(generate_threed.request.id)
 
-        image_response = requests.get(image_url)
+        image_response = requests.get(image_url).content
+        image_response = Image.open(BytesIO(image_response))
+
+        with BytesIO() as buf:
+            image_response.save(buf, "PNG")
+            image_response = buf.getvalue()
 
         prompt = caption + " " + prompt
         prompt = prompt.strip()
