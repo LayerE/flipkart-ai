@@ -10,4 +10,5 @@ Ensure you have environment variables set for the following:
  - FIREWORKS_API_KEY=#Fireworks API Key, get from fireworks.ai, used for expanding the prompt
  - SUPABASE_KEY=#Supabase Key
  - SUPABASE_URL=#Supabase URL
- - IMAGES_TABLE_NAME=#Table name in Supabase to store images
+ - IMAGES_TABLE_NAME=#Table name in Supabase to store images and also name of storage bucket in supabase where images are stored
+ - THREED_IMAGES_TABLE_NAME=#Table name in Supabase to store 3D images
