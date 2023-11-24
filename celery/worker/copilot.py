@@ -103,7 +103,7 @@ def generate_normal(rawJson):
                 pass
 
         # Insert into the supabase database
-        requests.post(
+        response = requests.post(
             f"{NEXT_PUBLIC_SUPABASE_URL}/rest/v1/{NEXT_PUBLIC_IMAGE_TABLE}",
             headers={
                 "apikey": os.getenv("SUPABASE_SERVICE_KEY"),
@@ -127,6 +127,7 @@ def generate_normal(rawJson):
             ),
         )
 
+        print("Normal DB response is: ", response)
         print("Generated Image URL's are:", original_file_urls)
     except Exception as e:
         print("Error is: ", e)
@@ -221,6 +222,7 @@ def generate_threed(rawJson):
             ),
         )
 
+        print("Threed DB response is: ", response)
         print("Generated Image URL's are:", original_file_urls)
     except Exception as e:
         print("Error is: ", e)
@@ -289,7 +291,6 @@ def regenerate(rawJson):
                 )
 
         # Insert into the supabase database
-        # Insert into the supabase database
         response = requests.post(
             f"{NEXT_PUBLIC_SUPABASE_URL}/rest/v1/{NEXT_PUBLIC_IMAGE_TABLE}",
             headers={
@@ -315,6 +316,7 @@ def regenerate(rawJson):
             ),
         )
 
+        print("Regenerate DB response is: ", response)
         print("Generated Image URL's are:", original_file_urls)
     except Exception as e:
         print("Error is: ", e)
