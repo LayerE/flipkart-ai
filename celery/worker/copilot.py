@@ -127,7 +127,7 @@ def generate_normal(rawJson):
             ),
         )
 
-        print("Normal DB response is: ", response)
+        print("Normal DB response is: ", response.json())
         print("Generated Image URL's are:", original_file_urls)
     except Exception as e:
         print("Error is: ", e)
@@ -222,7 +222,7 @@ def generate_threed(rawJson):
             ),
         )
 
-        print("Threed DB response is: ", response)
+        print("Threed DB response is: ", response.json())
         print("Generated Image URL's are:", original_file_urls)
     except Exception as e:
         print("Error is: ", e)
@@ -316,7 +316,7 @@ def regenerate(rawJson):
             ),
         )
 
-        print("Regenerate DB response is: ", response)
+        print("Regenerate DB response is: ", response.json())
         print("Generated Image URL's are:", original_file_urls)
     except Exception as e:
         print("Error is: ", e)
