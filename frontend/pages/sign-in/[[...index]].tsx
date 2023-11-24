@@ -98,6 +98,8 @@ const SignIn = () => {
             </button>
           )}
         </form>
+        {!sendMail ? (
+          <>
         <div className="text-center my-2">or</div>
         <div className="flex justify-center">
           <GoogleButton
@@ -109,6 +111,8 @@ const SignIn = () => {
               Sign in
             </button> */}
         </div>
+        </>
+        ): null}
       </div>
     </main>
   );
