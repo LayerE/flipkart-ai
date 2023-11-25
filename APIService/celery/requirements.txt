@@ -1,6 +1,0 @@
-modal
-requests
-celery
-supabase
-Pillow
-openai

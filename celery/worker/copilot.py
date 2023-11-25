@@ -14,6 +14,8 @@ import subprocess
 from helpers import (
     NEXT_PUBLIC_IMAGE_TABLE,
     NEXT_PUBLIC_SUPABASE_URL,
+    API_REQUEST_BUCKET,
+    API_REQUEST_TABLE,
     determine_model,
     get_chatgpt_response,
     upload_file_to_supabase,
@@ -387,7 +389,7 @@ def create_task(
                 # Save the images to a temporary directory
                 number_of_images = len(images)
                 for i, image in enumerate(images):
-                    supabase.storage.from_("api_images").upload(
+                    supabase.storage.from_(API_REQUEST_BUCKET).upload(
                         file=image,
                         path=f"/{unique_id}/{i}.png",
                         file_options={"content-type": "image/png"},
@@ -395,7 +397,7 @@ def create_task(
 
                 # Upload the image to Supabase Storage
                 image_urls = [
-                    f"{NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/api_images/{unique_id}/{i}.png"
+                    f"{NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/{API_REQUEST_BUCKET}/{unique_id}/{i}.png"
                     for i in range(number_of_images)
                 ]
 
@@ -416,7 +418,7 @@ def create_task(
                 )
 
             requests.patch(
-                f"{NEXT_PUBLIC_SUPABASE_URL}/rest/v1/APIRequests?task_id=eq.{unique_id}",
+                f"{NEXT_PUBLIC_SUPABASE_URL}/rest/v1/{API_REQUEST_TABLE}?task_id=eq.{unique_id}",
                 json={"result": image_urls},
                 headers={
                     "apikey": os.getenv("SUPABASE_SERVICE_KEY"),
@@ -442,7 +444,7 @@ def create_task(
                     },
                 )
             # Update the status of the task in the database
-            supabase.table("APIRequests").update(
+            supabase.table(API_REQUEST_TABLE).update(
                 {"result": ["Failed! Your API Key is invalid"]}
             ).eq("task_id", unique_id).execute()
 

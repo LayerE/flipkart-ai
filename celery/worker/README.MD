@@ -5,11 +5,11 @@ The database schema is provided in `images` folder to create the database tables
 
 Ensure you have environment variables set for the following:
 
-- CELERY_BROKER_URL=#Celery Broker URL
-- MODAL_TOKEN_ID=#Modal Token, get from modal.com
-- MODAL_TOKEN_SECRET=#Modal Token Secret, get from modal.com
-- FIREWORKS_API_KEY=#Fireworks API Key, get from fireworks.ai, used for expanding the prompt
-- SUPABASE_SERVICE_KEY=#Supabase Key
-- NEXT_PUBLIC_SUPABASE_URL=#Supabase URL
-- NEXT_PUBLIC_IMAGE_TABLE=#Table name in Supabase to store images and also name of storage bucket in supabase where images are stored
-- THREED_IMAGES_TABLE_NAME=#Table name in Supabase to store 3D images
+ - CELERY_BROKER_URL="#Celery Broker URL/Redis URL/RabbitMQ URL"
+ - MODAL_TOKEN_ID="#Modal Token, get from modal.com"
+ - MODAL_TOKEN_SECRET="#Modal Token Secret, get from modal.com"
+ - FIREWORKS_API_KEY="#Fireworks API Key, get from fireworks.ai, used for expanding the prompt"
+ - SUPABASE_SERVICE_KEY="#Supabase Key"
+ - NEXT_PUBLIC_SUPABASE_URL="#Supabase URL"\
+ # Table name in Supabase to store images and also name of storage bucket in supabase where images are stored, feel free to change it
+ - NEXT_PUBLIC_IMAGE_TABLE=public_images
