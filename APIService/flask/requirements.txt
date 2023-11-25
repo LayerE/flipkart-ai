@@ -1,4 +1,0 @@
-flask
-celery
-flask-swagger-ui
-requests

@@ -3,14 +3,16 @@ import os
 
 import openai
 from supabase import Client, create_client
+from PIL import Image
 
-IMAGES_TABLE_NAME = os.getenv("IMAGES_TABLE_NAME")
-SUPABASE_URL = os.getenv("SUPABASE_URL")
-THREED_IMAGES_TABLE_NAME = os.getenv("THREED_IMAGES_TABLE_NAME")
+NEXT_PUBLIC_IMAGE_TABLE = os.getenv("NEXT_PUBLIC_IMAGE_TABLE")
+NEXT_PUBLIC_SUPABASE_URL = os.getenv("NEXT_PUBLIC_SUPABASE_URL")
+API_REQUEST_TABLE = os.getenv("API_REQUEST_TABLE")
+API_REQUEST_BUCKET = os.getenv("API_REQUEST_BUCKET")
 
 supabase: Client = create_client(
-    SUPABASE_URL,
-    os.environ["SUPABASE_KEY"],
+    NEXT_PUBLIC_SUPABASE_URL,
+    os.environ["SUPABASE_SERVICE_KEY"],
 )
 
 
@@ -51,11 +53,19 @@ def hash(word):
     return sha256.hexdigest()
 
 
+def get_dominant_color(pil_img):
+    img = pil_img.copy()
+    img = img.convert("RGBA")
+    img = img.resize((1, 1), resample=0)
+    dominant_color = img.getpixel((0, 0))
+    return dominant_color
+
+
 # Function to make a request to chatgpt API and return the response
 def get_chatgpt_response(prompt):
     try:
         openai.api_base = "https://api.fireworks.ai/inference/v1"
-        openai.api_key = os.environ["FIREFWORKS_API_KEY"]
+        openai.api_key = os.environ["FIREWORKS_API_KEY"]
         chat_completion = openai.ChatCompletion.create(
             model="accounts/fireworks/models/mistral-7b-instruct-4k",
             messages=[
