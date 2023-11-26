@@ -1,5 +1,4 @@
 import io
-
 from modal import Image, Secret, Stub, method
 from PIL import Image as PILImage
 
@@ -28,6 +27,32 @@ embeddings_list = [
     #     "keyword": "epiCPhotoGasm-colorfulPhoto-neg",
     # },
 ]
+
+def download_upscaler():
+    import os
+
+    os.environ["TRANSFORMERS_CACHE"] = cache_path
+
+    import requests
+    from basicsr.archs.rrdbnet_arch import RRDBNet
+    from realesrgan import RealESRGANer
+
+    response = requests.get(
+        "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.1/RealESRGAN_x2plus.pth",
+        stream=True,
+    )
+    with open("/vol/cache/RealESRGAN_x2plus.pth", "wb") as f:
+        f.write(response.content)
+
+    model = RRDBNet(
+        num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=2
+    )
+    upsampler = RealESRGANer(
+        scale=2,
+        model_path="/vol/cache/RealESRGAN_x2plus.pth",
+        model=model,
+        device="cpu",
+    )
 
 
 def download_models():
@@ -96,7 +121,6 @@ def download_sam_models():
 
     model = LangSAM()
 
-    # Run a trial prediction to download the model weights during the build
     image_pil = PILImage.open(
         requests.get(
             "https://ik.imagekit.io/lkrvcrvnx/1_mEaa4G8_h.png?updatedAt=1695649335303&tr=orig-true",
@@ -228,6 +252,8 @@ image = (
     )
     .run_function(download_segmenter, gpu="any")
     .run_function(download_sam_models, gpu="any")
+    .pip_install("realesrgan", "basicsr>=1.4.2", gpu="any")
+    .run_function(download_upscaler, gpu="any")
     .pip_install("xformers", gpu="any")
 )
 
@@ -247,8 +273,11 @@ class ImageGenerator:
             ControlNetModel,
             DPMSolverMultistepScheduler,
             StableDiffusionControlNetInpaintPipeline,
+            StableDiffusionInpaintPipeline,
         )
         from diffusers.models import AutoencoderKL
+        from realesrgan import RealESRGANer
+        from basicsr.archs.rrdbnet_arch import RRDBNet
         from lang_sam import LangSAM
         from torch import float16, load
         from transformers import pipeline
@@ -282,6 +311,22 @@ class ImageGenerator:
         )
 
         self.pipe.enable_xformers_memory_efficient_attention()
+
+        model = RRDBNet(
+            num_in_ch=3,
+            num_out_ch=3,
+            num_feat=64,
+            num_block=23,
+            num_grow_ch=32,
+            scale=2,
+        )
+
+        self.upsampler = RealESRGANer(
+            scale=2,
+            model_path="/vol/cache/RealESRGAN_x2plus.pth",
+            model=model,
+            device="cuda",
+        )
 
         for embedding in embeddings_list:
             self.pipe.load_textual_inversion(
@@ -448,11 +493,10 @@ class ImageGenerator:
 
         # Save the input image to a file
         randomId = str(uuid.uuid4())
-        with open(f"/tmp/{randomId}.png", "wb") as f:
-            f.write(input_image)
+        input_img_path = f"{randomId}.png"
 
-        input_img_path = f"/tmp/{randomId}.png"
-        output_img_path = f"/tmp/{randomId}_bw.png"
+        with open(input_img_path, "wb") as f:
+            f.write(input_image)
 
         import numpy as np
         import torch
@@ -532,19 +576,17 @@ class ImageGenerator:
 
         input_image = PILImage.open(io.BytesIO(input_image))
         original_dims = input_image.size
-        input_image = input_image.resize(
-            (int(original_dims[0] * 0.5), int(original_dims[1] * 0.5))
-        )
         input_image = input_image.convert("RGB")
         input_image, _ = segment(input_image)
         input_image = input_image.convert("RGBA")
+        original_init_image = input_image.copy()
+        input_image = input_image.resize(
+            (int(original_dims[0] * 0.5), int(original_dims[1] * 0.5))
+        )
         input_image.save(input_img_path)
-
-        bw_image = self.convert_alpha_to_black_white(input_img_path)
-        bw_image.save(output_img_path)
         init_image = load_image(input_img_path)
-        mask_image = load_image(output_img_path)
 
+        mask_image = self.convert_alpha_to_black_white(input_img_path)
         control_image = load_image(input_img_path)
         control_image = np.array(control_image)
 
@@ -558,6 +600,11 @@ class ImageGenerator:
         )
         control_image = PILImage.fromarray(control_image)
 
+        print("____________________________")
+        print(prompt_embeds.shape)
+        print(negative_prompt_embeds.shape)
+        print("____________________________")
+
         images = self.pipe(
             prompt_embeds=prompt_embeds,
             negative_prompt_embeds=negative_prompt_embeds,
@@ -568,6 +615,8 @@ class ImageGenerator:
             mask_image=mask_image,
             control_image=control_image,
             controlnet_conditioning_scale=1.0,
+            # generator=torch.manual_seed(334),
+            # clip_skip=2,
             width=init_image.width,
             height=init_image.height,
             eta=1.0,
@@ -617,8 +666,6 @@ class ImageGenerator:
                 modified_images_output if len(modified_images_output) > 0 else images
             )
 
-        init_image = PILImage.open(input_img_path).convert("RGBA")
-
         def zoomer(image):
             # Get the dimensions of the original image
             original_width, original_height = image.size
@@ -640,12 +687,15 @@ class ImageGenerator:
 
             return cropped_image
 
-        init_image = zoomer(init_image)
+        original_init_image = zoomer(original_init_image)
 
         for i in range(len(images)):
             with io.BytesIO() as buf:
-                images[i].paste(init_image, (0, 0), init_image)
-                # Save images as buffer
+                original_numpy = np.array(images[i])
+                original_opencv = cv2.cvtColor(original_numpy, cv2.COLOR_RGB2BGR)
+                output, _ = self.upsampler.enhance(original_opencv, outscale=2)
+                images[i] = PILImage.fromarray(cv2.cvtColor(output, cv2.COLOR_BGR2RGB))
+                images[i].paste(original_init_image, (0, 0), original_init_image)
                 images[i].save(buf, format="PNG")
                 images_output.append(buf.getvalue())
 
@@ -657,13 +707,13 @@ def main():
     import requests
 
     generator = ImageGenerator()
-    inpu_img = PILImage.open("images/bed_bg.png")
+    inpu_img = PILImage.open(requests.get("https://tvjjvhjhvxwpkohjqxld.supabase.co/storage/v1/object/public/request_images/0f80a0d8-e001-4938-9f07-2ec9dfc64456/159ab667-28b3-474e-93fe-4e6a98f864af.png", stream=True).raw)
     with io.BytesIO() as buf:
         inpu_img.save(buf, format="PNG")
         inpu_img = buf.getvalue()
     images = generator.generate.remote(
-        "A Bed in room, with other furniture items", inpu_img, 4, "Bed"
+        "Washing Machine in a modern, well-equipped kitchen, minimum kitchen decor, under-cabinet lighting", inpu_img, 4, "Washing Machine"
     )
     for i, image in enumerate(images):
-        with open(f"out_{i}.png", "wb") as f:
+        with open(f"shoen{i}.png", "wb") as f:
             f.write(image)
