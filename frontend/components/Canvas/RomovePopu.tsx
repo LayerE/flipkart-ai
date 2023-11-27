@@ -40,6 +40,8 @@ const RemoveBox = () => {
           dataUrl: downloadImg,
           user_id: userId,
           project_id: null,
+          add_to_db: false
+
         }),
       });
       const data = await response.json();

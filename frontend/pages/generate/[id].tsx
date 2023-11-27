@@ -66,6 +66,8 @@ export default function Home() {
     set3dMode,
     getSupabaseImage,
     userId,
+    isOpen,
+    setisOpen,
     setUserID,
   } = useAppState();
   useEffect(() => {
@@ -133,6 +135,7 @@ export default function Home() {
         if (filteredResults?.length) {
           setLoader(false);
           setCanvasDisable(true);
+          setisOpen(true)
 
           setJobIdOne([]);
         }
@@ -143,7 +146,8 @@ export default function Home() {
       console.error("Error fetching images:", error);
     }
   };
-
+  // const [isOpen, setisOpen] = useState(true);
+  const [hidden, setHidden] = useState(isOpen);
   return (
     <MainPages>
       <div className="news">
@@ -157,7 +161,28 @@ export default function Home() {
 
           {filteredArray?.length > 0 ? (
             <div className="generatedBox">
-              <div className="itemsWrapper">
+              <motion.div
+                className="itemsWrapper"
+                hidden={hidden}
+                initial={false}
+                onAnimationStart={() => setHidden(false)}
+                onAnimationComplete={() => setHidden(!isOpen)}
+                animate={{
+                  width: isOpen ? "100%" : 0,
+                  padding: isOpen ? "15px" : "0",
+                }}
+                style={
+                  {
+                    // background: "red",
+                    // overflow: "hidden",
+                    // whiteSpace: "nowrap",
+                    // position: "absolute",
+                    // right: "0",
+                    // // height: "100vh",
+                    // top: "0"
+                  }
+                }
+              >
                 {filteredArray?.map((item, i) => (
                   <div
                     key={i}
@@ -169,7 +194,54 @@ export default function Home() {
                     </picture>
                   </div>
                 ))}
-              </div>
+              </motion.div>
+              {isOpen ? (
+                <button
+                  className="large"
+                  onClick={() => {
+                    // setHidden(false);
+                    setisOpen(false);
+                  }}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="icon icon-tabler icon-tabler-chevron-right"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    stroke-width="2"
+                    stroke="currentColor"
+                    fill="none"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <polyline points="9 6 15 12 9 18" />
+                  </svg>
+                </button>
+              ) : (
+                <button
+                  className="large"
+                  onClick={() => {
+                    // setHidden(true);
+                    setisOpen(true);
+                  }}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="15 18 9 12 15 6" />
+                  </svg>
+                </button>
+              )}
             </div>
           ) : null}
 
@@ -182,6 +254,10 @@ export default function Home() {
 }
 
 const MainPages = styled.div`
+  .large {
+    background-color: #f9d00d;
+    padding: 4px;
+  }
   position: relative;
   .generated {
     width: 100%;

@@ -69,6 +69,7 @@ const Edit = () => {
           dataUrl: downloadImg,
           user_id: userId,
           project_id: id,
+          add_to_db: false
         }),
       });
       const data = await response.json();

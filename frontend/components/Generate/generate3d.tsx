@@ -143,7 +143,7 @@ const Generate3d = () => {
 
         </div>
       <div className="gap">
-        <DisabledLabel>Describe your photo </DisabledLabel>
+        <DisabledLabel>Describe your background(without mentioning your product name)</DisabledLabel>
 
         <Row>
           

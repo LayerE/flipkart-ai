@@ -495,6 +495,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [file3dUrl, setFile3dUrl] = useState<string | null>(null);
   const [file3dName, setFile3dName] = useState<any | null>(null);
   const [elevatedSurface, seTelevatedSurface] = useState(false);
+  const [isOpen, setisOpen] = useState(true);
 
   const [viewMore, setViewMore] = useState<object>({});
   const [selectPlacement, setSelectedPlacement] = useState<string>("");
@@ -1693,6 +1694,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         elevatedSurface,
         seTelevatedSurface,
         canvasHistoryRef,
+        isOpen, setisOpen
       }}
     >
       {children}

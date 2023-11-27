@@ -237,14 +237,7 @@ export default async function handler(req: NextRequest, res: NextResponse) {
       outputBase64Url = caption_bg_data["image"];
     }
 
-    if (shouldAddToDb === false) {
-      res.status(200).send(
-        JSON.stringify({
-          data: { data: [outputBase64Url] },
-        })
-      );
-      return;
-    }
+  
 
     // Upload image
     const {
@@ -252,6 +245,16 @@ export default async function handler(req: NextRequest, res: NextResponse) {
       height,
       width,
     } = await uploadImage(outputBase64Url, user_id, false);
+
+    if (shouldAddToDb === false) {
+      res.status(200).send(
+        JSON.stringify({
+          data: { data: [outputBase64Url] },
+          imageUrl,
+        })
+      );
+      return;
+    }
 
     // Add the image to the database
     const respy = await fetch(

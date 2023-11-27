@@ -10,6 +10,7 @@
     "export": "next export"
   },
   "dependencies": {
+    "@coreui/react": "^4.11.0",
     "@react-three/drei": "^9.86.3",
     "@react-three/fiber": "^8.14.4",
     "@supabase/auth-helpers-nextjs": "^0.8.1",

@@ -258,6 +258,7 @@ export const FileUpload = ({
                   status: true,
                   data: data[0],
                   dataArray: data,
+                  loaderImage :reader.result, 
                 });
                 setassetLoader(false);
               } else {
