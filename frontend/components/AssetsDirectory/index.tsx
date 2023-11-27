@@ -52,6 +52,7 @@ const AssetsDir = () => {
   const [laoder, setlaoder] = useState(true);
 
   useEffect(() => {
+    setListOfAssets(null)
    
     setTimeout(() => {
       setlaoder(false);

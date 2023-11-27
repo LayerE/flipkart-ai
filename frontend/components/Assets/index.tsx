@@ -76,7 +76,7 @@ const Assets: React.FC = () => {
           ) : null}
 
           <ResponsiveRowWraptwo>
-            {listofassets?.length
+            { listofassets?.length &&  listofassets[0]?.image_url
               ? listofassets?.map((test: any, i: number) => (
                   <div
                     key={i}
