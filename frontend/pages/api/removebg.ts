@@ -115,7 +115,12 @@ export default async function handler(req: NextRequest, res: NextResponse) {
 
     const { body } = req;
     const payload = body;
-    const { user_id, dataUrl, project_id, type } = payload;
+    const { user_id, dataUrl, project_id, type, add_to_db } = payload;
+
+    var shouldAddToDb = true;
+    if (add_to_db !== undefined) {
+      shouldAddToDb = add_to_db;
+    }
 
     var fileExtension = "png";
     if (dataUrl.includes("jpeg") || dataUrl.includes("jpg")) {
@@ -230,6 +235,15 @@ export default async function handler(req: NextRequest, res: NextResponse) {
 
       const caption_bg_data = await image_bg_response.json();
       outputBase64Url = caption_bg_data["image"];
+    }
+
+    if (shouldAddToDb === false) {
+      res.status(200).send(
+        JSON.stringify({
+          data: { data: [outputBase64Url] },
+        })
+      );
+      return;
     }
 
     // Upload image
