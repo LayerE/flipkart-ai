@@ -55,6 +55,7 @@ export default function Home() {
     setListOfAssetsById,
     GetProjexts,
     setActiveSize,
+    setListOfAssets
   } = useAppState();
 
   const [rerenter, setre] = useState(1);
@@ -87,6 +88,7 @@ export default function Home() {
 
       setActiveTab(1);
       setcategory(null);
+      setListOfAssets(null)
       setpromtFull("");
       setActiveTemplet(null);
       setDownloadeImgFormate("png");

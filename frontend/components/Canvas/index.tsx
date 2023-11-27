@@ -79,7 +79,7 @@ export default function CanvasBox({
   useEffect(() => {
     canvasInstance.current = new fabric.Canvas(canvasRef?.current, {
       width: window.innerWidth,
-      height: window.innerHeight,
+      height: window.innerHeight + 30,
       preserveObjectStacking: true,
     });
 
@@ -89,7 +89,7 @@ export default function CanvasBox({
       window.addEventListener("resize", () => {
         canvasInstanceRef?.setDimensions({
           width: window?.innerWidth,
-          height: window?.innerHeight,
+          height: window?.innerHeight + 30,
         });
       });
     }
@@ -146,7 +146,7 @@ export default function CanvasBox({
             const scaledHeight = imageHeights * scales;
 
             canvas.width = scaledWidth;
-            canvas.height = scaledHeight;
+            canvas.height = scaledHeight ;
             const ctx = canvas.getContext("2d");
             ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
 
@@ -353,10 +353,12 @@ export default function CanvasBox({
   }, []);
 
   const generationBoxStyle = {
+    
     left: `${activeSize?.l * zoom}px`,
     top: `${activeSize?.t * zoom}px`,
     width: `${activeSize?.w * zoom}px`, // Adjust the width based on canvas zoom
     height: `${activeSize?.h * zoom}px`, // Adjust the height based on canvas zoom
+    
   };
   const PreviewBoxStyle = {
     left: `${activeSize.gl * zoom}px`,
@@ -385,7 +387,7 @@ export default function CanvasBox({
   };
 
   return (
-    <Wrapper canvasDisable={loader}>
+    <Wrapper canvasDisable={loader} activeSize ={activeSize} zoom>
       {loadercarna ? <Loader /> : null}
       {isMagic ? <PopupCanvas /> : null}
       {crop ? <CropperBox /> : null}
@@ -464,6 +466,9 @@ export default function CanvasBox({
 }
 
 const Wrapper = styled.div`
+.yello{
+  width: 150px;
+}
   .divovelay {
     z-index: 10;
     position: absolute;
@@ -477,7 +482,7 @@ const Wrapper = styled.div`
     overflow: auto;
   }
   .delet {
-    width: 20px;
+    min-width: 20px;
     height: 20px;
   }
   .ss {
@@ -508,9 +513,12 @@ const Wrapper = styled.div`
     position: absolute;
   }
   .generationBox {
+    margin-bottom: 30px;
     position: absolute;
     display: flex;
     gap: 20px;
+    height:  ${(props) => (`${(props.activeSize.h *props.zoom )+ 30}px`)}
+    /* height: {activeSize.h * zoom}; */
   }
   #inline-btn {
     position: absolute;

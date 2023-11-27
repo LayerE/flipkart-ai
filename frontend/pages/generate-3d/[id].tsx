@@ -143,6 +143,7 @@ export default function Home() {
         if (filteredResults?.length) {
           setLoader(false);
           setCanvasDisable(true);
+          setisOpen(true)
           setJobIdOne([]);
         }
 
@@ -154,6 +155,8 @@ export default function Home() {
     }
   };
 
+  const [isOpen, setisOpen] = useState(true);
+  const [hidden, setHidden] = useState(isOpen);
   return (
     <MainPages>
       <div className="news">
@@ -168,7 +171,17 @@ export default function Home() {
           <Canvas3d />
           {filteredArray?.length > 0 ? (
             <div className="generatedBox">
-              <div className="itemsWrapper">
+              <motion.div
+                className="itemsWrapper"
+                hidden={hidden}
+                initial={false}
+                onAnimationStart={() => setHidden(false)}
+                onAnimationComplete={() => setHidden(!isOpen)}
+                animate={{
+                  width: isOpen ? "100%" : 0,
+                  padding: isOpen ? "15px" : "0",
+                }}
+              >
                 {filteredArray?.map((item: any, i: number) => (
                   <div
                     key={i}
@@ -180,7 +193,54 @@ export default function Home() {
                     </picture>
                   </div>
                 ))}
-              </div>
+              </motion.div>
+              {isOpen ? (
+                <button
+                  className="large"
+                  onClick={() => {
+                    // setHidden(false);
+                    setisOpen(false);
+                  }}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="icon icon-tabler icon-tabler-chevron-right"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    stroke-width="2"
+                    stroke="currentColor"
+                    fill="none"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <polyline points="9 6 15 12 9 18" />
+                  </svg>
+                </button>
+              ) : (
+                <button
+                  className="large"
+                  onClick={() => {
+                    // setHidden(true);
+                    setisOpen(true);
+                  }}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="15 18 9 12 15 6" />
+                  </svg>
+                </button>
+              )}
             </div>
           ) : null}
         </div>
@@ -191,8 +251,11 @@ export default function Home() {
 
 const MainPages = styled.div`
   position: relative;
-  overflow: hidden;
-
+ height: 100%;
+  .large {
+    background-color: #f9d00d;
+    padding: 4px;
+  }
   .generated {
     width: 100%;
     display: flex;
@@ -201,7 +264,7 @@ const MainPages = styled.div`
     border: 2px solid rgba(249, 208, 13, 1);
     border-radius: 16px;
 
-    overflow: hidden;
+    /* overflow: hidden; */
 
     img {
       width: 100%;
@@ -221,14 +284,14 @@ const MainPages = styled.div`
   }
 
   .generatedBox {
-    width: 100%;
+    width:calc(100vw - 490px);
     display: flex;
     /* height: 300px; */
-    position: relative;
-    /* bottom: 0px; */
-    padding-right: 30px;
+    position: fixed;
+    bottom: 0px;
+    /* padding-right: 30px; */
     /* left: 20px; */
-    /* right: 20px; */
+    right: 0px;
     justify-content: right;
     z-index: 10;
     z-index: 100;
@@ -340,7 +403,7 @@ const MainPages = styled.div`
   }
   .Editor {
     width: 100%;
-    min-height: 100vh;
+    height: 100vh;
     position: relative;
 
     overflow: auto;

@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import { AssetsLoader } from "../Loader/AssetsLoader";
 import { useSession } from "@supabase/auth-helpers-react";
 import { supabase } from "@/utils/supabase";
+import Loader from "../Loader";
 
 const fadeIn = {
   hidden: { opacity: 0 },
@@ -48,6 +49,15 @@ const AssetsDir = () => {
   const [assers, setAssets] = useState();
   const { query, isReady } = useRouter();
   const { id } = query;
+  const [laoder, setlaoder] = useState(true);
+
+  useEffect(() => {
+   
+    setTimeout(() => {
+      setlaoder(false);
+    }, 1000);
+  }, []);
+
 
   useEffect(() => {
     if (userId) {
@@ -173,6 +183,9 @@ const AssetsDir = () => {
         </div>
 
         <div className="imageBox">
+        {laoder ? (
+            <Loader h={true}></Loader>
+          ) : (
           <div className="grid-img">
             {AssetsActivTab === "brand" ? (
               <>
@@ -239,6 +252,8 @@ const AssetsDir = () => {
               </div>
             ))}
           </div>
+          )}
+
         </div>
       </GelleryWrapper>
     </motion.div>

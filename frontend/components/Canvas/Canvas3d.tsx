@@ -53,7 +53,7 @@ const Canvas3d = () => {
     let renderer;
     const init = () => {
       camera = new THREE.PerspectiveCamera(
-        45,
+        15,
         activeSize.w / activeSize.h,
         0.01,
         1000
@@ -76,7 +76,7 @@ const Canvas3d = () => {
       const pmremGenerator = new THREE.PMREMGenerator(renderer);
       pmremGenerator.compileEquirectangularShader();
       scene.environment = pmremGenerator.fromScene(
-        new RoomEnvironment(renderer)
+        new RoomEnvironment(renderer), 0.8
       ).texture;
 
       // // ligting
@@ -390,7 +390,10 @@ const Canvas3d = () => {
       {romovepopu3d.status ? <RemoveBox /> : null}
       {loader ? <div className="divovelay"></div> : null}
 
-      <div className="boxs3d">
+      <div
+        className="boxs3d"
+        style={{ height: activeSize.h + 0 }}
+      >
         <div
           ref={containerRef}
           className="boxs"
@@ -401,7 +404,12 @@ const Canvas3d = () => {
         <div
           ref={outputBox}
           className="outboxs"
-          style={{ minWidth: activeSize.w, height: activeSize.h }}
+          style={{
+            minWidth: activeSize.w,
+            maxWidth: activeSize.w,
+            height: activeSize.h,
+            marginRight: 20
+          }}
         >
           {selectedImg?.image ? (
             <>
@@ -454,13 +462,13 @@ const Canvas3d = () => {
 export default Canvas3d;
 
 const Cnavas3d = styled.div`
-  padding: 0 30px;
-  min-width: 100%;
+  /* padding: 0 30px; */
+  width: 100%;
   height: 100%;
-  overflow: scroll;
+  overflow: auto;
 
-  margin-top: 100px;
-  margin-bottom: 20px;
+  margin-top: 80px;
+  /* margin-bottom: 20px; */
 
   &::-webkit-scrollbar {
     width: 10px;
@@ -468,13 +476,19 @@ const Cnavas3d = styled.div`
     display: none;
   }
   .boxs3d {
+
     display: flex;
-    /* transform: scale(0.8) translateX(-15%) translateY(13%); */
+    transform: scale(0.8) translateX(-13%) translateY(-12%);
     gap: 30px;
     width: 100%;
     height: 100%;
     /* overflow: auto; */
-    overflow-y: hidden;
+    /* overflow-y: hidden; */
+   
+    padding: 0 30px;
+    padding-right: 30px;
+    padding-top: 20px;
+
   }
   /* Track */
   &::-webkit-scrollbar-track {
@@ -511,7 +525,7 @@ const Cnavas3d = styled.div`
     position: relative;
     background-color: rgb(254, 244, 199);
     overflow: hidden;
-
+    margin-right: 30px;
     picture {
       width: 100%;
       height: 100%;
