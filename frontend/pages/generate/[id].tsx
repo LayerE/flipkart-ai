@@ -428,6 +428,13 @@ const MainPages = styled.div`
     height: 100%;
     position: absolute;
     top: 0;
+
+    -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+
+  &::-webkit-scrollbar {
+  display: none;
+}
   }
 
   .tgide {
