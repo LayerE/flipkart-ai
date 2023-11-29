@@ -600,9 +600,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     h: 512,
     w: 512,
     l: 50,
-    t: 160,
+    t: 170,
     gl: 592,
-    gt: 160,
+    gt: 170,
   });
 
   const handileDownload = (url: string) => {

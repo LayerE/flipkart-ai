@@ -149,7 +149,7 @@ export default function Home() {
   // const [isOpen, setisOpen] = useState(true);
   const [hidden, setHidden] = useState(isOpen);
   return (
-    <MainPages>
+    <MainPages generateBox={isOpen}>
       <div className="news">
         {popup?.status ? <PopupUpload /> : null}
 
@@ -287,12 +287,14 @@ const MainPages = styled.div`
   }
 
   .generatedBox {
-    width: 100%;
+
+    /* pointer-events: ${(props)=> !props.generateBox ? "none": "auto"}; */
+    width:  ${(props)=> !props.generateBox ? "100%": "100%"};
     display: flex;
     position: absolute;
-    bottom: 40px;
-    padding-right: 30px;
-    left: 20px;
+    bottom: 0px;
+    /* padding-right: 30px; */
+    right: 0px;
 
     justify-content: right;
     z-index: 10;

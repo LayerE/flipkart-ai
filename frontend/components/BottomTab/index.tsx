@@ -104,13 +104,14 @@ const BottomTab = () => {
 
 const BottomTabWtapper = styled.div`
   position: absolute;
-  bottom: 0;
+  top: 75px;
+  right: 0;
   display: flex;
   justify-content: start;
   align-items: center;
   height: 50px;
-  width: 100%;
-  padding: 0 50px;
+  width: max-content;
+  padding: 0 30px;
   z-index: 100;
 
   .serch {
