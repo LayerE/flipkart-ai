@@ -425,7 +425,7 @@ const MainPages = styled.div`
   .convas-continer {
     /* border: 1px solid #434343; */
     width: 100%;
-    min-height: 100%;
+    height: 100%;
     position: absolute;
     top: 0;
   }
