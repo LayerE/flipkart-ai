@@ -881,7 +881,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     currentCanvasIndex.current++;
   };
   const saveCanvasToDatabase = async () => {
-    const canvasData = canvasInstance.current.toJSON(["category"]);
+    const canvasData = canvasInstance.current.toJSON();
+    console.log(canvasData,"canvasData")
     if (canvasData.objects.length > 1 && !loadercarna) {
       SaveProjexts(userId, projectId, canvasData);
     }

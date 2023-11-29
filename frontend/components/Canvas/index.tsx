@@ -85,6 +85,10 @@ export default function CanvasBox({
 
     const canvasInstanceRef = canvasInstance.current;
     if (canvasInstanceRef) {
+
+           var zoomLevel = zoom;
+
+      canvasInstanceRef.setZoom(zoom);
       // Resize canvas when the window is resized
       window.addEventListener("resize", () => {
         canvasInstanceRef?.setDimensions({
@@ -273,75 +277,82 @@ export default function CanvasBox({
     }
   };
 
-  useEffect(() => {
-    if (canvasInstance?.current && loadercarna) {
-      const canvasInstanceRef = canvasInstance?.current;
+  // useEffect(() => {
+  //   if (canvasInstance?.current && loadercarna) {
+  //     const canvasInstanceRef = canvasInstance?.current;
 
-      fabric.Object.prototype.transparentCorners = false;
+  //     fabric.Object.prototype.transparentCorners = false;
 
-      var zoomLevel = zoom;
+  //     var zoomLevel = zoom;
 
-      canvasInstanceRef.setZoom(zoom);
-      var zooms = canvasInstanceRef.getZoom();
-
-
-
-      // Set the zooming point (x, y) coordinates
-      var zoomPointX = 100; // X-coordinate of the zooming point
-      var zoomPointY = 100; // Y-coordinate of the zooming point
-
-      // Calculate the zoom origin based on the zooming point
-      var zoomOriginX = canvasInstanceRef.width / 2 - zoomPointX * zoom;
-      var zoomOriginY = canvasInstanceRef.height / 2 - zoomPointY * zoom;
-
-      // Set the zoom origin
-      canvasInstanceRef.zoomToPoint(
-        new fabric.Point(zoomOriginX, zoomOriginY),
-        zoom
-      );
-
-      fabric.Canvas.prototype.getAbsoluteCoords = function (object) {
-        return {
-          left: object.left * zoom,
-          top: object.top * zoom,
-        };
-      };
-      setZoomCanvas(zooms);
-    }
-  }, [canvasInstance.current]);
+  //     canvasInstanceRef.setZoom(zoom);
+  //     var zooms = canvasInstanceRef.getZoom();
 
 
 
-  useEffect(() => {
-    // Fetch canvas data from your API and load it into the canvas
-    const canvasInstanceRef = canvasInstance?.current;
-    setloadercarna(true);
-    if (isReady && userId) {
-      console.log("canvasInstance", userId, proid);
-      axios
-        .get(`/api/project?user_id=${userId}&project_id=${proid}`)
-        .then((response) => {
+  //     // Set the zooming point (x, y) coordinates
+  //     var zoomPointX = 100; // X-coordinate of the zooming point
+  //     var zoomPointY = 100; // Y-coordinate of the zooming point
 
-          if (canvasInstanceRef) {
-            canvasInstanceRef.loadFromJSON(
-              response?.data[0].canvasHistory,
-              canvasInstanceRef.renderAll.bind(canvasInstanceRef),
-              function (o, object) {
-                console.log(o, object);
-              }
-            );
-            setloadercarna(false);
+  //     // Calculate the zoom origin based on the zooming point
+  //     var zoomOriginX = canvasInstanceRef.width / 2 - zoomPointX * zoom;
+  //     var zoomOriginY = canvasInstanceRef.height / 2 - zoomPointY * zoom;
 
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          setloadercarna(false);
-          return error;
-        });
+  //     // Set the zoom origin
+  //     canvasInstanceRef.zoomToPoint(
+  //       new fabric.Point(zoomOriginX, zoomOriginY),
+  //       zoom
+  //     );
+
+  //     fabric.Canvas.prototype.getAbsoluteCoords = function (object) {
+  //       return {
+  //         left: object.left * zoom,
+  //         top: object.top * zoom,
+  //       };
+  //     };
+  //     setZoomCanvas(zooms);
+  //   }
+  // }, [canvasInstance.current]);
+
+
+
+  // useEffect(() => {
+  //   // Fetch canvas data from your API and load it into the canvas
+  //   const canvasInstanceRef = canvasInstance?.current;
+  //   setloadercarna(true);
+  //   if (isReady && userId) {
+  //     console.log("canvasInstance", userId, proid);
+  //     const canvasData= {
+  //       "version": "5.3.0",
+  //       "objects": []
+  //   }
+  //  const  canvas_data = '{"objects":[{"type":"rect","left":50,"top":50,"width":20,"height":20,"fill":"green","overlayFill":null,"stroke":null,"strokeWidth":1,"strokeDashArray":null,"scaleX":1,"scaleY":1,"angle":0,"flipX":false,"flipY":false,"opacity":1,"selectable":true,"hasControls":true,"hasBorders":true,"hasRotatingPoint":false,"transparentCorners":true,"perPixelTargetFind":false,"rx":0,"ry":0}],"background":"rgba(0, 0, 0, 0)"}';
+  //     axios
+  //       .get(`/api/project?user_id=${userId}&project_id=${proid}`)
+  //       .then((response) => {
+
+  //         if (canvasInstanceRef) {
+  //           console.log("dfdf",response?.data[0].canvasHistory,canvasData);
+  //           canvasInstanceRef.loadFromJSON(
+  //             canvas_data,
+  //             canvasInstanceRef.render.bind(canvasInstanceRef),
+  //             function (o, object) {
+  //               console.log(o, object);
+
+  //             }
+  //           );
+  //           setloadercarna(false);
+
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         console.error(error);
+  //         setloadercarna(false);
+  //         return error;
+  //       });
   
-    }
-  }, [isReady, userId]);
+  //   }
+  // }, [isReady, userId,]);
 
   useEffect(() => {
     return () => {
