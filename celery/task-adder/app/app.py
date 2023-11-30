@@ -9,11 +9,10 @@ from flask_swagger_ui import get_swaggerui_blueprint
 
 copilot = Celery(
     "images",
-    # broker=f"amqp://{os.environ['RABBITMQ_DEFAULT_USER']}:{os.environ['RABBITMQ_DEFAULT_PASS']}@{os.environ['RABBITMQ_HOST']}",
-    broker="amqps://dptdaebm:bBLQFApup2KynNcYo0QIzVgfnJQONMTH@horse.lmq.cloudamqp.com/dptdaebm",
+    broker=os.environ["CELERY_BROKER_URL"],
 )
 
-
+# The following function signature is used to create a task, they are not the full function definitions, the full code is present in celery worker
 @copilot.task(name="copilot.create_task")
 def create_task(
     image: str,
@@ -44,6 +43,7 @@ def generate_threed(rawJson):
 app = Flask(__name__)
 app.config["DEBUG"] = True
 
+# A Swagger UI is used to document the API and can be accessed at /api/docs
 SWAGGER_URL = "/api/docs"
 API_URL = "/static/openapi.json"
 
@@ -56,6 +56,7 @@ swaggerui_blueprint = get_swaggerui_blueprint(
 app.register_blueprint(swaggerui_blueprint)
 
 
+# Get task result is used to get the result of a task
 @app.get("/getTaskResult")
 def getTaskResult():
     # Get the request headers
@@ -107,7 +108,7 @@ def getTaskResult():
         mimetype="application/json",
     )
 
-
+# Create task is used to create a task and return the task id
 @app.post("/createTask")
 def create():
     try:
@@ -172,7 +173,7 @@ def create():
             mimetype="application/json",
         )
 
-
+# The generate endpoint is used for the main website to add tasks to the queue
 @app.route("/generate", methods=["POST"])
 def generate():
     try:

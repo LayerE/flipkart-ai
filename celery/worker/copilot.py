@@ -13,13 +13,13 @@ import subprocess
 
 from helpers import (
     NEXT_PUBLIC_IMAGE_TABLE,
+    GENERATED_IMAGES_BUCKET,
     NEXT_PUBLIC_SUPABASE_URL,
     API_REQUEST_BUCKET,
     API_REQUEST_TABLE,
     determine_model,
     get_chatgpt_response,
     upload_file_to_supabase,
-    get_dominant_color,
 )
 
 supabase: Client = create_client(
@@ -29,8 +29,7 @@ supabase: Client = create_client(
 
 app = Celery(
     "images",
-    # broker=f"amqp://{os.environ['RABBITMQ_DEFAULT_USER']}:{os.environ['RABBITMQ_DEFAULT_PASS']}@{os.environ['RABBITMQ_HOST']}",
-    broker="amqps://dptdaebm:bBLQFApup2KynNcYo0QIzVgfnJQONMTH@horse.lmq.cloudamqp.com/dptdaebm",
+    broker=os.environ["CELERY_BROKER_URL"],
 )
 
 
@@ -85,7 +84,7 @@ def generate_normal(rawJson):
         )
 
         args = [prompt, image_response, num_images]
-        if model_used != "epicrealism-new":
+        if model_used != "epicrealism-inpaint-controlnet-indoor":
             args.extend([caption, is_quick_generation])
 
         images = f.remote(*args)
@@ -96,13 +95,13 @@ def generate_normal(rawJson):
         for i in range(number_of_images):
             try:
                 uploadToSupabase = upload_file_to_supabase(
-                    bucketName=NEXT_PUBLIC_IMAGE_TABLE,
+                    bucketName=GENERATED_IMAGES_BUCKET,
                     image=images[i],
                     filePath=f"{task_id}/{i}.png",
                 )
                 if uploadToSupabase:
                     original_file_urls.append(
-                        f"{NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/{NEXT_PUBLIC_IMAGE_TABLE}/{task_id}/{i}.png"
+                        f"{NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/{GENERATED_IMAGES_BUCKET}/{task_id}/{i}.png"
                     )
             except Exception as e:
                 print("Exception catched error is: ", e)
@@ -183,7 +182,7 @@ def generate_threed(rawJson):
         )
 
         args = [prompt, image_response, num_images]
-        if model_used != "epicrealism-new":
+        if model_used != "epicrealism-inpaint-controlnet-indoor":
             args.extend([caption])
 
         images = f.remote(*args)
@@ -194,13 +193,13 @@ def generate_threed(rawJson):
         original_file_urls = []
         for i in range(number_of_images):
             uploadToSupabase = upload_file_to_supabase(
-                bucketName=NEXT_PUBLIC_IMAGE_TABLE,
+                bucketName=GENERATED_IMAGES_BUCKET,
                 image=images[i],
                 filePath=f"{task_id}/{i}.png",
             )
             if uploadToSupabase:
                 original_file_urls.append(
-                    f"{NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/{NEXT_PUBLIC_IMAGE_TABLE}/{task_id}/{i}.png"
+                    f"{NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/{GENERATED_IMAGES_BUCKET}/{task_id}/{i}.png"
                 )
 
         # Insert into the supabase database
@@ -277,7 +276,7 @@ def regenerate(rawJson):
         )
 
         args = [prompt, image_response, 3]
-        if model_used != "epicrealism-new":
+        if model_used != "epicrealism-inpaint-controlnet-indoor":
             args.extend([caption])
 
         images = f.remote(*args)
@@ -287,13 +286,13 @@ def regenerate(rawJson):
         original_file_urls = []
         for i in range(number_of_images):
             uploadToSupabase = upload_file_to_supabase(
-                bucketName=NEXT_PUBLIC_IMAGE_TABLE,
+                bucketName=GENERATED_IMAGES_BUCKET,
                 image=images[i],
                 filePath=f"{task_id}/{i}.png",
             )
             if uploadToSupabase:
                 original_file_urls.append(
-                    f"{NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/{NEXT_PUBLIC_IMAGE_TABLE}/{task_id}/{i}.png"
+                    f"{NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/{GENERATED_IMAGES_BUCKET}/{task_id}/{i}.png"
                 )
 
         # Insert into the supabase database
@@ -381,7 +380,7 @@ def create_task(
                 print("Prompt, Caption: ", prompt, caption)
 
                 args = [prompt, image_as_bytes, num_images]
-                if model_used != "epicrealism-new":
+                if model_used != "epicrealism-inpaint-controlnet-indoor":
                     args.extend([caption, False, True])
 
                 images = f.remote(*args)

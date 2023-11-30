@@ -39,7 +39,7 @@ const uploadImage = async (dataUrl: string, user_id?: string) => {
 
   // Generate a unique filename
   const filename = `${user_id}/${uuidv4()}.${getFileExtension(base64String)}`;
-  const bucket_name = process.env.NEXT_PUBLIC_IMAGE_TABLE || "request_images";
+  const bucket_name = process.env.SUPABASE_REQUEST_IMAGES_BUCKET as string;
 
   const byteCharacters = atob(base64String.split(",")[1]);
   const byteNumbers = new Array(byteCharacters.length);
@@ -108,7 +108,7 @@ export default async function handler(req: NextRequest, res: NextResponse) {
     )}`;
 
     const upscale_response = await fetch(
-      "https://dehiddenformodal--upscale-upscale.modal.run",
+      process.env.UPSCALE_ENDPOINT as string,
       {
         headers: {
           "Content-Type": "application/json",

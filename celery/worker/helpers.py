@@ -9,16 +9,21 @@ NEXT_PUBLIC_IMAGE_TABLE = os.getenv("NEXT_PUBLIC_IMAGE_TABLE")
 NEXT_PUBLIC_SUPABASE_URL = os.getenv("NEXT_PUBLIC_SUPABASE_URL")
 API_REQUEST_TABLE = os.getenv("API_REQUEST_TABLE")
 API_REQUEST_BUCKET = os.getenv("API_REQUEST_BUCKET")
+GENERATED_IMAGES_BUCKET = os.getenv("GENERATED_IMAGES_BUCKET")
 
 supabase: Client = create_client(
     NEXT_PUBLIC_SUPABASE_URL,
     os.environ["SUPABASE_SERVICE_KEY"],
 )
 
-
+# We determine the type of model to be used based on the prompt
+# We observed that SDXL model works well for podium, stage, platform scenes
+# and epicrealism-inpaint-controlnet-indoor model works well for kitchen, bathroom, fridge, refrigerator, washing scenes
+# and epicrealism-inpaint-controlnet-general model works well for all other scenes
+# All the models are present in modal-code folder for deployment
 def determine_model(prompt):
-    sdxlcanny_prompts = ["podium", "stage", "platform"]
-    epicrealism_new_prompts = [
+    sdxl_prompts = ["podium", "stage", "platform"]
+    epicrealism_inpaint_controlnet_indoor_prompts = [
         "kitchen",
         "bathroom",
         "fridge",
@@ -26,14 +31,15 @@ def determine_model(prompt):
         "washing",
     ]
 
-    if any(word in sdxlcanny_prompts for word in prompt.split()):
-        return "sdxlcanny"
-    elif any(word in epicrealism_new_prompts for word in prompt.split()):
-        return "epicrealism-new"
+    if any(word in sdxl_prompts for word in prompt.split()):
+        return "sdxl"
+    elif any(word in epicrealism_inpaint_controlnet_indoor_prompts for word in prompt.split()):
+        return "epicrealism-inpaint-controlnet-indoor"
     else:
-        return "epicrealism-sam"
+        return "epicrealism-inpaint-controlnet-general"
 
 
+# A function used for uploading the image to supabase storage
 def upload_file_to_supabase(bucketName, image, filePath):
     try:
         supabase.storage.from_(bucketName).upload(
@@ -46,13 +52,13 @@ def upload_file_to_supabase(bucketName, image, filePath):
         print("error", e)
         return False
 
-
+# Hashing function used to generate a unique hash for the image
 def hash(word):
     sha256 = hashlib.sha256()
     sha256.update(word.encode("utf-8"))
     return sha256.hexdigest()
 
-
+# Function to get the dominant color of the image
 def get_dominant_color(pil_img):
     img = pil_img.copy()
     img = img.convert("RGBA")
@@ -61,18 +67,22 @@ def get_dominant_color(pil_img):
     return dominant_color
 
 
-# Function to make a request to chatgpt API and return the response
+# Function to make a request to Mistral AI 7B and return the response
+# There is a custom prompt used and a series of messages to be sent to the model to get the response from the model
 def get_chatgpt_response(prompt):
     try:
         openai.api_base = "https://api.fireworks.ai/inference/v1"
         openai.api_key = os.environ["FIREWORKS_API_KEY"]
         chat_completion = openai.ChatCompletion.create(
             model="accounts/fireworks/models/mistral-7b-instruct-4k",
+            # The following messages are used to instruct the model to generate a response, they are examples of the kind of messages that the model should generate
             messages=[
                 {
+                    # This is a system message, it is used to instruct the model to generate a response as per our requirements
                     "role": "system",
                     "content": "You are professional product photographer, your objective is to enhance normal image descriptions to good product photography shot descriptions. If we input a basic scene description, you need to output a detailed, vivid prompt for image generation. Elaborate on the provided prompt for a more detailed and visually evocative description. Add sensory details, context, and emotional elements. Provide clear context and specifics related to the scene, including lighting, setting, and relevant objects. Use descriptive and evocative language to immerse the reader in the described environment. Ensure the enhanced prompt aligns with image generation requirements, considering resolution, style, and thematic compatibility. Send entire prompt as a single sentence without fullstops or line breaks, just use commas. Dont describe much on the product/subject of the image, but rather describe the background in detail",
                 },
+                # And the following messages are examples of the kind of alternating prompts and responses that the model should generate
                 {"role": "user", "content": "Sofa in a luxury living room"},
                 {
                     "role": "assistant",
@@ -138,6 +148,7 @@ def get_chatgpt_response(prompt):
                     "role": "assistant",
                     "content": "Shoes against the backdrop of a mesmerizing waterfall, wooden bridge, lush, vibrant vegetation, natural overcasting light",
                 },
+                # Here we send the input prompt that we want the model to generate a response for currently
                 {"role": "user", "content": prompt},
             ],
             temperature=0.5,

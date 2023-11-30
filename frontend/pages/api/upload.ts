@@ -1,7 +1,6 @@
 // @ts-nocheck
 
 import { NextResponse, NextRequest } from "next/server";
-import FormData from "form-data";
 import { v4 as uuidv4 } from "uuid";
 import { createClient } from "@supabase/supabase-js";
 
@@ -33,73 +32,41 @@ const getFileExtension = (dataUrl: string) => {
   }
 };
 
-const uploadImage = async (
-  dataUrl: string,
-  user_id?: string,
-  useImageKit: boolean = false
-) => {
-  if (useImageKit) {
-    const formdata = new FormData();
-    formdata.append("file", dataUrl);
-    formdata.append("fileName", "img.png");
-
-    const imageKitResponse = await fetch(
-      "https://upload.imagekit.io/api/v1/files/upload",
-      {
-        method: "POST",
-        headers: {
-          Authorization: "Basic " + btoa(process.env.IMAGEKIT_API_KEY + ":"),
-        },
-        body: formdata,
-      }
-    );
-
-    const imageKitJson = await imageKitResponse.json();
-    const { url, name, height, width } = imageKitJson;
-
-    return {
-      url: url + "?tr=orig-true",
-      name: name,
-      height: height,
-      width: width,
-    };
-  } else {
-    var base64String = dataUrl;
-    if (!dataUrl.includes("data:image")) {
-      base64String = `data:image/png;base64,${dataUrl}`;
-    }
-
-    // Generate a unique filename
-    const filename = `${user_id}/${uuidv4()}.${getFileExtension(base64String)}`;
-    const bucket_name =
-      process.env.SUPABASE_REQUEST_IMAGES_BUCKET || "request_images";
-
-    const byteCharacters = atob(base64String.split(",")[1]);
-    const byteNumbers = new Array(byteCharacters.length);
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
-    const byteArray = new Uint8Array(byteNumbers);
-    const blob = new Blob([byteArray], { type: "image/png" });
-
-    // Upload image to supabase storage bucket
-    const { error } = await supabase.storage
-      .from(bucket_name)
-      .upload(`${filename}`, blob, {
-        cacheControl: "public, max-age=31536000, immutable",
-        upsert: false,
-      });
-
-    if (error) {
-      console.log(error.message);
-      throw error;
-    }
-
-    return {
-      url: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${bucket_name}/${filename}`,
-      name: filename,
-    };
+const uploadImage = async (dataUrl: string, user_id?: string) => {
+  var base64String = dataUrl;
+  if (!dataUrl.includes("data:image")) {
+    base64String = `data:image/png;base64,${dataUrl}`;
   }
+
+  // Generate a unique filename
+  const filename = `${user_id}/${uuidv4()}.${getFileExtension(base64String)}`;
+  const bucket_name = process.env.SUPABASE_REQUEST_IMAGES_BUCKET as string;
+
+  const byteCharacters = atob(base64String.split(",")[1]);
+  const byteNumbers = new Array(byteCharacters.length);
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i);
+  }
+  const byteArray = new Uint8Array(byteNumbers);
+  const blob = new Blob([byteArray], { type: "image/png" });
+
+  // Upload image to supabase storage bucket
+  const { error } = await supabase.storage
+    .from(bucket_name)
+    .upload(`${filename}`, blob, {
+      cacheControl: "public, max-age=31536000, immutable",
+      upsert: false,
+    });
+
+  if (error) {
+    console.log(error.message);
+    throw error;
+  }
+
+  return {
+    url: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${bucket_name}/${filename}`,
+    name: filename,
+  };
 };
 
 export default async function handler(req: NextRequest, res: NextResponse) {
@@ -132,8 +99,8 @@ export default async function handler(req: NextRequest, res: NextResponse) {
       dataUrl = `data:image/png;base64,${image_buffer.toString("base64")}`;
     }
 
-    // Upload image to ImageKit
-    const { url: imageUrl } = await uploadImage(dataUrl, user_id, false);
+    // Upload image
+    const { url: imageUrl } = await uploadImage(dataUrl, user_id);
     console.log(imageUrl);
 
     if (image_type == "image") {

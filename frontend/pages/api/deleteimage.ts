@@ -19,21 +19,7 @@ export default async function handler(req: NextRequest, res: NextResponse) {
       return;
     }
 
-    if (type && type === "banner") {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/${process.env.BANNER_TABLE}?image_url=eq.${image_url}`,
-        {
-          headers: {
-            apikey: process.env.SUPABASE_SERVICE_KEY as string,
-            Authorization:
-              `Bearer ${process.env.SUPABASE_SERVICE_KEY}` as string,
-            "Content-Type": "application/json",
-            Prefer: "return=minimal",
-          },
-          method: "DELETE",
-        }
-      );
-    } else if (type && type === "brand") {
+    if (type && type === "brand") {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/${process.env.BRAND_ASSETS_TABLE}?image_url=eq.${image_url}`,
         {

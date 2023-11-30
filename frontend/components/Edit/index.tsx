@@ -89,22 +89,6 @@ const Edit = () => {
   };
 
   const upSacle = async (photo: string, filename: string): Promise<string> => {
-    // const form = new FormData();
-    // const fileItem = await dataURLtoFile(photo, filename);
-    // form.append("image_file", fileItem);
-    // form.append("target_width", 2048);
-    // form.append("target_height", 2048);
-    // const response = await fetch(
-    //   "https://clipdrop-api.co/image-upscaling/v1/upscale",
-    //   {
-    //     method: "POST",
-    //     headers: {
-    //       "x-api-key":
-    //         "ca2c46b3fec7f2917642e99ab5c48d3e23a2f940293a0a3fbec2e496566107f9d8b192d030b7ecfd85cfb02b6adb32f4",
-    //     },
-    //     body: form,
-    //   }
-    // );
     try {
       const response = await fetch("/api/upscale", {
         method: "POST",
@@ -118,16 +102,6 @@ const Edit = () => {
 
       const data = await response.json();
 
-
-      // if (response.status == 500) {
-      //   toast.error("something went wrong");
-      //   setLoader(false);
-      // }
-
-      // const buffer = await response.arrayBuffer();
-      // const dataURL = await arrayBufferToDataURL(buffer);
-      // localStorage.setItem("m-images", JSON.stringify(dataURL));
-
       if (data) {
         addimgToCanvasGen(data.image_url);
         setSelectedImg({ status: true, image: data.image_url });
@@ -139,24 +113,12 @@ const Edit = () => {
 
       toast.error("Only generated images can be upscale");
     }
-
-    // const dataURL = await data.image_url;
-
-    // return dataURL;
   };
 
   const UpscaleBG = async () => {
     setIsMagic(false);
-
     setLoader(true);
-
     const data = await upSacle(downloadImg, "imger");
-
-    // if (data) {
-    //   addimgToCanvasGen(data);
-    //   setSelectedImg({ status: true, image: data });
-    //   setLoader(false);
-    // }
   };
 
   const history = useRef([]);

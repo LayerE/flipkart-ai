@@ -14,14 +14,6 @@ const fadeIn = {
 };
 const toolslist = [
   {
-    name: "Banner Creator",
-    route: false,
-
-    discription: "Banners from your AI Generations ",
-    url: `${process.env.NEXT_PUBLIC_BANNER_CANVAS_LINK}`,
-    img: "https://ik.imagekit.io/7urmiszfde/c5d0234a24d5537e.webp?updatedAt=1698826243971",
-  },
-  {
     name: "3D Product Photography",
     route: true,
 

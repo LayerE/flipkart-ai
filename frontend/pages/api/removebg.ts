@@ -2,7 +2,6 @@
 
 import { NextResponse, NextRequest } from "next/server";
 import axios from "axios";
-import FormData from "form-data";
 import { v4 as uuidv4 } from "uuid";
 import { createClient } from "@supabase/supabase-js";
 
@@ -33,73 +32,41 @@ const getFileExtension = (dataUrl: string) => {
   }
 };
 
-const uploadImage = async (
-  dataUrl: string,
-  user_id?: string,
-  useImageKit: boolean = false
-) => {
-  if (useImageKit) {
-    const formdata = new FormData();
-    formdata.append("file", dataUrl);
-    formdata.append("fileName", "img.png");
-
-    const imageKitResponse = await fetch(
-      "https://upload.imagekit.io/api/v1/files/upload",
-      {
-        method: "POST",
-        headers: {
-          Authorization: "Basic " + btoa(process.env.IMAGEKIT_API_KEY + ":"),
-        },
-        body: formdata,
-      }
-    );
-
-    const imageKitJson = await imageKitResponse.json();
-    const { url, name, height, width } = imageKitJson;
-
-    return {
-      url: url + "?tr=orig-true",
-      name: name,
-      height: height,
-      width: width,
-    };
-  } else {
-    var base64String = dataUrl;
-    if (!dataUrl.includes("data:image")) {
-      base64String = `data:image/png;base64,${dataUrl}`;
-    }
-
-    // Generate a unique filename
-    const filename = `${user_id}/${uuidv4()}.${getFileExtension(base64String)}`;
-    const bucket_name =
-      process.env.SUPABASE_REQUEST_IMAGES_BUCKET || "request_images";
-
-    const byteCharacters = atob(base64String.split(",")[1]);
-    const byteNumbers = new Array(byteCharacters.length);
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
-    const byteArray = new Uint8Array(byteNumbers);
-    const blob = new Blob([byteArray], { type: "image/png" });
-
-    // Upload image to supabase storage bucket
-    const { error } = await supabase.storage
-      .from(bucket_name)
-      .upload(`${filename}`, blob, {
-        cacheControl: "public, max-age=31536000, immutable",
-        upsert: false,
-      });
-
-    if (error) {
-      console.log(error.message);
-      throw error;
-    }
-
-    return {
-      url: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${bucket_name}/${filename}`,
-      name: filename,
-    };
+const uploadImage = async (dataUrl: string, user_id?: string) => {
+  var base64String = dataUrl;
+  if (!dataUrl.includes("data:image")) {
+    base64String = `data:image/png;base64,${dataUrl}`;
   }
+
+  // Generate a unique filename
+  const filename = `${user_id}/${uuidv4()}.${getFileExtension(base64String)}`;
+  const bucket_name = process.env.SUPABASE_REQUEST_IMAGES_BUCKET as string;
+
+  const byteCharacters = atob(base64String.split(",")[1]);
+  const byteNumbers = new Array(byteCharacters.length);
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i);
+  }
+  const byteArray = new Uint8Array(byteNumbers);
+  const blob = new Blob([byteArray], { type: "image/png" });
+
+  // Upload image to supabase storage bucket
+  const { error } = await supabase.storage
+    .from(bucket_name)
+    .upload(`${filename}`, blob, {
+      cacheControl: "public, max-age=31536000, immutable",
+      upsert: false,
+    });
+
+  if (error) {
+    console.log(error.message);
+    throw error;
+  }
+
+  return {
+    url: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${bucket_name}/${filename}`,
+    name: filename,
+  };
 };
 
 function isUrl(url: string) {
@@ -154,97 +121,29 @@ export default async function handler(req: NextRequest, res: NextResponse) {
       inputBase64Url = dataUrl;
     }
 
-    const useClipDrop = true;
     var outputBase64Url = "";
     var caption = "";
 
-    if (useClipDrop) {
-      // Encode the base64 data as a buffer
-      const inputBuffer = Buffer.from(
-        inputBase64Url.split(";base64,").pop(),
-        "base64"
-      );
-
-      const useCaption = false;
-      var caption_response: { json: () => any };
-
-      if (useCaption) {
-        caption_response = await fetch(
-          "https://dehiddenformodal--onlycaption-caption.modal.run",
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-            method: "POST",
-            body: JSON.stringify({
-              img: inputBase64Url,
-            }),
-            timeout: 10000,
-          }
-        );
-      }
-
-      let form = new FormData();
-      form.append("image_file", inputBuffer, {
-        filename: "input." + fileExtension,
-        contentType: "image/" + fileExtension,
-      });
-
-      let config = {
-        method: "post",
-        maxBodyLength: 10 * 1024 * 1024,
-        url: "https://clipdrop-api.co/remove-background/v1",
+    const image_bg_response = await fetch(
+      process.env.REMOVE_BG_ENDPOINT as string,
+      {
         headers: {
-          "x-api-key": process.env.CLIPDROP_API_KEY || null,
-          ...form.getHeaders(),
+          "Content-Type": "application/json",
         },
-        data: form,
-        responseType: "arraybuffer",
-      };
-
-      const response = axios.request(config);
-      var caption_data = null;
-
-      if (useCaption) {
-        try {
-          //  Get the caption
-          caption_data = await caption_response.json();
-          caption = caption_data["caption"];
-        } catch (error) {
-          console.log(error.message);
-        }
-        console.log(caption_data);
+        method: "POST",
+        body: JSON.stringify({
+          img: inputBase64Url,
+        }),
       }
+    );
 
-      // Get base64url from response
-      const { data } = await response;
-      outputBase64Url = `data:image/png;base64,${data.toString("base64")}`;
-    } else {
-      const image_bg_response = await fetch(
-        "https://dehiddenformodal--bgremove-removebg-and-caption.modal.run",
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          method: "POST",
-          body: JSON.stringify({
-            img: inputBase64Url,
-          }),
-        }
-      );
-
-      const caption_bg_data = await image_bg_response.json();
-      outputBase64Url = caption_bg_data["image"];
-    }
-
-  
+    const caption_bg_data = await image_bg_response.json();
+    outputBase64Url = caption_bg_data["image"];
 
     // Upload image
     const {
       url: imageUrl,
-      height,
-      width,
-    } = await uploadImage(outputBase64Url, user_id, false);
+    } = await uploadImage(outputBase64Url, user_id);
 
     if (shouldAddToDb === false) {
       res.status(200).send(
@@ -257,7 +156,7 @@ export default async function handler(req: NextRequest, res: NextResponse) {
     }
 
     // Add the image to the database
-    const respy = await fetch(
+    await fetch(
       `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/${process.env.NEXT_PUBLIC_BACKGROUND_REMOVED_IMAGES_TABLE}`,
       {
         headers: {

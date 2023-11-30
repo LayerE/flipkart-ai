@@ -2,14 +2,10 @@
 
 <!-- ## Description -->
 
-
-
-
 ## Getting Started
 
 To get a local copy up and running follow these simple steps.
 
-Clone this repository: `git clone git@github.com:LayerE/flipkart-ai.git`
 Install the dependencies:
 ```bash
 yarn

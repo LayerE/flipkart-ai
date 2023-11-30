@@ -3,10 +3,7 @@
     "info": {
       "title": "Commerce Copilot API",
       "version": "1.0.0",
-      "description": "This API allows users to create stunning product shots of inputted product images. It accepts an input image in base64 format and a textual prompt. The system then generates product images based on the provided input image and prompt. Users can specify the number of images to be generated, and an optional webhook URL can be provided for notifications.",
-      "contact": {
-        "email": "engineering@layere.com"
-      }
+      "description": "This API allows users to create stunning product shots of inputted product images. It accepts an input image in base64 format and a textual prompt. The system then generates product images based on the provided input image and prompt. Users can specify the number of images to be generated, and an optional webhook URL can be provided for notifications."
     },
     "tags": [
       {

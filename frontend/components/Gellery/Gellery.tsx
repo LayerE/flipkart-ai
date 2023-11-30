@@ -55,16 +55,6 @@ const Gellery = () => {
         }
 
         setlaoder(false);
-      } else {
-        const { data, error } = await supabase
-          .from("banner")
-          .select("*")
-          .eq("user_id", userId)
-          .order("created_at", { ascending: false });
-        setlaoder(false);
-        if (data) {
-          setGallery(data);
-        }
       }
     } catch (error) {
       setlaoder(false);
@@ -86,14 +76,6 @@ const Gellery = () => {
               }}
             >
               AI Generation{" "}
-            </div>
-            <div
-              className={galleryActivTab === "banner" ? "tab activeTAb" : "tab"}
-              onClick={() => {
-                setgalleryActiveTab("banner");
-              }}
-            >
-              Banner Generation{" "}
             </div>
           </div>
         </div>

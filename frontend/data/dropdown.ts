@@ -21,8 +21,6 @@ export const Loara = [
   "AbstractPattern",
 ];
 
-
-
 export const resultList = [1, 2, 3, 4];
 
 export const TempletList = [
@@ -115,7 +113,7 @@ export const TempletList = [
         image:
           "https://ik.imagekit.io/7urmiszfde/Luxury%20Bedroom.webp?updatedAt=1698316216393",
         promt:
-          "  in an opulent and lavish bedroom ambiance with stylish decor and clam environment.",
+          "in an opulent and lavish bedroom ambiance with stylish decor and clam environment.",
         placementType: "",
         surroundingType: "",
         backgroundType: "",
@@ -131,7 +129,7 @@ export const TempletList = [
         image:
           "https://ik.imagekit.io/7urmiszfde/High%20floor%20Balcony.webp?updatedAt=1698316218759",
         promt:
-          "coffee table on a large balcony of a high rise building, high-end modern furnishing and few plants, overlooking a city sky line, premium outdoor living",
+          "on a large balcony of a high rise building, high-end modern furnishing and few plants, overlooking a city sky line, premium outdoor living",
         placementType: "",
         surroundingType: "",
         backgroundType: "",
@@ -147,7 +145,7 @@ export const TempletList = [
         image:
           "https://ik.imagekit.io/7urmiszfde/Simple%20Balcony.webp?updatedAt=1698316219724",
         promt:
-          "coffee table on an open air balcony space of a simple and cozy house, minimalistic decor, natural sunlight,",
+          "on an open air balcony space of a simple and cozy house, minimalistic decor, natural sunlight,",
         placementType: "",
         surroundingType: "",
         backgroundType: "",
@@ -179,7 +177,7 @@ export const TempletList = [
         image:
           "https://ik.imagekit.io/7urmiszfde/Luxury%20Dining.webp?updatedAt=1698316210181",
         promt:
-          "dining table in a spacious tastefully designed dining space, featuring rich interiors, elegant lighting, and meticulously curated decor.",
+          "in a spacious tastefully designed dining space, featuring rich interiors, elegant lighting, and meticulously curated decor.",
         placementType: "",
         surroundingType: "",
         backgroundType: "",
@@ -227,7 +225,7 @@ export const TempletList = [
         image:
           "https://ik.imagekit.io/7urmiszfde/image1698750252713.png?updatedAt=1698869610889",
         promt:
-          "washing machine in a cozy household laundry room, surrounded by couple of neatly organized laundry baskets and detergent bottles, epitomizing efficiency and convenience in daily chores",
+          "in a cozy household laundry room, surrounded by couple of neatly organized laundry baskets and detergent bottles, epitomizing efficiency and convenience in daily chores",
         placementType: "",
         surroundingType: "",
         backgroundType: "",
@@ -292,7 +290,7 @@ export const TempletList = [
         image:
           "https://ik.imagekit.io/7urmiszfde/lBathroom.webp?updatedAt=1698432644280",
         promt:
-          "  in a luxurious bathroom space into an oasis of opulence and style, bathed in a gentle and inviting ambient light.",
+          "in a luxurious bathroom space into an oasis of opulence and style, bathed in a gentle and inviting ambient light.",
         placementType: "",
         surroundingType: "",
         backgroundType: "",
@@ -407,7 +405,6 @@ export const TempletList = [
         title: "Rocky terrain ",
         image:
           "https://ik.imagekit.io/7urmiszfde/Rocky%20terrain.webp?updatedAt=1698316222047",
-
         promt:
           "at a rugged and rocky terrain environment, surrounded by small leafy plants, natural soft sunlight",
         placementType: "on",
@@ -421,7 +418,6 @@ export const TempletList = [
       },
       {
         title: "Dense Forest ",
-
         image:
           "https://ik.imagekit.io/7urmiszfde/Dense%20Forest.webp?updatedAt=1698316245243",
         promt:
@@ -570,7 +566,6 @@ export const TempletList = [
     list: [
       {
         title: "Simple Platform ",
-
         image:
           "https://ik.imagekit.io/7urmiszfde/Simple%20Platform.webp?updatedAt=1698333525653",
         promt:
@@ -586,7 +581,6 @@ export const TempletList = [
       },
       {
         title: "Marble ",
-
         image:
           "https://ik.imagekit.io/7urmiszfde/Marble.webp?updatedAt=1698333165302",
         promt:
@@ -601,8 +595,7 @@ export const TempletList = [
         lora: "RealisticNaturalScenery",
       },
       {
-        title: "Rustic Wodeen  ",
-
+        title: "Rustic Wodeen ",
         image:
           "https://ik.imagekit.io/7urmiszfde/Rustic%20Wodeen.webp?updatedAt=1698333525271",
         promt:
@@ -646,7 +639,6 @@ export const TempletList = [
       // },
       {
         title: "Coffee Table ",
-
         image:
           "https://ik.imagekit.io/7urmiszfde/Coffee%20Table.webp?updatedAt=1698333523053",
         promt:
@@ -663,7 +655,6 @@ export const TempletList = [
 
       {
         title: "Wet Surface",
-
         image:
           "https://ik.imagekit.io/7urmiszfde/Wet%20Surface.webp?updatedAt=1698333523738",
         promt:
@@ -679,7 +670,6 @@ export const TempletList = [
       },
       {
         title: "Acrylic platform",
-
         image:
           "https://ik.imagekit.io/7urmiszfde/Acrylic%20platform.webp?updatedAt=1698333523054",
         promt:
@@ -695,7 +685,6 @@ export const TempletList = [
       },
       {
         title: "Stone",
-
         image:
           "https://ik.imagekit.io/7urmiszfde/Stone.webp?updatedAt=1698333521198",
         promt:
@@ -711,7 +700,6 @@ export const TempletList = [
       },
       {
         title: "Velvet",
-
         image:
           "https://ik.imagekit.io/7urmiszfde/Velvet.webp?updatedAt=1698333518847",
         promt:
@@ -727,7 +715,6 @@ export const TempletList = [
       },
       {
         title: "Wooden Dock Lake",
-
         image:
           "https://ik.imagekit.io/7urmiszfde/Wooden%20Dock%20Lake.webp?updatedAt=1698333514597",
         promt:
@@ -743,7 +730,6 @@ export const TempletList = [
       },
       {
         title: "Performance Stage",
-
         image:
           "https://ik.imagekit.io/7urmiszfde/Silver%20Stage.webp?updatedAt=1698333518286",
         promt:
@@ -759,7 +745,6 @@ export const TempletList = [
       },
       {
         title: "Rock & River",
-
         image:
           "https://ik.imagekit.io/7urmiszfde/Rock%20&%20River.webp?updatedAt=1698333521200",
         promt:
@@ -775,7 +760,6 @@ export const TempletList = [
       },
       {
         title: "Staricase",
-
         image:
           "https://ik.imagekit.io/7urmiszfde/Staricase.webp?updatedAt=1698333521734",
         promt:
@@ -791,7 +775,6 @@ export const TempletList = [
       },
       {
         title: "Rippling Water",
-
         image:
           "https://ik.imagekit.io/7urmiszfde/Rippling%20Water.webp?updatedAt=1698333183109",
         promt:
@@ -807,7 +790,6 @@ export const TempletList = [
       },
       {
         title: "Neon Podium",
-
         image:
           "https://ik.imagekit.io/7urmiszfde/Neon%20Podium.webp?updatedAt=1698333514900",
         promt:
@@ -823,7 +805,6 @@ export const TempletList = [
       },
       {
         title: "Grass Bed",
-
         image:
           "https://ik.imagekit.io/7urmiszfde/Grass%20Bed.webp?updatedAt=1698333516751",
         promt:
@@ -839,7 +820,6 @@ export const TempletList = [
       },
       {
         title: "Studio Podium",
-
         image:
           "https://ik.imagekit.io/7urmiszfde/Studio%20Podium.webp?updatedAt=1698333514591",
         promt:
@@ -861,11 +841,10 @@ export const TempletList = [
     list: [
       {
         title: "Vinyl ",
-
         image:
           "https://ik.imagekit.io/7urmiszfde/Vinyl.webp?updatedAt=1698334188864",
         promt:
-          " against a luxury light color vinyl backdrop, soft diffused, studio setup is adorned with sleek and minimalist decor, modern sophistication",
+          "against a luxury light color vinyl backdrop, soft diffused, studio setup is adorned with sleek and minimalist decor, modern sophistication",
         placementType: "on",
         surroundingType: "",
         backgroundType: "",
@@ -877,11 +856,10 @@ export const TempletList = [
       },
       {
         title: "Fabric ",
-
         image:
           "https://ik.imagekit.io/7urmiszfde/Fabric.webp?updatedAt=1698334207986",
         promt:
-          " positioned on a simple light coloured plain fabric, soft, warm, studio setup includes classic decor, creating ambiance",
+          "positioned on a simple light coloured plain fabric, soft, warm, studio setup includes classic decor, creating ambiance",
         placementType: "on",
         surroundingType: "",
         backgroundType: "",
@@ -893,11 +871,10 @@ export const TempletList = [
       },
       {
         title: "Stone Wall ",
-
         image:
           "https://ik.imagekit.io/7urmiszfde/Stone%20Wall.webp?updatedAt=1698334168250",
         promt:
-          " against a textured natural old ancient stone wall, gentle natural light, studio setup with minimal vintage decor, comforting soft ambiance environment",
+          "against a textured natural old ancient stone wall, gentle natural light, studio setup with minimal vintage decor, comforting soft ambiance environment",
         placementType: "on",
         surroundingType: "",
         backgroundType: "",
@@ -909,11 +886,10 @@ export const TempletList = [
       },
       {
         title: "Foliage ",
-
         image:
           "https://ik.imagekit.io/7urmiszfde/Foliage.webp?updatedAt=1698334211052",
         promt:
-          " on a lush grass backdrop, surrounded by tiny bloom natural decor, soft bright sunlight, mushy and peaceful scene",
+          "on a lush grass backdrop, surrounded by tiny bloom natural decor, soft bright sunlight, mushy and peaceful scene",
         placementType: "on",
         surroundingType: "",
         backgroundType: "",
@@ -927,9 +903,8 @@ export const TempletList = [
         title: "Decorative tile ",
         image:
           "https://ik.imagekit.io/7urmiszfde/Decorative%20tile.webp?updatedAt=1698334188914",
-
         promt:
-          " placed on rich ornate patterns colored wall in backdrop, soft natural light, elegance and beautiful atmosphere",
+          "placed on rich ornate patterns colored wall in backdrop, soft natural light, elegance and beautiful atmosphere",
         placementType: "on",
         surroundingType: "",
         backgroundType: "",
@@ -944,9 +919,8 @@ export const TempletList = [
         title: "Aesthetics  ",
         image:
           "https://ik.imagekit.io/7urmiszfde/Aesthetics.webp?updatedAt=1698334224447",
-
         promt:
-          " on modern colorful art painting backdrop, studio setup, artistic appeal and cozy environment",
+          "on modern colorful art painting backdrop, studio setup, artistic appeal and cozy environment",
         placementType: "on",
         surroundingType: "",
         backgroundType: "",
@@ -958,11 +932,10 @@ export const TempletList = [
       },
       {
         title: "Wooden ",
-
         image:
           "https://ik.imagekit.io/7urmiszfde/Wooden.webp?updatedAt=1698334188960",
         promt:
-          " on a simple wooden textured backdrop, natural sunlight, studio setup, minimal rustic indoor decor and cozy surroundings, warmth ambient environment ",
+          "on a simple wooden textured backdrop, natural sunlight, studio setup, minimal rustic indoor decor and cozy surroundings, warmth ambient environment ",
         placementType: "on",
         surroundingType: "",
         backgroundType: "",
@@ -975,11 +948,10 @@ export const TempletList = [
 
       {
         title: "Bamboo ",
-
         image:
           "https://ik.imagekit.io/7urmiszfde/Bamboo.webp?updatedAt=1698334208556",
         promt:
-          " on a simple platform with bamboo backdrop, lushy and natural green, with natural bright sunlight, studio setup with natural elements and bamboo decor, elegance ambiance.  ",
+          "on a simple platform with bamboo backdrop, lushy and natural green, with natural bright sunlight, studio setup with natural elements and bamboo decor, elegance ambiance.  ",
         placementType: "",
         surroundingType: "",
         backgroundType: "",
@@ -992,11 +964,10 @@ export const TempletList = [
 
       {
         title: "Simple Abstract ",
-
         image:
           "https://ik.imagekit.io/7urmiszfde/Abstracts%20(1).webp?updatedAt=1698334166271",
         promt:
-          "  on a detailed abstract backdrops, studio setup with minimal living room decor, warm lighting, ambient and artistic charm.  ",
+          "on a detailed abstract backdrops, studio setup with minimal living room decor, warm lighting, ambient and artistic charm.  ",
         placementType: "",
         surroundingType: "",
         backgroundType: "",
@@ -1008,11 +979,10 @@ export const TempletList = [
       },
       {
         title: "Leather  ",
-
         image:
           "https://ik.imagekit.io/7urmiszfde/Leather.webp?updatedAt=1698334252614",
         promt:
-          " on a bright detailed rich leather backdrop, studio setup, sophisticated and captivating atmosphere ",
+          "on a bright detailed rich leather backdrop, studio setup, sophisticated and captivating atmosphere ",
         placementType: "",
         surroundingType: "",
         backgroundType: "",
@@ -1024,11 +994,10 @@ export const TempletList = [
       },
       {
         title: " Flower Petals ",
-
         image:
           "https://ik.imagekit.io/7urmiszfde/Flower%20Petals.webp?updatedAt=1698334191325",
         promt:
-          " on a simple platform, surrounded by falling flower petals, natural bright light, studio setup with romantic elements and soft decor, warm and clam ambiant ",
+          "on a simple platform, surrounded by falling flower petals, natural bright light, studio setup with romantic elements and soft decor, warm and clam ambiant ",
         placementType: "",
         surroundingType: "",
         backgroundType: "",
@@ -1040,11 +1009,10 @@ export const TempletList = [
       },
       {
         title: "Simple Gradient ",
-
         image:
           "https://ik.imagekit.io/7urmiszfde/Gradient.webp?updatedAt=1698334188909",
         promt:
-          " on a professional studio blue gradient backdrop, expertly lit with studio lighting casting from the top front side. minimalist decor, dramatic emphasis, captivating and sophisticated presentation ",
+          "on a professional studio blue gradient backdrop, expertly lit with studio lighting casting from the top front side. minimalist decor, dramatic emphasis, captivating and sophisticated presentation ",
         placementType: "",
         surroundingType: "",
         backgroundType: "",
@@ -1056,11 +1024,10 @@ export const TempletList = [
       },
       {
         title: "Simple Studio ",
-
         image:
           "https://ik.imagekit.io/7urmiszfde/Simple%20Studio.webp?updatedAt=1698334164463",
         promt:
-          " on a professional studio white backdrop, expertly lit with studio lighting casting from the top front side. minimalist decor, dramatic emphasis, captivating and sophisticated presentation ",
+          "on a professional studio white backdrop, expertly lit with studio lighting casting from the top front side. minimalist decor, dramatic emphasis, captivating and sophisticated presentation",
         placementType: "",
         surroundingType: "",
         backgroundType: "",
@@ -1072,11 +1039,10 @@ export const TempletList = [
       },
       {
         title: "Ice  ",
-
         image:
           "https://ik.imagekit.io/7urmiszfde/Ice.webp?updatedAt=1698334167014",
         promt:
-          "on reflective surface, against snowy mountains and sunny skies in the background, natural light  ",
+          "on reflective surface, against snowy mountains and sunny skies in the background, natural light",
         placementType: "",
         surroundingType: "",
         backgroundType: "",
@@ -1088,11 +1054,10 @@ export const TempletList = [
       },
       {
         title: "Marble ",
-
         image:
           "https://ik.imagekit.io/7urmiszfde/Screenshot%202023-10-26%20211954.webp?updatedAt=1698335486012",
         promt:
-          " on a luxurious marble wall backdrop, studio setup with bright natural lighting, minimal decor, sophistication and premium environment ",
+          "on a luxurious marble wall backdrop, studio setup with bright natural lighting, minimal decor, sophistication and premium environment",
         placementType: "",
         surroundingType: "",
         backgroundType: "",
