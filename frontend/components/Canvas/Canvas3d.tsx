@@ -49,10 +49,12 @@ const Canvas3d = () => {
 
   let camera, scene, object, controls;
   const [showText, setshowText] = useState(false);
+const addWidth = 100
+const addHeight = 80
 
   useEffect(() => {
-    container3dRef.current.style.width = `${activeSize.w  + 50 }px`;
-    container3dRef.current.style.height = `${activeSize.h }px`;
+    container3dRef.current.style.minWidth = `${activeSize.w  + addWidth }px`;
+    container3dRef.current.style.height = `${activeSize.h +addHeight}px`;
 
     // containerRefOnlyForSaveHD.current.style.minWidth = `${
     //   activeSize.w * 1.5
@@ -62,7 +64,7 @@ const Canvas3d = () => {
     const init = () => {
       camera = new THREE.PerspectiveCamera(
         15,
-        activeSize.w / activeSize.h,
+        (activeSize.w +addWidth )/ (activeSize.h +addHeight),
         0.01,
         1000
       );
@@ -78,7 +80,7 @@ const Canvas3d = () => {
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1;
       renderer.setClearColor(0x000000, 0);
-      renderer.setSize(activeSize.w  + 50  , activeSize.h);
+      renderer.setSize(activeSize.w  + addWidth  , activeSize.h +addHeight);
 
       // modelRenderer = new THREE.WebGLRenderer({
       //   antialias: true,
@@ -473,9 +475,9 @@ const Canvas3d = () => {
           ref={outputBox}
           className="outboxs"
           style={{
-            minWidth: activeSize.w + 50,
-            maxWidth: activeSize.w + 50,
-            height: activeSize.h ,
+            minWidth: activeSize.w + addWidth,
+            maxWidth: activeSize.w + addWidth,
+            height: activeSize.h + addHeight ,
             marginRight: 20,
           }}
         >
