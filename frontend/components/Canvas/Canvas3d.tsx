@@ -21,6 +21,8 @@ import RemoveBox from "./RomovePopu";
 
 const Canvas3d = () => {
   const containerRef = useRef();
+  const containerRefOnlyForSaveHD = useRef();
+
   const outputBox = useRef();
 
   const {
@@ -40,17 +42,22 @@ const Canvas3d = () => {
     setDownloadImg,
     romovepopu3d,
     setFile3dName,
+    camaraPreview,
+    setcamaraPreview,
   } = useAppState();
 
-  let camera, scene, object, controls;
+  let camera, scene, object, controls, seconderyScene;
   const [showText, setshowText] = useState(false);
-  const addH = 100;
-  const addW = 100;
 
   useEffect(() => {
     containerRef.current.style.width = `${activeSize.w}px`;
     containerRef.current.style.height = `${activeSize.h}px`;
-    let renderer;
+
+    containerRefOnlyForSaveHD.current.style.minWidth = `${
+      activeSize.w * 1.5
+    }px`;
+    containerRefOnlyForSaveHD.current.style.height = `${activeSize.h * 1.5}px`;
+    let renderer, modelRenderer;
     const init = () => {
       camera = new THREE.PerspectiveCamera(
         15,
@@ -60,7 +67,16 @@ const Canvas3d = () => {
       );
       // camera.position.set( 1.5, 4, 9 );
 
+      // modelCamera = new THREE.PerspectiveCamera(
+      //   15,
+      //   activeSize.w / activeSize.h,
+      //   0.01,
+      //   1000
+      // );
+
       scene = new THREE.Scene();
+      seconderyScene = new THREE.Scene();
+
       renderer = new THREE.WebGLRenderer({
         antialias: true,
         preserveDrawingBuffer: true,
@@ -70,23 +86,38 @@ const Canvas3d = () => {
       renderer.setClearColor(0x000000, 0);
       renderer.setSize(activeSize.w, activeSize.h);
 
+      modelRenderer = new THREE.WebGLRenderer({
+        antialias: true,
+        preserveDrawingBuffer: true,
+      });
+      // modelRenderer .toneMapping = THREE.ACESFilmicToneMapping;
+      modelRenderer.toneMappingExposure = 1;
+      modelRenderer.setClearColor(0x000000, 0);
+      modelRenderer.setSize(activeSize.w * 1.5, activeSize.h * 1.5);
+
       containerRef.current.appendChild(renderer.domElement);
+      containerRefOnlyForSaveHD.current.appendChild(modelRenderer.domElement);
 
       // to get the colore and ligtin of the object
-      const pmremGenerator = new THREE.PMREMGenerator(renderer);
-      pmremGenerator.compileEquirectangularShader();
-      scene.environment = pmremGenerator.fromScene(
-        new RoomEnvironment(renderer), 0.8
-      ).texture;
+      // const pmremGenerator = new THREE.PMREMGenerator(renderer);
+      // pmremGenerator.compileEquirectangularShader();
+      // scene.environment = pmremGenerator.fromScene(
+      //   new RoomEnvironment(renderer),
+      //   0.8
+      // ).texture;
+
 
       // // ligting
-      const ambientLight = new THREE.AmbientLight(0x404040);
+      const ambientLight = new THREE.AmbientLight(0xffffff, 1);
       scene.add(ambientLight);
-      const pointLight = new THREE.PointLight(0xff0000, 100);
+      // seconderyScene.add(ambientLight);
+
+      const pointLight = new THREE.PointLight(0xffffff, 1);
       pointLight.position.set(2.5, 4.5, 15);
-      const light = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
+      const light = new THREE.HemisphereLight(0xffffbb, 0xffffbb, 1);
       light.position.set(2.5, 7.5, 15);
       scene.add(light);
+      // seconderyScene.add(light);
 
       controls = new OrbitControls(camera, renderer.domElement);
       // controls.enableDamping = true;
@@ -110,6 +141,7 @@ const Canvas3d = () => {
         });
 
         scene.add(object);
+        seconderyScene.add(object);
 
         // Adjust the camera position and rotation to focus on the loaded object
         const boundingBox = new THREE.Box3().setFromObject(object);
@@ -226,8 +258,12 @@ const Canvas3d = () => {
               const fov = camera.fov * (Math.PI / 180);
               const distance = Math.abs(maxDim / Math.sin(fov / 2));
               camera.position.z += distance;
+              // modelCamera.position.z += distance;
+
               controls.target = center;
+              seconderyScene.add(object.scene);
               scene.add(object.scene);
+
               setasset3dLoader(false);
             },
             onProgress,
@@ -338,12 +374,11 @@ const Canvas3d = () => {
         }
       }
 
-      containerRef.current.appendChild(renderer.domElement);
+      // containerRef.current.appendChild(renderer.domElement);
 
       // controls.enableDamping = true;
       controls.update();
       controls.addEventListener("change", render);
-
       /* The above code is updating the controls and then rendering after a delay of 1 second. */
 
       setTimeout(() => {
@@ -353,19 +388,30 @@ const Canvas3d = () => {
     };
 
     const render = () => {
+      console.log("camarea", camera);
+      setcamaraPreview(camera);
       setRenderer(renderer);
       renderer.render(scene, camera);
+      setTimeout(() => {}, 3000);
+      modelRenderer.render(scene, camera);
     };
 
     init();
 
     return () => {
-      if (renderer) {
+      if (renderer && modelRenderer) {
         renderer.dispose(); // Dispose of the renderer
+        modelRenderer.dispose(); // Dispose of the renderer
       }
+
       // Remove the renderer's canvas from the DOM
       if (containerRef.current) {
         containerRef.current.removeChild(renderer.domElement);
+        // modelRenderer.current.removeChild(renderer.domElement);
+      }
+      if (containerRefOnlyForSaveHD.current) {
+        // containerRef.current.removeChild(renderer.domElement);
+        containerRefOnlyForSaveHD.current.removeChild(modelRenderer.domElement);
       }
     };
   }, [file3d, file3dUrl, tdFormate, activeSize]);
@@ -390,10 +436,7 @@ const Canvas3d = () => {
       {romovepopu3d.status ? <RemoveBox /> : null}
       {loader ? <div className="divovelay"></div> : null}
 
-      <div
-        className="boxs3d"
-        style={{ height: activeSize.h + 0 }}
-      >
+      <div className="boxs3d" style={{ height: activeSize.h + 0 }}>
         <div
           ref={containerRef}
           className="boxs"
@@ -408,7 +451,7 @@ const Canvas3d = () => {
             minWidth: activeSize.w,
             maxWidth: activeSize.w,
             height: activeSize.h,
-            marginRight: 20
+            marginRight: 20,
           }}
         >
           {selectedImg?.image ? (
@@ -455,6 +498,14 @@ const Canvas3d = () => {
           ) : null}
         </div>
       </div>
+      <div className="largeBox">
+        <div
+          ref={containerRefOnlyForSaveHD}
+          style={{ minWidth: activeSize.w, height: activeSize.h }}
+        >
+          {!showText ? <div className="tesxt">3D model viewer</div> : null}
+        </div>
+      </div>
     </Cnavas3d>
   );
 };
@@ -470,13 +521,23 @@ const Cnavas3d = styled.div`
   margin-top: 80px;
   /* margin-bottom: 20px; */
 
+  .largeBox {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    pointer-events: none;
+    overflow: hidden;
+    background-color: #fff;
+    opacity: 0;
+  }
+
   &::-webkit-scrollbar {
     width: 10px;
     height: 10px;
     display: none;
   }
   .boxs3d {
-
     display: flex;
     transform: scale(0.8) translateX(-13%) translateY(-12%);
     gap: 30px;
@@ -484,11 +545,10 @@ const Cnavas3d = styled.div`
     height: 100%;
     /* overflow: auto; */
     /* overflow-y: hidden; */
-   
+
     padding: 0 30px;
     padding-right: 30px;
     padding-top: 20px;
-
   }
   /* Track */
   &::-webkit-scrollbar-track {

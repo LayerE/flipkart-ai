@@ -605,6 +605,11 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     gt: 170,
   });
 
+
+  const [camaraPreview, setcamaraPreview] = useState(null);
+
+
+
   const handileDownload = (url: string) => {
     saveAs(url, `image${Date.now()}.${downloadeImgFormate}`);
   };
@@ -1695,7 +1700,11 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         elevatedSurface,
         seTelevatedSurface,
         canvasHistoryRef,
-        isOpen, setisOpen
+        isOpen, setisOpen,
+
+
+
+        camaraPreview, setcamaraPreview
       }}
     >
       {children}

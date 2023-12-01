@@ -18,6 +18,7 @@ import { useRouter } from "next/router";
 import Canvas3d from "@/components/Canvas/Canvas3d";
 import Sidebar3d from "@/components/Sidebar/Generate3d";
 import { supabase } from "@/utils/supabase";
+import Canvas3dLarge from "@/components/Canvas/Canvas3dLarge";
 
 const fadeIn = {
   hidden: { opacity: 0 },
@@ -169,6 +170,7 @@ export default function Home() {
           {/* <div className="main-privier"></div> */}
 
           <Canvas3d />
+          {/* <Canvas3dLarge /> */}
           {filteredArray?.length > 0 ? (
             <div className="generatedBox">
               <motion.div
