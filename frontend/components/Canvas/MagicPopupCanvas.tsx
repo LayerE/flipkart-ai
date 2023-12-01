@@ -82,28 +82,7 @@ const PopupCanvas = () => {
     setDrawing(false);
   };
 
-  // const [scale, setScale] = useState(1);
-  // const [stagePos, setStagePos] = useState({ x: 0, y: 0 });
-  // const handleWheel = (e) => {
-  //   e.evt.preventDefault();
 
-  //   const scaleBy = 1.1;
-  //   const stage = e.target.getStage();
-  //   const oldScale = stage.scaleX();
-  //   const pointer = stage.getPointerPosition();
-  //   const mousePointTo = {
-  //     x: (pointer.x - stage.x()) / oldScale,
-  //     y: (pointer.y - stage.y()) / oldScale,
-  //   };
-
-  //   const newScale = e.evt.deltaY > 0 ? oldScale * scaleBy : oldScale / scaleBy;
-
-  //   setScale(newScale);
-  //   setStagePos({
-  //     x: pointer.x - mousePointTo.x * newScale,
-  //     y: pointer.y - mousePointTo.y * newScale,
-  //   });
-  // };
 
   const closeHanddler = () => {
     setLinesHistory([]);

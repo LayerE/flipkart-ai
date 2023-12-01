@@ -1,4 +1,3 @@
-
 /// <reference no-default-lib="true"/>
 
 import React, { useEffect, useState, useRef } from "react";
@@ -63,7 +62,7 @@ const Edit3d = () => {
     setCrop,
     loader,
     setromovepopu3d,
-    userId
+    userId,
   } = useAppState();
 
   const { query, isReady } = useRouter();
@@ -99,7 +98,7 @@ const Edit3d = () => {
     if (downloadImg) {
       const url = downloadImg;
       saveAs(url, `image${Date.now()}.${downloadeImgFormate}`);
-    } 
+    }
   };
 
   /* eslint-disable */
@@ -156,7 +155,6 @@ const Edit3d = () => {
   const [isEraseMode, setIsEraseMode] = useState(false);
   const history = useRef([]);
   const historyIndex = useRef(-1);
-
 
   const toggleEraseMode = () => {
     setIsEraseMode(!isEraseMode);
@@ -238,7 +236,6 @@ const Edit3d = () => {
       style={{ paddingBottom: "50px" }}
     >
       <WrapperEdit>
-
         <div className="gap">
           <Label>Tools</Label>
 
@@ -262,14 +259,12 @@ const Edit3d = () => {
                 <div className="gaps">
                   <div className="flex">
                     <Label>Mode</Label>
-                  
                   </div>
                   <div className="modeBtns">
                     <div
                       className={`btn ${mode === "pen" ? "activBtn" : ""}`}
                       onClick={() => {
                         setMode("pen");
-
                       }}
                     >
                       Erase
@@ -390,8 +385,8 @@ const Edit3d = () => {
 export default Edit3d;
 
 const WrapperEdit = styled.div`
- padding-left: 15px;
-    padding-right: 15px;
+  padding-left: 15px;
+  padding-right: 15px;
   .gaps {
     margin-bottom: 10px;
   }

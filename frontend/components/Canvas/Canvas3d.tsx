@@ -15,12 +15,12 @@ import { useAppState } from "@/context/app.context";
 import styled from "styled-components";
 import { saveAs } from "file-saver";
 import { toast } from "react-toastify";
-import PopupCanvas from "./popupCanvas";
+import PopupCanvas from "./MagicPopupCanvas";
 import CropperBox from "./Cropper";
-import RemoveBox from "./RomovePopu";
+import RemoveBox from "./RemoveBgPopup";
 
 const Canvas3d = () => {
-  const containerRef = useRef();
+  // const container3dRef = useRef();
   const containerRefOnlyForSaveHD = useRef();
 
   const outputBox = useRef();
@@ -44,20 +44,21 @@ const Canvas3d = () => {
     setFile3dName,
     camaraPreview,
     setcamaraPreview,
+    container3dRef,
   } = useAppState();
 
-  let camera, scene, object, controls, seconderyScene;
+  let camera, scene, object, controls;
   const [showText, setshowText] = useState(false);
 
   useEffect(() => {
-    containerRef.current.style.width = `${activeSize.w}px`;
-    containerRef.current.style.height = `${activeSize.h}px`;
+    container3dRef.current.style.width = `${activeSize.w  + 50 }px`;
+    container3dRef.current.style.height = `${activeSize.h }px`;
 
-    containerRefOnlyForSaveHD.current.style.minWidth = `${
-      activeSize.w * 1.5
-    }px`;
-    containerRefOnlyForSaveHD.current.style.height = `${activeSize.h * 1.5}px`;
-    let renderer, modelRenderer;
+    // containerRefOnlyForSaveHD.current.style.minWidth = `${
+    //   activeSize.w * 1.5
+    // }px`;
+    // containerRefOnlyForSaveHD.current.style.height = `${activeSize.h * 1.5}px`;
+    let renderer;
     const init = () => {
       camera = new THREE.PerspectiveCamera(
         15,
@@ -65,17 +66,10 @@ const Canvas3d = () => {
         0.01,
         1000
       );
-      // camera.position.set( 1.5, 4, 9 );
-
-      // modelCamera = new THREE.PerspectiveCamera(
-      //   15,
-      //   activeSize.w / activeSize.h,
-      //   0.01,
-      //   1000
-      // );
+  ;
 
       scene = new THREE.Scene();
-      seconderyScene = new THREE.Scene();
+      // seconderyScene = new THREE.Scene();
 
       renderer = new THREE.WebGLRenderer({
         antialias: true,
@@ -84,40 +78,72 @@ const Canvas3d = () => {
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1;
       renderer.setClearColor(0x000000, 0);
-      renderer.setSize(activeSize.w, activeSize.h);
+      renderer.setSize(activeSize.w  + 50  , activeSize.h);
 
-      modelRenderer = new THREE.WebGLRenderer({
-        antialias: true,
-        preserveDrawingBuffer: true,
-      });
-      // modelRenderer .toneMapping = THREE.ACESFilmicToneMapping;
-      modelRenderer.toneMappingExposure = 1;
-      modelRenderer.setClearColor(0x000000, 0);
-      modelRenderer.setSize(activeSize.w * 1.5, activeSize.h * 1.5);
+      // modelRenderer = new THREE.WebGLRenderer({
+      //   antialias: true,
+      //   preserveDrawingBuffer: true,
+      // });
+      // // modelRenderer .toneMapping = THREE.ACESFilmicToneMapping;
+      // modelRenderer.toneMappingExposure = 1;
+      // modelRenderer.setClearColor(0x000000, 0);
+      // modelRenderer.setSize(activeSize.w * 1.5, activeSize.h * 1.5);
 
-      containerRef.current.appendChild(renderer.domElement);
-      containerRefOnlyForSaveHD.current.appendChild(modelRenderer.domElement);
+      container3dRef.current.appendChild(renderer.domElement);
+      // containerRefOnlyForSaveHD.current.appendChild(modelRenderer.domElement);
 
       // to get the colore and ligtin of the object
-      // const pmremGenerator = new THREE.PMREMGenerator(renderer);
-      // pmremGenerator.compileEquirectangularShader();
-      // scene.environment = pmremGenerator.fromScene(
-      //   new RoomEnvironment(renderer),
-      //   0.8
-      // ).texture;
+      const pmremGenerator = new THREE.PMREMGenerator(renderer);
+      pmremGenerator.compileEquirectangularShader();
+      scene.environment = pmremGenerator.fromScene(
+        new RoomEnvironment(renderer),
+        0.8
+      ).texture;
+
+//       // Front light
+// var frontLight = new THREE.DirectionalLight(0xffffff, 1);
+// frontLight.position.set(0, 0, 1);
+// scene.add(frontLight);
+
+
+
+// // Top light
+// var topLight = new THREE.DirectionalLight(0xffffff, 1);
+// topLight.position.set(0, 1, 0);
+// scene.add(topLight);
+// // Top light
+// var bottomLight = new THREE.DirectionalLight(0xffffff, 1);
+// bottomLight.position.set(0, -1, 0);
+// scene.add(bottomLight);
+
+// // Left light
+// var leftLight = new THREE.DirectionalLight(0xffffff, 1);
+// leftLight.position.set(-1, 0, 0);
+// scene.add(leftLight);
+
+// // Right light
+// var rightLight = new THREE.DirectionalLight(0xffffff, 1);
+// rightLight.position.set(1, 0, 0);
+// scene.add(rightLight);
 
 
       // // ligting
-      const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+
       scene.add(ambientLight);
-      // seconderyScene.add(ambientLight);
+      
+      
+      var directionalLight = new THREE.DirectionalLight(0xffffff, 1); // Directional light
+      directionalLight.position.set(1, 1, 1).normalize();// Set the position of the directional light
+      scene.add(directionalLight);
+     ;
 
       const pointLight = new THREE.PointLight(0xffffff, 1);
       pointLight.position.set(2.5, 4.5, 15);
-      const light = new THREE.HemisphereLight(0xffffbb, 0xffffbb, 1);
+      const light = new THREE.HemisphereLight(0xffffbb, 1);
       light.position.set(2.5, 7.5, 15);
-      scene.add(light);
-      // seconderyScene.add(light);
+      // scene.add(pointLight);
+      // scene.add(light);
 
       controls = new OrbitControls(camera, renderer.domElement);
       // controls.enableDamping = true;
@@ -141,7 +167,7 @@ const Canvas3d = () => {
         });
 
         scene.add(object);
-        seconderyScene.add(object);
+        // seconderyScene.add(object);
 
         // Adjust the camera position and rotation to focus on the loaded object
         const boundingBox = new THREE.Box3().setFromObject(object);
@@ -261,7 +287,7 @@ const Canvas3d = () => {
               // modelCamera.position.z += distance;
 
               controls.target = center;
-              seconderyScene.add(object.scene);
+              // seconderyScene.add(object.scene);
               scene.add(object.scene);
 
               setasset3dLoader(false);
@@ -374,7 +400,7 @@ const Canvas3d = () => {
         }
       }
 
-      // containerRef.current.appendChild(renderer.domElement);
+      // container3dRef.current.appendChild(renderer.domElement);
 
       // controls.enableDamping = true;
       controls.update();
@@ -384,7 +410,6 @@ const Canvas3d = () => {
       setTimeout(() => {
         render();
       }, 1000);
-      setRenderer(renderer);
     };
 
     const render = () => {
@@ -393,26 +418,26 @@ const Canvas3d = () => {
       setRenderer(renderer);
       renderer.render(scene, camera);
       setTimeout(() => {}, 3000);
-      modelRenderer.render(scene, camera);
+      // modelRenderer.render(scene, camera);
     };
 
     init();
 
     return () => {
-      if (renderer && modelRenderer) {
+      if (renderer ) {
         renderer.dispose(); // Dispose of the renderer
-        modelRenderer.dispose(); // Dispose of the renderer
+        // modelRenderer.dispose(); // Dispose of the renderer
       }
 
       // Remove the renderer's canvas from the DOM
-      if (containerRef.current) {
-        containerRef.current.removeChild(renderer.domElement);
+      if (container3dRef.current) {
+        container3dRef.current.removeChild(renderer.domElement);
         // modelRenderer.current.removeChild(renderer.domElement);
       }
-      if (containerRefOnlyForSaveHD.current) {
-        // containerRef.current.removeChild(renderer.domElement);
-        containerRefOnlyForSaveHD.current.removeChild(modelRenderer.domElement);
-      }
+      // if (containerRefOnlyForSaveHD.current) {
+      //   // container3dRef.current.removeChild(renderer.domElement);
+      //   containerRefOnlyForSaveHD.current.removeChild(modelRenderer.domElement);
+      // }
     };
   }, [file3d, file3dUrl, tdFormate, activeSize]);
 
@@ -438,7 +463,7 @@ const Canvas3d = () => {
 
       <div className="boxs3d" style={{ height: activeSize.h + 0 }}>
         <div
-          ref={containerRef}
+          ref={container3dRef}
           className="boxs"
           style={{ minWidth: activeSize.w, height: activeSize.h }}
         >
@@ -448,9 +473,9 @@ const Canvas3d = () => {
           ref={outputBox}
           className="outboxs"
           style={{
-            minWidth: activeSize.w,
-            maxWidth: activeSize.w,
-            height: activeSize.h,
+            minWidth: activeSize.w + 50,
+            maxWidth: activeSize.w + 50,
+            height: activeSize.h ,
             marginRight: 20,
           }}
         >
@@ -498,14 +523,14 @@ const Canvas3d = () => {
           ) : null}
         </div>
       </div>
-      <div className="largeBox">
+      {/* <div className="largeBox">
         <div
           ref={containerRefOnlyForSaveHD}
           style={{ minWidth: activeSize.w, height: activeSize.h }}
         >
           {!showText ? <div className="tesxt">3D model viewer</div> : null}
         </div>
-      </div>
+      </div> */}
     </Cnavas3d>
   );
 };
@@ -521,7 +546,8 @@ const Cnavas3d = styled.div`
   margin-top: 80px;
   /* margin-bottom: 20px; */
 
-  .largeBox {
+  /* .largeBox {
+    z-index: 10000;
     position: absolute;
     top: 0;
     width: 100%;
@@ -530,7 +556,7 @@ const Cnavas3d = styled.div`
     overflow: hidden;
     background-color: #fff;
     opacity: 0;
-  }
+  } */
 
   &::-webkit-scrollbar {
     width: 10px;

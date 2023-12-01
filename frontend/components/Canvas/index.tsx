@@ -10,7 +10,7 @@ import axios from "axios";
 import Loader from "../Loader";
 import { setInterval } from "timers";
 import { saveAs } from "file-saver";
-import PopupCanvas from "./popupCanvas";
+import PopupCanvas from "./MagicPopupCanvas";
 import CropperBox from "./Cropper";
 
 export default function CanvasBox({

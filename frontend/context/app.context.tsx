@@ -1,4 +1,3 @@
-
 // @ts-nocheck
 import { createContext, useContext, useState, useRef, useEffect } from "react";
 import { fabric } from "fabric";
@@ -19,6 +18,11 @@ type ContextProviderProps = {
 
 interface ContextITFC {
   canvasInstance: React.MutableRefObject<null> | null;
+  container3dRef: React.MutableRefObject<null> | null;
+
+
+
+
   previewBox: React.MutableRefObject<null> | null;
   canvasHistory: React.MutableRefObject<null> | null;
   currentCanvasIndex: React.MutableRefObject<null> | null;
@@ -273,6 +277,10 @@ export const AppContext = createContext<ContextITFC>({
   editorBox: null,
   setEditorBox: () => {},
   canvasInstance: null,
+  container3dRef: null,
+
+
+  
   previewBox: null,
   canvasHistory: null,
   PosisionbtnRef: null,
@@ -477,6 +485,8 @@ export const AppContext = createContext<ContextITFC>({
 
 export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const canvasInstance = useRef<any | null>(null);
+  const container3dRef = useRef();
+
   const canvasInstanceQuick = useRef<any | null>(null);
 
   const [filteredArray, setFilteredArray] = useState([]);
@@ -605,10 +615,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     gt: 170,
   });
 
-
   const [camaraPreview, setcamaraPreview] = useState(null);
-
-
 
   const handileDownload = (url: string) => {
     saveAs(url, `image${Date.now()}.${downloadeImgFormate}`);
@@ -887,7 +894,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   };
   const saveCanvasToDatabase = async () => {
     const canvasData = canvasInstance.current.toJSON();
-    console.log(canvasData,"canvasData")
+    console.log(canvasData, "canvasData");
     if (canvasData.objects.length > 1 && !loadercarna) {
       SaveProjexts(userId, projectId, canvasData);
     }
@@ -897,7 +904,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     axios
       .get(`/api/project?user_id=${getUser}`)
       .then((response) => {
-      
         setprojectlist(response?.data);
         return response?.data;
       })
@@ -942,7 +948,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         filteredArray[0] &&
         "modified_image_url" in filteredArray[0]
       ) {
-    
         const jsons = JSON.stringify({
           project_id: projectId,
           user_id: userId,
@@ -1092,8 +1097,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         `/api/project?user_id=${userId}&project_id=${proid}`
       );
       if (projectData.data) {
-     
-
         const json = JSON.stringify({
           user_id: userId,
 
@@ -1209,7 +1212,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
       const canvas1 = canvasInstance.current;
       try {
-      
         if (templet?.title) {
           addtoRecntly(ueserId, proid);
         }
@@ -1261,25 +1263,22 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         axios
           .post(`/api/generate`, {
             dataUrl: subjectDataUrl,
-            maskDataUrl: null,
             prompt: promtText.trim(),
             user_id: userId,
             category: category,
-            // lora_type: loara,
             num_images: selectResult,
             caption: product,
             project_id: proid,
           })
           .then((response) => {
             const generate_response = response.data;
-          
+
             const getJobid = generate_response?.job_id;
 
             if (generate_response?.ok) {
               setJobIdOne([getJobid]);
-            
+
               GetProjextById(proid);
-           
             } else if (generate_response?.error) {
               toast.error(generate_response?.error);
               setLoader(false);
@@ -1292,8 +1291,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
             console.error(error);
             return error;
           });
-
-
       } catch (error) {
         console.error("Error generating image:", error);
         toast.error("something went wrong");
@@ -1303,7 +1300,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   };
 
   const generate3dHandeler = async (userId: any, proid: any) => {
-   
     if (category === null) {
       toast("Select your product category first !");
     } else if (!file3dUrl && !file3d) {
@@ -1322,7 +1318,11 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       } else {
         setLoader(true);
         const promtText = promt;
+      // renderer.setSize(activeSize.w  *2  , activeSize.h *2);
+      // container3dRef.current.appendChild(renderer.domElement);
         const screenshot = renderer.domElement.toDataURL("image/png");
+      //   renderer.setSize(activeSize.w  + 50  , activeSize.h);
+      // container3dRef.current.appendChild(renderer.domElement);
 
         let scaledDataURL;
         let subjectDataUrl;
@@ -1342,11 +1342,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
             multiplier: 4,
           });
 
-        
-
           subjectDataUrl = await scaleDownImage(scaledDataURL);
-
-         
 
           axios
             .post(`/api/generate`, {
@@ -1354,14 +1350,13 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
               prompt: promtText.trim(),
               user_id: userId,
               category: category,
-              lora_type: loara,
               num_images: selectResult,
               is_3d: true,
               caption: product,
             })
             .then((response) => {
               const generate_response = response.data;
-       
+
               const getJobid = generate_response?.job_id;
 
               if (generate_response?.ok) {
@@ -1379,38 +1374,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
               console.error(error);
               return error;
             });
-
-          // const generate_response = await response.json();
-
-          // if (generate_response?.error) {
-          //   toast.error(generate_response?.error);
-          //   setLoader(false);
-          //   return false;
-          // } else {
-          //   setLoader(true);
-
-          //   try {
-          //     const endTime = new Date().getTime();
-
-          //     const elapsedTime = endTime - startTime;
-
-          //     console.log(`Elapsed time: ${elapsedTime} milliseconds`);
-
-          //     setJobIdOne([generate_response?.job_id]);
-          //     axios
-          //       .get(`${process.env.NEXT_PUBLIC_API}/user?id=${ueserId}`)
-          //       .then((response) => {
-          //         setproject(response.data);
-          //         setJobId(response?.data?.jobIds3D);
-          //       })
-          //       .catch((error) => {
-          //         console.error(error);
-          //         return error;
-          //       });
-          //   } catch (error) {
-          //     setLoader(false);
-          //   }
-          // }
         });
       }
     }
@@ -1588,6 +1551,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         fetchGeneratedImages,
         handileDownload,
         canvasInstance,
+        container3dRef,
         addimgToCanvasGen,
 
         outerDivRef,
@@ -1700,11 +1664,11 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         elevatedSurface,
         seTelevatedSurface,
         canvasHistoryRef,
-        isOpen, setisOpen,
+        isOpen,
+        setisOpen,
 
-
-
-        camaraPreview, setcamaraPreview
+        camaraPreview,
+        setcamaraPreview,
       }}
     >
       {children}

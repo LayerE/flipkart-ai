@@ -41,6 +41,7 @@ const EditorSection = () => {
       t: 170,
       gl: 592,
       gt: 170,
+      
     },
     {
       id: 2,
