@@ -74,8 +74,8 @@ after update or insert on auth.users for each row
 execute procedure public.handle_new_user ();
 ```
 
-## Ensure you created tables given in Schema.png and then create the following functions
-![Schema](Schema.png)
+## Ensure you created tables given in Schema.jpg and then create the following functions
+![Schema](Schema.jpg)
 
 Also create the following storage buckets in supabase, and then populate the bucket names in th .env file of the frontend and celery worker
  - BRAND_ASSETS_BUCKET
