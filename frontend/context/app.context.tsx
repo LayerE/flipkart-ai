@@ -380,7 +380,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [file3dName, setFile3dName] = useState<any | null>(null);
   const [isOpen, setisOpen] = useState(true);
   const [viewMore, setViewMore] = useState<object>({});
+  const [elevatedSurface, setElevatedSurface] = useState();
 
+ 
   const [selectResult, setSelectedresult] = useState<number>(2);
 
   const [templet, setTemplet] = useState<object | null>(null);
@@ -1396,7 +1398,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         assetL3doader,
         setasset3dLoader,
         newEditorBox,
-   
+        elevatedSurface,
+        setElevatedSurface,
         canvasHistoryRef,
         isOpen,
         setisOpen,
