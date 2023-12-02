@@ -35,12 +35,12 @@ const Projects = () => {
           }),
         });
 
-        const datares = await response.json();
+        const resData = await response.json();
 
-        if (datares?.success) {
+        if (resData?.success) {
           setFilteredArray([]);
 
-          router.push(`/generate/${datares?.project_id}`);
+          router.push(`/generate/${resData?.project_id}`);
         }
       }
     } catch (error) {

@@ -53,8 +53,8 @@ const PopupUpload = () => {
           }),
         });
 
-        const datares = await response;
-        if (datares) {
+        const resData = await response;
+        if (resData) {
           addimgToCanvasSubject(popup?.dataArray?.imageUrl);
           fetchAssetsImagesWithProjectId(userId, id);
           setProduct(productnew);

@@ -754,7 +754,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           body: jsons,
         });
 
-        const datares = await response;
+    
       }
 
       return data;
@@ -911,9 +911,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         });
         const data = await response.json();
 
-        const datares = await response;
+        const resData = await response;
 
-        if (datares.ok) {
+        if (resData.ok) {
           GetProjextById(proid);
         }
       }
