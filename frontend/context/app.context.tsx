@@ -1111,7 +1111,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         renderer.render(scene, camera);
 
         const screenshot = renderer.domElement.toDataURL("image/png");
-        renderer.setSize(activeSize.w + 50, activeSize.h);
+        renderer.setSize(activeSize.w + 100, activeSize.h + 80);
         renderer.render(scene, camera);
         console.log(screenshot);
 
