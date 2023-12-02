@@ -1,16 +1,14 @@
 // @ts-nocheck
 
-import { images } from "@/next.config";
 import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { motion } from "framer-motion";
 import { useAppState } from "@/context/app.context";
 import { toast } from "react-toastify";
-import PopupUpload from "../Popup";
 import { useRouter } from "next/router";
 import { AssetsLoader } from "../Loader/AssetsLoader";
 import { useSession } from "@supabase/auth-helpers-react";
-import { supabase } from "@/utils/supabase";
+
 import Loader from "../Loader";
 
 const fadeIn = {
@@ -20,8 +18,6 @@ const fadeIn = {
 
 const AssetsDir = () => {
   const session = useSession();
- 
-  
 
   const {
     setPopupImage,
@@ -37,14 +33,14 @@ const AssetsDir = () => {
     fetchAssetsImagesWithProjectId,
     setPopup,
     fetchAssetsImagesBrant,
-  
+
     setProduct,
     addimgToCanvasSubject,
     listofassetsBarand,
     setListOfAssetsBrand,
-    userId, setUserId,
+    userId,
+    setUserId,
   } = useAppState();
-
 
   const [assers, setAssets] = useState();
   const { query, isReady } = useRouter();
@@ -52,13 +48,12 @@ const AssetsDir = () => {
   const [laoder, setlaoder] = useState(true);
 
   useEffect(() => {
-    setListOfAssets(null)
-   
+    setListOfAssets(null);
+
     setTimeout(() => {
       setlaoder(false);
     }, 1000);
   }, []);
-
 
   useEffect(() => {
     if (userId) {
@@ -79,7 +74,7 @@ const AssetsDir = () => {
     try {
       if (AssetsActivTab === "product") {
         fetchAssetsImages(userId, null, true);
-   
+
         setAssets(listofassets);
       } else {
         fetchAssetsImagesBrant(userId, null);
@@ -139,7 +134,6 @@ const AssetsDir = () => {
             }
             const data = await response.json();
 
-
             if (data?.data) {
               fetchAssetsImages(userId, null, true);
               fetchAssetsImagesWithProjectId(userId, id);
@@ -152,7 +146,7 @@ const AssetsDir = () => {
           reader.readAsDataURL(selectedFile);
         }
       } catch (e) {
-        console.log( e);
+        console.log(e);
         setbrandassetLoader(false);
       }
     }
@@ -172,89 +166,87 @@ const AssetsDir = () => {
             >
               Product Assets{" "}
             </div>
-            <div
+            {/* <div
               className={AssetsActivTab === "brand" ? "tab activeTAb" : "tab"}
               onClick={() => {
                 setassetsActiveTab("brand");
               }}
             >
               Brand Assets{" "}
-            </div>
+            </div> */}
           </div>
         </div>
 
         <div className="imageBox">
-        {laoder ? (
+          {laoder ? (
             <Loader h={true}></Loader>
           ) : (
-          <div className="grid-img">
-            {AssetsActivTab === "brand" ? (
-              <>
-                {brandassetLoader ? (
-                  <AssetsLoader />
-                ) : (
-                  <>
-                    <label
-                      className="createbox"
-                      onClick={"handleCreate"}
-                      htmlFor="fileInputAssets"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="14"
-                        height="14"
-                        viewBox="0 0 14 14"
-                        fill="none"
+            <div className="grid-img">
+              {AssetsActivTab === "brand" ? (
+                <>
+                  {brandassetLoader ? (
+                    <AssetsLoader />
+                  ) : (
+                    <>
+                      <label
+                        className="createbox"
+                        onClick={"handleCreate"}
+                        htmlFor="fileInputAssets"
                       >
-                        <path
-                          fillRule="evenodd"
-                          clipRule="evenodd"
-                          d="M7 0C7.26522 0 7.51957 0.105357 7.70711 0.292893C7.89464 0.48043 8 0.734784 8 1V6H13C13.2652 6 13.5196 6.10536 13.7071 6.29289C13.8946 6.48043 14 6.73478 14 7C14 7.26522 13.8946 7.51957 13.7071 7.70711C13.5196 7.89464 13.2652 8 13 8H8V13C8 13.2652 7.89464 13.5196 7.70711 13.7071C7.51957 13.8946 7.26522 14 7 14C6.73478 14 6.48043 13.8946 6.29289 13.7071C6.10536 13.5196 6 13.2652 6 13V8H1C0.734784 8 0.48043 7.89464 0.292893 7.70711C0.105357 7.51957 0 7.26522 0 7C0 6.73478 0.105357 6.48043 0.292893 6.29289C0.48043 6.10536 0.734784 6 1 6H6V1C6 0.734784 6.10536 0.48043 6.29289 0.292893C6.48043 0.105357 6.73478 0 7 0Z"
-                          fill="#585858"
-                        />
-                      </svg>
-                      <div className="testcreat">Upload New Photo</div>
-                    </label>
-                    <input
-                      type="file"
-                      id="fileInputAssets"
-                      style={{ display: "none" }}
-                      onChange={handleFileChange}
-                      accept=".webp, .png, .jpg"
-                    />
-                  </>
-                )}
-              </>
-            ) : null}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="14"
+                          height="14"
+                          viewBox="0 0 14 14"
+                          fill="none"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            clipRule="evenodd"
+                            d="M7 0C7.26522 0 7.51957 0.105357 7.70711 0.292893C7.89464 0.48043 8 0.734784 8 1V6H13C13.2652 6 13.5196 6.10536 13.7071 6.29289C13.8946 6.48043 14 6.73478 14 7C14 7.26522 13.8946 7.51957 13.7071 7.70711C13.5196 7.89464 13.2652 8 13 8H8V13C8 13.2652 7.89464 13.5196 7.70711 13.7071C7.51957 13.8946 7.26522 14 7 14C6.73478 14 6.48043 13.8946 6.29289 13.7071C6.10536 13.5196 6 13.2652 6 13V8H1C0.734784 8 0.48043 7.89464 0.292893 7.70711C0.105357 7.51957 0 7.26522 0 7C0 6.73478 0.105357 6.48043 0.292893 6.29289C0.48043 6.10536 0.734784 6 1 6H6V1C6 0.734784 6.10536 0.48043 6.29289 0.292893C6.48043 0.105357 6.73478 0 7 0Z"
+                            fill="#585858"
+                          />
+                        </svg>
+                        <div className="testcreat">Upload New Photo</div>
+                      </label>
+                      <input
+                        type="file"
+                        id="fileInputAssets"
+                        style={{ display: "none" }}
+                        onChange={handleFileChange}
+                        accept=".webp, .png, .jpg"
+                      />
+                    </>
+                  )}
+                </>
+              ) : null}
 
-            {assers?.map((image, i) => (
-              <div className="We" key={i}>
-               
-                <div
-                  className="img"
-                  onClick={() =>
-                    setPopupImage({
-                      id: i,
-                      url: image?.image_url,
-                      status: true,
-                      userId: userId,
-                      btn: "Use to generate",
-                      generat: true,
-                      index: i,
-                      list: assers,
-                      type: AssetsActivTab,
-                    })
-                  }
-                >
-                  <picture>
-                    <img src={image?.image_url} alt="" />
-                  </picture>
+              {assers?.map((image, i) => (
+                <div className="We" key={i}>
+                  <div
+                    className="img"
+                    onClick={() =>
+                      setPopupImage({
+                        id: i,
+                        url: image?.image_url,
+                        status: true,
+                        userId: userId,
+                        btn: "Use to generate",
+                        generat: true,
+                        index: i,
+                        list: assers,
+                        type: AssetsActivTab,
+                      })
+                    }
+                  >
+                    <picture>
+                      <img src={image?.image_url} alt="" loading="lazy" />
+                    </picture>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
           )}
-
         </div>
       </GelleryWrapper>
     </motion.div>

@@ -13,14 +13,14 @@ const fadeIn = {
   visible: { opacity: 1, transition: { duration: 0.5 } },
 };
 const toolslist = [
-  {
-    name: "Banner Creator",
-    route: false,
+  // {
+  //   name: "Banner Creator",
+  //   route: false,
 
-    discription: "Banners from your AI Generations ",
-    url: `${process.env.NEXT_PUBLIC_BANNER_CANVAS_LINK}`,
-    img: "https://ik.imagekit.io/7urmiszfde/c5d0234a24d5537e.webp?updatedAt=1698826243971",
-  },
+  //   discription: "Banners from your AI Generations ",
+  //   url: `${process.env.NEXT_PUBLIC_BANNER_CANVAS_LINK}`,
+  //   img: "https://ik.imagekit.io/7urmiszfde/c5d0234a24d5537e.webp?updatedAt=1698826243971",
+  // },
   {
     name: "3D Product Photography",
     route: true,
@@ -44,9 +44,8 @@ const Tools = ({ loadetool }) => {
     }
   };
   return (
-    <motion.div initial="hidden" animate="visible" variants={fadeIn}>
+    <div >
       <ToolsWrapper>
-        {/* {loadetool ? <Loader h={true} /> : null} */}
         <div className="headerText">Tools</div>
 
         <div className="gridbox">
@@ -71,7 +70,7 @@ const Tools = ({ loadetool }) => {
           ))}
         </div>
       </ToolsWrapper>
-    </motion.div>
+    </div>
   );
 };
 

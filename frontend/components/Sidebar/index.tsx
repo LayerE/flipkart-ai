@@ -9,11 +9,10 @@ import Assets from "../Assets/index";
 import Generate from "../Generate/index";
 import Edit from "../Edit";
 import { motion } from "framer-motion";
-import Element from "../Element";
 import ListOf from "../List OfProduct";
 import MagicEraser from "../MagicErase";
 import RegenratTab from "../RegenrateTab";
-import Assets3d from "../Assets/Assets3 d";
+import Assets3d from "../Assets/Assets3d";
 
 
 const TabData = [
@@ -152,9 +151,7 @@ const Sidebar: React.FC = () => {
                   </svg>{" "}
                   {viewMore.title}{" "}
                 </div>
-              ) : activeTab === 3 ? (
-                "Add Element"
-              ) : activeTab === 4 ? (
+              )  : activeTab === 4 ? (
                 "Add Humans"
               ) : activeTab === 5 && isMagic == true ? (
                 <div
@@ -224,9 +221,7 @@ const Sidebar: React.FC = () => {
               <Generate />
             ) : activeTab === 3 && viewMore?.status == true ? (
               <ListOf />
-            ) : activeTab === 3 ? (
-              <Element />
-            )  : activeTab === 5 && isMagic === "true" ? (
+            ) : activeTab === 5 && isMagic === "true" ? (
               <MagicEraser />
             ) : activeTab === 5 ? (
               <Edit />

@@ -1,7 +1,6 @@
 // @ts-nocheck
 
 import { styled } from "styled-components";
-import { motion } from "framer-motion";
 import HomeSidebar from "@/components/Sidebar/HomeSidebar";
 import Projects from "@/components/Projets/Projects";
 import { useAppState } from "@/context/app.context";
@@ -17,17 +16,11 @@ import MainLoader from "@/components/Loader/main";
 import PopupUpload from "@/components/Popup";
 import { supabase } from "@/utils/supabase";
 
-const fadeIn = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.5 } },
-};
 
 export default function Home() {
   const session = useSession();
   const router = useRouter();
-
   const { query, isReady } = router;
-  const id = (query.id as string[]) || [];
   const {
     activeTabHome,
     setActiveTabHome,
@@ -36,7 +29,7 @@ export default function Home() {
     projectlist,
     setMainLoader,
     setprojectlist,
-    seTelevatedSurface,
+    setElevatedSurface,
     mainLoader,
     setFilteredArray,
     setActiveTab,
@@ -55,7 +48,7 @@ export default function Home() {
     setListOfAssetsById,
     GetProjexts,
     setActiveSize,
-    setListOfAssets
+    setListOfAssets,
   } = useAppState();
 
   const [rerenter, setre] = useState(1);
@@ -65,11 +58,9 @@ export default function Home() {
       const checkSession = async () => {
         const { data } = await supabase.auth.getSession();
         if (data.session) {
-          // router.push("/");
           setUserID(data.session.user.id);
           GetProjexts(data.session.user.id);
         } else {
-          // router.push("/sign-in");
         }
       };
       checkSession();
@@ -83,12 +74,11 @@ export default function Home() {
     setSelectedImg(null);
 
     if (isReady && userId) {
-
-      seTelevatedSurface(false);
+      setElevatedSurface(false);
 
       setActiveTab(1);
       setcategory(null);
-      setListOfAssets(null)
+      setListOfAssets(null);
       setpromtFull("");
       setActiveTemplet(null);
       setDownloadeImgFormate("png");
@@ -111,31 +101,9 @@ export default function Home() {
       fetchAssetsImages(userId, null);
       setFilteredArray(null);
 
-
-      // axios
-      //   .get("/api/images")
-      //   .then(async (response) => {
-          // const dataFecth = await fetchData(userId);
-      //     console.log("dfd",response);
-
-      //     if (dataFecth.status === 200) {
-      //       // setprojectlist(await dataFecth.data);
-
-      //       setMainLoader(false);
-      //     } else {
-      //       setMainLoader(false);
-      //     }
-      //   })
-      //   .catch((error) => {
-      //     console.error(error);
-      //     setMainLoader(false);
-      //   });
       (async () => {
         try {
           const responses = await axios.get(`/api/project?user_id=${userId}`);
-          // const responsess = await axios.post(`/api/images?user_id=${userId}`, {
-          //   user_id: userId,
-          // });
           if (responses.data) {
             setprojectlist(responses.data);
             setMainLoader(false);
@@ -143,36 +111,20 @@ export default function Home() {
         } catch (e) {
           setMainLoader(false);
         }
-
-       
-     
       })();
     }
-  }, [ userId]);
-
-
-
- 
+  }, [userId]);
 
   return (
     <MainPage>
       {popup?.status ? <PopupUpload /> : null}
-
       {mainLoader ? <MainLoader /> : null}
-
-      <motion.div
-        initial="hidden"
-        animate="visible"
-        variants={fadeIn}
-        className="new"
-      >
+      <div className="new">
         {popupImage.status ? <PopupCard /> : null}
-
         <HomeSidebar />
-
         <div className="dashbaord">
           {activeTabHome === 1 ? (
-            <Projects  />
+            <Projects />
           ) : activeTabHome === 2 ? (
             <AssetsDir />
           ) : activeTabHome === 3 ? (
@@ -181,7 +133,7 @@ export default function Home() {
             <Tools />
           )}
         </div>
-      </motion.div>
+      </div>
     </MainPage>
   );
 }

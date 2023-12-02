@@ -24,8 +24,7 @@ const EditorSection = () => {
     setSelectedresult,
     activeSize,
     setActiveSize,
-    customsize,
-    setCustomsize,
+
     changeRectangleSize,
     loader,
   } = useAppState();
@@ -143,34 +142,9 @@ const EditorSection = () => {
                 }}
               >
                 <div className="tittl">{item.title}</div>
-                {item?.custom ? (
-                  <div className="input">
-                    <input
-                      type="number"
-                      readOnly={activeSize.id === item.id ? "" : "readOnly"}
-                      value={customsize.w}
-                      onChange={(e) =>
-                        setCustomsize((pre: any) => ({
-                          ...pre,
-                          w: e.target.value,
-                        }))
-                      }
-                    />
-                    X
-                    <input
-                      type="number"
-                      value={customsize.h}
-                      onChange={(e) =>
-                        setCustomsize((pre: any) => ({
-                          ...pre,
-                          h: e.target.value,
-                        }))
-                      }
-                    />
-                  </div>
-                ) : (
+               
                   <div className="sub">{item.subTittle}</div>
-                )}
+               
               </div>
             ))}
           </div>

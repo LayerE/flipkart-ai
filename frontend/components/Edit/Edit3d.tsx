@@ -28,8 +28,7 @@ const Edit3d = () => {
   const popupRef = useRef<HTMLDivElement>(null);
 
   const {
-    colore,
-    setColore,
+  
     previewLoader,
     setPriviewLoader,
     downloadImg,
@@ -54,14 +53,14 @@ const Edit3d = () => {
     setLinesHistory,
     lines,
     setLines,
-    magicLoader,
+  
     setMagicloder,
     setDownloadImg,
     selectedImg,
     crop,
     setCrop,
     loader,
-    setromovepopu3d,
+    setremovepopu3d,
     userId,
   } = useAppState();
 
@@ -92,7 +91,7 @@ const Edit3d = () => {
     setIsPopupOpen((prevIsPopupOpen) => !prevIsPopupOpen);
   };
 
-  const { setSelectedColoreMode, selectColoreMode } = useAppState();
+
 
   const handileDownload = () => {
     if (downloadImg) {
@@ -106,7 +105,7 @@ const Edit3d = () => {
   const HandelBG = async () => {
     setCrop(false);
     setIsMagic(false);
-    setromovepopu3d({ status: true, type: "bgRemove" });
+    setremovepopu3d({ status: true, type: "bgRemove" });
   };
 
   async function toB64(imgUrl: string): Promise<string> {
@@ -140,15 +139,11 @@ const Edit3d = () => {
     setCrop(false);
     setIsMagic(false);
 
-    setromovepopu3d({ status: true, type: "upscale" });
+    setremovepopu3d({ status: true, type: "upscale" });
   };
-  useEffect(() => {
-    // addColorOverlayToSelectedImage(colore, selectColoreMode);
-  }, [selectColoreMode, colore]);
 
-  const handleChangeComplete = (color: string) => {
-    setColore(color.hex);
-  };
+
+
 
   const [size, setsize] = useState(40);
 
@@ -221,7 +216,7 @@ const Edit3d = () => {
   };
 
   const HandelCrop = () => {
-    setromovepopu3d({});
+    setremovepopu3d({});
 
     setCrop(true);
     setIsMagic(false);
@@ -243,7 +238,7 @@ const Edit3d = () => {
             <div
               className={isMagic ? "selectTool activeTool" : "selectTool"}
               onClick={() => {
-                setromovepopu3d({});
+                setremovepopu3d({});
 
                 setIsMagic(true);
                 setCrop(false);
@@ -295,34 +290,10 @@ const Edit3d = () => {
                     />
                   </div>
                 </div>
-                {/* <Row>
-                  {magicLoader ? (
-                    <TextLoader />
-                  ) : (
-                    <Button
-                      onClick={() => HandleInpainting()}
-                      disabled={linesHistory.length === 0 ? true : false}
-                    >
-                      Generate
-                    </Button>
-                  )}
-                </Row> */}
               </div>
             </div>
-            {/* <div className={"selectTool"} onClick={() => setIsMagic(true)}>
-            <Label>Magic Erase</Label>
-            <div>
-              <p>Paint over objects to erase from the image</p>
-            </div>
-          </div> */}
 
-            <div
-              className={
-                "selectTool "
-                //  "selectTool ativeimg"
-              }
-              onClick={() => UpscaleBG()}
-            >
+            <div className={"selectTool "} onClick={() => UpscaleBG()}>
               <Label>Upscale</Label>
               <div>
                 <p>Upscale image up to 2k resolution</p>

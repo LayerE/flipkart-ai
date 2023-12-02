@@ -23,7 +23,6 @@ const CropperBox = () => {
 
   const HandleCrope = async () => {
     if (cropSize.width && cropSize.height) {
-
       const canvas = document.createElement("canvas");
       const image = document.getElementById("img");
       const scaleX = image.naturalWidth / image.width;
@@ -56,7 +55,6 @@ const CropperBox = () => {
     }
   };
   const downloadH = async () => {
-
     if (cropSize.width && cropSize.height) {
       const canvas = document.createElement("canvas");
       const image = document.getElementById("img");
@@ -96,7 +94,6 @@ const CropperBox = () => {
         <ReactCrop
           crop={cropSize}
           onChange={(c) => setCropSize(c)}
-  
           minWidth={50}
           minHeight={50}
         >

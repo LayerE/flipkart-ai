@@ -8,7 +8,7 @@ import assets from "@/public/assets";
 import { useAppState } from "@/context/app.context";
 import { motion } from "framer-motion";
 import ListOf from "../List OfProduct";
-import Assets3d from "../Assets/Assets3 d";
+import Assets3d from "../Assets/Assets3d";
 import Edit3d from "../Edit/Edit3d";
 import Generate3d from "../Generate/generate3d.tsx";
 const fadeIn = {

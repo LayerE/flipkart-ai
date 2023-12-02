@@ -55,7 +55,6 @@ export default function Home() {
     setprojectId,
     setUserId,
     setGeneratedImgList,
-    saveCanvasToDatabase,
     filteredArray,
     setFilteredArray,
     jobIdOne,

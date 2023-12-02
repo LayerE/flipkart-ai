@@ -12,12 +12,9 @@ const ListOf: React.FC = () => {
     viewMore,
     addimgToCanvas,
     activeTab,
-    setPlacementTest,
-    setSurroundingTest,
-    setBackgrundTest,
-    setSelectedPlacement,
-    setSelectedSurrounding,
-    setSelectedBackground
+    setpromt,
+    setTemplet,
+    setActiveTemplet,
 
   } = useAppState();
 
@@ -33,12 +30,11 @@ const ListOf: React.FC = () => {
               className={"imageBox"}
               onClick={() => {
                 if(activeTab=== 2){
-                  setPlacementTest(test?.placement);
-                  setSurroundingTest(test?.surrounding);
-                  setBackgrundTest(test?.background);
-                  setSelectedPlacement(test?.placementType);
-                  setSelectedSurrounding(test?.surroundingType);
-                  setSelectedBackground(test?.backgroundType);
+                  setActiveTemplet(test); // Set the current item as active
+                  setTemplet(test);
+                  setpromt(test.promt);
+
+                 
 
                 }else
                 addimgToCanvas(test);

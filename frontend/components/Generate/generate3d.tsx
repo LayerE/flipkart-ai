@@ -18,7 +18,7 @@ import { fabric } from "fabric";
 import Label, { DisabledLabel } from "../common/Label";
 import SuggetionInput from "./SuggetionInput";
 import {
-  Loara,
+
   PlacementSuggestions,
   categoryList,
   productSuggestions,
@@ -35,26 +35,7 @@ const Generate3d = () => {
   const {
     product,
     setProduct,
-    placementTest,
-    backgroundTest,
-    surroundingTest,
-    generationLoader,
-    setGenerationLoader,
-    selectPlacement,
-    selectSurrounding,
-    selectBackground,
-    getBase64FromUrl,
-    addimgToCanvasGen,
-    canvasInstance,
-    setGeneratedImgList,
-    generatedImgList,
-    setSelectedImg,
-    setLoader,
-    selectedImg,
-    undoArray,
-    setModifidImageArray,
-    selectResult,
-    editorBox,
+ 
     loader,
     jobId,
     setJobId,
@@ -67,7 +48,7 @@ const Generate3d = () => {
     category,
     setcategory,
     filteredArray,
-    genrateeRef,
+    generateBtnRef,
     TDMode,
     generate3dHandeler,
     userId,
@@ -75,7 +56,7 @@ const Generate3d = () => {
     setpromt,
     setActiveTemplet,
     activeTemplet,
-    elevatedSurface, seTelevatedSurface
+
 
   } = useAppState();
 
@@ -84,12 +65,6 @@ const Generate3d = () => {
 
   const [changeTab, setChangeTab] = useState(false);
 
-  function isEmpty(obj) {
-    if (obj) {
-      return Object.keys(obj).length === 0 && obj.constructor === Object;
-    }
-    return false;
-  }
 
   useEffect(() => {
     const promts = product + " " + promt;
@@ -151,34 +126,17 @@ const Generate3d = () => {
             value={promtFull}
             onChange={(e) => handelPromt(e)}
             readonly={loader ? "readonly" : false}
-            // value={placementTest}
-            // setValue={setPlacementTest}
-            // suggetion={PlacementSuggestionsFilter}
-          />
-          {/* <input type="text" className="generatePreview" /> */}
-        </Row>
-        {/* <Row>
-          <DATA>
-          <div>
-              <DisabledLabel>
-              Is model on elevated surface
-              </DisabledLabel>
-            </div>
-          <div
-              className={`toggle-switch ${elevatedSurface ? "on" : "off"}`}
-              onClick={() => seTelevatedSurface(!elevatedSurface)}
-            >
-              <div className="circle"></div>
-            </div>
            
-          </DATA>
-        </Row> */}
+          />
+        
+        </Row>
+        
         <Row>
           {loader ? (
             <TextLoader />
           ) : (
             <Button
-              ref={genrateeRef}
+              ref={generateBtnRef}
               onClick={() =>
                 TDMode
                   ? generate3dHandeler(userId, id)
@@ -187,31 +145,19 @@ const Generate3d = () => {
               disabled={promtFull === " " ? true : false}
             >
               Generate
-              {/* {generationLoader ? "Loading..." : "Generate"} */}
+           
             </Button>
           )}
         </Row>
       </div>
 
-      {/* <div className="rowwothtwo" style={{ marginBottom: "0px" }}>
-        <DisabledLabel>Number of results</DisabledLabel>
-        <div className="two-side">
-         
-          <DropdownNOBorder
-            data={{
-              list: resultList,
-              action: setSelectedresult,
-              activeTab: selectResult,
-            }}
-          ></DropdownNOBorder>
-        </div>
-      </div> */}
+    
      </AllWrapper>
 
       <div className="bigGap">
-        {/* <Label>Edit the the prompt in the form below.</Label> */}
+     
       </div>
-      {/* <div className="gap"></div> */}
+ 
       <SwchichBtn className="swich">
         <div
           className={changeTab ? "btnswitch " : "btnswitch activeSwitch"}

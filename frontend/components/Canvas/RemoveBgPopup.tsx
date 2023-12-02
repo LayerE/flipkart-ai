@@ -15,8 +15,8 @@ const RemoveBox = () => {
   const {
     downloadImg,
     TDMode,
-    setromovepopu3d,
-    romovepopu3d,
+    setremovepopu3d,
+    removepopu3d,
     downloadeImgFormate,
     userId,
     regenratingId
@@ -52,7 +52,7 @@ const RemoveBox = () => {
     } catch (error) {
       setLoader(false);
       toast.error("Error removing background");
-      setromovepopu3d(false);
+      setremovepopu3d(false);
       setupdateImg(null);
     }
     // setLoader(false);
@@ -83,7 +83,7 @@ const RemoveBox = () => {
       console.log(error);
       setLoader(false);
       setupdateImg(null);
-      setromovepopu3d(false);
+      setremovepopu3d(false);
       toast.error("something went wrong");
 
     }
@@ -97,7 +97,7 @@ const RemoveBox = () => {
 
   };
   useEffect(() => {
-    if (romovepopu3d.type === "bgRemove") {
+    if (removepopu3d.type === "bgRemove") {
       HandelBG();
     } else {
       UpscaleBG();
@@ -131,7 +131,7 @@ const RemoveBox = () => {
           <Button
             onClick={() => {
               setupdateImg(null);
-              setromovepopu3d(false);
+              setremovepopu3d(false);
             }}
           >
             Close

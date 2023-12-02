@@ -32,7 +32,7 @@ const Generate = () => {
     setpromtFull,
     category,
     setcategory,
-    genrateeRef,
+    generateBtnRef,
     TDMode,
     generate3dHandeler,
     userId,
@@ -128,7 +128,7 @@ const Generate = () => {
                 <TextLoader />
               ) : (
                 <Button
-                  ref={genrateeRef}
+                  ref={generateBtnRef}
                   onClick={() =>
                     TDMode
                       ? generate3dHandeler(userId, id)
