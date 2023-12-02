@@ -15,7 +15,7 @@ const PopupCard = () => {
   const {
     popupImage,
     setPopupImage,
-    handileDownload,
+    handleDownload,
     GetProjexts,
 
     AssetsActivTab,
@@ -56,9 +56,9 @@ const PopupCard = () => {
       }
     } else {
       if (popupImage?.list[currentIndex]?.modified_image_url) {
-        handileDownload(popupImage?.list[currentIndex]?.modified_image_url);
+        handleDownload(popupImage?.list[currentIndex]?.modified_image_url);
       } else {
-        handileDownload(popupImage?.list[currentIndex]?.image_url);
+        handleDownload(popupImage?.list[currentIndex]?.image_url);
       }
     }
   };

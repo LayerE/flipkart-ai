@@ -129,7 +129,7 @@ interface ContextITFC {
   generateImageHandeler: (ueserId: any, proid: any) => void;
   fetchGeneratedImages: (userId: any) => void;
   RegenerateImageHandeler: (ueserId: any) => void;
-  handileDownload: (url: string) => void;
+  handleDownload: (url: string) => void;
   fetchAssetsImagesBrant: (userId: any, pro: any) => void;
   fetchAssetsImagesWithProjectId: (userId: any, pro: any) => void;
   GetProjextById: (getUser: any) => void;
@@ -327,7 +327,7 @@ export const AppContext = createContext<ContextITFC>({
   generate3dHandeler: () => {},
 
   positionBtn: () => {},
-  handileDownload: () => {},
+  handleDownload: () => {},
   generateImageHandeler: () => {},
 
   fetchAssetsImages: () => {},
@@ -470,7 +470,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
 
   
-  const handileDownload = (url: string) => {
+  const handleDownload = (url: string) => {
     saveAs(url, `image${Date.now()}.${downloadeImgFormate}`);
   };
 
@@ -1308,7 +1308,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setprojectlist,
         sendImageToBack,
         fetchGeneratedImages,
-        handileDownload,
+        handleDownload,
         canvasInstance,
         addimgToCanvasGen,
         outerDivRef,

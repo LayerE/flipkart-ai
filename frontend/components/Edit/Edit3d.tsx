@@ -93,7 +93,7 @@ const Edit3d = () => {
 
 
 
-  const handileDownload = () => {
+  const handleDownload = () => {
     if (downloadImg) {
       const url = downloadImg;
       saveAs(url, `image${Date.now()}.${downloadeImgFormate}`);
@@ -343,7 +343,7 @@ const Edit3d = () => {
         <Row>
           <Button
             disabled={previewLoader === true ? true : false}
-            onClick={() => handileDownload()}
+            onClick={() => handleDownload()}
           >
             Download
           </Button>
