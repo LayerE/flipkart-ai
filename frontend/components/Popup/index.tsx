@@ -135,7 +135,7 @@ const DaoderWarpperL = styled.div`
   height: 200px;
   position: absolute;
   z-index: 10000;
-  background-color: #e4d8d83b;
+  /* background-color: #e4d8d83b; */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -206,6 +206,7 @@ const PopupWrapper = styled.div`
   .aa {
     /* min-height: 200px;
     max-height: 300px; */
+    height: 250px;
 
     position: relative;
     z-index: 50;
@@ -214,16 +215,19 @@ const PopupWrapper = styled.div`
     /* min-height: 200px;
     max-height: 300px; */
     /* position: absolute; */
+    height: 250px;
+
     img {
       /* width: 200px; */
-      max-height: 250px;
+       height: 250px;
+
       margin: auto;
       margin-bottom: 30px;
     }
   }
   .griteitem {
     position: relative;
-    height: 250px;
+    /* height: 250px; */
 
     /* max-height: 300px; */
 
