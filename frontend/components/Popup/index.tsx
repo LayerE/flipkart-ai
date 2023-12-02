@@ -80,7 +80,7 @@ const PopupUpload = () => {
         {imglaode ? (
         // <div className="bmain">
           <div className={` griteitem`} onClick={() => ""}>
-            <div className="newgri" style={!imglaode ? { opacity: 1 } : null}>
+            <div className="newgri" style={!imglaode ? { opacity: 0 } : null}>
               <DaoderWarpperL>
                 <div className="jumping-dots-loader">
                   {" "}
@@ -199,8 +199,8 @@ const DaoderWarpperL = styled.div`
 const PopupWrapper = styled.div`
 
 .bmain{
-  min-height: 200px;
-    max-height: 300px;
+  height: 250px;
+    /* max-height: 300px; */
 
 }
   .aa {
@@ -223,9 +223,9 @@ const PopupWrapper = styled.div`
   }
   .griteitem {
     position: relative;
-    min-height: 200px;
+    height: 250px;
 
-    max-height: 300px;
+    /* max-height: 300px; */
 
     width: 100%;
     justify-content: center;
