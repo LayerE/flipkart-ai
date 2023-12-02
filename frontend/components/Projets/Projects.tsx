@@ -35,12 +35,12 @@ const Projects = () => {
           }),
         });
 
-        const datares = await response.json();
-     
-        if (datares?.success) {
+        const resData = await response.json();
+
+        if (resData?.success) {
           setFilteredArray([]);
 
-          router.push(`/generate/${datares?.project_id}`);
+          router.push(`/generate/${resData?.project_id}`);
         }
       }
     } catch (error) {
@@ -57,7 +57,6 @@ const Projects = () => {
   };
 
   const handleDelet = async (id: string) => {
-  
     try {
       const data = await fetch(`/api/project?should_delete=${true}`, {
         method: "POST",

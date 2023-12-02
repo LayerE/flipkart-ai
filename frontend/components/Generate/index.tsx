@@ -32,7 +32,7 @@ const Generate = () => {
     setpromtFull,
     category,
     setcategory,
-    genrateeRef,
+    generateBtnRef,
     TDMode,
     generate3dHandeler,
     userId,
@@ -47,7 +47,7 @@ const Generate = () => {
   useEffect(() => {
     if (product) {
     }
-    console.log(promt, promtFull, activeTemplet);
+
     const words = promtFull.split(" ");
     const newPro = words[0];
     const words1 = product.split(" ");
@@ -128,7 +128,7 @@ const Generate = () => {
                 <TextLoader />
               ) : (
                 <Button
-                  ref={genrateeRef}
+                  ref={generateBtnRef}
                   onClick={() =>
                     TDMode
                       ? generate3dHandeler(userId, id)

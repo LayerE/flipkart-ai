@@ -1,16 +1,13 @@
-
 // @ts-nocheck
-import { createContext, useContext, useState, useRef, useEffect } from "react";
+import { createContext, useContext, useState, useRef } from "react";
 import { fabric } from "fabric";
 import { saveAs } from "file-saver";
 import axios from "axios";
 import * as THREE from "three";
 import { toast } from "react-toastify";
-import { arrayBufferToDataURL, dataURLtoFile } from "@/utils/BufferToDataUrl";
 import { useSession } from "@supabase/auth-helpers-react";
 import Pica from "pica";
 import { supabase } from "@/utils/supabase";
-import { optimizeAndEncodeImage } from "@/lib/resize";
 import { getBase64FromUrl, scaleDownImage } from "@/utils";
 
 type ContextProviderProps = {
@@ -25,11 +22,10 @@ interface ContextITFC {
   stageRef: React.MutableRefObject<null> | null;
   PosisionbtnRef: React.MutableRefObject<null> | null;
   regenerateRef: React.MutableRefObject<null> | null;
-  genrateeRef: React.MutableRefObject<null> | null;
+  generateBtnRef: React.MutableRefObject<null> | null;
   canvasHistoryRef: any | null;
   canvasRef: React.MutableRefObject<null> | null;
   generateBox: React.MutableRefObject<null> | null;
-  canvasInstanceQuick: React.MutableRefObject<null> | null;
   outerDivRef: React.MutableRefObject<null> | null;
   addimgToCanvas: (url: string) => void;
   addimgToCanvasSubject: (url: string) => void;
@@ -55,34 +51,10 @@ interface ContextITFC {
   setFile: (file: File | null) => void;
   viewMore: object;
   setViewMore: (viewMore: object) => void;
-  selectPlacement: string;
-  setSelectedPlacement: (selectPlacement: string) => void;
-  surroundingtype: string;
-  setSurroundingtype: (surroundingtype: string) => void;
-  selectSurrounding: string;
-  setSelectedSurrounding: (selectSurrounding: string) => void;
-  selectBackground: string;
-  setSelectedBackground: (selectBackground: string) => void;
-  selectColoreMode: string;
-  setSelectedColoreMode: (selectColoreMode: string) => void;
   selectResult: number;
   setSelectedresult: (selectResult: number) => void;
-  selectRender: number;
-  setSelectedRender: (selectRender: number) => void;
-  selectColoreStrength: number;
-  setSelectedColoreStrength: (selectColoreStrength: number) => void;
-  selectOutLline: number;
-  setSelectedOutline: (selectOutLline: number) => void;
   product: string;
   setProduct: (product: string) => void;
-  placementTest: string;
-  setPlacementTest: (placementTest: string) => void;
-  backgroundTest: string;
-  setBackgrundTest: (backgrundTest: string) => void;
-  surroundingTest: string;
-  setSurroundingTest: (surroundingTest: string) => void;
-  colore: string;
-  setColore: (colore: string) => void;
   uploadedProductlist: string[];
   setUploadedProductlist: (uploadedProductlist: string[]) => void;
   generatedImgList: any[];
@@ -97,8 +69,6 @@ interface ContextITFC {
   setLoader: (loader: boolean) => void;
   modifidImageArray: string[];
   setModifidImageArray: (modifidImageArray: string[]) => void;
-  undoArray: string[];
-  setUndoArray: (undoArray: string[]) => void;
   jobId: string[];
   setJobId: (jobId: string[]) => void;
   jobIdOne: string[];
@@ -111,8 +81,8 @@ interface ContextITFC {
   setPopupImage: (popupImage: object) => void;
   regeneratePopup: object;
   setRegeneratePopup: (regeneratePopup: object) => void;
-  romovepopu3d: object | boolean;
-  setromovepopu3d: (romovepopu3d: object | boolean) => void;
+  removepopu3d: object | boolean;
+  setremovepopu3d: (removepopu3d: object | boolean) => void;
   activeTemplet: object | null;
   setActiveTemplet: (activeTemplet: object | null) => void;
   lines: any[];
@@ -123,8 +93,6 @@ interface ContextITFC {
   setMode: (generatedImgList: string) => void;
   regenratedImgsJobId: string | null;
   setRegenratedImgsJobid: (regenratedImgsJobId: string) => void;
-  magicLoader: boolean;
-  setMagicloder: React.Dispatch<React.SetStateAction<boolean>>;
   crop: boolean;
   setCrop: React.Dispatch<React.SetStateAction<boolean>>;
   filsizeMorethan10: boolean;
@@ -139,8 +107,6 @@ interface ContextITFC {
   set3dMode: (TDMode: boolean) => void;
   assetL3doader: boolean;
   setasset3dLoader: (assetL3doader: boolean) => void;
-  TdImage: any;
-  set3DImage: (TdImage: any) => void;
   filteredArray: any;
   setFilteredArray: (filteredArray: any) => void;
   regenratingId: any;
@@ -154,65 +120,45 @@ interface ContextITFC {
   setRenderer: (renderer: THREE.WebGLRenderer) => void;
   file3dUrl: any;
   setFile3dUrl: (file3dUrl: any) => void;
-  downloadImgEdit: any;
-  setDownloadImgEdit: (downloadImgEdit: any) => void;
   category: any | null;
   setcategory: (category: any) => void;
-  galleryActivTab: string;
-  setgalleryActiveTab: (galleryActivTab: string) => void;
-  addimgToCanvasCropped: (url: string) => void;
   changeRectangleSize: () => void;
   getSupabaseImage: () => void;
   positionBtn: (obj: any) => void;
   generate3dHandeler: (ueserId: any, proid: any) => void;
-
   generateImageHandeler: (ueserId: any, proid: any) => void;
   fetchGeneratedImages: (userId: any) => void;
-
   RegenerateImageHandeler: (ueserId: any) => void;
-  handileDownload: (url: string) => void;
+  handleDownload: (url: string) => void;
   fetchAssetsImagesBrant: (userId: any, pro: any) => void;
   fetchAssetsImagesWithProjectId: (userId: any, pro: any) => void;
-
   GetProjextById: (getUser: any) => void;
   saveCanvasToDatabase: () => void;
-
   bringImageToFront: () => void;
   sendImageToBack: () => void;
   renameProject: (userId: any, projectId: any, name: any) => void;
   fetchAssetsImages: (userId: any, pro: any) => void;
-
   SaveProjexts: (userId: any, projectId: any, canvas: any) => void;
-  addtoRecntly: (ueserId: any, proid: any) => void;
+  addtoRecently: (ueserId: any, proid: any) => void;
   GetProjexts: (getUser: string) => void;
   AssetsActivTab: string;
   setassetsActiveTab: (AssetsActivTab: string) => void;
-  loara: string;
-  setLoara: (loara: string) => void;
   imageGenRect: any;
-
   userId: string | null;
   setUserID: (userId: string) => void;
   downloadeImgFormate: string | null;
   setDownloadeImgFormate: (downloadeImgFormate: string) => void;
-
   promtFull: string | null;
   setpromtFull: (promtFull: string) => void;
-
   file3d: File | null | string;
   setFile3d: (file3d: File | null | string) => void;
-
   magickErase: boolean;
   setmagickErase: (magickErase: boolean) => void;
-
   projectId: string | null;
   setprojectId: (projectId: string) => void;
-  customsize: any;
-  setCustomsize: (customsize: any) => void;
   zoom: number;
   setZoomCanvas: (zoom: number) => void;
   activeSize: object;
-
   setActiveSize: React.Dispatch<
     React.SetStateAction<{
       id: number;
@@ -233,12 +179,10 @@ interface ContextITFC {
   setproject: (project: object[]) => void;
   projectlist: object[];
   setprojectlist: (projectlist: object[]) => void;
-
   templet: object | null;
   setTemplet: (templet: object) => void;
   file3dName: any;
   setFile3dName: (file3dName: any | null) => void;
-
   listofassetsBarand: any[] | null;
   setListOfAssetsBrand: (listofassetsBarand: any[]) => void;
   listofassets: any | null;
@@ -253,23 +197,19 @@ export const AppContext = createContext<ContextITFC>({
   brushSize: 5,
   setBrushSize: () => {},
   imageGenRect: "",
-
   selectedImg: null,
   setSelectedImg: () => {},
   fetchAssetsImagesBrant: () => {},
   GetProjextById: () => {},
   SaveProjexts: () => {},
-  addtoRecntly: () => {},
+  addtoRecently: () => {},
   renameProject: () => {},
   saveCanvasToDatabase: () => {},
-
   GetProjexts: () => {},
-
   downloadImg: null,
   setDownloadImg: () => {},
   isMagic: null,
   setIsMagic: () => {},
-
   editorBox: null,
   setEditorBox: () => {},
   canvasInstance: null,
@@ -277,25 +217,19 @@ export const AppContext = createContext<ContextITFC>({
   canvasHistory: null,
   PosisionbtnRef: null,
   regenerateRef: null,
-  genrateeRef: null,
+  generateBtnRef: null,
   canvasRef: null,
   canvasHistoryRef: null,
-
   generateBox: null,
-
   currentCanvasIndex: null,
   bringImageToFront: () => {},
   sendImageToBack: () => {},
-
-  canvasInstanceQuick: null,
   outerDivRef: null,
   addimgToCanvas: () => {},
   addimgToCanvasSubject: () => {},
   addimgToCanvasGen: () => {},
   modifidImageArray: [],
   setModifidImageArray: (modifidImageArray: string[]) => {},
-  undoArray: [],
-  setUndoArray: (undoArray: string[]) => {},
   jobId: [],
   setJobId: (jobId: string[]) => {},
   jobIdOne: [],
@@ -305,10 +239,8 @@ export const AppContext = createContext<ContextITFC>({
   setFile: () => {},
   mainLoader: false,
   setMainLoader: () => {},
-
   assetLoader: false,
   setassetLoader: () => {},
-
   brandassetLoader: false,
   setbrandassetLoader: () => {},
   viewMore: {},
@@ -317,48 +249,19 @@ export const AppContext = createContext<ContextITFC>({
   setCurrentStep: (currentStep: number) => {},
   activeTemplet: {},
   setActiveTemplet: () => {},
-
   popupImage: {},
   setPopupImage: (popupImage: object) => {},
-
   fetchAssetsImagesWithProjectId: () => {},
-
-  selectPlacement: "",
-  setSelectedPlacement: (selectPlacement: string) => {},
-  surroundingtype: "",
-  setSurroundingtype: (surroundingtype: string) => {},
-  selectSurrounding: "",
-  setSelectedSurrounding: (selectSurrounding: string) => {},
-  selectBackground: "",
-  setSelectedBackground: (selectBackground: string) => {},
-  selectColoreMode: "",
-  setSelectedColoreMode: (selectColoreMode: string) => {},
   selectResult: 1,
   setSelectedresult: (selectResult: number) => {},
-  selectRender: 1,
-  setSelectedRender: (selectRender: number) => {},
-  selectColoreStrength: 1,
-  setSelectedColoreStrength: (selectColoreStrength: number) => {},
-  selectOutLline: 1,
-  setSelectedOutline: (selectOutLline: number) => {},
   product: "",
   setProduct: (product: string) => "",
-  placementTest: "",
-  setPlacementTest: (placementTest: string) => "",
-  backgroundTest: "",
-  setBackgrundTest: (backgrundTest: string) => "",
-  surroundingTest: "",
-  setSurroundingTest: (surroundingTest: string) => {},
   file3d: null,
   setFile3d: () => {},
-
-  colore: "",
-  setColore: () => {},
   uploadedProductlist: [],
   setUploadedProductlist: (uploadedProductlist: string[]) => {},
   generatedImgList: [],
   setGeneratedImgList: (generatedImgList: any[]) => {},
-
   assetL3doader: false,
   setasset3dLoader: () => {},
   previewLoader: false,
@@ -368,30 +271,23 @@ export const AppContext = createContext<ContextITFC>({
   TDMode: false,
   set3dMode: () => {},
   newEditorBox: {},
-
   loadercarna: false,
   setloadercarna: () => {},
   renderer: null,
   setRenderer: () => {},
-
   loader: false,
   setLoader: () => {},
-
   category: null,
   setcategory: () => {},
-
   popup: {},
   setPopup: () => {},
   regeneratePopup: {},
   setRegeneratePopup: () => {},
-
-  romovepopu3d: {},
-  setromovepopu3d: () => {},
-
+  removepopu3d: {},
+  setremovepopu3d: () => {},
   stageRef: null,
   lines: [],
   setLines: () => {},
-
   filteredArray: [],
   setFilteredArray: () => {},
 
@@ -409,16 +305,14 @@ export const AppContext = createContext<ContextITFC>({
   setMode: (mode: string) => {},
   regenratedImgsJobId: null,
   setRegenratedImgsJobid: (regenratedImgsJobId: string) => {},
-  magicLoader: false,
-  setMagicloder: () => {},
+
   crop: false,
   setCrop: () => {},
   filsizeMorethan10: false,
   setfilsizeMorethan10: () => {},
   canvasDisable: false,
   setCanvasDisable: () => {},
-  TdImage: "",
-  set3DImage: () => {},
+
   regenratingId: "",
   setregeneraatingId: () => {},
   tdFormate: "",
@@ -428,16 +322,12 @@ export const AppContext = createContext<ContextITFC>({
 
   file3dUrl: "",
   setFile3dUrl: () => {},
-  downloadImgEdit: "",
-  setDownloadImgEdit: () => {},
-  galleryActivTab: "",
-  setgalleryActiveTab: (galleryActivTab: string) => {},
-  addimgToCanvasCropped: () => {},
+
   changeRectangleSize: () => {},
   generate3dHandeler: () => {},
 
   positionBtn: () => {},
-  handileDownload: () => {},
+  handleDownload: () => {},
   generateImageHandeler: () => {},
 
   fetchAssetsImages: () => {},
@@ -449,8 +339,7 @@ export const AppContext = createContext<ContextITFC>({
   setListOfAssetsBrand: () => {},
   userId: "",
   setUserID: (userId: string) => {},
-  loara: "",
-  setLoara: (loara: string) => {},
+
   promtFull: "",
   setpromtFull: (promtFull: string) => {},
 
@@ -460,8 +349,7 @@ export const AppContext = createContext<ContextITFC>({
   setDownloadeImgFormate: (downloadeImgFormate: string) => {},
   magickErase: false,
   setmagickErase: () => {},
-  customsize: "",
-  setCustomsize: () => {},
+
   zoom: 0,
   setZoomCanvas: () => {},
   getSupabaseImage: () => {},
@@ -477,16 +365,12 @@ export const AppContext = createContext<ContextITFC>({
 
 export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const canvasInstance = useRef<any | null>(null);
-  const canvasInstanceQuick = useRef<any | null>(null);
 
   const [filteredArray, setFilteredArray] = useState([]);
-
   const outerDivRef = useRef(null);
   const [mainLoader, setMainLoader] = useState<boolean>(true);
   const [selectedImg, setSelectedImg] = useState<object | null>(null);
   const [downloadImg, setDownloadImg] = useState<string | null>(null);
-  const [downloadImgEdit, setDownloadImgEdit] = useState<string | null>(null);
-
   const [isMagic, setIsMagic] = useState<boolean | null>(false);
   const [activeTab, setActiveTab] = useState<number | null>(1);
   const [activeTabHome, setActiveTabHome] = useState<number | null>(1);
@@ -494,41 +378,27 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [file3d, setFile3d] = useState<File | null | string>(null);
   const [file3dUrl, setFile3dUrl] = useState<string | null>(null);
   const [file3dName, setFile3dName] = useState<any | null>(null);
-  const [elevatedSurface, seTelevatedSurface] = useState(false);
   const [isOpen, setisOpen] = useState(true);
-
   const [viewMore, setViewMore] = useState<object>({});
-  const [selectPlacement, setSelectedPlacement] = useState<string>("");
-  const [selectSurrounding, setSelectedSurrounding] = useState<string>("");
-  const [surroundingtype, setSurroundingtype] = useState<string>("");
-  const [selectBackground, setSelectedBackground] = useState<string>("");
-  const [selectColoreMode, setSelectedColoreMode] = useState<string>("");
+  const [elevatedSurface, setElevatedSurface] = useState();
+
+ 
   const [selectResult, setSelectedresult] = useState<number>(2);
-  const [selectRender, setSelectedRender] = useState<number>(4);
-  const [loara, setLoara] = useState<string>("");
+
   const [templet, setTemplet] = useState<object | null>(null);
   const [promt, setpromt] = useState<string>("");
   const [promtFull, setpromtFull] = useState("");
-  const [selectColoreStrength, setSelectedColoreStrength] = useState<number>(0);
-  const [selectOutLline, setSelectedOutline] = useState<number>(0);
   const [product, setProduct] = useState<string>("");
-  const [placementTest, setPlacementTest] = useState<string>("");
-  const [surroundingTest, setSurroundingTest] = useState<string>("");
-  const [backgroundTest, setBackgrundTest] = useState<string>("");
-  const [colore, setColore] = useState<string>("");
+
   const [uploadedProductlist, setUploadedProductlist] = useState<string[]>([]);
   const [previewLoader, setPriviewLoader] = useState<boolean>(false);
   const [generationLoader, setGenerationLoader] = useState<boolean>(false);
   const [loader, setLoader] = useState<boolean>(false);
   const [modifidImageArray, setModifidImageArray] = useState<string[]>([]);
-  const [romovepopu3d, setromovepopu3d] = useState<object | boolean>({});
-
-  const [undoArray, setUndoArray] = useState<string[]>([]);
+  const [removepopu3d, setremovepopu3d] = useState<object | boolean>({});
   const [editorBox, setEditorBox] = useState<fabric.Rect | null>(null);
   const [zoom, setZoomCanvas] = useState<number>(0.7);
-
   const [canvasDisable, setCanvasDisable] = useState<boolean>(false);
-
   const [popup, setPopup] = useState<object>({});
   const [popupImage, setPopupImage] = useState<object>({});
   const [regeneratePopup, setRegeneratePopup] = useState<object>({});
@@ -541,9 +411,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [regenratingId, setregeneraatingId] = useState(null);
   const PosisionbtnRef = useRef<any | null>(null);
   const canvasRef = useRef<any | null>(null);
-
   const regenerateRef = useRef<any | null>(null);
-  const genrateeRef = useRef<any | null>(null);
+  const generateBtnRef = useRef<any | null>(null);
   const generateBox = useRef<any | null>(null);
   const previewBox = useRef<any | null>(null);
   const canvasHistoryRef = useRef([]);
@@ -559,7 +428,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [listofassets, setListOfAssets] = useState(null);
   const [listofassetsBarand, setListOfAssetsBrand] = useState<any | null>(null);
   const [listofassetsById, setListOfAssetsById] = useState<any[]>([]);
-
   const [assetLoader, setassetLoader] = useState(false);
   const [assetL3doader, setasset3dLoader] = useState(false);
   const [brandassetLoader, setbrandassetLoader] = useState(false);
@@ -569,19 +437,16 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [magickErase, setmagickErase] = useState(false);
   const [brushSize, setBrushSize] = useState(5);
   const [AssetsActivTab, setassetsActiveTab] = useState("product");
-  const [galleryActivTab, setgalleryActiveTab] = useState("ai");
-  const [TdImage, set3DImage] = useState(null);
   const [renderer, setRenderer] = useState<THREE.WebGLRenderer | null>(null);
+  const [scene, setscene] = useState(null);
+  const [camera, setcamera] = useState(null);
   const [TDMode, set3dMode] = useState(false);
   const [linesHistory, setLinesHistory] = useState<any[]>([]);
   const [lines, setLines] = useState<any[]>([]);
   const [mode, setMode] = useState<string>("pen");
-  const [magicLoader, setMagicloder] = useState(false);
   const [crop, setCrop] = useState(false);
   const [filsizeMorethan10, setfilsizeMorethan10] = useState(false);
-  const [customsize, setCustomsize] = useState({ w: 1024, h: 1024 });
   const [loadercarna, setloadercarna] = useState(false);
-  const session = useSession();
   const [userId, setUserID] = useState<string | null>(null);
   const [activeSize, setActiveSize] = useState<{
     id: number;
@@ -605,7 +470,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     gt: 170,
   });
 
-  const handileDownload = (url: string) => {
+
+  
+  const handleDownload = (url: string) => {
     saveAs(url, `image${Date.now()}.${downloadeImgFormate}`);
   };
 
@@ -644,69 +511,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       canvasInstance?.current.renderAll();
       saveCanvasState();
       saveCanvasToDatabase();
-    });
-  };
-  // to adde croped image to canvas
-  const addimgToCanvasCropped = async (url: string) => {
-    fabric.Image.fromURL(await getBase64FromUrl(url), function (img: any) {
-      img.scaleToWidth(200);
-      const canvasWidth = activeSize.w;
-      const canvasHeight = activeSize.h;
-      const imageAspectRatio = img.width / img.height;
-      // Calculate the maximum width and height based on the canvas size
-      const maxWidth = canvasWidth;
-      const maxHeight = canvasHeight;
-      const getRandomPosition = (max: number) =>
-        Math.floor(Math.random() * max);
-
-      const randomLeft = getRandomPosition(
-        canvasInstance?.current?.width / 2 - img.width
-      );
-      const randomTop = getRandomPosition(300);
-      img.set({
-        left: 300,
-        top: 300,
-      });
-
-      // Calculate the scaled width and height while maintaining the aspect ratio
-      let scaledWidth = maxWidth;
-      let scaledHeight = scaledWidth / imageAspectRatio;
-      // If the scaled height exceeds the canvas height, scale it down
-      if (scaledHeight > maxHeight) {
-        scaledHeight = maxHeight;
-        scaledWidth = scaledHeight * imageAspectRatio;
-      }
-
-      img.scaleToWidth(activeSize.w / 2);
-      img.scaleToHeight(activeSize.w / 2);
-      img.on("selected", () => {
-        const rebtn = regenerateRef?.current as HTMLElement;
-        if (rebtn) {
-          rebtn.style.display = "none";
-          const btn = PosisionbtnRef?.current;
-          if (btn) {
-            btn.style.display = "flex";
-            positionBtn(img);
-          }
-        }
-      });
-      img.on("moving", () => {
-        const btn = PosisionbtnRef?.current;
-        if (btn) {
-          btn.style.display = "flex";
-          positionBtn(img);
-        }
-      });
-
-      img.on("scaling", () => {
-        positionBtn(img);
-      });
-
-      img.set({ category: "subject" });
-      canvasInstance?.current?.add(img);
-      canvasInstance?.current?.setActiveObject(img);
-      canvasInstance?.current?.renderAll();
-      saveCanvasState();
     });
   };
 
@@ -880,19 +684,11 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     canvasHistory?.current?.push(canvasData);
     currentCanvasIndex.current++;
   };
-  const saveCanvasToDatabase = async () => {
-    const canvasData = canvasInstance.current.toJSON();
-    console.log(canvasData,"canvasData")
-    if (canvasData.objects.length > 1 && !loadercarna) {
-      SaveProjexts(userId, projectId, canvasData);
-    }
-  };
 
   const GetProjexts = (getUser: string) => {
     axios
       .get(`/api/project?user_id=${getUser}`)
       .then((response) => {
-      
         setprojectlist(response?.data);
         return response?.data;
       })
@@ -915,6 +711,16 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         return error;
       });
   };
+
+  // funtion Handel save canvase  to DB
+  const saveCanvasToDatabase = async () => {
+    const canvasData = canvasInstance.current.toJSON();
+
+    if (canvasData.objects.length > 1 && !loadercarna) {
+      SaveProjexts(userId, projectId, canvasData);
+    }
+  };
+  // funtion save canvase  to DB
   const SaveProjexts = async (userId: any, projectId: any, canvas: any) => {
     const json = JSON.stringify({
       user_id: userId,
@@ -937,7 +743,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         filteredArray[0] &&
         "modified_image_url" in filteredArray[0]
       ) {
-    
         const jsons = JSON.stringify({
           project_id: projectId,
           user_id: userId,
@@ -951,7 +756,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
           body: jsons,
         });
 
-        const datares = await response;
+    
       }
 
       return data;
@@ -987,7 +792,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       const data = await getSupabaseImage();
       if (data) {
         setGeneratedImgList(data);
-        // setFilteredArray(data);
       }
 
       return data;
@@ -1081,14 +885,13 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     }
   };
 
-  const addtoRecntly = async (userId: any, proid: any) => {
+  // funtion to added recent Templete to Database
+  const addtoRecently = async (userId: any, proid: any) => {
     try {
       const projectData = await axios.get(
         `/api/project?user_id=${userId}&project_id=${proid}`
       );
       if (projectData.data) {
-     
-
         const json = JSON.stringify({
           user_id: userId,
 
@@ -1110,9 +913,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         });
         const data = await response.json();
 
-        const datares = await response;
+        const resData = await response;
 
-        if (datares.ok) {
+        if (resData.ok) {
           GetProjextById(proid);
         }
       }
@@ -1162,17 +965,11 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
     excludeFromExport: true,
   });
 
+  // change the canvas boxe size when templet size change
   const changeRectangleSize = () => {
     newEditorBox.set({ width: activeSize.w, height: activeSize.h });
     canvasInstance?.current.renderAll();
   };
-
-  function isEmpty(obj) {
-    if (obj) {
-      return Object.keys(obj).length === 0 && obj.constructor === Object;
-    }
-    return false;
-  }
 
   //  fuction for genrating image
   const generateImageHandeler = async (ueserId: any, proid: any) => {
@@ -1204,9 +1001,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
       const canvas1 = canvasInstance.current;
       try {
-      
         if (templet?.title) {
-          addtoRecntly(ueserId, proid);
+          addtoRecently(ueserId, proid);
         }
         const objects = canvas1.getObjects();
         const subjectObjects: any = [];
@@ -1256,25 +1052,22 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         axios
           .post(`/api/generate`, {
             dataUrl: subjectDataUrl,
-            maskDataUrl: null,
             prompt: promtText.trim(),
             user_id: userId,
             category: category,
-            // lora_type: loara,
             num_images: selectResult,
             caption: product,
             project_id: proid,
           })
           .then((response) => {
             const generate_response = response.data;
-          
+
             const getJobid = generate_response?.job_id;
 
             if (generate_response?.ok) {
               setJobIdOne([getJobid]);
-            
+
               GetProjextById(proid);
-           
             } else if (generate_response?.error) {
               toast.error(generate_response?.error);
               setLoader(false);
@@ -1287,8 +1080,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
             console.error(error);
             return error;
           });
-
-
       } catch (error) {
         console.error("Error generating image:", error);
         toast.error("something went wrong");
@@ -1298,7 +1089,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   };
 
   const generate3dHandeler = async (userId: any, proid: any) => {
-   
     if (category === null) {
       toast("Select your product category first !");
     } else if (!file3dUrl && !file3d) {
@@ -1317,7 +1107,13 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       } else {
         setLoader(true);
         const promtText = promt;
+        renderer.setSize(activeSize.w * 6, activeSize.h * 6);
+        renderer.render(scene, camera);
+
         const screenshot = renderer.domElement.toDataURL("image/png");
+        renderer.setSize(activeSize.w + 100, activeSize.h + 80);
+        renderer.render(scene, camera);
+        console.log(screenshot);
 
         let scaledDataURL;
         let subjectDataUrl;
@@ -1325,99 +1121,49 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         canvass.setWidth(activeSize.w);
         canvass.setHeight(activeSize.h);
 
-        // Add the image to the Fabric canvas
-        fabric.Image.fromURL(screenshot, async function (oImg) {
-          // Add the image to the canvas
-          canvass.add(oImg);
-          // Once the image is added and rendered, you can get the data URL
-          canvass.renderAll();
-          scaledDataURL = canvass.toDataURL({
-            format: "png",
-            quality: 1,
-            multiplier: 4,
+        subjectDataUrl = await scaleDownImage(screenshot);
+        console.log(subjectDataUrl);
+
+        axios
+          .post(`/api/generate`, {
+            dataUrl: await subjectDataUrl,
+            prompt: promtText.trim(),
+            user_id: userId,
+            category: category,
+            num_images: selectResult,
+            is_3d: true,
+            caption: product,
+          })
+          .then((response) => {
+            const generate_response = response.data;
+
+            const getJobid = generate_response?.job_id;
+
+            if (generate_response?.ok) {
+              setLoader(true);
+              setJobIdOne([generate_response?.job_id]);
+            } else if (generate_response?.error) {
+              toast.error(generate_response?.error);
+              setLoader(false);
+              return false;
+            } else {
+              console.error(" ");
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+            return error;
           });
-
-        
-
-          subjectDataUrl = await scaleDownImage(scaledDataURL);
-
-         
-
-          axios
-            .post(`/api/generate`, {
-              dataUrl: await subjectDataUrl,
-              prompt: promtText.trim(),
-              user_id: userId,
-              category: category,
-              lora_type: loara,
-              num_images: selectResult,
-              is_3d: true,
-              caption: product,
-            })
-            .then((response) => {
-              const generate_response = response.data;
-       
-              const getJobid = generate_response?.job_id;
-
-              if (generate_response?.ok) {
-                setLoader(true);
-                setJobIdOne([generate_response?.job_id]);
-              } else if (generate_response?.error) {
-                toast.error(generate_response?.error);
-                setLoader(false);
-                return false;
-              } else {
-                console.error(" ");
-              }
-            })
-            .catch((error) => {
-              console.error(error);
-              return error;
-            });
-
-          // const generate_response = await response.json();
-
-          // if (generate_response?.error) {
-          //   toast.error(generate_response?.error);
-          //   setLoader(false);
-          //   return false;
-          // } else {
-          //   setLoader(true);
-
-          //   try {
-          //     const endTime = new Date().getTime();
-
-          //     const elapsedTime = endTime - startTime;
-
-          //     console.log(`Elapsed time: ${elapsedTime} milliseconds`);
-
-          //     setJobIdOne([generate_response?.job_id]);
-          //     axios
-          //       .get(`${process.env.NEXT_PUBLIC_API}/user?id=${ueserId}`)
-          //       .then((response) => {
-          //         setproject(response.data);
-          //         setJobId(response?.data?.jobIds3D);
-          //       })
-          //       .catch((error) => {
-          //         console.error(error);
-          //         return error;
-          //       });
-          //   } catch (error) {
-          //     setLoader(false);
-          //   }
-          // }
-        });
       }
     }
   };
 
-  // to regenrate image
+  //function to regenrate image
   const RegenerateImageHandeler = async (ueserId: any) => {
     setLoader(true);
     setGenerationLoader(true);
     try {
       setLoader(true);
-      const promtText = promtFull ? promtFull : " ";
       const response = await fetch("/api/regenerate", {
         method: "POST",
         headers: {
@@ -1426,7 +1172,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         body: JSON.stringify({
           image_url: regenratingId,
           user_id: ueserId,
-          // category: category,
         }),
       });
 
@@ -1494,7 +1239,6 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setUserID,
         getSupabaseImage,
         canvasDisable,
-        TdImage,
         filsizeMorethan10,
         setfilsizeMorethan10,
         regenratingId,
@@ -1502,14 +1246,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         tdFormate,
         setTdFormate,
         file3dUrl,
-        downloadImgEdit,
-        setDownloadImgEdit,
         setFile3dUrl,
-        set3DImage,
         setCanvasDisable,
-        galleryActivTab,
-        setgalleryActiveTab,
-        addimgToCanvasCropped,
         changeRectangleSize,
         AssetsActivTab,
         setassetsActiveTab,
@@ -1518,19 +1256,13 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setCrop,
         stageRef,
         mode,
-
         setMode,
-        canvasInstanceQuick,
-        magicLoader,
-        setMagicloder,
         linesHistory,
         setLinesHistory,
         magickErase,
         setmagickErase,
         lines,
         setLines,
-        customsize,
-        setCustomsize,
         zoom,
         setZoomCanvas,
         activeTemplet,
@@ -1546,14 +1278,12 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         fetchAssetsImagesBrant,
         file3dName,
         setFile3dName,
-        loara,
-        setLoara,
-        romovepopu3d,
-        setromovepopu3d,
+        removepopu3d,
+        setremovepopu3d,
         promtFull,
         setpromtFull,
         GetProjexts,
-        genrateeRef,
+        generateBtnRef,
         canvasRef,
         file3d,
         setFile3d,
@@ -1570,9 +1300,8 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         currentCanvasIndex,
         regeneratePopup,
         setRegeneratePopup,
-        addtoRecntly,
+        addtoRecently,
         generateImageHandeler,
-
         PosisionbtnRef,
         regenerateRef,
         bringImageToFront,
@@ -1581,10 +1310,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setprojectlist,
         sendImageToBack,
         fetchGeneratedImages,
-        handileDownload,
+        handleDownload,
         canvasInstance,
         addimgToCanvasGen,
-
         outerDivRef,
         addimgToCanvas,
         addimgToCanvasSubject,
@@ -1615,37 +1343,16 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         activeSize,
         setActiveSize,
         setMainLoader,
-        selectPlacement,
-        setSelectedPlacement,
-        selectSurrounding,
-        setSelectedSurrounding,
-        surroundingtype,
-        setSurroundingtype,
-        selectBackground,
-        setSelectedBackground,
-        selectColoreMode,
-        setSelectedColoreMode,
+
         selectResult,
         canvasHistory,
         setSelectedresult,
-        selectRender,
-        setSelectedRender,
-        selectColoreStrength,
-        setSelectedColoreStrength,
-        selectOutLline,
-        setSelectedOutline,
+
         product,
         setProduct,
-        placementTest,
-        setPlacementTest,
-        backgroundTest,
         listofassets,
         setListOfAssets,
-        setBackgrundTest,
-        surroundingTest,
-        setSurroundingTest,
-        colore,
-        setColore,
+
         uploadedProductlist,
         setUploadedProductlist,
         templet,
@@ -1676,8 +1383,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         brandassetLoader,
         setbrandassetLoader,
         setpromt,
-        undoArray,
-        setUndoArray,
+
         modifidImageArray,
         setModifidImageArray,
         fetchAssetsImagesWithProjectId,
@@ -1693,9 +1399,15 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
         setasset3dLoader,
         newEditorBox,
         elevatedSurface,
-        seTelevatedSurface,
+        setElevatedSurface,
         canvasHistoryRef,
-        isOpen, setisOpen
+        isOpen,
+        setisOpen,
+
+        scene,
+        setscene,
+        camera,
+        setcamera,
       }}
     >
       {children}

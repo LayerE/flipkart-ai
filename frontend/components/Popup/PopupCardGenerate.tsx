@@ -7,7 +7,7 @@ import Button from "../common/Button";
 import { useAppState } from "@/context/app.context";
 
 const PopupCardGenerate = () => {
-  const { popupImage, setPopupImage ,handileDownload} = useAppState();
+  const { popupImage, setPopupImage ,handleDownload} = useAppState();
 
   return (
     // <motion.div initial="hidden" animate="visible" variants={fadeIn}>
@@ -32,7 +32,7 @@ const PopupCardGenerate = () => {
         </picture>
         <div className="btns">
           
-          <Button onClick={()=> handileDownload(popupImage?.url)}>{popupImage.btn} </Button>
+          <Button onClick={()=> handleDownload(popupImage?.url)}>{popupImage.btn} </Button>
         </div>
       </div>
     </PopupWrapper2>

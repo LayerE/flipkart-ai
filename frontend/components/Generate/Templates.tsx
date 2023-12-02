@@ -16,16 +16,12 @@ const fadeIn = {
 
 const Tamplates = () => {
   const {
-    setPlacementTest,
-    setBackgrundTest,
-    setSurroundingTest,
-    setSelectedPlacement,
-    setSelectedSurrounding,
-    setSelectedBackground,
+  
+  
     project,
     setTemplet,
     setViewMore,
-    setLoara,
+
     setpromt,
     loader,
     GetProjextById,
@@ -77,7 +73,7 @@ const Tamplates = () => {
     })();
 
     // filterTemplates(category)
-    console.log(suggestedTemplates, otherTemplates);
+  
   }, [category]);
 
   return (
@@ -123,13 +119,10 @@ const Tamplates = () => {
                     onClick={() => {
                       if (!loader) {
                         setActiveTemplet(test);
-                        setPlacementTest(test.placement);
-                        setSurroundingTest(test.surrounding);
-                        setBackgrundTest(test.background);
-                        setSelectedPlacement(test.placementType);
-                        setSelectedSurrounding(test.surroundingType);
-                        setSelectedBackground(test.backgroundType);
-                        setLoara(test.lora);
+                     
+                     
+                      
+
                         setpromt(test.promt);
                       }
                     }}
@@ -162,13 +155,7 @@ const Tamplates = () => {
                     if (!loader) {
                       setActiveTemplet(test); // Set the current item as active
                       setTemplet(test);
-                      setPlacementTest(test.placement);
-                      setSurroundingTest(test.surrounding);
-                      setBackgrundTest(test.background);
-                      setSelectedPlacement(test.placementType);
-                      setSelectedSurrounding(test.surroundingType);
-                      setSelectedBackground(test.backgroundType);
-                      setLoara(test.lora);
+                      
                       setpromt(test.promt);
                     }
                   }}
@@ -204,13 +191,8 @@ const Tamplates = () => {
                     if (!loader) {
                       setActiveTemplet(test); // Set the current item as active
                       setTemplet(test);
-                      setPlacementTest(test.placement);
-                      setSurroundingTest(test.surrounding);
-                      setBackgrundTest(test.background);
-                      setSelectedPlacement(test.placementType);
-                      setSelectedSurrounding(test.surroundingType);
-                      setSelectedBackground(test.backgroundType);
-                      setLoara(test.lora);
+                     
+
                       setpromt(test.promt);
                     }
                   }}

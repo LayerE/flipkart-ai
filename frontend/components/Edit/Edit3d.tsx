@@ -1,4 +1,3 @@
-
 /// <reference no-default-lib="true"/>
 
 import React, { useEffect, useState, useRef } from "react";
@@ -29,8 +28,7 @@ const Edit3d = () => {
   const popupRef = useRef<HTMLDivElement>(null);
 
   const {
-    colore,
-    setColore,
+  
     previewLoader,
     setPriviewLoader,
     downloadImg,
@@ -55,15 +53,15 @@ const Edit3d = () => {
     setLinesHistory,
     lines,
     setLines,
-    magicLoader,
+  
     setMagicloder,
     setDownloadImg,
     selectedImg,
     crop,
     setCrop,
     loader,
-    setromovepopu3d,
-    userId
+    setremovepopu3d,
+    userId,
   } = useAppState();
 
   const { query, isReady } = useRouter();
@@ -93,13 +91,13 @@ const Edit3d = () => {
     setIsPopupOpen((prevIsPopupOpen) => !prevIsPopupOpen);
   };
 
-  const { setSelectedColoreMode, selectColoreMode } = useAppState();
 
-  const handileDownload = () => {
+
+  const handleDownload = () => {
     if (downloadImg) {
       const url = downloadImg;
       saveAs(url, `image${Date.now()}.${downloadeImgFormate}`);
-    } 
+    }
   };
 
   /* eslint-disable */
@@ -107,7 +105,7 @@ const Edit3d = () => {
   const HandelBG = async () => {
     setCrop(false);
     setIsMagic(false);
-    setromovepopu3d({ status: true, type: "bgRemove" });
+    setremovepopu3d({ status: true, type: "bgRemove" });
   };
 
   async function toB64(imgUrl: string): Promise<string> {
@@ -141,22 +139,17 @@ const Edit3d = () => {
     setCrop(false);
     setIsMagic(false);
 
-    setromovepopu3d({ status: true, type: "upscale" });
+    setremovepopu3d({ status: true, type: "upscale" });
   };
-  useEffect(() => {
-    // addColorOverlayToSelectedImage(colore, selectColoreMode);
-  }, [selectColoreMode, colore]);
 
-  const handleChangeComplete = (color: string) => {
-    setColore(color.hex);
-  };
+
+
 
   const [size, setsize] = useState(40);
 
   const [isEraseMode, setIsEraseMode] = useState(false);
   const history = useRef([]);
   const historyIndex = useRef(-1);
-
 
   const toggleEraseMode = () => {
     setIsEraseMode(!isEraseMode);
@@ -223,7 +216,7 @@ const Edit3d = () => {
   };
 
   const HandelCrop = () => {
-    setromovepopu3d({});
+    setremovepopu3d({});
 
     setCrop(true);
     setIsMagic(false);
@@ -238,7 +231,6 @@ const Edit3d = () => {
       style={{ paddingBottom: "50px" }}
     >
       <WrapperEdit>
-
         <div className="gap">
           <Label>Tools</Label>
 
@@ -246,7 +238,7 @@ const Edit3d = () => {
             <div
               className={isMagic ? "selectTool activeTool" : "selectTool"}
               onClick={() => {
-                setromovepopu3d({});
+                setremovepopu3d({});
 
                 setIsMagic(true);
                 setCrop(false);
@@ -262,14 +254,12 @@ const Edit3d = () => {
                 <div className="gaps">
                   <div className="flex">
                     <Label>Mode</Label>
-                  
                   </div>
                   <div className="modeBtns">
                     <div
                       className={`btn ${mode === "pen" ? "activBtn" : ""}`}
                       onClick={() => {
                         setMode("pen");
-
                       }}
                     >
                       Erase
@@ -300,34 +290,10 @@ const Edit3d = () => {
                     />
                   </div>
                 </div>
-                {/* <Row>
-                  {magicLoader ? (
-                    <TextLoader />
-                  ) : (
-                    <Button
-                      onClick={() => HandleInpainting()}
-                      disabled={linesHistory.length === 0 ? true : false}
-                    >
-                      Generate
-                    </Button>
-                  )}
-                </Row> */}
               </div>
             </div>
-            {/* <div className={"selectTool"} onClick={() => setIsMagic(true)}>
-            <Label>Magic Erase</Label>
-            <div>
-              <p>Paint over objects to erase from the image</p>
-            </div>
-          </div> */}
 
-            <div
-              className={
-                "selectTool "
-                //  "selectTool ativeimg"
-              }
-              onClick={() => UpscaleBG()}
-            >
+            <div className={"selectTool "} onClick={() => UpscaleBG()}>
               <Label>Upscale</Label>
               <div>
                 <p>Upscale image up to 2k resolution</p>
@@ -377,7 +343,7 @@ const Edit3d = () => {
         <Row>
           <Button
             disabled={previewLoader === true ? true : false}
-            onClick={() => handileDownload()}
+            onClick={() => handleDownload()}
           >
             Download
           </Button>
@@ -390,8 +356,8 @@ const Edit3d = () => {
 export default Edit3d;
 
 const WrapperEdit = styled.div`
- padding-left: 15px;
-    padding-right: 15px;
+  padding-left: 15px;
+  padding-right: 15px;
   .gaps {
     margin-bottom: 10px;
   }

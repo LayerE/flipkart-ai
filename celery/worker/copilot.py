@@ -154,6 +154,13 @@ def generate_threed(rawJson):
         image_response = requests.get(image_url).content
         image_response = Image.open(BytesIO(image_response))
 
+        height, width = image_response.size
+
+        # Resize the image down by 1.5x
+        image_response = image_response.resize(
+            (int(height / 1.5), int(width / 1.5)), Image.Resampling.LANCZOS
+        )
+
         with BytesIO() as buf:
             image_response.save(buf, "PNG")
             image_response = buf.getvalue()

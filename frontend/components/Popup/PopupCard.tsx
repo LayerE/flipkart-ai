@@ -15,7 +15,7 @@ const PopupCard = () => {
   const {
     popupImage,
     setPopupImage,
-    handileDownload,
+    handleDownload,
     GetProjexts,
 
     AssetsActivTab,
@@ -42,11 +42,11 @@ const PopupCard = () => {
               }),
             }
           );
-          const datares = await response.json();
-          if (datares?.success) {
+          const resData = await response.json();
+          if (resData?.success) {
             GetProjexts(popupImage.userId);
             setPopupImage({ statu: false });
-            router.push(`/generate/${datares?.project_id}`);
+            router.push(`/generate/${resData?.project_id}`);
             setTimeout(() => {}, 1000);
           }
         }
@@ -56,9 +56,9 @@ const PopupCard = () => {
       }
     } else {
       if (popupImage?.list[currentIndex]?.modified_image_url) {
-        handileDownload(popupImage?.list[currentIndex]?.modified_image_url);
+        handleDownload(popupImage?.list[currentIndex]?.modified_image_url);
       } else {
-        handileDownload(popupImage?.list[currentIndex]?.image_url);
+        handleDownload(popupImage?.list[currentIndex]?.image_url);
       }
     }
   };

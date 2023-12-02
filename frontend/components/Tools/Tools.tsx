@@ -36,9 +36,8 @@ const Tools = ({ loadetool }) => {
     }
   };
   return (
-    <motion.div initial="hidden" animate="visible" variants={fadeIn}>
+    <div >
       <ToolsWrapper>
-        {/* {loadetool ? <Loader h={true} /> : null} */}
         <div className="headerText">Tools</div>
 
         <div className="gridbox">
@@ -63,7 +62,7 @@ const Tools = ({ loadetool }) => {
           ))}
         </div>
       </ToolsWrapper>
-    </motion.div>
+    </div>
   );
 };
 

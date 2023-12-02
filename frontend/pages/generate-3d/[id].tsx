@@ -8,7 +8,6 @@ import { styled } from "styled-components";
 import { useAppState } from "@/context/app.context";
 import { motion } from "framer-motion";
 import PopupUpload from "@/components/Popup";
-
 import Loader from "@/components/Loader";
 import BottomTab from "@/components/BottomTab";
 import CanvasBox from "@/components/Canvas";
@@ -18,6 +17,7 @@ import { useRouter } from "next/router";
 import Canvas3d from "@/components/Canvas/Canvas3d";
 import Sidebar3d from "@/components/Sidebar/Generate3d";
 import { supabase } from "@/utils/supabase";
+import Canvas3dLarge from "@/components/Canvas/Canvas3dLarge";
 
 const fadeIn = {
   hidden: { opacity: 0 },
@@ -71,7 +71,6 @@ export default function Home() {
         const { data } = await supabase.auth.getSession();
         if (data.session) {
           setUserID(data.session.user.id);
-          console.log(data.session, "dfdsd");
         }
       };
       checkSession();
@@ -129,13 +128,9 @@ export default function Home() {
       const data = await getSupabaseImage();
 
       if (data) {
-        console.log(data, "data");
-        console.log(jobIdOne, "jobIdOne");
-
         const filteredResultss = await data?.filter(
           (obj: any) => obj?.is_3d === true
         );
-        console.log(filteredResultss, "filteredResultss");
 
         const filteredResults = await filteredResultss?.filter((obj: any) =>
           jobIdOne?.includes(obj?.task_id)
@@ -143,7 +138,7 @@ export default function Home() {
         if (filteredResults?.length) {
           setLoader(false);
           setCanvasDisable(true);
-          setisOpen(true)
+          setisOpen(true);
           setJobIdOne([]);
         }
 
@@ -165,9 +160,6 @@ export default function Home() {
         <Sidebar3d />
         <div className="Editor" ref={outerDivRef}>
           {regeneratePopup.status ? <Regeneret /> : null}
-
-          {/* <div className="main-privier"></div> */}
-
           <Canvas3d />
           {filteredArray?.length > 0 ? (
             <div className="generatedBox">
@@ -251,7 +243,7 @@ export default function Home() {
 
 const MainPages = styled.div`
   position: relative;
- height: 100%;
+  height: 100%;
   .large {
     background-color: #f9d00d;
     padding: 4px;
@@ -284,7 +276,7 @@ const MainPages = styled.div`
   }
 
   .generatedBox {
-    width:calc(100vw - 490px);
+    width: calc(100vw - 490px);
     display: flex;
     /* height: 300px; */
     position: fixed;

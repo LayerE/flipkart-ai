@@ -17,12 +17,12 @@ const Gellery = () => {
 
   const {
     setPopupImage,
-    galleryActivTab,
-    setgalleryActiveTab,
+
     userId,
     setUserID,
     getSupabaseImage,
   } = useAppState();
+  const [galleryActivTab, setgalleryActiveTab] = useState("ai");
 
   const [laoder, setlaoder] = useState(true);
 
@@ -103,7 +103,7 @@ const Gellery = () => {
                       }
                     >
                       <picture>
-                        <img src={image?.modified_image_url} alt="" />
+                        <img src={image?.modified_image_url} alt="" loading="lazy"/>
                       </picture>
                     </div>
                   ))
@@ -124,7 +124,7 @@ const Gellery = () => {
                       }
                     >
                       <picture>
-                        <img src={image?.image_url} alt="" />
+                        <img src={image?.image_url} alt="" loading="lazy" />
                       </picture>
                     </div>
                   ))}

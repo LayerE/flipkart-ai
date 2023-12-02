@@ -99,9 +99,8 @@ export default async function handler(req: NextRequest, res: NextResponse) {
       dataUrl = `data:image/png;base64,${image_buffer.toString("base64")}`;
     }
 
-    // Upload image
-    const { url: imageUrl } = await uploadImage(dataUrl, user_id);
-    console.log(imageUrl);
+    // Upload image to ImageKit
+    const { url: imageUrl } = await uploadImage(dataUrl, user_id, false);
 
     if (image_type == "image") {
       // Add the image to the database

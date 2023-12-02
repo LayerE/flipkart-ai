@@ -15,11 +15,6 @@ export const placementList = [
 
 export const ImgFormate = ["png", "jpg", "webp", "avif"];
 
-export const Loara = [
-  "RealisticNaturalScenery",
-  "InteriorDesign",
-  "AbstractPattern",
-];
 
 export const resultList = [1, 2, 3, 4];
 

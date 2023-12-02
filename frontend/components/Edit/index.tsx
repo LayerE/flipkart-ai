@@ -8,7 +8,6 @@ import Button from "../common/Button";
 import { useAppState } from "@/context/app.context";
 import { saveAs } from "file-saver";
 import { motion } from "framer-motion";
-import { arrayBufferToDataURL, dataURLtoFile } from "@/utils/BufferToDataUrl";
 import { ImgFormate } from "@/data/dropdown";
 import { useRouter } from "next/router";
 import { styled } from "styled-components";
@@ -50,7 +49,7 @@ const Edit = () => {
   const { query, isReady } = useRouter();
   const id = (query.id as string[]) || [];
 
-  const handileDownload = () => {
+  const handleDownload = () => {
     if (downloadImg) {
       const url = downloadImg;
       saveAs(url, `image${Date.now()}.${downloadeImgFormate}`);
@@ -269,7 +268,7 @@ const Edit = () => {
           <Row>
             <Button
               disabled={previewLoader === true ? true : false}
-              onClick={() => handileDownload()}
+              onClick={() => handleDownload()}
             >
               Download
             </Button>

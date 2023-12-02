@@ -15,14 +15,12 @@ import { useAppState } from "@/context/app.context";
 import styled from "styled-components";
 import { saveAs } from "file-saver";
 import { toast } from "react-toastify";
-import PopupCanvas from "./popupCanvas";
+import PopupCanvas from "./MagicPopupCanvas";
 import CropperBox from "./Cropper";
-import RemoveBox from "./RomovePopu";
+import RemoveBox from "./RemoveBgPopup";
 
 const Canvas3d = () => {
-  const containerRef = useRef();
   const outputBox = useRef();
-
   const {
     file3d,
     loader,
@@ -38,29 +36,38 @@ const Canvas3d = () => {
     crop,
     activeSize,
     setDownloadImg,
-    romovepopu3d,
+    removepopu3d,
     setFile3dName,
+    setcamera,
+    setscene,
   } = useAppState();
+  const container3dRef = useRef();
 
   let camera, scene, object, controls;
   const [showText, setshowText] = useState(false);
-  const addH = 100;
-  const addW = 100;
+  const addWidth = 100;
+  const addHeight = 80;
 
   useEffect(() => {
-    containerRef.current.style.width = `${activeSize.w}px`;
-    containerRef.current.style.height = `${activeSize.h}px`;
+    container3dRef.current.style.minWidth = `${activeSize.w + addWidth}px`;
+    container3dRef.current.style.maxWidth = `${activeSize.w + addWidth}px`;
+
+    container3dRef.current.style.height = `${activeSize.h + addHeight}px`;
+
     let renderer;
     const init = () => {
+      // camera
       camera = new THREE.PerspectiveCamera(
         15,
-        activeSize.w / activeSize.h,
+        (activeSize.w + addWidth) / (activeSize.h + addHeight),
         0.01,
         1000
       );
-      // camera.position.set( 1.5, 4, 9 );
 
+      // screne
       scene = new THREE.Scene();
+
+      // render
       renderer = new THREE.WebGLRenderer({
         antialias: true,
         preserveDrawingBuffer: true,
@@ -68,38 +75,43 @@ const Canvas3d = () => {
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1;
       renderer.setClearColor(0x000000, 0);
-      renderer.setSize(activeSize.w, activeSize.h);
+      renderer.setSize(activeSize.w + addWidth, activeSize.h + addHeight);
 
-      containerRef.current.appendChild(renderer.domElement);
+      container3dRef.current.appendChild(renderer.domElement);
 
       // to get the colore and ligtin of the object
       const pmremGenerator = new THREE.PMREMGenerator(renderer);
       pmremGenerator.compileEquirectangularShader();
       scene.environment = pmremGenerator.fromScene(
-        new RoomEnvironment(renderer), 0.8
+        new RoomEnvironment(renderer),
+        0.8
       ).texture;
 
       // // ligting
-      const ambientLight = new THREE.AmbientLight(0x404040);
-      scene.add(ambientLight);
-      const pointLight = new THREE.PointLight(0xff0000, 100);
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 1); // Directional light
+      const pointLight = new THREE.PointLight(0xffffff, 1);
+      const light = new THREE.HemisphereLight(0xffffbb, 1);
+
+      directionalLight.position.set(1, 1, 1).normalize(); // Set the position of the directional light
       pointLight.position.set(2.5, 4.5, 15);
-      const light = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
       light.position.set(2.5, 7.5, 15);
-      scene.add(light);
+
+      scene.add(ambientLight);
+      scene.add(directionalLight);
+      // scene.add(pointLight);
+      // scene.add(light);
 
       controls = new OrbitControls(camera, renderer.domElement);
-      // controls.enableDamping = true;
       controls.screenSpacePanning = true;
 
       controls.update();
 
+      //  loade .obj models
       function loadModel() {
         object.traverse(function (child) {
           if (child.isMesh) {
             if (filsizeMorethan10) {
-              // child.material.color.set(0xc8c8c8);
-              // child.material = new THREE.MeshBasicMaterial({ color: 0xc8c8c8 });
             } else {
               child.material = child.material.clone();
             }
@@ -110,7 +122,6 @@ const Canvas3d = () => {
         });
 
         scene.add(object);
-
         // Adjust the camera position and rotation to focus on the loaded object
         const boundingBox = new THREE.Box3().setFromObject(object);
         const center = boundingBox.getCenter(new THREE.Vector3());
@@ -124,8 +135,8 @@ const Canvas3d = () => {
         controls.target = center;
         setasset3dLoader(false);
       }
-
-      const postingCenter = (object) => {
+      // make object position to center
+      const positionToCenter = (object) => {
         const boundingBox = new THREE.Box3().setFromObject(object);
         const center = boundingBox.getCenter(new THREE.Vector3());
         const size = boundingBox.getSize(new THREE.Vector3());
@@ -138,6 +149,7 @@ const Canvas3d = () => {
         setasset3dLoader(false);
       };
 
+      // when the obj file load
       function onProgress(xhr) {
         if (xhr.lengthComputable) {
           const percentComplete = (xhr.loaded / xhr.total) * 100;
@@ -149,7 +161,7 @@ const Canvas3d = () => {
           }
         }
       }
-
+      //  error handling when obj file loading
       function onError(e) {
         console.log({ error: e });
         toast.error(e.message);
@@ -195,7 +207,7 @@ const Canvas3d = () => {
             (object) => {
               container.add(object);
               scene.add(container);
-              postingCenter(object);
+              positionToCenter(object);
               const boundingBox = new THREE.Box3().setFromObject(object);
               const center = boundingBox.getCenter(new THREE.Vector3());
               const size = boundingBox.getSize(new THREE.Vector3());
@@ -219,7 +231,6 @@ const Canvas3d = () => {
               // After loading the model, calculate the center
               const boundingBox = new THREE.Box3().setFromObject(object.scene);
               const center = boundingBox.getCenter(new THREE.Vector3());
-              // controls.target = center;
               const size = boundingBox.getSize(new THREE.Vector3());
               // Calculate the distance to fit the object in the view
               const maxDim = Math.max(size.x, size.y, size.z);
@@ -228,6 +239,7 @@ const Canvas3d = () => {
               camera.position.z += distance;
               controls.target = center;
               scene.add(object.scene);
+
               setasset3dLoader(false);
             },
             onProgress,
@@ -250,7 +262,7 @@ const Canvas3d = () => {
                 }
               });
               object.scale.set(0.01, 0.01, 0.01);
-              postingCenter(object);
+              positionToCenter(object);
               scene.add(object);
               const boundingBox = new THREE.Box3().setFromObject(object);
               const center = boundingBox.getCenter(new THREE.Vector3());
@@ -274,7 +286,7 @@ const Canvas3d = () => {
             (gltf) => {
               const model = gltf.scene;
               scene.add(model);
-              postingCenter(gltf);
+              positionToCenter(gltf);
 
               setasset3dLoader(false);
             },
@@ -338,23 +350,21 @@ const Canvas3d = () => {
         }
       }
 
-      containerRef.current.appendChild(renderer.domElement);
-
-      // controls.enableDamping = true;
       controls.update();
+
       controls.addEventListener("change", render);
-
       /* The above code is updating the controls and then rendering after a delay of 1 second. */
-
       setTimeout(() => {
         render();
       }, 1000);
-      setRenderer(renderer);
     };
 
     const render = () => {
+      setcamera(camera);
       setRenderer(renderer);
+      setscene(scene);
       renderer.render(scene, camera);
+      setTimeout(() => {}, 3000);
     };
 
     init();
@@ -364,20 +374,21 @@ const Canvas3d = () => {
         renderer.dispose(); // Dispose of the renderer
       }
       // Remove the renderer's canvas from the DOM
-      if (containerRef.current) {
-        containerRef.current.removeChild(renderer.domElement);
+      if (container3dRef.current) {
+        container3dRef.current.removeChild(renderer.domElement);
+        // modelRenderer.current.removeChild(renderer.domElement);
       }
     };
   }, [file3d, file3dUrl, tdFormate, activeSize]);
 
-  const downlaedImf = () => {
+  const downlaedImg = () => {
     if (selectedImg?.image) {
       const url = selectedImg?.image;
       saveAs(url, `image${Date.now()}.png`);
     }
   };
 
-  const DeletIrem = () => {
+  const DeletImg = () => {
     setSelectedImg(null);
     setDownloadImg(null);
   };
@@ -387,15 +398,12 @@ const Canvas3d = () => {
       {isMagic ? <PopupCanvas /> : null}
       {crop ? <CropperBox /> : null}
 
-      {romovepopu3d.status ? <RemoveBox /> : null}
+      {removepopu3d.status ? <RemoveBox /> : null}
       {loader ? <div className="divovelay"></div> : null}
 
-      <div
-        className="boxs3d"
-        style={{ height: activeSize.h + 0 }}
-      >
+      <div className="boxs3d" style={{ height: activeSize.h + 0 }}>
         <div
-          ref={containerRef}
+          ref={container3dRef}
           className="boxs"
           style={{ minWidth: activeSize.w, height: activeSize.h }}
         >
@@ -405,16 +413,16 @@ const Canvas3d = () => {
           ref={outputBox}
           className="outboxs"
           style={{
-            minWidth: activeSize.w,
-            maxWidth: activeSize.w,
-            height: activeSize.h,
-            marginRight: 20
+            minWidth: activeSize.w + addWidth,
+            maxWidth: activeSize.w + addWidth,
+            height: activeSize.h + addHeight,
+            marginRight: 20,
           }}
         >
           {selectedImg?.image ? (
             <>
               <div className="btn">
-                <button className="selectone" onClick={() => DeletIrem()}>
+                <button className="selectone" onClick={() => DeletImg()}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -431,7 +439,7 @@ const Canvas3d = () => {
                     ></path>
                   </svg>
                 </button>
-                <button className="selectone" onClick={() => downlaedImf()}>
+                <button className="selectone" onClick={() => downlaedImg()}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
@@ -470,13 +478,25 @@ const Cnavas3d = styled.div`
   margin-top: 80px;
   /* margin-bottom: 20px; */
 
+  .largeBox {
+    z-index: 10000;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    pointer-events: none;
+    overflow: hidden;
+    background-color: #fdf5cf;
+    opacity: 0;
+    border: 2px solid rgba(249, 208, 13, 1);
+  }
+
   &::-webkit-scrollbar {
     width: 10px;
     height: 10px;
     display: none;
   }
   .boxs3d {
-
     display: flex;
     transform: scale(0.8) translateX(-13%) translateY(-12%);
     gap: 30px;
@@ -484,11 +504,10 @@ const Cnavas3d = styled.div`
     height: 100%;
     /* overflow: auto; */
     /* overflow-y: hidden; */
-   
+
     padding: 0 30px;
     padding-right: 30px;
     padding-top: 20px;
-
   }
   /* Track */
   &::-webkit-scrollbar-track {

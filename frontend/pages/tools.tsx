@@ -1,38 +1,18 @@
 // @ts-nocheck
 
-import Image from "next/image";
-import { Inter } from "next/font/google";
 import { styled } from "styled-components";
-import assets from "@/public/assets";
-import Link from "next/link";
-
-const fadeIn = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.5 } },
-};
-
-import { motion } from "framer-motion";
 import HomeSidebar from "@/components/Sidebar/HomeSidebar";
-import Projects from "@/components/Projets/Projects";
 import { useAppState } from "@/context/app.context";
 import Tools from "@/components/Tools/Tools";
-import Gellery from "@/components/Gellery/Gellery";
-import AssetsDir from "@/components/AssetsDirectory";
-
 import { useEffect, useState } from "react";
-import PopupCard from "@/components/Popup/PopupCard";
-import axios from "axios";
 import { useRouter } from "next/router";
-import Loader from "@/components/Loader";
 import MainLoader from "@/components/Loader/main";
 import PopupUpload from "@/components/Popup";
-import { useSession } from "@supabase/auth-helpers-react";
 import { supabase } from "@/utils/supabase";
 
 export default function Home() {
   const [loadetool, setloadetool] = useState(false);
   const { query, isReady } = useRouter();
-  const id = (query.id as string[]) || [];
   const {
     setUserID,
     userId,
@@ -50,7 +30,7 @@ export default function Home() {
     setSelectedImg,
     setActiveTabHome,
     setActiveSize,
-    seTelevatedSurface,
+    setElevatedSurface,
   } = useAppState();
   const router = useRouter();
 
@@ -68,7 +48,7 @@ export default function Home() {
     if (isReady && userId) {
       setloadetool(true);
       setActiveTab(1);
-      seTelevatedSurface(false);
+      setElevatedSurface(false);
       setcategory(null);
       setpromtFull("");
       setActiveTemplet(null);
@@ -103,10 +83,8 @@ export default function Home() {
 
       {mainLoader ? <MainLoader /> : null}
 
-      <motion.div
-        initial="hidden"
-        animate="visible"
-        variants={fadeIn}
+      <div
+
         className="new"
       >
         <HomeSidebar />
@@ -114,7 +92,7 @@ export default function Home() {
         <div className="dashbaord">
           <Tools loadetool={loadetool} />
         </div>
-      </motion.div>
+      </div>
     </MainPage>
   );
 }

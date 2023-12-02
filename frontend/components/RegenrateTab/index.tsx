@@ -31,7 +31,7 @@ const RegenratTab = () => {
     setSelectedImg,
     setLoader,
     selectedImg,
-    undoArray,
+
     setModifidImageArray,
     selectResult,
     editorBox,
