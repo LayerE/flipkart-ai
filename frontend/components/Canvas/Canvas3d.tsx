@@ -50,6 +50,8 @@ const Canvas3d = () => {
 
   useEffect(() => {
     container3dRef.current.style.minWidth = `${activeSize.w + addWidth}px`;
+    container3dRef.current.style.maxWidth = `${activeSize.w + addWidth}px`;
+
     container3dRef.current.style.height = `${activeSize.h + addHeight}px`;
 
     let renderer;
