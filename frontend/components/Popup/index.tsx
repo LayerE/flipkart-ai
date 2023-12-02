@@ -78,8 +78,9 @@ const PopupUpload = () => {
       <div className="wrapper">
         {/* <Loader/> */}
         {imglaode ? (
+        // <div className="bmain">
           <div className={` griteitem`} onClick={() => ""}>
-            <div className="newgri" style={!imglaode ? { opacity: 0 } : null}>
+            <div className="newgri" style={!imglaode ? { opacity: 1 } : null}>
               <DaoderWarpperL>
                 <div className="jumping-dots-loader">
                   {" "}
@@ -87,16 +88,16 @@ const PopupUpload = () => {
                 </div>
                 <div className="moving-gradient"></div>
               </DaoderWarpperL>
-              <picture className="griteitemLoading">
+              {/* <picture className="griteitemLoading">
                 <img loading="lazy" src={popup?.loaderImage} alt="image" />
-              </picture>
+              </picture> */}
             </div>
           </div>
         ) : null}
         <picture className="aa">
-          <img src={popup?.dataArray?.imageUrl} alt="" />
+          <img loading="lazy" src={popup?.dataArray?.imageUrl} alt="image" />
         </picture>
-
+{/* </div> */}
         <div className="test">
           <div>
             <Label>{"What did you just upload?"}</Label>
@@ -131,7 +132,7 @@ export default PopupUpload;
 
 const DaoderWarpperL = styled.div`
   width: 100%;
-  height: 100%;
+  height: 200px;
   position: absolute;
   z-index: 10000;
   background-color: #e4d8d83b;
@@ -196,17 +197,36 @@ const DaoderWarpperL = styled.div`
 `;
 
 const PopupWrapper = styled.div`
+
+.bmain{
+  min-height: 200px;
+    max-height: 300px;
+
+}
   .aa {
-    min-height: 200px;
+    /* min-height: 200px;
+    max-height: 300px; */
+
     position: relative;
     z-index: 50;
   }
   .griteitemLoading {
+    /* min-height: 200px;
+    max-height: 300px; */
     /* position: absolute; */
+    img {
+      /* width: 200px; */
+      max-height: 250px;
+      margin: auto;
+      margin-bottom: 30px;
+    }
   }
   .griteitem {
     position: relative;
-    height: 100%;
+    min-height: 200px;
+
+    max-height: 300px;
+
     width: 100%;
     justify-content: center;
   }
@@ -235,7 +255,8 @@ const PopupWrapper = styled.div`
     background-color: #fff;
 
     img {
-      width: 200px;
+      /* width: 200px; */
+      max-height: 250px;
       margin: auto;
       margin-bottom: 30px;
     }
