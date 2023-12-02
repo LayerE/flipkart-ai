@@ -320,7 +320,7 @@ export default function CanvasBox({
     const canvasInstanceRef = canvasInstance?.current;
     setloadercarna(true);
     if (isReady && userId) {
-      console.log("canvasInstance", userId, proid);
+ 
       axios
         .get(`/api/project?user_id=${userId}&project_id=${proid}`)
         .then((response) => {
@@ -330,7 +330,7 @@ export default function CanvasBox({
               response?.data[0].canvasHistory,
               canvasInstanceRef.renderAll.bind(canvasInstanceRef),
               function (o, object) {
-                console.log(o, object);
+          
               }
             );
             setloadercarna(false);

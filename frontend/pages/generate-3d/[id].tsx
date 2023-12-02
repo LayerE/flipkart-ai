@@ -72,7 +72,7 @@ export default function Home() {
         const { data } = await supabase.auth.getSession();
         if (data.session) {
           setUserID(data.session.user.id);
-          console.log(data.session, "dfdsd");
+     
         }
       };
       checkSession();
@@ -130,13 +130,12 @@ export default function Home() {
       const data = await getSupabaseImage();
 
       if (data) {
-        console.log(data, "data");
-        console.log(jobIdOne, "jobIdOne");
+      
 
         const filteredResultss = await data?.filter(
           (obj: any) => obj?.is_3d === true
         );
-        console.log(filteredResultss, "filteredResultss");
+     
 
         const filteredResults = await filteredResultss?.filter((obj: any) =>
           jobIdOne?.includes(obj?.task_id)

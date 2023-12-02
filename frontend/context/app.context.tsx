@@ -582,6 +582,10 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   const [galleryActivTab, setgalleryActiveTab] = useState("ai");
   const [TdImage, set3DImage] = useState(null);
   const [renderer, setRenderer] = useState<THREE.WebGLRenderer | null>(null);
+  const [scene, setscene] = useState(null);
+
+  const [camera, setcamera] = useState(null);
+
   const [TDMode, set3dMode] = useState(false);
   const [linesHistory, setLinesHistory] = useState<any[]>([]);
   const [lines, setLines] = useState<any[]>([]);
@@ -894,7 +898,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
   };
   const saveCanvasToDatabase = async () => {
     const canvasData = canvasInstance.current.toJSON();
-    console.log(canvasData, "canvasData");
+   
     if (canvasData.objects.length > 1 && !loadercarna) {
       SaveProjexts(userId, projectId, canvasData);
     }
@@ -1318,10 +1322,14 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
       } else {
         setLoader(true);
         const promtText = promt;
-      // renderer.setSize(activeSize.w  *2  , activeSize.h *2);
+      renderer.setSize(activeSize.w  *4  , activeSize.h *4);
+      renderer.render(scene, camera);
+
       // container3dRef.current.appendChild(renderer.domElement);
         const screenshot = renderer.domElement.toDataURL("image/png");
-      //   renderer.setSize(activeSize.w  + 50  , activeSize.h);
+        renderer.setSize(activeSize.w  + 50  , activeSize.h);
+      renderer.render(scene, camera);
+console.log(screenshot)
       // container3dRef.current.appendChild(renderer.domElement);
 
         let scaledDataURL;
@@ -1346,7 +1354,7 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
           axios
             .post(`/api/generate`, {
-              dataUrl: await subjectDataUrl,
+              dataUrl: await screenshot,
               prompt: promtText.trim(),
               user_id: userId,
               category: category,
@@ -1669,6 +1677,9 @@ export const AppContextProvider = ({ children }: ContextProviderProps) => {
 
         camaraPreview,
         setcamaraPreview,
+
+        scene, setscene,
+        camera, setcamera
       }}
     >
       {children}

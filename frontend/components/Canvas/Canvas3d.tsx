@@ -45,33 +45,33 @@ const Canvas3d = () => {
     camaraPreview,
     setcamaraPreview,
     container3dRef,
+    setcamera,
+    setscene
   } = useAppState();
 
-  let camera, scene, object, controls;
+  let camera, scene, object, controls, seconderyScene;
   const [showText, setshowText] = useState(false);
-const addWidth = 100
-const addHeight = 80
+  const addWidth = 100;
+  const addHeight = 80;
 
   useEffect(() => {
-    container3dRef.current.style.minWidth = `${activeSize.w  + addWidth }px`;
-    container3dRef.current.style.height = `${activeSize.h +addHeight}px`;
+    container3dRef.current.style.minWidth = `${activeSize.w + addWidth}px`;
+    container3dRef.current.style.height = `${activeSize.h + addHeight}px`;
 
-    // containerRefOnlyForSaveHD.current.style.minWidth = `${
-    //   activeSize.w * 1.5
-    // }px`;
-    // containerRefOnlyForSaveHD.current.style.height = `${activeSize.h * 1.5}px`;
-    let renderer;
+    containerRefOnlyForSaveHD.current.style.minWidth = `${
+      activeSize.w * 1.5
+    }px`;
+    containerRefOnlyForSaveHD.current.style.height = `${activeSize.h * 1.5}px`;
+    let renderer, modelRenderer;
     const init = () => {
       camera = new THREE.PerspectiveCamera(
         15,
-        (activeSize.w +addWidth )/ (activeSize.h +addHeight),
+        (activeSize.w + addWidth) / (activeSize.h + addHeight),
         0.01,
         1000
       );
-  ;
-
       scene = new THREE.Scene();
-      // seconderyScene = new THREE.Scene();
+      seconderyScene = new THREE.Scene();
 
       renderer = new THREE.WebGLRenderer({
         antialias: true,
@@ -80,19 +80,19 @@ const addHeight = 80
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1;
       renderer.setClearColor(0x000000, 0);
-      renderer.setSize(activeSize.w  + addWidth  , activeSize.h +addHeight);
+      renderer.setSize(activeSize.w + addWidth, activeSize.h + addHeight);
 
-      // modelRenderer = new THREE.WebGLRenderer({
-      //   antialias: true,
-      //   preserveDrawingBuffer: true,
-      // });
-      // // modelRenderer .toneMapping = THREE.ACESFilmicToneMapping;
-      // modelRenderer.toneMappingExposure = 1;
-      // modelRenderer.setClearColor(0x000000, 0);
-      // modelRenderer.setSize(activeSize.w * 1.5, activeSize.h * 1.5);
+      modelRenderer = new THREE.WebGLRenderer({
+        antialias: true,
+        preserveDrawingBuffer: true,
+      });
+      modelRenderer .toneMapping = THREE.ACESFilmicToneMapping;
+      modelRenderer.toneMappingExposure = 1;
+      modelRenderer.setClearColor(0x000000, 0);
+      modelRenderer.setSize(activeSize.w * 1.5, activeSize.h * 1.5);
 
       container3dRef.current.appendChild(renderer.domElement);
-      // containerRefOnlyForSaveHD.current.appendChild(modelRenderer.domElement);
+      containerRefOnlyForSaveHD.current.appendChild(modelRenderer.domElement);
 
       // to get the colore and ligtin of the object
       const pmremGenerator = new THREE.PMREMGenerator(renderer);
@@ -102,44 +102,38 @@ const addHeight = 80
         0.8
       ).texture;
 
-//       // Front light
-// var frontLight = new THREE.DirectionalLight(0xffffff, 1);
-// frontLight.position.set(0, 0, 1);
-// scene.add(frontLight);
+      //       // Front light
+      // var frontLight = new THREE.DirectionalLight(0xffffff, 1);
+      // frontLight.position.set(0, 0, 1);
+      // scene.add(frontLight);
 
+      // // Top light
+      // var topLight = new THREE.DirectionalLight(0xffffff, 1);
+      // topLight.position.set(0, 1, 0);
+      // scene.add(topLight);
+      // // Top light
+      // var bottomLight = new THREE.DirectionalLight(0xffffff, 1);
+      // bottomLight.position.set(0, -1, 0);
+      // scene.add(bottomLight);
 
+      // // Left light
+      // var leftLight = new THREE.DirectionalLight(0xffffff, 1);
+      // leftLight.position.set(-1, 0, 0);
+      // scene.add(leftLight);
 
-// // Top light
-// var topLight = new THREE.DirectionalLight(0xffffff, 1);
-// topLight.position.set(0, 1, 0);
-// scene.add(topLight);
-// // Top light
-// var bottomLight = new THREE.DirectionalLight(0xffffff, 1);
-// bottomLight.position.set(0, -1, 0);
-// scene.add(bottomLight);
-
-// // Left light
-// var leftLight = new THREE.DirectionalLight(0xffffff, 1);
-// leftLight.position.set(-1, 0, 0);
-// scene.add(leftLight);
-
-// // Right light
-// var rightLight = new THREE.DirectionalLight(0xffffff, 1);
-// rightLight.position.set(1, 0, 0);
-// scene.add(rightLight);
-
+      // // Right light
+      // var rightLight = new THREE.DirectionalLight(0xffffff, 1);
+      // rightLight.position.set(1, 0, 0);
+      // scene.add(rightLight);
 
       // // ligting
       const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 
       scene.add(ambientLight);
-      
-      
-      var directionalLight = new THREE.DirectionalLight(0xffffff, 1); // Directional light
-      directionalLight.position.set(1, 1, 1).normalize();// Set the position of the directional light
-      scene.add(directionalLight);
-     ;
 
+      var directionalLight = new THREE.DirectionalLight(0xffffff, 1); // Directional light
+      directionalLight.position.set(1, 1, 1).normalize(); // Set the position of the directional light
+      scene.add(directionalLight);
       const pointLight = new THREE.PointLight(0xffffff, 1);
       pointLight.position.set(2.5, 4.5, 15);
       const light = new THREE.HemisphereLight(0xffffbb, 1);
@@ -415,20 +409,21 @@ const addHeight = 80
     };
 
     const render = () => {
-      console.log("camarea", camera);
       setcamaraPreview(camera);
+      setcamera(camera)
       setRenderer(renderer);
+      setscene(scene)
       renderer.render(scene, camera);
       setTimeout(() => {}, 3000);
-      // modelRenderer.render(scene, camera);
+      modelRenderer.render(scene, camera);
     };
 
     init();
 
     return () => {
-      if (renderer ) {
+      if (renderer && modelRenderer) {
         renderer.dispose(); // Dispose of the renderer
-        // modelRenderer.dispose(); // Dispose of the renderer
+        modelRenderer.dispose(); // Dispose of the renderer
       }
 
       // Remove the renderer's canvas from the DOM
@@ -436,10 +431,10 @@ const addHeight = 80
         container3dRef.current.removeChild(renderer.domElement);
         // modelRenderer.current.removeChild(renderer.domElement);
       }
-      // if (containerRefOnlyForSaveHD.current) {
-      //   // container3dRef.current.removeChild(renderer.domElement);
-      //   containerRefOnlyForSaveHD.current.removeChild(modelRenderer.domElement);
-      // }
+      if (containerRefOnlyForSaveHD.current) {
+        // container3dRef.current.removeChild(renderer.domElement);
+        containerRefOnlyForSaveHD.current.removeChild(modelRenderer.domElement);
+      }
     };
   }, [file3d, file3dUrl, tdFormate, activeSize]);
 
@@ -477,7 +472,7 @@ const addHeight = 80
           style={{
             minWidth: activeSize.w + addWidth,
             maxWidth: activeSize.w + addWidth,
-            height: activeSize.h + addHeight ,
+            height: activeSize.h + addHeight,
             marginRight: 20,
           }}
         >
@@ -525,14 +520,14 @@ const addHeight = 80
           ) : null}
         </div>
       </div>
-      {/* <div className="largeBox">
+      <div className="largeBox">
         <div
           ref={containerRefOnlyForSaveHD}
-          style={{ minWidth: activeSize.w, height: activeSize.h }}
+          style={{ minWidth: activeSize.w * 1.5, height: activeSize.h * 1.5 }}
         >
           {!showText ? <div className="tesxt">3D model viewer</div> : null}
         </div>
-      </div> */}
+      </div>
     </Cnavas3d>
   );
 };
@@ -548,7 +543,7 @@ const Cnavas3d = styled.div`
   margin-top: 80px;
   /* margin-bottom: 20px; */
 
-  /* .largeBox {
+  .largeBox {
     z-index: 10000;
     position: absolute;
     top: 0;
@@ -556,9 +551,10 @@ const Cnavas3d = styled.div`
     height: 100vh;
     pointer-events: none;
     overflow: hidden;
-    background-color: #fff;
+    background-color: #fdf5cf;
     opacity: 0;
-  } */
+    border: 2px solid rgba(249, 208, 13, 1);
+  }
 
   &::-webkit-scrollbar {
     width: 10px;

@@ -77,7 +77,7 @@ const Tamplates = () => {
     })();
 
     // filterTemplates(category)
-    console.log(suggestedTemplates, otherTemplates);
+  
   }, [category]);
 
   return (

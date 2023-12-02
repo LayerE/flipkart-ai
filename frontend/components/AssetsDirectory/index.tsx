@@ -79,7 +79,7 @@ const AssetsDir = () => {
     try {
       if (AssetsActivTab === "product") {
         fetchAssetsImages(userId, null, true);
-        console.log(listofassets)
+   
         setAssets(listofassets);
       } else {
         fetchAssetsImagesBrant(userId, null);

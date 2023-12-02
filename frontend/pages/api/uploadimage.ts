@@ -73,7 +73,7 @@ export default async function handler(req: NextRequest, res: NextResponse) {
     const payload = body;
     const { user_id, dataUrl, project_id } = payload;
 
-    console.log(dataUrl);
+
 
     if (!user_id) {
       res.status(400).send("Missing user_id");

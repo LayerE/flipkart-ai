@@ -19,7 +19,7 @@ const SignIn = () => {
       if (data.session) {
        
         // router.push("/");
-        console.log(data.session);
+       
       }
     };
     checkSession();
