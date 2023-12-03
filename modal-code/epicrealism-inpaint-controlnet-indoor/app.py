@@ -610,7 +610,7 @@ class ImageGenerator:
             negative_prompt_embeds=negative_prompt_embeds,
             num_inference_steps=40,
             num_images_per_prompt=num_images,
-            guidance_scale=10,
+            guidance_scale=15,
             image=init_image,
             mask_image=mask_image,
             control_image=control_image,
