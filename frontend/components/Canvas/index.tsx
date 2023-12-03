@@ -30,7 +30,7 @@ export default function CanvasBox({
     getBase64FromUrl,
     activeTab,
     setActiveTab,
-    setSelectedColoreMode,
+
     downloadImg,
     setDownloadImg,
     RegenerateImageHandeler,
@@ -164,7 +164,7 @@ export default function CanvasBox({
               setregeneraatingId(options.target.id);
             }
             setDownloadImg(selectedObject);
-            setSelectedColoreMode("None");
+          
           }
         }
       });

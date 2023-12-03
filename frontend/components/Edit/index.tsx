@@ -110,7 +110,7 @@ const Edit = () => {
       console.log(error);
       setLoader(false);
 
-      toast.error("Only generated images can be upscale");
+      toast.error("Sorry, you can only upscale originally generated images");
     }
   };
 
